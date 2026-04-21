@@ -30,6 +30,7 @@ Migrate legacy Astro source into current Next.js + Sanity stack with:
 
 ## Current Status Snapshot (Already Done)
 
+- [x] Dependabot automation has been disabled by removing `.github/dependabot.yml`, so dependency/GitHub Actions update PRs are no longer auto-opened by Dependabot.
 - [x] **GSC MIGRATION 100% DONE:** All Top 300 manual curations + Top 1000 auto-redirects fully synced, seeded, and mapped via Sanity and Next.js wildcards.
 - [x] Repo-local `json_usaha` source pack has been restored from the Astro source tree into `frontend/content/astro-local/json-usaha`, and `/services/[slug]` static generation is green again for `agency-landing`, `biro-jasa-perizinan`, and `jasa-pengukuhan-pkp`.
 - [x] `/services` now follows the repo hybrid-page pattern: the route remains code-owned for the service catalog shell, while Sanity `page` blocks and metadata for slug `services` are rendered again through `PageHybridShell`.
