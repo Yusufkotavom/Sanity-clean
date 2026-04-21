@@ -91,7 +91,7 @@
     "eslint-config-next": "16.1.7",
     "googleapis": "^171.4.0",
     "postcss": "^8.5.8",
-    "react-email": "^5.2.10",
+    "react-email": "^6.0.0",
     "tailwindcss": "^4.2.2",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
