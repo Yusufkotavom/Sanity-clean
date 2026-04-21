@@ -15,6 +15,7 @@ const REPO_LOCAL_ROOT = path.join(
   "astro-local",
   "pages",
 );
+const LOCAL_ASTRO_CATALOG_DISABLED = true;
 
 const CONTENT_ROOTS = ["posts", "services", "products", "projects"] as const;
 
@@ -117,6 +118,10 @@ async function collectFromRoot(
 }
 
 export async function getAstroLocalCatalog(): Promise<AstroLocalContentItem[]> {
+  if (LOCAL_ASTRO_CATALOG_DISABLED) {
+    return [];
+  }
+
   const repoLocalItems = (await pathExists(REPO_LOCAL_ROOT))
     ? await collectFromRoot(REPO_LOCAL_ROOT)
     : [];

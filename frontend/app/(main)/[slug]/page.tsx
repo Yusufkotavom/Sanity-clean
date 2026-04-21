@@ -1,9 +1,4 @@
 import Blocks from "@/components/blocks";
-import JasaCetakBukuCityShell from "@/components/ui/jasa-cetak-buku-city-shell";
-import {
-  getJasaCetakBukuCityBySlugOrFallback,
-  getJasaCetakBukuCityStaticParams,
-} from "@/lib/local-content/jasa-cetak-buku-kota";
 import {
   fetchSanityPageBySlug,
   fetchSanityPagesStaticParams,
@@ -11,15 +6,13 @@ import {
   fetchTemplatePageRoutes,
 } from "@/sanity/lib/fetch";
 import { notFound } from "next/navigation";
-import { generateBasicMetadata, generatePageMetadata } from "@/sanity/lib/metadata";
-import { buildPercetakanCetakBukuCityCopy } from "@/lib/legacy-pages/rewrite-content";
+import { generatePageMetadata } from "@/sanity/lib/metadata";
 import RewritePageShell from "@/components/ui/rewrite/page-shell";
 import type { LegacyAstroPage } from "@/lib/legacy-pages/astro-static";
 import { resolveTemplateMeta } from "@/lib/templates/resolve-template";
 
 export async function generateStaticParams() {
   const pages = await fetchSanityPagesStaticParams();
-  const cityPages = getJasaCetakBukuCityStaticParams();
   const templateRoutes = await fetchTemplatePageRoutes();
 
   const sanityParams = pages.map((page) => ({
@@ -32,7 +25,7 @@ export async function generateStaticParams() {
     .map((slug) => ({ slug }));
 
   const dedup = new Map<string, { slug: string }>();
-  for (const item of [...sanityParams, ...cityPages, ...templateParams]) {
+  for (const item of [...sanityParams, ...templateParams]) {
     if (!item?.slug) continue;
     if (!dedup.has(item.slug)) dedup.set(item.slug, { slug: item.slug });
   }
@@ -64,16 +57,6 @@ export async function generateMetadata(props: {
     return await generatePageMetadata({ page, slug: params.slug });
   }
 
-  const cityPage = getJasaCetakBukuCityBySlugOrFallback(params.slug);
-  if (cityPage) {
-    const cityCopy = buildPercetakanCetakBukuCityCopy(cityPage.citySlug);
-    return await generateBasicMetadata({
-      title: cityCopy.primaryKeyword || cityPage.title || `Jasa cetak buku ${cityPage.city}`,
-      description: cityCopy.description || cityPage.excerpt,
-      slug: params.slug,
-    });
-  }
-
   if (!page) {
     notFound();
   }
@@ -101,11 +84,6 @@ export default async function Page(props: {
 
   if (page) {
     return <Blocks blocks={page?.blocks ?? []} pageTitle={page.title} />;
-  }
-
-  const cityPage = getJasaCetakBukuCityBySlugOrFallback(params.slug);
-  if (cityPage) {
-    return <JasaCetakBukuCityShell item={cityPage} />;
   }
 
   if (!page) {

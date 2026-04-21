@@ -1,21 +1,7 @@
 /**
- * @deprecated This file contains local static data that has been migrated to Sanity CMS.
- * 
- * Migration Status: ✅ COMPLETE (2026-04-05)
- * - All 104 URLs now exist in Sanity
- * - This file kept as fallback during transition
- * - Route handlers still use this as primary source
- * 
- * Source of Truth: Sanity CMS
- * - Use Sanity queries for new features
- * - This data serves as backup/reference only
- * 
- * Future: Will be archived after route handlers updated to use Sanity first
- * 
- * See: docs/astro-migration-megaplan.md for details
+ * Local Astro fallback catalog is intentionally disabled.
+ * Sanity is the only source of truth for public routes.
  */
-
-import manifest from "./astro-static-manifest.json";
 
 export type LegacyAstroPage = {
   route: string;
@@ -26,45 +12,9 @@ export type LegacyAstroPage = {
   migrationStatus: "draft" | string;
 };
 
-const supplementalPages: LegacyAstroPage[] = [
-  {
-    route: "/pembuatan-website/sidoarjo",
-    section: "pembuatan-website",
-    slug: "sidoarjo",
-    sourceFile: "supplemental/pembuatan-website/sidoarjo",
-    title: "Pembuatan Website Sidoarjo",
-    migrationStatus: "draft",
-  },
-  {
-    route: "/pembuatan-website/portfolio",
-    section: "pembuatan-website",
-    slug: "portfolio",
-    sourceFile: "supplemental/pembuatan-website/portfolio",
-    title: "Portfolio Pembuatan Website",
-    migrationStatus: "draft",
-  },
-];
+const pages: LegacyAstroPage[] = [];
 
-const pages = [...(manifest as LegacyAstroPage[]), ...supplementalPages]
-  .filter(
-    (item, index, arr) => arr.findIndex((candidate) => candidate.route === item.route) === index,
-  )
-  .sort((a, b) => {
-  return a.route.localeCompare(b.route);
-  });
-
-const SECTION_SLUG_ALIASES: Record<string, Record<string, string>> = {
-  "pembuatan-website": {
-    "toko-online": "jasa-pembuatan-website-toko-online",
-    sekolah: "jasa-pembuatan-website-sekolah",
-    "company-profile": "jasa-pembuatan-website-company-profile",
-    "dokter-klinik": "jasa-pembuatan-website-dokter-klinik",
-    expedisi: "jasa-pembuatan-website-expedisi",
-    "komunitas-ngo": "jasa-pembuatan-website-komunitas-ngo",
-    konstruksi: "jasa-pembuatan-website-konstruksi",
-    "migrasi-wordpress": "jasa-migrasi-wordpress",
-  },
-};
+const SECTION_SLUG_ALIASES: Record<string, Record<string, string>> = {};
 
 export function getLegacyRoute(route: string): LegacyAstroPage | null {
   return pages.find((item) => item.route === route) ?? null;

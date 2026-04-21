@@ -4,6 +4,32 @@ This document tracks all SEO-related changes made to the repository.
 
 ---
 
+## 2026-04-21 — Remove Local Fallback Runtime Sources (Frontend)
+
+### Changed Files
+- `frontend/lib/legacy-pages/astro-static.ts` (MODIFIED) - Disabled local legacy Astro route catalog fallback (`pages` now empty).
+- `frontend/lib/local-content/json-usaha.ts` (MODIFIED) - Disabled repo-local JSON Usaha content fallback loader.
+- `frontend/lib/local-content/astro-catalog.ts` (MODIFIED) - Disabled repo-local Astro catalog fallback loader.
+- `frontend/lib/local-content/jasa-cetak-buku-kota.ts` (MODIFIED) - Disabled city template/static params fallback for `jasa-cetak-buku-*` routes.
+- `frontend/app/(main)/services/[slug]/page.tsx` (MODIFIED) - Removed explicit JSON Usaha fallback path from static params, metadata, and page rendering.
+- `frontend/app/(main)/services/page.tsx` (MODIFIED) - Removed explicit legacy/json-usaha fallback rendering; page now uses Sanity-driven services listing shell only.
+- `frontend/app/sitemap.ts` (MODIFIED) - Removed JSON Usaha local fallback URLs from sitemap generation.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated status snapshot/workstream checklist.
+
+### Summary
+Cleaned remaining local runtime fallback sources so frontend routes no longer generate or resolve content from repo-local Astro/JSON fallback packs. Runtime behavior is now aligned to Sanity-first contracts, and local fallback generators are disabled.
+
+### Impact on SEO/Integration
+- Positive integration impact: avoids stale local fallback content being served/indexed when Sanity data changes.
+- Route/indexing impact: static generation count dropped significantly after fallback removal, reducing unintended legacy URL output.
+
+### Verification Status
+- ✅ `pnpm --filter frontend run build` passed.
+- ✅ Build output validation: static page generation reduced to `33` pages (previous run observed `134`), confirming fallback sources are no longer feeding route generation.
+
+---
+
 ## 2026-04-21 — Disable Dependabot Configuration
 
 ### Changed Files

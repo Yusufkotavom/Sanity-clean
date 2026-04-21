@@ -65,6 +65,7 @@ const ROOT = path.join(
   "astro-local",
   "json-usaha",
 );
+const LOCAL_JSON_USAHA_DISABLED = true;
 const DEFAULT_CONTACT = "/contact";
 const MIN_FAQ_ITEMS = 4;
 
@@ -440,6 +441,10 @@ function normalizeJsonUsaha(data: Record<string, unknown>, sourceFile: string): 
 }
 
 async function readAllJsonUsahaFiles() {
+  if (LOCAL_JSON_USAHA_DISABLED) {
+    return [];
+  }
+
   let entries;
   try {
     entries = await fs.readdir(ROOT, { withFileTypes: true });

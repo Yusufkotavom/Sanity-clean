@@ -23,8 +23,10 @@ const EXCLUDED_SLUGS: string[] = (excludedSlugs as Array<{ slug: string }>).map(
 );
 
 let templateCache: string | null = null;
+const LOCAL_JASA_CETAK_BUKU_CITY_DISABLED = true;
 
 export function getJasaCetakBukuCityBySlug(slug: string) {
+  if (LOCAL_JASA_CETAK_BUKU_CITY_DISABLED) return null;
   return CITY_MAP.get(slug) || null;
 }
 
@@ -37,6 +39,7 @@ function toCityName(citySlug: string) {
 }
 
 export function getJasaCetakBukuCityBySlugOrFallback(slug: string) {
+  if (LOCAL_JASA_CETAK_BUKU_CITY_DISABLED) return null;
   const matched = getJasaCetakBukuCityBySlug(slug);
   if (matched) return matched;
 
@@ -58,6 +61,7 @@ export function getJasaCetakBukuCityBySlugOrFallback(slug: string) {
 }
 
 export function getJasaCetakBukuCityStaticParams() {
+  if (LOCAL_JASA_CETAK_BUKU_CITY_DISABLED) return [];
   const slugs = new Set<string>([
     ...CITY_ITEMS.map((item) => item.slug),
     ...EXCLUDED_SLUGS,
@@ -66,6 +70,7 @@ export function getJasaCetakBukuCityStaticParams() {
 }
 
 export function getJasaCetakBukuCityTemplate() {
+  if (LOCAL_JASA_CETAK_BUKU_CITY_DISABLED) return "";
   if (templateCache) return templateCache;
 
   const templatePath = path.join(

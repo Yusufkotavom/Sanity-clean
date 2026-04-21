@@ -24,11 +24,6 @@ import { generatePageMetadata } from "@/sanity/lib/metadata";
 import JsonLd from "@/components/seo/json-ld";
 import { buildBreadcrumbJsonLd, buildServiceJsonLd, resolveAggregateRating } from "@/lib/seo-jsonld";
 import ReviewsSection from "@/components/ui/reviews-section";
-import JsonUsahaPageView from "@/components/ui/json-usaha-page";
-import {
-  getJsonUsahaPageBySlug,
-  getJsonUsahaStaticParams,
-} from "@/lib/local-content/json-usaha";
 
 type BreadcrumbLink = {
   label: string;
@@ -36,10 +31,9 @@ type BreadcrumbLink = {
 };
 
 export async function generateStaticParams() {
-  const [services, categories, usahaPages] = await Promise.all([
+  const [services, categories] = await Promise.all([
     fetchSanityServicesStaticParams(),
     fetchSanityServiceCategories(),
-    getJsonUsahaStaticParams(),
   ]);
 
   const slugs = new Set<string>();
@@ -50,10 +44,6 @@ export async function generateStaticParams() {
   for (const category of categories as any[]) {
     if (category?.slug?.current) slugs.add(category.slug.current);
   }
-  for (const page of usahaPages) {
-    if (page?.slug) slugs.add(page.slug);
-  }
-
   return Array.from(slugs).map((slug) => ({ slug }));
 }
 
@@ -89,17 +79,6 @@ export async function generateMetadata(props: {
 
   if (service) {
     return await generatePageMetadata({ page: service, slug: `services/${params.slug}` });
-  }
-
-  const usahaPage = await getJsonUsahaPageBySlug(params.slug);
-  if (usahaPage) {
-    return await generatePageMetadata({
-      page: {
-        title: usahaPage.title,
-        excerpt: usahaPage.description,
-      },
-      slug: `services/${params.slug}`,
-    });
   }
 
   notFound();
@@ -159,16 +138,6 @@ export default async function ServiceSlugPage(props: {
   }
 
   if (!service) {
-    const usahaPage = await getJsonUsahaPageBySlug(params.slug);
-    if (usahaPage) {
-      return (
-        <JsonUsahaPageView
-          page={usahaPage}
-          basePath="/services"
-          breadcrumbLabel="Layanan"
-        />
-      );
-    }
     notFound();
   }
 

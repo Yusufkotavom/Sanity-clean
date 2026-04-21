@@ -2,8 +2,6 @@ import { MetadataRoute } from "next";
 import { groq } from "next-sanity";
 import { sanityFetch } from "@/sanity/lib/live";
 import { fetchSanitySeoSettings } from "@/sanity/lib/fetch";
-import { getJasaCetakBukuCityStaticParams } from "@/lib/local-content/jasa-cetak-buku-kota";
-import { getJsonUsahaStaticParams } from "@/lib/local-content/json-usaha";
 import { isAllowedTemplateRoute } from "@/lib/templates/route-policy";
 
 type SitemapItem = {
@@ -96,15 +94,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { data: contentData }, 
     { data: categoryData },
     { data: templateData },
-    jsonUsahaParams,
   ] = await Promise.all([
     sanityFetch({ query: CONTENT_SITEMAP_QUERY }),
     sanityFetch({ query: CATEGORY_SITEMAP_QUERY }),
     sanityFetch({ query: TEMPLATE_SITEMAP_QUERY }),
-    getJsonUsahaStaticParams(),
   ]);
-
-  const cityParams = getJasaCetakBukuCityStaticParams();
 
   const contentItems = (contentData || []) as SitemapItem[];
   const categoryItems = (categoryData || []) as CategorySitemapItem[];
@@ -192,26 +186,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date().toISOString(),
       changeFrequency: "weekly",
       priority: 0.8,
-    });
-  }
-
-  // JSON Usaha routes now live under /services
-  for (const usaha of jsonUsahaParams) {
-    addEntry({
-      url: makeAbsoluteUrl(baseUrl, `/services/${usaha.slug}`),
-      lastModified: new Date().toISOString(),
-      changeFrequency: "monthly",
-      priority: 0.6,
-    });
-  }
-
-  // Add Jasa Cetak Buku Kota local routes
-  for (const city of cityParams) {
-    addEntry({
-      url: makeAbsoluteUrl(baseUrl, `/${city.slug}`),
-      lastModified: new Date().toISOString(),
-      changeFrequency: "monthly",
-      priority: 0.6,
     });
   }
 
