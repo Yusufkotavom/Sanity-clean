@@ -67,6 +67,7 @@ export default defineType({
           }
           return true;
         }),
+      hidden: true,
     }),
     defineField({
       name: "lane",

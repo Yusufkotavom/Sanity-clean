@@ -34,6 +34,30 @@ Applied the lowest-risk cleanup from the legacy templating audit. The frontend n
 
 ---
 
+## 2026-04-25 — Legacy Template Migration Tooling
+
+### Changed Files
+- `studio/schemas/documents/page-template.ts` (MODIFIED) - Hid the misleading legacy `variant` editor field so operators do not treat it as an effective runtime control.
+- `frontend/scripts/generator/migrate-legacy-templates-to-generator.mjs` (ADDED) - Added a development-only migration script that reads legacy `pageTemplate` documents and maps them into minimal `generatorTemplate` documents for Generator V2.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated the current-status snapshot and Sprint 3 cleanup checklist.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+Completed the next safe migration step for the new generator system. The remaining misleading `variant` field in the legacy template editor is now hidden, and the repo now includes a dedicated migration script that converts legacy `pageTemplate` records into minimal `generatorTemplate` documents in the `development` dataset only. The script uses a defensive contract: dry-run by default, dev-only enforcement, and `createOrReplace` only when explicitly run with `--write`.
+
+### Impact on SEO/Integration
+- `No direct SEO impact`
+- Positive migration integration impact: the repo now has a concrete bridge from legacy template records into Generator V2 without touching production runtime or production datasets.
+- Positive editor clarity impact: `variant` is no longer presented as if it still controlled the live runtime.
+
+### Verification Status
+- ✅ `pnpm --filter studio run typecheck` passed.
+- ✅ `pnpm --filter frontend run typecheck` passed.
+- ✅ `node frontend/scripts/generator/migrate-legacy-templates-to-generator.mjs` dry run succeeded against the live `development` dataset.
+- ℹ️ The live dry run reported `totalLegacyTemplates: 0`, so no `generatorTemplate` documents were created yet because the current development dataset does not contain legacy `pageTemplate` documents.
+
+---
+
 ## 2026-04-25 — Legacy Template Schema Minimization
 
 ### Changed Files
