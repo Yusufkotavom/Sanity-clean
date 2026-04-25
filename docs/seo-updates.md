@@ -34,6 +34,30 @@ Applied the lowest-risk cleanup from the legacy templating audit. The frontend n
 
 ---
 
+## 2026-04-25 — Generator Dev Dataset Cleanup And Starter Reset
+
+### Changed Files
+- `frontend/scripts/generator/seed-generator-examples.mjs` (DELETED) - Retired the old one-off printing seed script that kept recreating the legacy generator clutter.
+- `frontend/scripts/generator/seed-generator-service-starters.mjs` (ADDED) - Added a new development-only starter seeding script that provisions aligned `website`, `software`, and `printing` generator families.
+- `docs/superpowers/plans/2026-04-25-sanity-generator-v2.md` (MODIFIED) - Updated the implementation plan so Task 5 now points to the new starter seed script instead of the retired one-off example seed.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated the current-status snapshot and Sprint 3 cleanup checklist.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+Cleaned the development generator workspace for real, not just in code. The old one-off printing seed script was removed from the repo, replaced by a new starter-family seeding script, and the stale `generator-template-printing-dev` / `generator-dataset-printing-dev` / `generator-program-printing-dev` documents were deleted from the development Sanity dataset. The new starter script then seeded three consistent generator families for `website`, `software`, and `printing`, each with one template, one dataset, and one program.
+
+### Impact on SEO/Integration
+- `No direct SEO impact`
+- Positive Studio integration impact: the development generator workspace is now much cleaner and no longer shows the old legacy seed set mixed with the new starter families.
+- Positive operational impact: rerunning generator seeds now produces a controlled, aligned starter inventory instead of restoring the old clutter.
+
+### Verification Status
+- ✅ Live delete on the development Sanity dataset removed the old `generator-template-printing-dev`, `generator-dataset-printing-dev`, and `generator-program-printing-dev` documents.
+- ✅ `node frontend/scripts/generator/seed-generator-service-starters.mjs --write` seeded the clean starter families using `SANITY_DEV`.
+- ✅ Live post-cleanup query confirmed exactly these generator docs remain in `development`: `generator-template-*starter-dev`, `generator-dataset-*starter-dev`, and `generator-program-*starter-dev` for `website`, `software`, and `printing`.
+
+---
+
 ## 2026-04-25 — Legacy Template Migration Tooling
 
 ### Changed Files

@@ -73,8 +73,8 @@
 
 - Create: `frontend/scripts/generator/export-legacy-templates.mjs`
   - Read old `pageTemplate` docs and export a migration inventory.
-- Create: `frontend/scripts/generator/seed-generator-examples.mjs`
-  - Seed one example template/program/dataset in development dataset only.
+- Create: `frontend/scripts/generator/seed-generator-service-starters.mjs`
+  - Seed clean starter template/program/dataset families in the development dataset only.
 - Create: `frontend/scripts/generator/run-generator-smoke.mjs`
   - Dry-run generator pipeline against development dataset.
 
@@ -691,7 +691,7 @@ git commit -m "feat: connect generator v2 preview and dry-run workflow"
 
 **Files:**
 - Create: `studio/lib/generator/write.ts`
-- Create: `frontend/scripts/generator/seed-generator-examples.mjs`
+- Create: `frontend/scripts/generator/seed-generator-service-starters.mjs`
 - Modify: `studio/components/generator/program-runner-pane.tsx`
 
 - [ ] **Step 1: Write a failing dev-write guard test script**
@@ -734,20 +734,20 @@ export const assertGeneratorWriteTarget = (dataset: string) => {
 export const buildGeneratedPageId = (slug: string) => `generator-page-${slug}`;
 ```
 
-- [ ] **Step 4: Add example seed script**
+- [ ] **Step 4: Add starter seed script**
 
-Create `frontend/scripts/generator/seed-generator-examples.mjs` to upsert:
-- one `generatorTemplate`
-- one `generatorDataset`
-- one `generatorProgram`
+Create `frontend/scripts/generator/seed-generator-service-starters.mjs` to upsert clean starter families:
+- website
+- software
+- printing
 
 Use ids like:
 
 ```js
 const docs = [
-  { _id: "generator-template-printing-dev", _type: "generatorTemplate", title: "Printing Base" },
-  { _id: "generator-dataset-printing-dev", _type: "generatorDataset", title: "Printing Seed Dataset" },
-  { _id: "generator-program-printing-dev", _type: "generatorProgram", title: "Printing Seed Program" },
+  { _id: "generator-template-website-starter-dev", _type: "generatorTemplate", title: "Website Service Starter" },
+  { _id: "generator-dataset-website-starter-dev", _type: "generatorDataset", title: "Website Service Dataset" },
+  { _id: "generator-program-website-starter-dev", _type: "generatorProgram", title: "Website Service Starter Program" },
 ];
 ```
 
@@ -787,7 +787,7 @@ Expected:
 git add studio/lib/generator/write.ts \
   studio/components/generator/program-runner-pane.tsx \
   frontend/scripts/generator/check-dev-write-guard.mjs \
-  frontend/scripts/generator/seed-generator-examples.mjs
+  frontend/scripts/generator/seed-generator-service-starters.mjs
 git commit -m "feat: add generator v2 dev-only write path"
 ```
 
