@@ -22,6 +22,26 @@ Documented the replacement direction for the current templating system: a new Sa
 - ✅ Manual spec review completed for scope, consistency, and migration sequencing.
 - ✅ Repository tracking docs updated in the same task per repo policy.
 
+---
+
+## 2026-04-25 — Sanity Generator V2 Implementation Plan
+
+### Changed Files
+- `docs/superpowers/plans/2026-04-25-sanity-generator-v2.md` (ADDED) - Added the file-by-file implementation plan for the new dev-only Sanity generator workflow.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated migration tracking to note that implementation planning is complete and ready for execution.
+
+### Summary
+Converted the approved generator design into an execution-ready implementation plan. The plan breaks work into schema scaffolding, Studio desk/pane setup, deterministic render logic, dev-only write guards, legacy templating export/freeze, and final verification/docs. It is structured to keep the new generator isolated from production while preserving the current frontend contract that renders standard `page` documents only.
+
+### Impact on SEO/Integration
+- Positive integration impact: the migration path from legacy templating to standard generated `page` output is now explicit and staged, reducing the chance of runtime duplication or accidental production coupling.
+- No direct live SEO impact yet because this is planning/documentation only.
+
+### Verification Status
+- ✅ Manual plan review completed for spec coverage, placeholder scan, and type consistency.
+- ✅ Required repo tracking docs updated in the same task.
+
 ## 2026-04-21 — Homepage Lane Grid Layout Set to 2x2
 
 ### Changed Files
