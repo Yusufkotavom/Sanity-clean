@@ -30,6 +30,8 @@ Migrate legacy Astro source into current Next.js + Sanity stack with:
 
 ## Current Status Snapshot (Already Done)
 
+- [x] A new dev-only `Sanity Generator V2` design direction is now documented: future programmatic page generation will move to a Studio-native workflow (`generatorTemplate` + `generatorProgram` + `generatorDataset`) that outputs standard `page` documents, preserves manual edits, supports bulk keyword and row-based variation, and freezes the current legacy templating engine as migration source material instead of continuing to expand it.
+- [x] Dormant migration-era component artifacts have been pruned without changing active render paths: archived `legacy-rewrite-v0` components, an unused hybrid middle-section variant, an unused rewrite city shell, and tracked Studio session/runtime artifacts were removed, while active legacy contracts such as `legacyPage` and `legacy-rich-content` were intentionally kept because frontend/runtime still depends on them.
 - [x] `seo-dashboard` workspace app has been fully retired and removed from the repository; root monorepo scripts/workspace entries and frontend revalidate webhook forwarding were cleaned so runtime no longer depends on dashboard indexing endpoints.
 - [x] Sanity Studio AI authoring surface has been retired from the main CMS flow: `AI Rewrite/AI Extend` document actions were removed, `aiWriterSettings` is no longer part of Studio schema/desk singletons, and Studio env/setup docs were cleaned to avoid stale AI action secret configuration.
 - [x] Homepage lane card layout has been normalized to a 2x2 scan pattern on larger screens (`sm:grid-cols-2`), replacing the previous XL 4-column spread for better readability.

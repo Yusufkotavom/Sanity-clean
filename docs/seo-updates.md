@@ -4,6 +4,24 @@ This document tracks all SEO-related changes made to the repository.
 
 ---
 
+## 2026-04-25 — Sanity Generator V2 Design Spec
+
+### Changed Files
+- `docs/superpowers/specs/2026-04-25-sanity-generator-v2-design.md` (ADDED) - Added the new generator architecture/design spec for a dev-only Page Generator Pro-like workflow on top of Sanity + Next.js.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated the migration/status snapshot to reflect the new generator direction and legacy templating freeze plan.
+
+### Summary
+Documented the replacement direction for the current templating system: a new Sanity Studio generator that uses `generatorTemplate`, `generatorProgram`, and `generatorDataset`, produces normal `page` documents, supports bulk keyword diversification plus row-based variation, and preserves manual editing. The spec also defines the anti-duplicate strategy, AI integration boundary for later LiteLLM hookup, and a safe dev-only migration plan that does not affect production.
+
+### Impact on SEO/Integration
+- Positive integration impact: future programmatic content generation is now explicitly tied to standard `page` output instead of runtime template inference, reducing duplication risk and simplifying frontend/render contracts.
+- No direct live SEO change yet because this task is design/spec only and remains dev-isolated.
+
+### Verification Status
+- ✅ Manual spec review completed for scope, consistency, and migration sequencing.
+- ✅ Repository tracking docs updated in the same task per repo policy.
+
 ## 2026-04-21 — Homepage Lane Grid Layout Set to 2x2
 
 ### Changed Files
@@ -1361,3 +1379,31 @@ Removed the `seo-dashboard` app from the repository and cleaned root workspace/r
 - ✅ `test -d seo-dashboard` returns `deleted`.
 - ✅ `pnpm --filter studio run typecheck` passed.
 - ✅ `pnpm --filter frontend run typecheck` passed.
+
+## 2026-04-25 — Component and Studio Artifact Cleanup (Safe Legacy Prune)
+
+### Changed Files
+- `frontend/components/archive/README.md` (DELETED) - Removed archive-only component notes after removing the dormant archive tree.
+- `frontend/components/archive/legacy-rewrite-v0/*` (DELETED) - Removed unused first-generation rewrite components that no longer have any active imports.
+- `frontend/components/hybrid/home-middle-section.tsx` (DELETED) - Removed unused homepage middle-shell variant superseded by the active generated homepage section.
+- `frontend/components/ui/jasa-cetak-buku-city-shell.tsx` (DELETED) - Removed unused rewrite city shell with no active runtime imports.
+- `studio/.gitignore` (MODIFIED) - Added `.sanity` and `dist` ignores to keep Studio runtime/build artifacts out of source control.
+- `studio/.sanity/runtime/app.js` (DELETED) - Removed tracked generated Studio runtime artifact.
+- `studio/.sanity/runtime/index.html` (DELETED) - Removed tracked generated Studio runtime artifact.
+- `studio/Starting New Development Session.md` (DELETED) - Removed tracked session transcript file from Studio source tree.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated current status snapshot for safe legacy/component pruning.
+
+### Summary
+Completed a conservative cleanup pass across frontend components and Sanity Studio files. The removed files were either archive-only components with no active imports or generated/session artifacts that do not belong in the source tree. Active legacy contracts were reviewed and intentionally preserved where runtime still depends on them.
+
+### Impact on SEO/Integration
+- No direct SEO impact.
+- Integration impact:
+  - No active frontend render path was changed.
+  - Active Studio/frontend legacy contracts such as `legacyPage` and `legacy-rich-content` were kept because they are still part of live route and conversion tooling flows.
+  - Studio repository hygiene improved by removing generated/session artifacts from tracked source.
+
+### Verification Status
+- ✅ `rg` confirmed the removed component files had no active imports before deletion.
+- ✅ `pnpm --filter frontend run typecheck` passed.
+- ✅ `pnpm --filter studio run typecheck` passed.
