@@ -104,13 +104,6 @@ export const structure = (S: any, context: any) =>
         S,
         context,
       }),
-      orderableDocumentListDeskItem({
-        type: "pageTemplate",
-        title: "Page Templates",
-        icon: LayoutTemplate,
-        S,
-        context,
-      }),
       ...(isGeneratorDeskEnabled(context)
         ? [
             S.listItem()
@@ -146,22 +139,38 @@ export const structure = (S: any, context: any) =>
           ]
         : []),
       S.listItem()
-        .title("Page Locations")
-        .icon(MapPin)
-        .schemaType("pageLocation")
+        .title("Legacy Templating")
+        .icon(LayoutTemplate)
         .child(
-          S.documentTypeList("pageLocation")
-            .title("Page Locations")
-            .defaultOrdering([{ field: "_updatedAt", direction: "desc" }])
-        ),
-      S.listItem()
-        .title("Service Locations")
-        .icon(MapPin)
-        .schemaType("serviceLocation")
-        .child(
-          S.documentTypeList("serviceLocation")
-            .title("Service Locations")
-            .defaultOrdering([{ field: "_updatedAt", direction: "desc" }])
+          S.list()
+            .title("Legacy Templating")
+            .items([
+              orderableDocumentListDeskItem({
+                type: "pageTemplate",
+                title: "Legacy Page Templates",
+                icon: LayoutTemplate,
+                S,
+                context,
+              }),
+              S.listItem()
+                .title("Legacy Page Locations")
+                .icon(MapPin)
+                .schemaType("pageLocation")
+                .child(
+                  S.documentTypeList("pageLocation")
+                    .title("Legacy Page Locations")
+                    .defaultOrdering([{ field: "_updatedAt", direction: "desc" }])
+                ),
+              S.listItem()
+                .title("Legacy Service Locations")
+                .icon(MapPin)
+                .schemaType("serviceLocation")
+                .child(
+                  S.documentTypeList("serviceLocation")
+                    .title("Legacy Service Locations")
+                    .defaultOrdering([{ field: "_updatedAt", direction: "desc" }])
+                ),
+            ])
         ),
       S.listItem()
         .title("Locations")

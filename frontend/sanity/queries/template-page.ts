@@ -1,7 +1,6 @@
 import { groq } from "next-sanity";
 import { linkQuery } from "./shared/link";
 import { imageQuery } from "./shared/image";
-import { blocksQuery } from "./shared/blocks";
 import { metaQuery } from "./shared/meta";
 
 const templateRewriteQuery = `
@@ -104,20 +103,15 @@ export const TEMPLATE_PAGE_BY_ROUTE_QUERY = groq`
     title,
     route,
     routePattern,
-    slug,
     heroEyebrow,
     heroImage{
       ${imageQuery}
     },
-    topBlockCount,
-    contentStatus,
     ${metaQuery},
-    ${blocksQuery},
     ${templateRewriteQuery},
     template->{
       _id,
       title,
-      slug,
       variant,
       lane,
       trustMode,
@@ -127,14 +121,11 @@ export const TEMPLATE_PAGE_BY_ROUTE_QUERY = groq`
         testimonialSource,
         maxQuickLinks
       },
-      isHybrid,
       shellId,
-      topBlockCountDefault,
       heroEyebrow,
       heroImage{
         ${imageQuery}
       },
-      ${blocksQuery},
       ${templateRewriteQuery},
       ${metaDefaultsQuery}
     },
@@ -176,20 +167,15 @@ export const TEMPLATE_PAGE_BY_PATTERN_QUERY = groq`
     title,
     route,
     routePattern,
-    slug,
     heroEyebrow,
     heroImage{
       ${imageQuery}
     },
-    topBlockCount,
-    contentStatus,
     ${metaQuery},
-    ${blocksQuery},
     ${templateRewriteQuery},
     template->{
       _id,
       title,
-      slug,
       variant,
       lane,
       trustMode,
@@ -199,14 +185,11 @@ export const TEMPLATE_PAGE_BY_PATTERN_QUERY = groq`
         testimonialSource,
         maxQuickLinks
       },
-      isHybrid,
       shellId,
-      topBlockCountDefault,
       heroEyebrow,
       heroImage{
         ${imageQuery}
       },
-      ${blocksQuery},
       ${templateRewriteQuery},
       ${metaDefaultsQuery}
     },

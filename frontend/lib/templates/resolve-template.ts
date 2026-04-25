@@ -799,18 +799,6 @@ export const resolveTemplateMeta = ({
   return page || template || null;
 };
 
-export const resolveTemplateBlocks = ({
-  page,
-  template,
-}: {
-  page?: TemplatePageDoc | null;
-  template?: TemplatePageDoc["template"] | null;
-}) => {
-  const pageBlocks = page?.blocks || [];
-  if (pageBlocks.length > 0) return pageBlocks;
-  return template?.blocks || [];
-};
-
 export const resolveTemplateHero = ({
   page,
   template,
@@ -821,20 +809,6 @@ export const resolveTemplateHero = ({
   eyebrow: page?.heroEyebrow || template?.heroEyebrow || undefined,
   image: page?.heroImage || template?.heroImage || undefined,
 });
-
-export const resolveTopBlockCount = ({
-  page,
-  template,
-}: {
-  page?: TemplatePageDoc | null;
-  template?: TemplatePageDoc["template"] | null;
-}) => {
-  if (typeof page?.topBlockCount === "number") return page.topBlockCount;
-  if (typeof template?.topBlockCountDefault === "number") {
-    return template.topBlockCountDefault;
-  }
-  return 0;
-};
 
 export const resolvePrimaryHeroEyebrow = ({
   page,

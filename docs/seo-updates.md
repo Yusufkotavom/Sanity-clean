@@ -6,6 +6,58 @@ This document tracks all SEO-related changes made to the repository.
 
 ## 2026-04-25 — Sanity Generator V2 Legacy Inventory Export
 
+## 2026-04-25 — Legacy Template Runtime Cleanup
+
+### Changed Files
+- `frontend/app/(main)/about/page.tsx` (MODIFIED) - Removed the dead template-route branch so `/about` now only uses the real Sanity page path or the existing fallback metadata title.
+- `frontend/app/(main)/about/[slug]/page.tsx` (MODIFIED) - Removed the dead template-route branch so nested `/about/*` routes now stay on the legacy-local path only.
+- `frontend/app/(main)/privacy/page.tsx` (MODIFIED) - Removed the dead template-route branch for `/privacy`.
+- `frontend/app/(main)/sistem-pos/page.tsx` (MODIFIED) - Removed the dead template-route branch for `/sistem-pos`.
+- `frontend/lib/templates/resolve-template.ts` (MODIFIED) - Deleted the unused `resolveTemplateBlocks` and `resolveTopBlockCount` exports.
+- `frontend/sanity/queries/template-page.ts` (MODIFIED) - Trimmed legacy template query fields that are no longer consumed by runtime rendering.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated the current-status snapshot and Sprint 3 cleanup checklist.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+Applied the lowest-risk cleanup from the legacy templating audit. The frontend no longer carries template-page branches for routes that can never match the current template allowlist, the legacy resolver no longer exports dead block/top-count helpers, and the template-page GROQ query no longer fetches fields that the runtime does not consume. This reduces mental overhead and payload size while leaving the active template-driven routes untouched.
+
+### Impact on SEO/Integration
+- `No direct SEO impact`
+- Positive frontend integration impact: unreachable branches and unused query fields are gone, so the live legacy templating surface is smaller and easier to reason about.
+- Positive runtime hygiene impact: template-page fetches now carry less dead data without changing the active route-policy contract.
+
+### Verification Status
+- ✅ `pnpm --filter frontend run typecheck` passed.
+- ✅ `pnpm --filter studio run typecheck` passed.
+- ✅ `rg -n "resolveTemplateBlocks|resolveTopBlockCount"` confirmed the dead helper exports are no longer referenced.
+- ✅ Manual self-review confirmed the cleanup stayed outside the active template route allowlist (`/pembuatan-website`, `/software`, `/percetakan`, and root `/jasa-*`).
+
+---
+
+## 2026-04-25 — Sanity Generator V2 Studio Boundary Cleanup
+
+### Changed Files
+- `studio/structure.ts` (MODIFIED) - Reorganized the Studio desk so the new `Generator` workflow remains separate while `pageTemplate`, `pageLocation`, and `serviceLocation` now live under a dedicated `Legacy Templating` section with explicit legacy labels.
+- `studio/.gitignore` (MODIFIED) - Added `tmp` so local generator schema artifacts under `studio/tmp/` stop polluting repo status.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated the current-status snapshot and Sprint 3 cleanup checklist to reflect the Studio boundary cleanup and the remaining local temp-folder deletion blocker.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+Cleaned up the Studio editing surface around the new generator rollout. The active `Generator` workspace remains the forward path for new programmatic content work in the development dataset, while the old runtime-driven templating documents are now intentionally grouped under `Legacy Templating` so editors can see that they are migration-era surfaces rather than the preferred system going forward. I also ignored `studio/tmp/` artifacts at the repo level because the generator schema checks produce local temporary files that should not keep reappearing in `git status`.
+
+### Impact on SEO/Integration
+- `No direct SEO impact`
+- Positive Studio integration impact: the migration boundary is now clearer for operators, which reduces the risk of editing the old templating surface when the intent is to work in Generator V2.
+- Positive repo hygiene impact: recurring local temp artifacts from Studio generator checks no longer pollute the worktree.
+
+### Verification Status
+- ✅ `node studio/scripts/check-generator-structure.mjs` passed.
+- ✅ `pnpm --filter studio run typecheck` passed.
+- ✅ Manual self-review confirmed no schema/query/frontend runtime contracts changed; only the Studio desk organization and local ignore rules were updated.
+- ⚠️ Physical deletion of the already-created local `studio/tmp/` folder is still pending because the destructive shell command was blocked by the current tool approval layer, but future artifacts are now ignored.
+
+---
+
 ### Changed Files
 - `studio/lib/generator/legacy.ts` (ADDED) - Added a read-only mapper that normalizes legacy `pageTemplate` records into minimal generator seed metadata for migration planning.
 - `frontend/scripts/generator/export-legacy-templates.mjs` (ADDED) - Added a read-only export script that fetches `pageTemplate`, `pageLocation`, and `serviceLocation` inventory and writes `frontend/tmp/generator-legacy-template-inventory.json`.
