@@ -21,6 +21,9 @@ import redirect from "./schemas/documents/redirect";
 import reusableSection from "./schemas/documents/reusable-section";
 import seoOpsSettings from "./schemas/documents/seo-ops-settings";
 import legacyPage from "./schemas/documents/legacy-page";
+import generatorTemplate from "./schemas/documents/generator-template";
+import generatorProgram from "./schemas/documents/generator-program";
+import generatorDataset from "./schemas/documents/generator-dataset";
 
 // Schema UI shared objects
 import blockContent from "./schemas/blocks/shared/block-content";
@@ -48,6 +51,11 @@ import templateRewriteCopy from "./schemas/objects/template-rewrite-copy";
 import templateSourcePolicy from "./schemas/objects/template-source-policy";
 import pricingPackage from "./schemas/objects/pricingPackage";
 import faqItem from "./schemas/objects/faqItem";
+import generatorTokenDefinition from "./schemas/objects/generator-token-definition";
+import generatorKeywordSet from "./schemas/objects/generator-keyword-set";
+import generatorRow from "./schemas/objects/generator-row";
+import generatorSectionVariant from "./schemas/objects/generator-section-variant";
+import generatorPageMeta from "./schemas/objects/generator-page-meta";
 // Schema UI objects
 import hero1 from "./schemas/blocks/hero/hero-1";
 import hero2 from "./schemas/blocks/hero/hero-2";
@@ -109,6 +117,9 @@ export const schemaTypes = [
   redirect,
   reusableSection,
   legacyPage,
+  generatorTemplate,
+  generatorProgram,
+  generatorDataset,
   // shared objects
   blockContent,
   link,
@@ -135,6 +146,11 @@ export const schemaTypes = [
   templateSourcePolicy,
   pricingPackage,
   faqItem,
+  generatorTokenDefinition,
+  generatorKeywordSet,
+  generatorRow,
+  generatorSectionVariant,
+  generatorPageMeta,
   // blocks
   hero1,
   hero2,

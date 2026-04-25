@@ -32,6 +32,8 @@ const singletonTypes = new Set([
 const projectId = process.env.SANITY_STUDIO_PROJECT_ID || "your-project-id";
 const dataset = process.env.SANITY_STUDIO_DATASET || "production";
 const apiVersion = process.env.SANITY_STUDIO_API_VERSION || "2026-03-23";
+const generatorTypes = new Set(["generatorTemplate", "generatorProgram", "generatorDataset"]);
+const generatorTemplatesEnabled = dataset === "development";
 
 const SANITY_STUDIO_PREVIEW_URL =
   process.env.SANITY_STUDIO_PREVIEW_URL || "http://localhost:3000";
@@ -45,7 +47,10 @@ export default defineConfig({
     types: schemaTypes,
     // Filter out singleton types from the global "New document" menu options
     templates: (templates) =>
-      templates.filter(({ schemaType }) => !singletonTypes.has(schemaType)),
+      templates.filter(
+        ({ schemaType }) =>
+          !singletonTypes.has(schemaType) && (generatorTemplatesEnabled || !generatorTypes.has(schemaType)),
+      ),
   },
   document: {
     // For singleton types, filter out actions that are not explicitly included

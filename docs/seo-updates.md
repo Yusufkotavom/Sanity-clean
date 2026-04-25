@@ -4,6 +4,103 @@ This document tracks all SEO-related changes made to the repository.
 
 ---
 
+## 2026-04-25 — Sanity Generator V2 Desk Structure and Program Pane
+
+### Changed Files
+- `studio/structure.ts` (MODIFIED) - Added a dev-only `Generator` desk section with entries for `generatorProgram`, `generatorTemplate`, and `generatorDataset`.
+- `studio/defaultDocumentNode.ts` (MODIFIED) - Added a dedicated `Generator Run` document view for `generatorProgram`.
+- `studio/components/generator/program-runner-pane.tsx` (ADDED) - Added the minimal four-section Generator Run pane scaffold for Program Setup, Inputs, Preview, and Run.
+- `studio/components/generator/preview-card.tsx` (ADDED) - Added a focused placeholder preview card for route and SEO pattern visibility.
+- `studio/components/generator/run-summary.tsx` (ADDED) - Added a focused placeholder run-summary card for generated/skipped/conflict/failed counts.
+- `studio/scripts/check-generator-structure.mjs` (ADDED) - Added a structure smoke check for Generator desk entries.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated status snapshot and execution checklist tracking for Task 2.
+
+### Summary
+Implemented Task 2 of the Sanity Generator V2 plan in Studio. The desk now exposes a dedicated dev-only `Generator` section for programs, templates, and datasets, matching the existing dev-only direction already used for generator document creation. `generatorProgram` documents now include a second Studio view titled `Generator Run`, backed by a minimal pane that surfaces current setup values, placeholder input messaging, a focused preview card, and a placeholder run-summary card. No generator runtime, page writes, or fake execution flow were added in this task; the pane is strictly a structural/operator scaffold for later deterministic preview and run work. The `check-generator-structure.mjs` smoke script verifies the presence of the desk gate helper and generator list-entry strings in `studio/structure.ts`; it does not execute the Studio structure resolver or prove runtime gating behavior.
+
+### Impact on SEO/Integration
+- No direct SEO impact.
+- Positive Studio integration impact: generator navigation and document workflow now exist as explicit Studio surfaces without changing frontend rendering or production dataset behavior.
+
+### Verification Status
+- ✅ `node studio/scripts/check-generator-structure.mjs` failed before the desk update with `Missing structure contract: Generator`, then passed after the implementation.
+- ✅ `pnpm --filter studio run typecheck` passed.
+- ✅ Manual self-review completed for dev-only desk gating, pane scope, and no-runtime placeholder behavior.
+
+---
+
+## 2026-04-25 — Sanity Generator V2 Deterministic Core
+
+### Changed Files
+- `studio/lib/generator/types.ts` (ADDED) - Added shared lightweight generator types for program, template, keyword-set, row, draft output, and duplicate detection.
+- `studio/lib/generator/slug.ts` (ADDED) - Added deterministic slug and route-path builders for generator outputs.
+- `studio/lib/generator/variation.ts` (ADDED) - Added deterministic angle normalization, token resolution, section-plan selection, and FAQ category helpers.
+- `studio/lib/generator/render.ts` (ADDED) - Added `buildGeneratedPageDraft` to assemble a minimal standard `page` draft with generator lineage metadata and schema-aligned blocks.
+- `studio/lib/generator/dedupe.ts` (ADDED) - Added duplicate detection helpers for slug and generator-lineage conflicts.
+- `studio/lib/generator/__tests__/render.test.ts` (ADDED) - Added deterministic tests for page draft assembly, angle-driven variation differences, and duplicate detection.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated status snapshot and execution checklist tracking for Task 3.
+
+### Summary
+Implemented and then hardened Task 3 of the Sanity Generator V2 plan under `studio/lib/generator`. The deterministic core now keeps output stable from `generatorProgram + generatorTemplate + keywordSet + row` inputs only, without AI or implicit clock-based mutations in the default path. Slug generation remains repeatable, but derived page-path behavior is now aligned with the live frontend root-slug `page` contract, so generated page links resolve to `/${slug}` instead of `/routeBase/${slug}`. Token resolution now honors the template contract by reading declared `tokenDefinitions`, resolving values from keyword-set fields, row fields, derived fields, and fallback values, and skipping sections whose `requiredTokens` cannot be satisfied. Section selection is also restricted to the template's ordered `baseSections` plus angle-filtered `optionalSections`, so arbitrary `sectionVariants` outside those lists are no longer rendered. `buildGeneratedPageDraft` now returns a standard `page` draft with read-only generator lineage metadata that includes reference fields for program/template and dataset metadata when available, while duplicate protection still covers both exact slug collisions and generator-lineage collisions for later write flows.
+
+### Impact on SEO/Integration
+- No direct live SEO impact.
+- Positive Studio integration impact: generator preview/run work now relies on a deterministic draft builder that matches the current root-slug frontend page contract, the schema token contract, and the fuller `generatorPageMeta` lineage shape.
+
+### Verification Status
+- ✅ `pnpm dlx tsx --test studio/lib/generator/__tests__/render.test.ts` passed.
+- ✅ `pnpm --filter studio run typecheck` passed.
+- ✅ `git diff --check -- studio/lib/generator/types.ts studio/lib/generator/slug.ts studio/lib/generator/variation.ts studio/lib/generator/render.ts studio/lib/generator/dedupe.ts studio/lib/generator/__tests__/render.test.ts docs/seo-updates.md docs/astro-migration-megaplan.md` passed.
+- ⚠️ `pnpm --filter studio exec vitest run studio/lib/generator/__tests__/render.test.ts` could not run because `vitest` is not installed in this repo (`ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL Command "vitest" not found`).
+- ✅ Manual self-review completed for root-slug path behavior, token-definition resolution, required-token gating, ordered section selection, and lineage metadata completeness.
+
+### 2026-04-25 Follow-up Quality Hardening
+- `studio/defaultDocumentNode.ts` (MODIFIED) - Applied the same development-dataset gate to the `generatorProgram` custom view so `Generator Run` is not exposed outside dev dataset contexts.
+- `studio/components/generator/program-runner-pane.tsx` (MODIFIED) - Reshaped preview and run state for Task 3 integration, separated blocking setup issues from informational notes, and stopped masking missing SEO patterns with fake placeholder values.
+- `studio/components/generator/preview-card.tsx` (MODIFIED) - Switched preview status handling from `string[]` to a richer blocking-issues plus notes contract.
+- `studio/components/generator/run-summary.tsx` (MODIFIED) - Switched to a single summary-object prop for cleaner future integration.
+- `studio/scripts/check-generator-structure.mjs` (MODIFIED) - Strengthened the smoke check to look for both the desk gate helper and generator list-entry strings, and clarified the contract language.
+- `docs/seo-updates.md` (MODIFIED) - Updated Task 2 verification wording to describe the structure check honestly.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Refined the Task 2 snapshot wording to note that generator desk/view gating and pane contracts were hardened.
+
+---
+
+## 2026-04-25 — Sanity Generator V2 Schema Scaffolding
+
+### Changed Files
+- `studio/sanity.config.ts` (MODIFIED) - Gated generator new-document template exposure to the development dataset only, while keeping singleton filtering intact.
+- `studio/schemas/documents/generator-template.ts` (ADDED) - Added the minimal dev-only generator template schema with token and section variant arrays.
+- `studio/schemas/documents/generator-program.ts` (ADDED) - Added the minimal program schema linking template, dataset, route base, and run status.
+- `studio/schemas/documents/generator-dataset.ts` (ADDED) - Added the minimal dataset schema for keyword sets, rows, and dedupe/import policy.
+- `studio/schemas/objects/generator-token-definition.ts` (ADDED) - Added the token contract object for generator templates.
+- `studio/schemas/objects/generator-keyword-set.ts` (ADDED) - Added the keyword set object for primary and secondary keywords.
+- `studio/schemas/objects/generator-row.ts` (ADDED) - Added the row object for service/city/industry/offer variations.
+- `studio/schemas/objects/generator-section-variant.ts` (ADDED) - Added the minimal section variant object for future deterministic assembly.
+- `studio/schemas/objects/generator-page-meta.ts` (ADDED) - Added namespaced generator metadata for generated `page` documents.
+- `studio/schema-types.ts` (MODIFIED) - Registered all new generator document and object schemas.
+- `studio/schemas/documents/page.ts` (MODIFIED) - Added the `generator` metadata field under the `settings` group on pages.
+- `studio/scripts/check-generator-schema.mjs` (ADDED) - Added a targeted schema registration smoke check for generator types.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated status snapshot and checklist tracking for this schema task.
+
+### Summary
+Implemented Task 1 of the Sanity Generator V2 plan by introducing the minimal Studio schema surface for `generatorTemplate`, `generatorProgram`, `generatorDataset`, and their supporting objects. The review follow-up completed the approved minimal document fields: template output/section/variation/status fields, program type/generation/SEO pattern fields, and dataset status. The quality hardening pass then made lineage safer with read-only references in `generatorPageMeta`, added a stable `key` to `generatorKeywordSet`, clarified section source-of-truth by storing `baseSections`/`optionalSections` as keyed arrays backed by `sectionVariants`, enforced duplicate-key and minimum-usable-state validation on the new generator documents, added pragmatic route-root validation for `generatorProgram.routeBase`, and made the schema smoke script verify both schema registration and schema-file `name` declarations. The current isolation pass now gates generator new-document templates to the `development` dataset only at the document-creation/menu exposure level and tightens generator template/dataset validation further by requiring `designFamily`, `optionalSections`, `importMode`, `dedupePolicy`, preventing section overlap, rejecting duplicate token names, validating section required-token references against template token definitions, and requiring every `required` token to have a usable `sourceField` or `fallbackValue`. Full dataset/runtime cutover isolation is still deferred to later tasks. The standard `page` document still includes a namespaced generator metadata object under `settings`, and that metadata is now read-only in Studio to reduce accidental lineage drift.
+
+### Impact on SEO/Integration
+- No direct SEO impact.
+- Positive Studio integration impact: generator metadata now has an explicit schema contract, and the new generator surface remains isolated to dev-only Studio scaffolding without changing frontend runtime behavior.
+
+### Verification Status
+- ✅ `node studio/scripts/check-generator-schema.mjs` passed.
+- ✅ `pnpm --filter studio run typecheck` passed.
+- ✅ `pnpm --filter studio run build` passed.
+- ✅ Manual code review confirmed generator new-document templates are gated to the `development` dataset only at the Studio new-document menu layer in `studio/sanity.config.ts`.
+- ✅ Manual self-review completed to confirm the task stayed within the requested file scope for code changes.
+
+---
+
 ## 2026-04-25 — Sanity Generator V2 Design Spec
 
 ### Changed Files

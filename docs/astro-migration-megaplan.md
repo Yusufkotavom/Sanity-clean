@@ -30,6 +30,9 @@ Migrate legacy Astro source into current Next.js + Sanity stack with:
 
 ## Current Status Snapshot (Already Done)
 
+- [x] Task 3 of `Sanity Generator V2` is now implemented in Studio with the quality hardening pass applied: shared generator core helpers now cover typed inputs, deterministic slug construction, root-slug page-path output, tokenDefinitions-driven token resolution, required-token section gating, ordered section selection from `baseSections` plus angle-filtered `optionalSections`, draft page assembly, and duplicate detection; the default output is a standard `page` draft with read-only generator lineage metadata plus schema-aligned block shapes and reference fields for program/template plus dataset when available; render tests pass via `tsx`, `studio` typecheck passes, and `git diff --check` is clean for the touched files, while Studio pane wiring and dev-only draft writes remain later tasks.
+- [x] Task 2 of `Sanity Generator V2` is now implemented in Studio: a dedicated dev-only `Generator` desk section exposes `generatorProgram`, `generatorTemplate`, and `generatorDataset`; `generatorProgram` now has a development-dataset-only `Generator Run` custom view; and the first minimal operator pane is in place with Program Setup, Inputs, Preview, and Run sections plus placeholder preview/run summary cards using Task 3-friendly status/summary contracts. The structure smoke check now verifies the desk gate helper plus generator list-entry strings, and `studio` typecheck passes, while deterministic preview assembly and actual generator execution remain deferred to later tasks.
+- [x] Task 1 of `Sanity Generator V2` is now implemented in Studio: minimal dev-only schemas for `generatorTemplate`, `generatorProgram`, `generatorDataset`, and supporting objects are registered with the approved document fields for template output/sections/variation/status, program type/generation/SEO pattern, and dataset status; lineage metadata is hardened with read-only references plus stable keyword keys and Studio-level read-only protection on page generator metadata; template section selection now uses keyed arrays backed by `sectionVariants` with duplicate, overlap, and token-contract guards; `generatorProgram.routeBase` now enforces lowercase-safe root-path validation; generator document templates are exposed only for the `development` dataset at the Studio document-creation/menu layer; and schema check, `studio` typecheck, and `studio` build all pass while fuller dataset/runtime cutover isolation remains a later-task concern.
 - [x] The approved `Sanity Generator V2` design has now been converted into an execution-ready implementation plan under `docs/superpowers/plans/2026-04-25-sanity-generator-v2.md`, covering new generator schemas, Studio workflow, deterministic page rendering, dev-only write guards, and legacy templating freeze/export steps before any production cutover.
 - [x] A new dev-only `Sanity Generator V2` design direction is now documented: future programmatic page generation will move to a Studio-native workflow (`generatorTemplate` + `generatorProgram` + `generatorDataset`) that outputs standard `page` documents, preserves manual edits, supports bulk keyword and row-based variation, and freezes the current legacy templating engine as migration source material instead of continuing to expand it.
 - [x] Dormant migration-era component artifacts have been pruned without changing active render paths: archived `legacy-rewrite-v0` components, an unused hybrid middle-section variant, an unused rewrite city shell, and tracked Studio session/runtime artifacts were removed, while active legacy contracts such as `legacyPage` and `legacy-rich-content` were intentionally kept because frontend/runtime still depends on them.
@@ -541,11 +544,14 @@ Migrate legacy Astro source into current Next.js + Sanity stack with:
 
 ### Sprint 1 (Foundation)
 - [ ] Freeze schema/query/route contracts
+- [x] Establish dev-only `Sanity Generator V2` schema scaffolding in Studio
+- [x] Add `Sanity Generator V2` desk structure and minimal `generatorProgram` run pane in Studio
 - [x] Start top-300 manual curation
 - [x] Fix highest-impact non-200 pages
 
 ### Sprint 2 (Template + Metadata)
 - [ ] Complete core template parity
+- [x] Build deterministic `Sanity Generator V2` core helpers (types, slug/path, variation, render, dedupe, tests)
 - [x] Add Sanity template documents + template resolver for rewrite shells (hybrid-ready)
 - [ ] Rewrite high-impression metadata batch
 - [x] Deploy redirect wave 1

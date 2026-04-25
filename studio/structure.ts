@@ -19,6 +19,9 @@ import {
   LayoutTemplate,
 } from "lucide-react";
 
+const isGeneratorDeskEnabled = (context: any) =>
+  (context?.dataset ?? process.env.SANITY_STUDIO_DATASET ?? "production") === "development";
+
 export const structure = (S: any, context: any) =>
   S.list()
     .title("Content")
@@ -108,6 +111,40 @@ export const structure = (S: any, context: any) =>
         S,
         context,
       }),
+      ...(isGeneratorDeskEnabled(context)
+        ? [
+            S.listItem()
+              .title("Generator")
+              .icon(LayoutTemplate)
+              .child(
+                S.list()
+                  .title("Generator")
+                  .items([
+                    orderableDocumentListDeskItem({
+                      type: "generatorProgram",
+                      title: "Programs",
+                      icon: LayoutTemplate,
+                      S,
+                      context,
+                    }),
+                    orderableDocumentListDeskItem({
+                      type: "generatorTemplate",
+                      title: "Templates",
+                      icon: Blocks,
+                      S,
+                      context,
+                    }),
+                    orderableDocumentListDeskItem({
+                      type: "generatorDataset",
+                      title: "Datasets",
+                      icon: Files,
+                      S,
+                      context,
+                    }),
+                  ])
+              ),
+          ]
+        : []),
       S.listItem()
         .title("Page Locations")
         .icon(MapPin)
