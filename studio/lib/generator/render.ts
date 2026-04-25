@@ -71,6 +71,12 @@ const toValuePropsBlock = (section: GeneratorSectionPlan, title: string, descrip
       title: "Eksekusi lebih konsisten",
       description: `Draft ini menjaga arah ${section.key.replace(/-/g, " ")} tetap konsisten tanpa AI.`,
     },
+    {
+      _key: `${section.key}-value-3`,
+      icon: "03",
+      title: "Masih mudah disunting manual",
+      description: "Output tetap berupa page biasa sehingga editor masih bisa merapikan copy akhir tanpa mengulang generator.",
+    },
   ],
 });
 
@@ -94,6 +100,14 @@ const toFaqBlock = (section: GeneratorSectionPlan, title: string, description: s
   category,
 });
 
+const toPricingBlock = (section: GeneratorSectionPlan, title: string, description: string, category: string) => ({
+  _type: "pricing-block",
+  _key: section.key,
+  title,
+  description,
+  category,
+});
+
 const sectionPlanToBlock = (
   section: GeneratorSectionPlan,
   pageTitle: string,
@@ -108,6 +122,8 @@ const sectionPlanToBlock = (
       return toProblemSolutionBlock(section, section.title, description);
     case "faq-block":
       return toFaqBlock(section, section.title, description, faqCategory);
+    case "pricing-block":
+      return toPricingBlock(section, section.title, description, faqCategory);
     case "value-props-block":
     default:
       return toValuePropsBlock(section, section.title, description);
@@ -137,6 +153,10 @@ export const buildGeneratedPageDraft = ({
   const seoDescriptionPattern = program.defaultSeoPattern?.description?.trim();
   const location = tokens.location ?? tokens.city ?? tokens.service ?? "target utama";
   const offer = tokens.offer ?? `Konsultasi ${tokens.service ?? keywordSet.primaryKeyword}`;
+  const secondaryKeywords =
+    Array.isArray(keywordSet.secondaryKeywords) && keywordSet.secondaryKeywords.length > 0
+      ? keywordSet.secondaryKeywords
+      : [];
   const description = seoDescriptionPattern
     ? `${seoDescriptionPattern} ${offer} di ${location}.`.trim()
     : `${pageTitle} untuk ${location} dengan fokus ${tokens.angle ?? "default"}.`;
@@ -157,6 +177,13 @@ export const buildGeneratedPageDraft = ({
     slug: {
       _type: "slug",
       current: slug,
+    },
+    meta: {
+      title: seoTitlePattern ? `${pageTitle} | ${seoTitlePattern}` : pageTitle,
+      description,
+      focusKeyword: tokens.primaryKeyword ?? keywordSet.primaryKeyword,
+      secondaryKeywords,
+      noindex: false,
     },
     topBlockCount: 0,
     blocks,

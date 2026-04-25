@@ -104,6 +104,13 @@ export type GeneratedPageDraft = {
     _type: "slug";
     current: string;
   };
+  meta?: {
+    title?: string;
+    description?: string;
+    focusKeyword?: string;
+    secondaryKeywords?: string[];
+    noindex?: boolean;
+  };
   topBlockCount: number;
   blocks: Array<Record<string, unknown>>;
   generator: {

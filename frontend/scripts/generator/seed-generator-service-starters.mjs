@@ -9,7 +9,7 @@ const SERVICE_STARTERS = [
     datasetId: "generator-dataset-website-starter-dev",
     programId: "generator-program-website-starter-dev",
     template: {
-      title: "Website Service Starter",
+      title: "Starter Jasa Website",
       slug: "website-service-starter",
       description: "Starter generator template for high-intent website service pages.",
       designFamily: "website",
@@ -70,7 +70,7 @@ const SERVICE_STARTERS = [
       ],
     },
     dataset: {
-      title: "Website Service Dataset",
+      title: "Dataset Jasa Website",
       slug: "website-service-dataset",
       keywordSets: [
         {
@@ -123,7 +123,7 @@ const SERVICE_STARTERS = [
     datasetId: "generator-dataset-software-starter-dev",
     programId: "generator-program-software-starter-dev",
     template: {
-      title: "Software Service Starter",
+      title: "Starter Jasa Software",
       slug: "software-service-starter",
       description: "Starter generator template for custom software service pages.",
       designFamily: "software",
@@ -184,7 +184,7 @@ const SERVICE_STARTERS = [
       ],
     },
     dataset: {
-      title: "Software Service Dataset",
+      title: "Dataset Jasa Software",
       slug: "software-service-dataset",
       keywordSets: [
         {
@@ -237,7 +237,7 @@ const SERVICE_STARTERS = [
     datasetId: "generator-dataset-printing-starter-dev",
     programId: "generator-program-printing-starter-dev",
     template: {
-      title: "Printing Service Starter",
+      title: "Starter Jasa Percetakan",
       slug: "printing-service-starter",
       description: "Starter generator template for printing service pages.",
       designFamily: "printing",
@@ -272,7 +272,7 @@ const SERVICE_STARTERS = [
           _key: "printing-pricing",
           key: "pricing",
           title: "Pertimbangan sebelum memilih {{service}}",
-          sectionType: "value-props-block",
+          sectionType: "pricing-block",
           copy: "Bantu user memahami ruang lingkup, bukan sekadar angka harga.",
           requiredTokens: ["service"],
           optional: true,
@@ -298,7 +298,7 @@ const SERVICE_STARTERS = [
       ],
     },
     dataset: {
-      title: "Printing Service Dataset",
+      title: "Dataset Jasa Percetakan",
       slug: "printing-service-dataset",
       keywordSets: [
         {

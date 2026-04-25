@@ -34,6 +34,35 @@ Applied the lowest-risk cleanup from the legacy templating audit. The frontend n
 
 ---
 
+## 2026-04-25 — Generator Dataset Input Flow And Richer Starter Output
+
+### Changed Files
+- `studio/schemas/documents/generator-dataset.ts` (MODIFIED) - Added `csv-ready` input support with pasted `keywordSetCsv` and `rowCsv` fields, relaxed array validation so CSV mode is valid before sync, and improved dataset preview labeling.
+- `frontend/scripts/generator/sync-generator-dataset-inputs.mjs` (ADDED) - Added a development-only sync script that parses pasted dataset CSV inputs and writes normalized `keywordSets` and `rows` back into `generatorDataset` documents.
+- `studio/lib/generator/types.ts` (MODIFIED) - Extended generated page draft typing to include page-level SEO metadata.
+- `studio/lib/generator/render.ts` (MODIFIED) - Added page-level `meta` generation, richer value-props content, and support for `pricing-block` output in deterministic generator drafts.
+- `frontend/scripts/generator/seed-generator-service-starters.mjs` (MODIFIED) - Refined starter family titles and upgraded the printing starter to use `pricing-block` for a more realistic generated layout.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated the current-status snapshot and Sprint 3 cleanup checklist.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+Upgraded the new generator from scaffold status to a more practical authoring flow. Dataset documents can now accept pasted CSV input in Studio, and the repo includes a dedicated dev-only sync script that converts that pasted CSV into normalized generator arrays. The deterministic page builder now emits better structured output as well: generated pages carry page-level meta fields, value-props sections are less placeholder-like, and pricing-oriented starter sections can render as real `pricing-block` output.
+
+### Impact on SEO/Integration
+- Positive integration impact: generated `page` drafts now include `meta.title`, `meta.description`, `focusKeyword`, and secondary keywords, which keeps generated output more aligned with the frontend metadata contract.
+- Positive Studio integration impact: operators now have a CSV/manual input path inside `generatorDataset` instead of relying only on direct array editing.
+- No direct live SEO impact in this batch because production runtime and production datasets were not changed.
+
+### Verification Status
+- ✅ `pnpm --filter studio run typecheck` passed.
+- ✅ `pnpm --filter frontend run typecheck` passed.
+- ✅ `pnpm dlx tsx --test studio/lib/generator/__tests__/render.test.ts` passed.
+- ✅ `node --check frontend/scripts/generator/sync-generator-dataset-inputs.mjs` passed.
+- ✅ `node --check frontend/scripts/generator/seed-generator-service-starters.mjs` passed.
+- ⚠️ A second live run of the dataset sync/reseed scripts against Sanity `development` was not completed in this batch because the current approval layer rejected additional networked write commands due usage limits.
+
+---
+
 ## 2026-04-25 — Generator Dev Dataset Cleanup And Starter Reset
 
 ### Changed Files

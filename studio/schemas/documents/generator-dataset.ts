@@ -20,6 +20,33 @@ const validateUniqueObjectKeys = (value: unknown, label: string) => {
   return true;
 };
 
+const hasCsvInput = (value: unknown) =>
+  typeof value === "string" && value.trim().split(/\r?\n/).filter(Boolean).length >= 2;
+
+const validateDatasetArray = (
+  fieldLabel: "Keyword set" | "Row",
+  csvField: "keywordSetCsv" | "rowCsv",
+  value: unknown,
+  context: { parent?: unknown },
+) => {
+  const parent = (context.parent ?? {}) as {
+    importMode?: unknown;
+    keywordSetCsv?: unknown;
+    rowCsv?: unknown;
+  };
+  const importMode = typeof parent.importMode === "string" ? parent.importMode : "manual";
+
+  if (importMode === "csv-ready" && hasCsvInput(parent[csvField])) {
+    return validateUniqueObjectKeys(value, fieldLabel);
+  }
+
+  if (!Array.isArray(value) || value.length === 0) {
+    return `${fieldLabel}${fieldLabel === "Row" ? "s" : "s"} must contain at least one item.`;
+  }
+
+  return validateUniqueObjectKeys(value, fieldLabel);
+};
+
 export default defineType({
   name: "generatorDataset",
   title: "Generator Dataset",
@@ -42,21 +69,21 @@ export default defineType({
       name: "keywordSets",
       title: "Keyword Sets",
       type: "array",
+      description:
+        "Manual mode: edit directly here. CSV Ready mode: this array will be filled by the dataset CSV sync script.",
       of: [{ type: "generatorKeywordSet" }],
       validation: (Rule) =>
-        Rule.required()
-          .min(1)
-          .custom((value) => validateUniqueObjectKeys(value, "Keyword set")),
+        Rule.custom((value, context) => validateDatasetArray("Keyword set", "keywordSetCsv", value, context)),
     }),
     defineField({
       name: "rows",
       title: "Rows",
       type: "array",
+      description:
+        "Manual mode: edit directly here. CSV Ready mode: this array will be filled by the dataset CSV sync script.",
       of: [{ type: "generatorRow" }],
       validation: (Rule) =>
-        Rule.required()
-          .min(1)
-          .custom((value) => validateUniqueObjectKeys(value, "Row")),
+        Rule.custom((value, context) => validateDatasetArray("Row", "rowCsv", value, context)),
     }),
     defineField({
       name: "importMode",
@@ -71,6 +98,24 @@ export default defineType({
       },
       initialValue: "manual",
       validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: "keywordSetCsv",
+      title: "Keyword Set CSV",
+      type: "text",
+      rows: 8,
+      hidden: ({ document }) => document?.importMode !== "csv-ready",
+      description:
+        "Paste CSV with header: key,label,primaryKeyword,secondaryKeywords,angle. Use | inside secondaryKeywords for multiple terms.",
+    }),
+    defineField({
+      name: "rowCsv",
+      title: "Row CSV",
+      type: "text",
+      rows: 8,
+      hidden: ({ document }) => document?.importMode !== "csv-ready",
+      description:
+        "Paste CSV with header: key,label,service,city,industry,offer. Run the sync script to convert pasted CSV into Rows.",
     }),
     defineField({
       name: "dedupePolicy",
@@ -113,6 +158,13 @@ export default defineType({
     select: {
       title: "title",
       subtitle: "slug.current",
+      importMode: "importMode",
+    },
+    prepare({ title, subtitle, importMode }) {
+      return {
+        title: title || "Generator Dataset",
+        subtitle: [importMode, subtitle].filter(Boolean).join(" · "),
+      };
     },
   },
 });
