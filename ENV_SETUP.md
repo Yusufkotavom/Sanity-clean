@@ -176,5 +176,4 @@ Detailed explanation:
 
 Additional references:
 - `docs/env-reference.md`
-- `docs/seo-dashboard-setup.md`
 - `docs/gsc-priority-export.md`

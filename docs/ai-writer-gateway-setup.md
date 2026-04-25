@@ -5,9 +5,9 @@ Dokumen ini fokus ke implementasi production AI rewrite di project ini.
 ## Scope
 
 Yang termasuk:
-- Konfigurasi provider/model/prompt di Studio.
+- Konfigurasi provider/model/prompt lewat SEO Dashboard (disimpan ke Sanity `aiWriterSettings`).
 - Endpoint config + generate + rewrite apply.
-- Tombol `AI Rewrite` langsung dari dokumen `post/service/project`.
+- Trigger rewrite dari SEO Dashboard/API (bukan document action di Studio).
 
 Yang tidak termasuk:
 - Auto-publish.
@@ -16,10 +16,10 @@ Yang tidak termasuk:
 
 ## Arsitektur
 
-1. Konfigurasi disimpan di singleton Sanity: `aiWriterSettings`.
+1. Konfigurasi disimpan di dokumen Sanity: `aiWriterSettings`.
 2. Secret key disimpan terenkripsi lewat API backend.
-3. Studio action memanggil endpoint rewrite backend.
-4. Backend generate konten lalu patch ke `drafts.<id>`.
+3. Dashboard/API memanggil endpoint rewrite backend.
+4. Backend generate konten lalu patch ke draft target.
 
 ## Endpoint Aktif
 
@@ -30,7 +30,7 @@ Yang tidak termasuk:
 
 Catatan auth:
 - `config/*` dan `generate` memakai auth cookie dashboard SEO.
-- `rewrite/apply` memakai shared secret header untuk Studio action.
+- `rewrite/apply` mengikuti mekanisme auth backend/dashboard aktif.
 
 ## Provider Mode
 
@@ -43,12 +43,6 @@ Catatan auth:
 Frontend (`frontend/.env`):
 - `SEO_SESSION_SECRET`
 - `SANITY_AUTH_TOKEN`
-- `AI_WRITER_ACTION_SECRET`
-
-Studio (`studio/.env`):
-- `SANITY_STUDIO_AI_WRITER_ACTION_SECRET`
-
-`AI_WRITER_ACTION_SECRET` dan `SANITY_STUDIO_AI_WRITER_ACTION_SECRET` harus sama.
 
 Opsional:
 - `VERCEL_OIDC_TOKEN` (gateway via OIDC).
@@ -101,26 +95,23 @@ Backend akan mencoba key satu per satu sampai sukses.
 
 ## Rewrite Apply Flow
 
-1. Buka dokumen `post/service/project` di Studio.
-2. Klik action `AI Rewrite`.
-3. Tambah instruksi opsional.
-4. Backend rewrite dan patch `title`, `excerpt`, `body` ke draft.
-5. Review manual sebelum publish.
+1. Jalankan rewrite dari SEO Dashboard/API.
+2. Tambah instruksi opsional bila diperlukan.
+3. Backend rewrite dan patch `title`, `excerpt`, `body` ke draft.
+4. Review manual sebelum publish.
 
 ## Guardrail yang Sudah Aktif
 
 - Validasi model format untuk gateway: `provider/model`.
 - Guard panjang prompt pada generate endpoint.
 - Rewrite apply hanya untuk `post/service/project`.
-- Rewrite apply mewajibkan action secret valid.
 
 ## Production Checklist
 
-1. Secret env sudah terpasang (`SEO_SESSION_SECRET`, `SANITY_AUTH_TOKEN`, action secret pair).
+1. Secret env sudah terpasang (`SEO_SESSION_SECRET`, `SANITY_AUTH_TOKEN`).
 2. Mode `gateway` aktif dan model valid.
 3. Prompt template final sudah diisi.
 4. Smoke test:
    - `/api/ai/config/status`
    - `/api/ai/generate` (3 doc type)
-   - Studio `AI Rewrite` di dokumen real.
 5. Team editorial confirm review-before-publish policy.

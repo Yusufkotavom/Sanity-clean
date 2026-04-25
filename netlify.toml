@@ -9,7 +9,7 @@
   PNPM_VERSION = "10.19.0"
   NEXT_DISABLE_NETLIFY_EDGE = "true"
   # Keep frontend function env under AWS Lambda 4KB limit by clearing
-  # non-frontend secrets that are only needed by seo-dashboard/ops services.
+  # non-frontend secrets that are only needed by external ops services.
   AI_GATEWAY_API_KEY = ""
   CRON_SECRET = ""
   DATABASE_URL = ""
@@ -45,11 +45,6 @@
 # Set Base Directory to "studio" in Netlify UI
 # Build command: "pnpm build"
 # Publish directory: "studio/dist"
-
-# Configuration for SEO Dashboard (if deployed as a separate site)
-# Set Base Directory to "seo-dashboard" in Netlify UI
-# Build command: "pnpm build"
-# Publish directory: "seo-dashboard/.next"
 
 [[headers]]
   for = "/*"

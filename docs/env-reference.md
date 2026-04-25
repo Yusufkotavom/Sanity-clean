@@ -42,7 +42,7 @@ Catatan build/deploy:
 - `VERCEL_OIDC_TOKEN` (direkomendasikan untuk mode gateway di Vercel)
 - `AI_WRITER_GEMINI_KEYS` (opsional fallback env, format newline/comma list)
 - `AI_WRITER_GROQ_KEYS` (opsional fallback env, format newline/comma list)
-- `AI_WRITER_ACTION_SECRET` (direkomendasikan untuk Studio Document Action lintas-origin)
+- `AI_WRITER_ACTION_SECRET` (opsional header secret tambahan untuk endpoint `/api/ai/rewrite/apply`)
 
 ### Wajib jika menyimpan secret terenkripsi dari dashboard
 
@@ -115,7 +115,6 @@ Catatan build/deploy:
 - `SANITY_STUDIO_APP_ID` (legacy/advanced deploy target)
 - `SANITY_DEV`
 - `SANITY_DEPLOY`
-- `SANITY_STUDIO_AI_WRITER_ACTION_SECRET` (harus sama dengan `AI_WRITER_ACTION_SECRET` di frontend)
 
 Catatan operasional agent/script:
 - Untuk otomasi import/mutasi Sanity oleh agent, gunakan kredensial **dev** terlebih dulu.
@@ -216,7 +215,6 @@ SANITY_AUTH_TOKEN=replace-with-deploy-token
 SANITY_DEV=replace-with-sanity-dev-write-token
 SANITY_DEPLOY=false
 # SANITY_STUDIO_APP_ID=replace-with-studio-app-id
-SANITY_STUDIO_AI_WRITER_ACTION_SECRET=replace-with-strong-shared-secret
 ```
 
 ---

@@ -108,36 +108,6 @@ export async function POST(request: NextRequest) {
     revalidatePath(path);
   }
 
-  const dashboardUrl = process.env.SEO_DASHBOARD_URL || "";
-  const dashboardSecret = process.env.SEO_DASHBOARD_WEBHOOK_SECRET || "";
-  if (dashboardUrl && dashboardSecret) {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
-    const urls = Array.from(paths)
-      .map((path) => {
-        if (!baseUrl || !path.startsWith("/")) return null;
-        return `${baseUrl.replace(/\/+$/, "")}${path}`;
-      })
-      .filter((url): url is string => Boolean(url));
-
-    if (urls.length) {
-      try {
-        await fetch(`${dashboardUrl.replace(/\/+$/, "")}/api/seo/indexing/webhook`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-seo-dashboard-secret": dashboardSecret,
-          },
-          body: JSON.stringify({
-            urls,
-            reason: `revalidate webhook: ${payload?._type || "unknown"}`,
-          }),
-        });
-      } catch {
-        // ignore dashboard webhook failures; revalidate should still succeed
-      }
-    }
-  }
-
   return NextResponse.json({
     ok: true,
     revalidated: Array.from(paths),

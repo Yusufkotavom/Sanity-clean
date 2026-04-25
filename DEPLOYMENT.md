@@ -4,7 +4,7 @@ This project is a **PNPM Monorepo**. Each application can be deployed as a separ
 
 ---
 
-## 🌥️ Cloudflare Pages (Recommended for Frontend & Dashboard)
+## 🌥️ Cloudflare Pages (Recommended for Frontend)
 
 ### 1. Setup on Cloudflare Dashboard
 1. Go to **Workers & Pages** > **Create application** > **Pages** > **Connect to Git**.
@@ -14,7 +14,6 @@ This project is a **PNPM Monorepo**. Each application can be deployed as a separ
 | Application | Build command | Build output directory | Root directory |
 | :--- | :--- | :--- | :--- |
 | **Frontend** | `pnpm build` | `.next` | `frontend` |
-| **SEO Dashboard** | `pnpm build` | `.next` | `seo-dashboard` |
 | **Sanity Studio** | `pnpm build` | `dist` | `studio` |
 
 ### 2. Environment Variables (Required)
@@ -34,7 +33,7 @@ We have included a `netlify.toml` in the root. By default, it will deploy the **
 ### 2. Multi-site deployment
 If you want to deploy multiple apps from the same repo:
 1. Create a new site on Netlify.
-2. Under **Build settings**, set the **Base directory** to `frontend`, `studio`, or `seo-dashboard`.
+2. Under **Build settings**, set the **Base directory** to `frontend` or `studio`.
 3. Set **Build command** to `pnpm build`.
 4. Set **Publish directory** to `.next` (for Next.js) or `dist` (for Sanity Studio).
 

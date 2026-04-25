@@ -10,6 +10,9 @@ import {
   CheckCircle2,
   Trophy,
   MapPin,
+  Clock3,
+  Layers2,
+  ShieldCheck,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -41,26 +44,26 @@ const laneIconMap = {
   printing: Printer,
 } as const;
 
-const testimonials = [
+const proofPoints = [
   {
-    quote: "Website baru dari KOTACOM benar-benar mengubah cara kami mendapatkan klien. Tampilannya profesional dan sangat cepat. Timnya juga sangat responsif. Luar biasa!",
-    name: "Budi Santoso",
-    company: "PT Maju Bersama",
-    role: "Business Owner",
+    title: "Scope Lebih Jelas di Awal",
+    description:
+      "Kebutuhan dipetakan menjadi prioritas kerja supaya tim bisnis tidak menebak langkah berikutnya.",
+    icon: Layers2,
   },
   {
-    quote: "Masalah laptop kantor yang sering error sangat mengganggu produktivitas. Sejak pakai jasa maintenance KOTACOM, semua berjalan lancar. Problem solved!",
-    name: "Siti Rahayu",
-    company: "CV Digital Sejahtera",
-    role: "Operational Manager",
+    title: "Eksekusi Lebih Cepat",
+    description:
+      "Website, software, support, dan percetakan dikelola dalam satu ritme delivery tanpa handoff berulang.",
+    icon: Clock3,
   },
   {
-    quote: "Kualitas cetak brosur dan buku profil perusahaan kami sangat tajam dan warnanya akurat. Benar-benar meningkatkan citra perusahaan kami di mata klien. Terima kasih KOTACOM.",
-    name: "Ahmad Wijaya",
-    company: "PT Karya Mandiri",
-    role: "Marketing Director",
-  }
-];
+    title: "Support Setelah Rilis",
+    description:
+      "Pendampingan pasca-go-live membantu perbaikan kecil dan penyesuaian berjalan tanpa mengganggu operasional.",
+    icon: ShieldCheck,
+  },
+] as const;
 
 export default async function HomePeparMiddleSection() {
   const [
@@ -77,53 +80,49 @@ export default async function HomePeparMiddleSection() {
 
   return (
     <>
-      {/* HERO SECTION WITH SPLIT LAYOUT */}
-      <SectionShell className="pt-16 lg:pt-24">
-        <SectionPanel
-          tone="neutral"
-          className="grid gap-8 overflow-hidden rounded-[1.75rem] p-5 md:grid-cols-[minmax(0,1fr)_minmax(320px,0.92fr)] md:p-7 lg:gap-10 lg:p-8"
-        >
-          <div className="flex flex-col justify-center">
-            <div className="mb-3 inline-flex items-center gap-2 text-ui-label text-foreground/55">
-              <Sparkles className="size-4" />
-              <span>Layanan IT Terpadu</span>
-            </div>
-            <SectionIntro
-              title="Bangun fondasi digital bisnis yang rapi, stabil, dan siap untuk tumbuh"
-              className="mb-0 max-w-3xl"
-            />
-            <div className="mt-5 max-w-2xl text-sm leading-7 text-muted-foreground md:text-base">
-              <p>
-                Fokus pada bisnis Anda, kami tangani website, software, infrastruktur IT, dan kebutuhan digital harian Anda.
+      <section className="section-divider relative overflow-hidden bg-gradient-to-b from-background via-muted/20 to-background pt-14 pb-10 lg:pt-20 lg:pb-14">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_20%,hsl(var(--primary)/0.16),transparent_40%),radial-gradient(circle_at_88%_24%,hsl(var(--primary)/0.12),transparent_36%)]" />
+        <div className="container relative">
+          <div className="grid items-center gap-10 md:grid-cols-[minmax(0,1fr)_minmax(300px,0.86fr)]">
+            <div className="flex flex-col justify-center">
+              <div className="mb-4 inline-flex items-center gap-2 text-ui-label text-foreground/60">
+                <Sparkles className="size-4" />
+                <span>Partner Eksekusi Digital</span>
+              </div>
+              <h1 className="max-w-3xl text-balance text-3xl font-semibold tracking-tight sm:text-4xl lg:text-5xl">
+                Website, software, IT support, dan percetakan dalam satu jalur kerja.
+              </h1>
+              <p className="mt-5 max-w-2xl text-sm leading-7 text-muted-foreground md:text-base">
+                Kami membantu bisnis bergerak dari brief ke implementasi dengan scope yang jelas, timeline realistis, dan pendampingan sampai sistem benar-benar dipakai.
               </p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Button asChild variant="default">
+                  <Link href="/services">Lihat Solusi untuk Bisnis Anda</Link>
+                </Button>
+                <GlobalWhatsAppButton
+                  label="Diskusikan Kebutuhan Anda"
+                  variant="outline"
+                />
+              </div>
             </div>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Button asChild variant="default">
-                <Link href="/services">Jelajahi Solusi</Link>
-              </Button>
-              <GlobalWhatsAppButton
-                label="Konsultasi Gratis"
-                variant="outline"
-              />
+            <div className="flex flex-col justify-center">
+              <div className="relative aspect-square overflow-hidden rounded-[1.5rem] border border-white/45 bg-white/70 shadow-[0_18px_48px_rgba(15,23,42,0.1)] dark:border-white/12 dark:bg-white/5">
+                <Image
+                  src="/images/kotacom-split-production-ready/hero/hero-cetak-buku-shark-v2.png"
+                  alt="Ilustrasi layanan website, software, support, dan percetakan Kotacom"
+                  fill
+                  className="object-contain p-4"
+                  priority
+                  quality={85}
+                  loading="eager"
+                  fetchPriority="high"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
+                />
+              </div>
             </div>
           </div>
-          <div className="flex flex-col justify-center">
-            <div className="relative aspect-square overflow-hidden rounded-[1.5rem] border border-white/45 bg-white/70 shadow-[0_18px_48px_rgba(15,23,42,0.1)] dark:border-white/12 dark:bg-white/5">
-              <Image
-                src="/images/kotacom-split-production-ready/hero/hero-cetak-buku-shark-v2.png"
-                alt="Kotacom IT services and printing illustration"
-                fill
-                className="object-contain p-4"
-                priority
-                quality={85}
-                loading="eager"
-                fetchPriority="high"
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
-              />
-            </div>
-          </div>
-        </SectionPanel>
-      </SectionShell>
+        </div>
+      </section>
 
       {/* 1. HERO EXTENSION: Stats Bar */}
       <SectionShell className="pt-12 lg:pt-16">
@@ -167,7 +166,7 @@ export default async function HomePeparMiddleSection() {
               className="mb-0 max-w-4xl"
             />
 
-            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            <div className="grid gap-3 sm:grid-cols-2">
               {homePrepareContent.lanes.map((lane) => {
                 const Icon = laneIconMap[lane.key];
 
@@ -186,7 +185,7 @@ export default async function HomePeparMiddleSection() {
                           {lane.eyebrow}
                         </div>
                         <div className="text-sm font-medium text-foreground">
-                          {lane.bullets[0]}
+                          {lane.title}
                         </div>
                       </div>
                     </div>
@@ -343,7 +342,7 @@ export default async function HomePeparMiddleSection() {
               className="mb-0"
             />
             <Button asChild variant="outline" className="hidden sm:flex">
-              <Link href="/posts">Semua Artikel</Link>
+              <Link href="/blog">Semua Artikel</Link>
             </Button>
           </div>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -353,7 +352,7 @@ export default async function HomePeparMiddleSection() {
           </div>
           <div className="mt-8 flex justify-center sm:hidden">
             <Button asChild variant="outline" className="w-full">
-              <Link href="/posts">Semua Artikel</Link>
+              <Link href="/blog">Semua Artikel</Link>
             </Button>
           </div>
         </SectionShell>
@@ -442,40 +441,27 @@ export default async function HomePeparMiddleSection() {
         </SectionPanel>
       </SectionShell>
 
-      {/* 4. TESTIMONIALS SECTION */}
+      {/* OPERATIONAL PROOF SECTION */}
       <SectionShell>
         <SectionIntro
-          eyebrow="Kepercayaan Klien"
-          title="Apa kata klien tentang layanan kami."
-          description="Pengalaman nyata mereka yang telah mempercayakan kebutuhan IT, software, dan percetakan pada Kotacom."
+          eyebrow="Kenapa Tim Bisnis Memilih Kotacom"
+          title="Fokus pada hasil kerja yang bisa langsung dipakai."
+          description="Pendekatan ini kami pakai agar bisnis bisa mengambil keputusan lebih cepat dan menjalankan delivery tanpa kebingungan antar vendor."
         />
         <div className="grid gap-5 md:grid-cols-3">
-          {testimonials.map((testi, i) => {
-            const initial = testi.name.charAt(0).toUpperCase();
+          {proofPoints.map((point) => {
+            const Icon = point.icon;
             return (
-              <div key={i} className="flex flex-col justify-between rounded-[1.75rem] border border-border/50 bg-background/60 p-7 shadow-sm">
-                <p className="italic leading-7 text-muted-foreground">&quot;{testi.quote}&quot;</p>
-                <div className="mt-8 border-t border-border/50 pt-5">
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary font-semibold">
-                      {initial}
-                    </div>
-                    <div>
-                      <div className="font-semibold text-foreground">{testi.name}</div>
-                      <div className="text-sm text-muted-foreground">{testi.role}</div>
-                      {testi.company && (
-                        <div className="text-xs text-muted-foreground/80">{testi.company}</div>
-                      )}
-                    </div>
-                  </div>
+              <div key={point.title} className="rounded-[1.75rem] border border-border/50 bg-background/60 p-7 shadow-sm">
+                <div className="flex h-11 w-11 items-center justify-center rounded-full border border-border/70 bg-primary/10">
+                  <Icon className="h-5 w-5" />
                 </div>
+                <h3 className="mt-5 text-lg font-semibold tracking-tight">{point.title}</h3>
+                <p className="mt-3 leading-7 text-muted-foreground">{point.description}</p>
               </div>
             );
           })}
         </div>
-        <p className="mt-6 text-center text-xs text-muted-foreground/70">
-          * Nama klien telah diubah untuk menjaga privasi
-        </p>
       </SectionShell>
 
       <SectionShell>

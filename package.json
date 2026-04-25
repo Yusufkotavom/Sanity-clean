@@ -16,7 +16,6 @@
     "dev": "pnpm --parallel -r run dev",
     "dev:frontend": "pnpm run dev --workspace=frontend",
     "dev:studio": "pnpm run dev --workspace=studio",
-    "dev:dashboard": "pnpm run dev --workspace=seo-dashboard",
     "deploy:worker": "cd worker && pnpm wrangler deploy",
     "deploy:frontend:cf": "cd frontend && npx @cloudflare/next-on-pages",
     "typegen": "cd studio && pnpm typegen",

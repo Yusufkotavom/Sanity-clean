@@ -20,7 +20,6 @@ import location from "./schemas/documents/location";
 import redirect from "./schemas/documents/redirect";
 import reusableSection from "./schemas/documents/reusable-section";
 import seoOpsSettings from "./schemas/documents/seo-ops-settings";
-import aiWriterSettings from "./schemas/documents/ai-writer-settings";
 import legacyPage from "./schemas/documents/legacy-page";
 
 // Schema UI shared objects
@@ -107,7 +106,6 @@ export const schemaTypes = [
   serviceLocation,
   location,
   seoOpsSettings,
-  aiWriterSettings,
   redirect,
   reusableSection,
   legacyPage,

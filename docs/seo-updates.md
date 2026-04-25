@@ -4,6 +4,89 @@ This document tracks all SEO-related changes made to the repository.
 
 ---
 
+## 2026-04-21 — Homepage Lane Grid Layout Set to 2x2
+
+### Changed Files
+- `frontend/components/hybrid/generated/home-pepar-middle-section.tsx` (MODIFIED) - Changed lane card grid from `xl:grid-cols-4` to 2-column layout.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated status snapshot/workstream checklist.
+
+### Summary
+Adjusted the homepage lane-card block layout to consistently render as two columns on non-mobile screens (`2 atas, 2 bawah`) instead of expanding into four columns on extra-large screens.
+
+### Impact on SEO/Integration
+- `No direct SEO impact`
+- Frontend UX impact: improved scanning readability for lane cards on large screens.
+
+### Verification Status
+- ✅ `pnpm --filter frontend run typecheck` passed.
+- ✅ Manual class verification: grid now uses `sm:grid-cols-2` without `xl:grid-cols-4`.
+
+---
+
+## 2026-04-21 — Homepage Frontend Source & Copywriting Polish
+
+### Changed Files
+- `frontend/components/hybrid/generated/home-pepar-middle-section.tsx` (MODIFIED) - Refined homepage hero composition/copy, replaced static testimonial quotes with operational proof cards, improved lane card label clarity, and fixed blog CTA routes.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated status snapshot/workstream checklist.
+
+### Summary
+Improved the code-owned homepage middle shell to make the first viewport clearer and more conversion-focused: stronger headline/subheadline hierarchy, more specific CTA labels, and cleaner lane scannability. Replaced static personal testimonial quotes with a neutral operational proof section to keep trust messaging credible. Fixed homepage article CTA links from `/posts` to the existing `/blog` route.
+
+### Impact on SEO/Integration
+- Positive integration impact: homepage internal links now point to the valid blog listing route (`/blog`), reducing dead-route risk for users/crawlers.
+- Copy/UX impact: clearer above-the-fold value proposition and CTA intent on homepage.
+- No schema/query contract changes were required for this task.
+
+### Verification Status
+- ✅ `pnpm --filter frontend run typecheck` passed.
+- ✅ Manual code verification: homepage post-list CTAs now target `/blog`.
+
+---
+
+## 2026-04-21 — Make Studio Dev Port Auto-Fallback
+
+### Changed Files
+- `studio/scripts/dev.mjs` (ADDED) - Added Studio dev launcher that auto-selects the first available port, starting from `3333`.
+- `studio/package.json` (MODIFIED) - Updated `dev` script to use the new launcher.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+Replaced the fixed-port `sanity dev` command with a small Node launcher that checks port availability and falls back to the next open port when `3333` is occupied. This prevents monorepo `pnpm --parallel -r run dev` from failing when another process is already bound to Studio's default port.
+
+### Impact on SEO/Integration
+- `No direct SEO impact`
+- Integration impact: local dev orchestration is now resilient to Studio port collisions.
+
+### Verification Status
+- ✅ Verified port conflict existed on `3333` (listener PID `569080`).
+- ✅ Ran `pnpm --filter studio run dev` and confirmed launcher starts Sanity on fallback port when needed.
+
+---
+
+## 2026-04-21 — Add Example Sanity Seed Script (Development Dataset)
+
+### Changed Files
+- `frontend/scripts/seed-example-db.mjs` (ADDED) - New idempotent seed script for example baseline content in Sanity.
+- `frontend/package.json` (MODIFIED) - Added `sanity:seed:example` script shortcut.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated status snapshot/workstream checklist.
+
+### Summary
+Implemented a new seed utility to bootstrap example content for Sanity in one run (category, settings, seoSettings, navigation, page, post, product, service, project). Script defaults to safe behavior (dry-run unless `--write`) and supports current env contract via existing Sanity write-client guard.
+
+### Impact on SEO/Integration
+- Indirect positive integration impact: accelerates provisioning of valid baseline CMS content for development/testing workflows.
+- No structural SEO logic changes in frontend rendering pipeline.
+
+### Verification Status
+- ✅ Executed write seed against `project=ww3aejg2`, `dataset=development`.
+- ✅ Post-seed verification counts:
+  - `category=2`, `navigation=1`, `page=1`, `post=1`, `product=1`, `project=1`, `seoSettings=1`, `service=1`, `settings=1`.
+
+---
+
 ## 2026-04-21 — Remove Local Fallback Runtime Sources (Frontend)
 
 ### Changed Files
@@ -1215,3 +1298,66 @@ Synchronized AI runtime contracts across frontend query layer, shared package ex
 
 ### Verification Status
 - ⚠️ No additional full test/build run in this cycle before push (changes are contract-sync follow-up).
+
+## 2026-04-22 — Sanity Studio AI Surface Cleanup (Actions + Settings + Setup)
+
+### Changed Files
+- `studio/sanity.config.ts` (MODIFIED) - Removed `AI Rewrite/AI Extend` document action registration and dropped `aiWriterSettings` from Studio singleton types.
+- `studio/schema-types.ts` (MODIFIED) - Removed `aiWriterSettings` schema import/registration from Studio schema bundle.
+- `studio/structure.ts` (MODIFIED) - Removed `AI Writer Settings` singleton item from Studio desk structure.
+- `studio/.env.example` (MODIFIED) - Removed deprecated `SANITY_STUDIO_AI_WRITER_ACTION_SECRET` setup variable.
+- `studio/document-actions/ai-rewrite-action.ts` (DELETED) - Removed unused Studio AI rewrite action implementation.
+- `studio/document-actions/ai-extend-action.ts` (DELETED) - Removed unused Studio AI extend action implementation.
+- `studio/schemas/documents/ai-writer-settings.ts` (DELETED) - Removed AI writer settings schema from Studio-managed schema set.
+- `studio/schema.json` (MODIFIED) - Regenerated extracted schema after removing AI writer Studio schema.
+- `frontend/sanity/lib/fetch.ts` (MODIFIED) - Removed unused frontend AI writer settings fetch helpers tied to deleted query contract.
+- `frontend/sanity/queries/ai-writer-settings.ts` (DELETED) - Removed unused frontend AI writer settings query file.
+- `frontend/schema.json` (MODIFIED) - Synced frontend schema artifact with latest Studio extract after AI writer schema removal.
+- `frontend/sanity.types.ts` (MODIFIED) - Regenerated types from updated Studio schema (AI writer schema/query types removed).
+- `docs/env-reference.md` (MODIFIED) - Removed Studio AI action-secret setup guidance from env reference.
+- `docs/ai-writer-gateway-setup.md` (MODIFIED) - Updated guide to match current flow (no Studio document action wiring) and removed stale Studio rewrite smoke-check step.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated current status snapshot and legacy AI bullets to explicitly mark Studio action flow as retired.
+
+### Summary
+Removed deprecated AI-specific authoring integration from Sanity Studio, including document actions, singleton settings schema, desk entry, and Studio env setup variable. Also cleaned related frontend fetch/query remnants that were no longer used by active runtime paths, synchronized frontend schema/type artifacts, and updated docs to avoid stale Studio-action instructions.
+
+### Impact on SEO/Integration
+- No direct SEO impact.
+- Integration impact:
+  - Studio editing surface is cleaner and no longer exposes inactive AI rewrite controls.
+  - AI runtime capability remains available through SEO Dashboard/backend flows; this change only removes inactive Studio-side hooks.
+  - Reduces configuration drift by removing stale Studio action-secret setup instructions.
+
+### Verification Status
+- ✅ `pnpm --filter studio run typecheck` passed.
+- ✅ `pnpm --filter frontend run typecheck` passed.
+- ✅ `pnpm --filter studio run typegen` passed (regenerated `studio/schema.json` and `frontend/sanity.types.ts`).
+- ⚠️ `pnpm --filter frontend run typegen` failed with `PROJECT_ROOT_NOT_FOUND` (expected in current frontend package context); not required for this cleanup.
+
+## 2026-04-22 — Remove `seo-dashboard` Workspace App
+
+### Changed Files
+- `seo-dashboard/**` (DELETED) - Removed the entire dashboard application package (API routes, UI pages, libs, scripts, env examples, and package metadata).
+- `pnpm-workspace.yaml` (MODIFIED) - Removed `seo-dashboard` from workspace package list.
+- `package.json` (MODIFIED) - Removed root script `dev:dashboard`.
+- `frontend/app/api/revalidate/route.ts` (MODIFIED) - Removed webhook forwarding logic that posted revalidate URLs to SEO dashboard indexing endpoint.
+- `frontend/.env.example` (MODIFIED) - Removed `SEO_DASHBOARD_URL` and `SEO_DASHBOARD_WEBHOOK_SECRET` env examples.
+- `DEPLOYMENT.md` (MODIFIED) - Removed deployment instructions that referenced `seo-dashboard`.
+- `netlify.toml` (MODIFIED) - Removed separate `seo-dashboard` deployment comment block and generalized env-pruning comment.
+- `CLOUDFLARE-DEPLOYMENT-GUIDE.md` (MODIFIED) - Rewrote guide to active deploy targets (`frontend`, `studio`, `worker`) and marked `seo-dashboard` as retired.
+- `ENV_SETUP.md` (MODIFIED) - Removed `docs/seo-dashboard-setup.md` from active references.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Added snapshot note about dashboard retirement.
+
+### Summary
+Removed the `seo-dashboard` app from the repository and cleaned root workspace/runtime integrations that depended on it, including monorepo package registration, root dev script, and frontend revalidate webhook forwarding to dashboard indexing API.
+
+### Impact on SEO/Integration
+- SEO integration impact:
+  - Disables SEO Ops dashboard/API surfaces that previously handled indexing automation, AI scheduling, and dashboard-driven operations.
+  - Frontend revalidate flow now only performs local cache/path revalidation and no longer triggers external dashboard indexing webhook.
+- No direct change to page metadata rendering logic in `frontend` or Studio schema contracts.
+
+### Verification Status
+- ✅ `test -d seo-dashboard` returns `deleted`.
+- ✅ `pnpm --filter studio run typecheck` passed.
+- ✅ `pnpm --filter frontend run typecheck` passed.

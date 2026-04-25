@@ -9,8 +9,6 @@ import { resolve } from "./presentation/resolve";
 import { structure } from "./structure";
 import { defaultDocumentNode } from "./defaultDocumentNode";
 import { codeInput } from "@sanity/code-input";
-import { aiRewriteAction } from "./document-actions/ai-rewrite-action";
-import { aiExtendAction } from "./document-actions/ai-extend-action";
 import { applyHybridPresetAction } from "./document-actions/apply-hybrid-preset-action";
 import { convertPageToPostAction } from "./document-actions/convert-page-to-post-action";
 
@@ -28,7 +26,6 @@ const singletonTypes = new Set([
   "navigation",
   "seoSettings",
   "seoOpsSettings",
-  "aiWriterSettings",
   "themeSettings",
 ]);
 
@@ -56,10 +53,6 @@ export default defineConfig({
     actions: (input, context) => {
       if (singletonTypes.has(context.schemaType)) {
         return input.filter(({ action }) => action && singletonActions.has(action));
-      }
-
-      if (["post", "service", "project"].includes(context.schemaType)) {
-        return [aiRewriteAction, aiExtendAction, ...input];
       }
 
       if (context.schemaType === "page") {

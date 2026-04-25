@@ -30,6 +30,11 @@ Migrate legacy Astro source into current Next.js + Sanity stack with:
 
 ## Current Status Snapshot (Already Done)
 
+- [x] `seo-dashboard` workspace app has been fully retired and removed from the repository; root monorepo scripts/workspace entries and frontend revalidate webhook forwarding were cleaned so runtime no longer depends on dashboard indexing endpoints.
+- [x] Sanity Studio AI authoring surface has been retired from the main CMS flow: `AI Rewrite/AI Extend` document actions were removed, `aiWriterSettings` is no longer part of Studio schema/desk singletons, and Studio env/setup docs were cleaned to avoid stale AI action secret configuration.
+- [x] Homepage lane card layout has been normalized to a 2x2 scan pattern on larger screens (`sm:grid-cols-2`), replacing the previous XL 4-column spread for better readability.
+- [x] Homepage hybrid middle shell has been polished with clearer above-the-fold copy/CTA hierarchy and safer trust messaging; static testimonial-persona quotes were replaced by operational proof cards, and homepage article CTAs now point to the valid `/blog` route instead of `/posts`.
+- [x] Example Sanity seed baseline is now available and executed for development dataset (`ww3aejg2/development`) via `frontend/scripts/seed-example-db.mjs`, covering singleton + core content types (`settings`, `seoSettings`, `navigation`, `category`, `page`, `post`, `product`, `service`, `project`).
 - [x] Local runtime fallback sources have been fully disabled in frontend (`legacy-pages/astro-static`, `local-content/json-usaha`, `local-content/astro-catalog`, and `jasa-cetak-buku-kota`), and explicit local fallback hooks were removed from `/services/[slug]`, `/services`, and `sitemap.xml` generation.
 - [x] Dependabot automation has been disabled by removing `.github/dependabot.yml`, so dependency/GitHub Actions update PRs are no longer auto-opened by Dependabot.
 - [x] **GSC MIGRATION 100% DONE:** All Top 300 manual curations + Top 1000 auto-redirects fully synced, seeded, and mapped via Sanity and Next.js wildcards.
@@ -77,7 +82,7 @@ Migrate legacy Astro source into current Next.js + Sanity stack with:
 - [x] New keyword-focused schedule workflow shipped (`keyword_pipeline`) with per-run keyword batching, `articlesPerKeyword` support (>1 variants), and persisted keyword cursor progression for long keyword lists.
 - [x] Flexible AI model routing is now enabled across schedules and ideation: global quality profiles (`economy/standard/high`) + per-flow provider/model overrides, including split model-quality controls for keyword-pipeline outline vs full-content stages.
 - [x] `/dashboard/ai-settings` is now fully wired to runtime config APIs (`/api/ai/config/status` + `/api/ai/config/save`) with editable global mode/default models, quality profiles (`economy/standard/high`), and full prompt set including body-extend variants; Sanity schema/query/fetch contracts were synced with new `modelProfiles` fields.
-- [x] Cross-layer AI runtime contract sync completed for follow-up iteration: frontend Sanity query, shared `packages/ai` exports, dashboard schedule/config APIs, and Studio `aiWriterSettings` schema now move in lockstep for model/profile settings.
+- [x] Cross-layer AI runtime contract sync completed for follow-up iteration: frontend Sanity query, shared `packages/ai` exports, dashboard schedule/config APIs, and Studio `aiWriterSettings` schema were aligned for model/profile settings (later retired from Studio desk schema on 2026-04-22).
 - [x] Ops env contract now includes explicit GA4/GSC vars required by automated tasks (`GA4_PROPERTY_ID`, optional GA4 creds, `GSC_SITEMAP_URL`) to reduce runtime misconfiguration risk.
 - [x] Real env sync completed for GA4/GSC/Sitemap across root + frontend + seo-dashboard + studio examples (`G-P0DQM5CH0D`, `https://www.kotacom.id`, `https://www.kotacom.id/sitemap.xml`, stream/property value `2168616948`) to keep tracking and import flows aligned.
 - [x] Added root-level unified env template (`.env.all-in-one.example`) as a single source of config truth for frontend, studio, and seo-dashboard setup.
@@ -138,7 +143,7 @@ Migrate legacy Astro source into current Next.js + Sanity stack with:
 - [x] Vercel-style UI shell pass applied across global surfaces and shared primitives (header desktop/mobile, footer, section wrappers, legacy landing sections) while preserving existing CMS and root-slug contracts
 - [x] AI writer ops foundation added: Studio singleton settings + encrypted key pools + gateway/direct generation API for controlled rewrite workflows
 - [x] AI writer production hardening completed for operations: dashboard UI, gateway model validation, prompt guardrails, and go-live checklist docs
-- [x] AI rewrite apply flow completed: Studio `AI Rewrite` document action now triggers server rewrite and patches draft content automatically
+- [x] AI rewrite apply flow completed in earlier phase via Studio document action, then intentionally retired from Studio surface on 2026-04-22 as part of CMS cleanup.
 - [x] AI writer documentation consolidated into production-focused runbook; irrelevant/duplicated setup notes removed
 - [x] SEO Ops dashboard stack split into a standalone Next.js app (`seo-dashboard`) with dedicated scripts, Sanity fetch layer, and auth middleware
 - [x] Frontend revalidate webhook now supports optional indexing submission via the dashboard webhook when configured
@@ -318,6 +323,7 @@ Migrate legacy Astro source into current Next.js + Sanity stack with:
   - Added import safety note: avoid dotted `_id` patterns for page/post imports to ensure visibility in unauthenticated published API reads.
   - 2026-04-02 execution: imported missing repo-Astro MDX documents only, leaving local fallback pack `frontend/content/astro-local/jasa-cetak-buku-kota` untouched.
 - [x] Repo-local Astro source pack (`frontend/content/astro-local/jasa-cetak-buku-kota`) now has a reusable importer that creates missing Sanity `page` docs and preserves slug/canonical parity for root-slug routes.
+- [x] Added reusable example seed pipeline for empty/dev Sanity environments (`frontend/scripts/seed-example-db.mjs`) and validated successful write on `development` dataset.
 
 ## Workstream B - Per-URL Curation (One by One)
 
@@ -436,6 +442,7 @@ Migrate legacy Astro source into current Next.js + Sanity stack with:
 
 ### D2. Template Refactor Priority
 - [ ] Homepage
+- [x] Homepage conversion polish pass (copy hierarchy + CTA clarity + valid blog route links) applied on hybrid middle shell (`home-pepar`) for safer live-home readiness.
 - [x] Product-led homepage promoted to `/` using shared UI primitives; `/home` and `/product-home` now act as redirect aliases instead of separate preview destinations
 - [x] Root homepage route restored to CMS-first behavior by resolving Sanity `page:index` before the local product-led fallback view, keeping `/home` and `/product-home` as aliases only
 - [ ] Blog detail/list/category
