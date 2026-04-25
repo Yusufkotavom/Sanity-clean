@@ -17,9 +17,12 @@ const TEMPLATE_LANES = [
   { title: "Generic Company", value: "generic" },
 ];
 
+const LEGACY_RUNTIME_NOTE =
+  "Legacy templating field. Kept for migration/reference only and no longer drives the preferred Generator V2 workflow.";
+
 export default defineType({
   name: "pageTemplate",
-  title: "Page Template",
+  title: "Legacy Page Template",
   type: "document",
   icon: LayoutTemplate,
   groups: [
@@ -49,6 +52,8 @@ export default defineType({
       title: "Variant",
       type: "string",
       group: "settings",
+      description:
+        "Legacy routing/runtime setting. Keep only for migration reference until legacy templating is fully retired.",
       options: {
         list: TEMPLATE_VARIANTS,
         layout: "dropdown",
@@ -100,8 +105,9 @@ export default defineType({
       title: "Hybrid Template",
       type: "boolean",
       group: "settings",
-      description: "Jika aktif, blocks dapat dirender di atas dan bawah shell.",
+      description: `${LEGACY_RUNTIME_NOTE} The current runtime no longer consumes this field.`,
       initialValue: false,
+      hidden: true,
     }),
     defineField({
       name: "shellId",
@@ -116,8 +122,10 @@ export default defineType({
       title: "Top Block Count Default",
       type: "number",
       group: "settings",
+      description: `${LEGACY_RUNTIME_NOTE} The current runtime no longer consumes this field.`,
       initialValue: 0,
       validation: (Rule) => Rule.integer().min(0),
+      hidden: true,
     }),
     defineField({
       name: "heroEyebrow",
@@ -145,7 +153,12 @@ export default defineType({
       type: "templateRewriteCopy",
       group: "content",
     }),
-    pageBlocks,
+    {
+      ...pageBlocks,
+      title: "Legacy Page Blocks",
+      description: `${LEGACY_RUNTIME_NOTE} The current runtime no longer consumes blocks from legacy template documents.`,
+      hidden: true,
+    },
     defineField({
       name: "metaDefaults",
       title: "Meta Defaults",

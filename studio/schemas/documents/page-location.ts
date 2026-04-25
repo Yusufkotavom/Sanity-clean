@@ -4,9 +4,12 @@ import pageBlocks from "../blocks/shared/page-blocks";
 import meta from "../blocks/shared/meta";
 import AutoRouteInput from "../../inputs/auto-route-input";
 
+const LEGACY_RUNTIME_NOTE =
+  "Legacy templating field. Kept for migration/reference only and no longer drives the preferred Generator V2 workflow.";
+
 export default defineType({
   name: "pageLocation",
-  title: "Page Location",
+  title: "Legacy Page Location",
   type: "document",
   icon: FileText,
   groups: [
@@ -109,20 +112,28 @@ export default defineType({
       type: "templateRewriteCopy",
       group: "content",
     }),
-    pageBlocks,
+    {
+      ...pageBlocks,
+      title: "Legacy Page Blocks",
+      description: `${LEGACY_RUNTIME_NOTE} The current runtime no longer consumes blocks from legacy page-location documents.`,
+      hidden: true,
+    },
     defineField({
       name: "topBlockCount",
       title: "Top Block Count",
       type: "number",
       group: "settings",
-      description: "Override jumlah block di atas shell.",
+      description: `${LEGACY_RUNTIME_NOTE} The current runtime no longer consumes this field.`,
       validation: (Rule) => Rule.integer().min(0),
+      hidden: true,
     }),
     defineField({
       name: "contentStatus",
       title: "Content Status",
       type: "string",
       group: "settings",
+      description:
+        "Dipakai hanya oleh tooling/audit indexing internal. Tidak mengubah render halaman frontend.",
       options: {
         list: [
           { title: "Draft", value: "draft" },
@@ -141,7 +152,7 @@ export default defineType({
     },
     prepare({ title, route }) {
       return {
-        title: title || "Page Location",
+        title: title || "Legacy Page Location",
         subtitle: route || "",
       };
     },

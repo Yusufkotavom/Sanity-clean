@@ -34,6 +34,30 @@ Applied the lowest-risk cleanup from the legacy templating audit. The frontend n
 
 ---
 
+## 2026-04-25 — Legacy Template Schema Minimization
+
+### Changed Files
+- `studio/schemas/documents/page-template.ts` (MODIFIED) - Relabeled the document as `Legacy Page Template`, clarified `variant` as migration-era config, and hid inert legacy-only fields (`isHybrid`, `topBlockCountDefault`, and legacy blocks) from the Studio editor.
+- `studio/schemas/documents/page-location.ts` (MODIFIED) - Relabeled the document as `Legacy Page Location`, hid inert legacy-only fields (`pageBlocks` and `topBlockCount`), and clarified that `contentStatus` is only for internal indexing/audit tooling.
+- `studio/schemas/documents/service-location.ts` (MODIFIED) - Relabeled the document as `Legacy Service Location`, hid inert legacy-only fields (`pageBlocks` and `topBlockCount`), and clarified that `contentStatus` is only for internal indexing/audit tooling.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated the current-status snapshot and Sprint 3 cleanup checklist.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry and repaired adjacent section headings.
+
+### Summary
+Minimized the legacy templating content model in Studio without deleting any stored content. The editor surface now matches the current direction: Generator V2 is the forward workflow, while old template documents remain available as migration/reference material only. Fields that no longer affect the current runtime are hidden from editors, and the remaining operational field `contentStatus` is explicitly labeled as an internal indexing/audit signal instead of page-render logic.
+
+### Impact on SEO/Integration
+- `No direct SEO impact`
+- Positive Studio integration impact: editors now see a simpler, more honest legacy schema surface that matches the reduced runtime contract.
+- Positive migration safety impact: no stored fields were deleted and no frontend query/render contracts changed.
+
+### Verification Status
+- ✅ `pnpm --filter studio run typecheck` passed.
+- ✅ `pnpm --filter frontend run typecheck` passed.
+- ✅ Manual self-review confirmed the task hides legacy-only fields in Studio rather than deleting content-model data.
+
+---
+
 ## 2026-04-25 — Sanity Generator V2 Studio Boundary Cleanup
 
 ### Changed Files
@@ -57,6 +81,8 @@ Cleaned up the Studio editing surface around the new generator rollout. The acti
 - ⚠️ Physical deletion of the already-created local `studio/tmp/` folder is still pending because the destructive shell command was blocked by the current tool approval layer, but future artifacts are now ignored.
 
 ---
+
+## 2026-04-25 — Sanity Generator V2 Legacy Inventory Export
 
 ### Changed Files
 - `studio/lib/generator/legacy.ts` (ADDED) - Added a read-only mapper that normalizes legacy `pageTemplate` records into minimal generator seed metadata for migration planning.
