@@ -63,6 +63,7 @@ export type GeneratorSectionVariantLite = {
   title: string;
   sectionType?: string;
   copy?: string;
+  colorVariant?: string;
   requiredTokens?: string[];
   optional?: boolean;
 };
@@ -71,6 +72,9 @@ export type GeneratorTemplateLite = {
   _id: string;
   title: string;
   designFamily: string;
+  visualPreset?: string;
+  motionPreset?: string;
+  styleNotes?: string;
   ref?: ReferenceValue;
   tokenDefinitions?: GeneratorTokenDefinitionLite[];
   baseSections?: string[];
@@ -93,6 +97,7 @@ export type GeneratorSectionPlan = {
   sectionType: string;
   title: string;
   copy: string;
+  colorVariant?: string;
   optional: boolean;
   requiredTokens: string[];
 };

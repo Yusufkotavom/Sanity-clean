@@ -88,11 +88,14 @@ const TEMPLATE_QUERY = `*[_type == "generatorTemplate" && _id == $id][0]{
   _id,
   title,
   designFamily,
+  visualPreset,
+  motionPreset,
+  styleNotes,
   tokenDefinitions[]{_key, name, label, sourceField, fallbackValue, required},
   baseSections,
   optionalSections,
   variationRules,
-  sectionVariants[]{_key, key, title, sectionType, copy, requiredTokens, optional}
+  sectionVariants[]{_key, key, title, sectionType, copy, colorVariant, requiredTokens, optional}
 }`;
 
 const DATASET_QUERY = `*[_type == "generatorDataset" && _id == $id][0]{
@@ -411,6 +414,14 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
 
     if (linkedData.dataset?.dedupePolicy) {
       notes.push(`Dry-run dedupe policy: ${formatLabel(linkedData.dataset.dedupePolicy)}.`);
+    }
+
+    if (linkedData.template?.visualPreset) {
+      notes.push(`Visual preset: ${formatLabel(linkedData.template.visualPreset)}.`);
+    }
+
+    if (linkedData.template?.motionPreset) {
+      notes.push(`Motion preset: ${formatLabel(linkedData.template.motionPreset)}.`);
     }
 
     if (previewInput?.keywordSet && previewInput?.row) {
@@ -739,6 +750,9 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
               <Text size={1}>Status: {formatLabel(program.status)}</Text>
               <Text size={1}>AI mode: {formatLabel(program.aiMode)}</Text>
               <Text size={1}>Resolved template: {valueOrFallback(linkedData.template?.title)}</Text>
+              <Text size={1}>Visual preset: {formatLabel(linkedData.template?.visualPreset)}</Text>
+              <Text size={1}>Motion preset: {formatLabel(linkedData.template?.motionPreset)}</Text>
+              <Text size={1}>Style notes: {valueOrFallback(linkedData.template?.styleNotes)}</Text>
               <Text size={1}>Resolved dataset: {valueOrFallback(linkedData.dataset?.title)}</Text>
               <Text size={1}>Keyword sets: {linkedData.dataset?.keywordSets?.length ?? 0}</Text>
               <Text size={1}>Rows: {linkedData.dataset?.rows?.length ?? 0}</Text>

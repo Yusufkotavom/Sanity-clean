@@ -20,6 +20,7 @@ const baseInput = {
     _id: "gt-1",
     title: "Printing",
     designFamily: "printing",
+    visualPreset: "editorial-grid",
     tokenDefinitions: [
       { name: "primaryKeyword", sourceField: "primaryKeyword", required: true },
       { name: "service", sourceField: "service", required: true },
@@ -31,6 +32,7 @@ const baseInput = {
     ],
     baseSections: ["hero", "benefits"],
     optionalSections: ["problems", "faq"],
+    variationRules: ["angle-selects-optional-sections"],
     sectionVariants: [
       {
         key: "hero",
@@ -131,6 +133,60 @@ test("buildGeneratedPageDraft keeps ordered sections and gates optional sections
     ["hero-1", "value-props-block", "faq-block"],
   );
   assert.equal(price.blocks.some((block) => block._key === "differentiators"), false);
+});
+
+test("buildGeneratedPageDraft renders richer visual blocks and respects section color overrides", () => {
+  const result = buildGeneratedPageDraft({
+    ...baseInput,
+    template: {
+      ...baseInput.template,
+      visualPreset: "conversion-stack",
+      variationRules: ["visual-template-library"],
+      baseSections: ["hero", "story", "process"],
+      optionalSections: ["finalCta"],
+      sectionVariants: [
+        {
+          key: "hero",
+          title: "{{primaryKeyword}} untuk {{city}}",
+          sectionType: "hero-1",
+          requiredTokens: ["primaryKeyword", "city"],
+        },
+        {
+          key: "story",
+          title: "Kenapa {{service}} ini berbeda",
+          sectionType: "split-row",
+          colorVariant: "accent",
+          requiredTokens: ["service"],
+        },
+        {
+          key: "process",
+          title: "Alur kerja {{service}}",
+          sectionType: "timeline-row",
+          requiredTokens: ["service"],
+        },
+        {
+          key: "finalCta",
+          title: "Mulai {{offer}}",
+          sectionType: "cta-1",
+          requiredTokens: ["offer"],
+          optional: true,
+        },
+      ],
+    },
+    keywordSet: {
+      _key: "kw-visual",
+      primaryKeyword: "jasa cetak buku premium",
+      angle: "quality",
+    },
+  });
+
+  assert.deepEqual(
+    result.blocks.map((block) => block._type),
+    ["hero-1", "split-row", "timeline-row", "cta-1"],
+  );
+  assert.equal((result.blocks[1] as { colorVariant: string }).colorVariant, "accent");
+  assert.equal((result.blocks[2] as { colorVariant: string }).colorVariant, "background");
+  assert.equal((result.blocks[3] as { colorVariant: string }).colorVariant, "primary");
 });
 
 test("buildGeneratedPageDraft skips sections whose required tokens cannot be resolved", () => {

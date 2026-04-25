@@ -48,11 +48,14 @@ const TEMPLATE_QUERY = `*[_type == "generatorTemplate" && _id == $id][0]{
   _id,
   title,
   designFamily,
+  visualPreset,
+  motionPreset,
+  styleNotes,
   tokenDefinitions[]{_key, name, label, sourceField, fallbackValue, required},
   baseSections,
   optionalSections,
   variationRules,
-  sectionVariants[]{_key, key, title, sectionType, copy, requiredTokens, optional}
+  sectionVariants[]{_key, key, title, sectionType, copy, colorVariant, requiredTokens, optional}
 }`;
 
 const DATASET_QUERY = `*[_type == "generatorDataset" && _id == $id][0]{

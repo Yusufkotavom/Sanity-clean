@@ -22,6 +22,10 @@ const DEFAULT_ANGLE_SECTION_MAP: Record<string, string[]> = {
   default: ["benefits", "faq"],
 };
 
+const ANGLE_GATED_SECTION_KEYS = new Set(
+  Object.values(DEFAULT_ANGLE_SECTION_MAP).flatMap((keys) => keys),
+);
+
 const titleCase = (value: string) =>
   value
     .split(/\s+/)
@@ -135,14 +139,20 @@ const hasAllRequiredTokens = (requiredTokens: string[], tokens: GeneratorTokenMa
   requiredTokens.every((tokenName) => cleanTokenValue(tokens[tokenName]).length > 0);
 
 export const selectSectionKeysForAngle = (template: GeneratorTemplateLite, angle?: string) => {
-  const normalizedAngle = normalizeAngle(angle);
-  const wantedOptional = new Set(DEFAULT_ANGLE_SECTION_MAP[normalizedAngle] ?? DEFAULT_ANGLE_SECTION_MAP.default);
   const baseSections = template.baseSections ?? [];
   const optionalSections = template.optionalSections ?? [];
+  const usesAngleSelection = (template.variationRules ?? []).includes("angle-selects-optional-sections");
+
+  if (!usesAngleSelection) {
+    return [...baseSections, ...optionalSections];
+  }
+
+  const normalizedAngle = normalizeAngle(angle);
+  const wantedOptional = new Set(DEFAULT_ANGLE_SECTION_MAP[normalizedAngle] ?? DEFAULT_ANGLE_SECTION_MAP.default);
 
   return [
     ...baseSections,
-    ...optionalSections.filter((key) => wantedOptional.has(key)),
+    ...optionalSections.filter((key) => wantedOptional.has(key) || !ANGLE_GATED_SECTION_KEYS.has(key)),
   ];
 };
 
@@ -176,6 +186,7 @@ export const buildSectionPlan = (
         sectionType,
         title: titleBase,
         copy: copyBase,
+        colorVariant: variant?.colorVariant,
         optional: optionalKeys.has(key) || Boolean(variant?.optional),
         requiredTokens,
       },

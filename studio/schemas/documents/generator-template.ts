@@ -150,6 +150,47 @@ export default defineType({
       rows: 3,
     }),
     defineField({
+      name: "visualPreset",
+      title: "Visual Preset",
+      type: "string",
+      description: "Reusable visual direction for many service categories.",
+      options: {
+        list: [
+          { title: "Editorial Grid", value: "editorial-grid" },
+          { title: "Proof Showcase", value: "proof-showcase" },
+          { title: "Pricing Spotlight", value: "pricing-spotlight" },
+          { title: "Conversion Stack", value: "conversion-stack" },
+        ],
+        layout: "radio",
+      },
+      initialValue: "editorial-grid",
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: "motionPreset",
+      title: "Motion Preset",
+      type: "string",
+      description: "Planned motion rhythm used by the visual generator templates.",
+      options: {
+        list: [
+          { title: "Calm Reveal", value: "calm-reveal" },
+          { title: "Stagger Rise", value: "stagger-rise" },
+          { title: "Spotlight Flow", value: "spotlight-flow" },
+          { title: "Crisp Snap", value: "crisp-snap" },
+        ],
+        layout: "radio",
+      },
+      initialValue: "calm-reveal",
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: "styleNotes",
+      title: "Style Notes",
+      type: "text",
+      rows: 3,
+      description: "Short operator note about when this visual template works best.",
+    }),
+    defineField({
       name: "outputType",
       title: "Output Type",
       type: "string",
@@ -241,7 +282,14 @@ export default defineType({
   preview: {
     select: {
       title: "title",
-      subtitle: "slug.current",
+      subtitle: "visualPreset",
+      slug: "slug.current",
+    },
+    prepare({ title, subtitle, slug }) {
+      return {
+        title: title || "Generator Template",
+        subtitle: [subtitle, slug].filter(Boolean).join(" · "),
+      };
     },
   },
 });

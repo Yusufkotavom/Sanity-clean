@@ -1810,3 +1810,40 @@ Completed Task 7 for `Sanity Generator V2` by aligning the frontend page query/f
 - ✅ `node frontend/scripts/generator/check-dev-write-guard.mjs` passed.
 - ✅ `node frontend/scripts/generator/export-legacy-templates.mjs` passed against the development dataset (live read-only run).
 - ✅ `node frontend/scripts/generator/run-generator-smoke.mjs` passed against live development generator docs with `readPath.auth = token-drafts` and `source = sanity-development`.
+
+## 2026-04-25 — Sanity Generator Visual Template Library Cleanup
+
+### Changed Files
+- `studio/schemas/documents/generator-template.ts` (MODIFIED) - Added Sanity-side `visualPreset`, `motionPreset`, and `styleNotes` so generator templates can be managed as reusable visual systems instead of service-specific records.
+- `studio/schemas/objects/generator-section-variant.ts` (MODIFIED) - Replaced free-form section typing with supported block-type options and added optional `colorVariant` overrides for per-section visual control in Studio.
+- `studio/lib/generator/types.ts` (MODIFIED) - Extended generator template and section contracts with visual preset and section color metadata.
+- `studio/lib/generator/variation.ts` (MODIFIED) - Simplified optional-section selection so visual-library templates render full optional stacks by default while preserving legacy angle-gated behavior when explicitly requested.
+- `studio/lib/generator/render.ts` (MODIFIED) - Added richer reusable visual output blocks (`split-row`, `timeline-row`, `cta-1`) and preset-aware color selection for generated page drafts.
+- `studio/lib/generator/__tests__/render.test.ts` (MODIFIED) - Added regression coverage for richer visual blocks, color overrides, and explicit angle-gating behavior.
+- `studio/components/generator/program-runner-pane.tsx` (MODIFIED) - Exposed visual preset, motion preset, and style notes in the Studio generator run pane for operator visibility.
+- `frontend/scripts/generator/run-generator-smoke.mjs` (MODIFIED) - Synced live smoke queries to the richer template contract including visual preset metadata.
+- `frontend/scripts/generator/seed-generator-service-starters.mjs` (MODIFIED) - Replaced the old `website/software/printing` starter seeding with a reusable multi-jasa visual template library (`editorial-grid`, `proof-showcase`, `pricing-spotlight`, `conversion-stack`) plus shared dataset cleanup/reseed logic for the development dataset.
+- `studio/schema.json` (MODIFIED) - Regenerated extracted Studio schema after the generator model updates.
+- `frontend/sanity.types.ts` (MODIFIED) - Regenerated Sanity query/schema types after Studio typegen.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated generator migration status/checklist for the new visual template library milestone.
+
+### Summary
+Restructured `Sanity Generator V2` from service-specific starter families into a reusable Sanity-managed visual template library. The generator now models reusable visual direction directly in Studio, supports richer block output in deterministic rendering, and reseeds the development dataset to a cleaner multi-jasa library that can drive many services without carrying old one-off template clutter.
+
+### Impact on SEO/Integration
+- No direct SEO impact.
+- Integration impact:
+  - Studio and generator runtime contracts are now aligned around reusable visual-template metadata.
+  - Development Sanity generator docs are cleaner and no longer organized around legacy per-service starter families.
+  - Live smoke verification now resolves the new visual-library program set from the development dataset under `/layanan`.
+
+### Verification Status
+- ✅ `pnpm --filter studio run typecheck` passed.
+- ✅ `pnpm --filter frontend run typecheck` passed.
+- ✅ `pnpm dlx tsx --test studio/lib/generator/__tests__/render.test.ts` passed.
+- ✅ `node --check frontend/scripts/generator/seed-generator-service-starters.mjs` passed.
+- ✅ `node --check frontend/scripts/generator/run-generator-smoke.mjs` passed.
+- ✅ `pnpm --filter studio run typegen` passed and regenerated `studio/schema.json` plus `frontend/sanity.types.ts`.
+- ✅ `node frontend/scripts/generator/seed-generator-service-starters.mjs --write` passed against the Sanity `development` dataset using dev credentials.
+- ✅ `node frontend/scripts/generator/run-generator-smoke.mjs` passed live against the Sanity `development` dataset and now resolves `generator-program-conversion-stack-dev` with `9` successful dry-run combinations.
+- ⚠️ `pnpm --filter frontend run typegen` still fails with `PROJECT_ROOT_NOT_FOUND` because `frontend` is not a standalone Sanity project root in the current repo layout.

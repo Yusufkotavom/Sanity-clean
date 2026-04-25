@@ -26,6 +26,59 @@ const buildReference = (id: string, existing?: ReferenceValue): ReferenceValue =
     _weak: true,
   };
 
+const DEFAULT_PADDING = {
+  _type: "section-padding" as const,
+  top: true,
+  bottom: true,
+};
+
+const buildLink = (key: string, title: string, href: string, buttonVariant: "default" | "outline" = "default") => ({
+  _key: key,
+  _type: "link",
+  isExternal: true,
+  title,
+  href,
+  target: false,
+  buttonVariant,
+});
+
+const resolveSectionColorVariant = (
+  sectionColorVariant: string | undefined,
+  visualPreset: string | undefined,
+  sectionType: string,
+  sectionKey: string,
+) => {
+  if (sectionColorVariant) {
+    return sectionColorVariant;
+  }
+
+  const preset = visualPreset || "editorial-grid";
+
+  if (preset === "proof-showcase") {
+    if (sectionType === "testimonials-block") return "accent";
+    if (sectionType === "service-types-block") return "secondary";
+    if (sectionType === "pricing-block") return "card";
+    return sectionKey === "highlights" ? "card" : "background";
+  }
+
+  if (preset === "pricing-spotlight") {
+    if (sectionType === "pricing-block") return "primary";
+    if (sectionType === "testimonials-block") return "muted";
+    return sectionKey === "serviceTypes" ? "card" : "background";
+  }
+
+  if (preset === "conversion-stack") {
+    if (sectionType === "service-types-block") return "accent";
+    if (sectionType === "testimonials-block") return "secondary";
+    return sectionKey === "finalCta" ? "primary" : "background";
+  }
+
+  if (sectionType === "service-types-block") return "card";
+  if (sectionType === "testimonials-block") return "muted";
+  if (sectionType === "pricing-block") return "secondary";
+  return sectionKey === "highlights" ? "accent" : "background";
+};
+
 const toHeroBlock = (section: GeneratorSectionPlan, title: string, description: string, pagePath: string) => ({
   _type: "hero-1",
   _key: section.key,
@@ -33,31 +86,23 @@ const toHeroBlock = (section: GeneratorSectionPlan, title: string, description: 
   title,
   body: buildPortableText(description, section.key),
   links: [
-    {
-      _key: `${section.key}-link-primary`,
-      _type: "link",
-      isExternal: true,
-      title: "Konsultasi Sekarang",
-      href: pagePath,
-      target: false,
-      buttonVariant: "default",
-    },
-    {
-      _key: `${section.key}-link-secondary`,
-      _type: "link",
-      isExternal: true,
-      title: "Lihat Detail Layanan",
-      href: pagePath,
-      buttonVariant: "outline",
-    },
+    buildLink(`${section.key}-link-primary`, "Konsultasi Sekarang", pagePath),
+    buildLink(`${section.key}-link-secondary`, "Lihat Detail Layanan", pagePath, "outline"),
   ],
 });
 
-const toValuePropsBlock = (section: GeneratorSectionPlan, title: string, description: string) => ({
+const toValuePropsBlock = (
+  section: GeneratorSectionPlan,
+  title: string,
+  description: string,
+  colorVariant: string,
+) => ({
   _type: "value-props-block",
   _key: section.key,
   title,
   description,
+  colorVariant,
+  padding: DEFAULT_PADDING,
   valueProps: [
     {
       _key: `${section.key}-value-1`,
@@ -80,10 +125,17 @@ const toValuePropsBlock = (section: GeneratorSectionPlan, title: string, descrip
   ],
 });
 
-const toProblemSolutionBlock = (section: GeneratorSectionPlan, title: string, description: string) => ({
+const toProblemSolutionBlock = (
+  section: GeneratorSectionPlan,
+  title: string,
+  description: string,
+  colorVariant: string,
+) => ({
   _type: "problem-solution-block",
   _key: section.key,
   title,
+  colorVariant,
+  padding: DEFAULT_PADDING,
   problems: [
     `Pesan ${title.toLowerCase()} belum cukup spesifik untuk calon pelanggan lokal.`,
     `Halaman butuh jalur keputusan yang lebih jelas untuk kata kunci target.`,
@@ -92,28 +144,52 @@ const toProblemSolutionBlock = (section: GeneratorSectionPlan, title: string, de
   solution: description,
 });
 
-const toFaqBlock = (section: GeneratorSectionPlan, title: string, description: string, category: string) => ({
+const toFaqBlock = (
+  section: GeneratorSectionPlan,
+  title: string,
+  description: string,
+  category: string,
+  colorVariant: string,
+) => ({
   _type: "faq-block",
   _key: section.key,
   title,
   description,
   category,
+  colorVariant,
+  padding: DEFAULT_PADDING,
 });
 
-const toPricingBlock = (section: GeneratorSectionPlan, title: string, description: string, category: string) => ({
+const toPricingBlock = (
+  section: GeneratorSectionPlan,
+  title: string,
+  description: string,
+  category: string,
+  colorVariant: string,
+) => ({
   _type: "pricing-block",
   _key: section.key,
   title,
   description,
   category,
+  colorVariant,
+  padding: DEFAULT_PADDING,
 });
 
-const toTestimonialsBlock = (section: GeneratorSectionPlan, title: string, description: string, category: string) => ({
+const toTestimonialsBlock = (
+  section: GeneratorSectionPlan,
+  title: string,
+  description: string,
+  category: string,
+  colorVariant: string,
+) => ({
   _type: "testimonials-block",
   _key: section.key,
   title,
   description,
   category,
+  colorVariant,
+  padding: DEFAULT_PADDING,
 });
 
 const toServiceTypesBlock = (
@@ -121,11 +197,14 @@ const toServiceTypesBlock = (
   title: string,
   description: string,
   pagePath: string,
+  colorVariant: string,
 ) => ({
   _type: "service-types-block",
   _key: section.key,
   title,
   description,
+  colorVariant,
+  padding: DEFAULT_PADDING,
   services: [
     {
       _key: `${section.key}-service-1`,
@@ -172,29 +251,137 @@ const toServiceTypesBlock = (
   ],
 });
 
+const toSplitRowBlock = (
+  section: GeneratorSectionPlan,
+  title: string,
+  description: string,
+  pagePath: string,
+  colorVariant: string,
+) => ({
+  _type: "split-row",
+  _key: section.key,
+  colorVariant,
+  padding: DEFAULT_PADDING,
+  noGap: false,
+  splitColumns: [
+    {
+      _key: `${section.key}-intro`,
+      _type: "split-content",
+      tagLine: section.title,
+      title,
+      body: buildPortableText(description, `${section.key}-intro`),
+      link: buildLink(`${section.key}-link-primary`, "Diskusikan Struktur Halaman", pagePath),
+    },
+    {
+      _key: `${section.key}-proofs`,
+      _type: "split-info-list",
+      list: [
+        {
+          _key: `${section.key}-proof-1`,
+          _type: "split-info",
+          title: "Pesan utama lebih cepat tertangkap",
+          body: buildPortableText("Layout ini memecah manfaat, pembeda, dan CTA menjadi ritme baca yang lebih jelas.", `${section.key}-proof-1`),
+          tags: ["Visual", "Clarity"],
+        },
+        {
+          _key: `${section.key}-proof-2`,
+          _type: "split-info",
+          title: "Masih fleksibel untuk banyak jasa",
+          body: buildPortableText("Template tetap generik di level struktur, lalu service, lokasi, dan keyword mengisi detailnya.", `${section.key}-proof-2`),
+          tags: ["Reusable", "Multi Service"],
+        },
+      ],
+    },
+  ],
+});
+
+const toTimelineRowBlock = (
+  section: GeneratorSectionPlan,
+  title: string,
+  description: string,
+  colorVariant: string,
+) => ({
+  _type: "timeline-row",
+  _key: section.key,
+  colorVariant,
+  padding: DEFAULT_PADDING,
+  timelines: [
+    {
+      _key: `${section.key}-timeline-1`,
+      _type: "timelines-1",
+      title: "Pilih sudut intent",
+      tagLine: "Step 1",
+      body: buildPortableText(`Keyword dipetakan ke angle yang tepat agar ${title.toLowerCase()} tidak terasa generik.`, `${section.key}-timeline-1`),
+    },
+    {
+      _key: `${section.key}-timeline-2`,
+      _type: "timelines-1",
+      title: "Susun section visual",
+      tagLine: "Step 2",
+      body: buildPortableText(description, `${section.key}-timeline-2`),
+    },
+    {
+      _key: `${section.key}-timeline-3`,
+      _type: "timelines-1",
+      title: "Siapkan CTA akhir",
+      tagLine: "Step 3",
+      body: buildPortableText("Output tetap berupa page biasa sehingga editor masih bisa memoles copy sebelum publish.", `${section.key}-timeline-3`),
+    },
+  ],
+});
+
+const toCtaBlock = (
+  section: GeneratorSectionPlan,
+  title: string,
+  description: string,
+  pagePath: string,
+  colorVariant: string,
+) => ({
+  _type: "cta-1",
+  _key: section.key,
+  colorVariant: colorVariant === "background" ? "primary" : colorVariant,
+  sectionWidth: "default",
+  stackAlign: "left",
+  tagLine: section.title,
+  title,
+  body: buildPortableText(description, `${section.key}-cta`),
+  links: [
+    buildLink(`${section.key}-cta-primary`, "Mulai Diskusi", pagePath),
+    buildLink(`${section.key}-cta-secondary`, "Lihat Detail", pagePath, "outline"),
+  ],
+});
+
 const sectionPlanToBlock = (
   section: GeneratorSectionPlan,
   pageTitle: string,
   description: string,
   pagePath: string,
   faqCategory: string,
+  visualPreset: string | undefined,
 ) => {
+  const colorVariant = resolveSectionColorVariant(section.colorVariant, visualPreset, section.sectionType, section.key);
   switch (section.sectionType) {
     case "hero-1":
       return toHeroBlock(section, pageTitle, description, pagePath);
     case "problem-solution-block":
-      return toProblemSolutionBlock(section, section.title, description);
+      return toProblemSolutionBlock(section, section.title, description, colorVariant);
     case "faq-block":
-      return toFaqBlock(section, section.title, description, faqCategory);
+      return toFaqBlock(section, section.title, description, faqCategory, colorVariant);
     case "pricing-block":
-      return toPricingBlock(section, section.title, description, faqCategory);
+      return toPricingBlock(section, section.title, description, faqCategory, colorVariant);
     case "testimonials-block":
-      return toTestimonialsBlock(section, section.title, description, faqCategory);
+      return toTestimonialsBlock(section, section.title, description, faqCategory, colorVariant);
     case "service-types-block":
-      return toServiceTypesBlock(section, section.title, description, pagePath);
+      return toServiceTypesBlock(section, section.title, description, pagePath, colorVariant);
+    case "split-row":
+      return toSplitRowBlock(section, section.title, description, pagePath, colorVariant);
+    case "timeline-row":
+      return toTimelineRowBlock(section, section.title, description, colorVariant);
+    case "cta-1":
+      return toCtaBlock(section, section.title, description, pagePath, colorVariant);
     case "value-props-block":
     default:
-      return toValuePropsBlock(section, section.title, description);
+      return toValuePropsBlock(section, section.title, description, colorVariant);
   }
 };
 
@@ -236,6 +423,7 @@ export const buildGeneratedPageDraft = ({
       `${description} ${section.copy}`.trim(),
       pagePath,
       buildFaqCategory(template, row),
+      template.visualPreset,
     ),
   );
 
