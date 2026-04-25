@@ -1,0 +1,27 @@
+{
+  "ok": true,
+  "readOnly": true,
+  "generatedAt": "2026-04-25T12:49:06.770Z",
+  "dataset": "development",
+  "projectId": "ww3aejg2",
+  "counts": {
+    "pageTemplates": 0,
+    "pageLocations": 0,
+    "serviceLocations": 0
+  },
+  "summaries": {
+    "pageLocations": {
+      "total": 0,
+      "missingTemplate": 0,
+      "byTemplateId": {}
+    },
+    "serviceLocations": {
+      "total": 0,
+      "missingTemplate": 0,
+      "byTemplateId": {}
+    }
+  },
+  "pageTemplates": [],
+  "pageLocations": [],
+  "serviceLocations": []
+}

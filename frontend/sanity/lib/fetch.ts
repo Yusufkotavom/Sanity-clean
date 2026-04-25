@@ -66,6 +66,19 @@ import {
 import type { TemplatePageDoc } from "@/types/template";
 
 export type PageBlock = NonNullable<NonNullable<PAGE_QUERY_RESULT>["blocks"]>[number];
+export type PageGeneratorDebug = {
+  programId?: string | null;
+  templateId?: string | null;
+  datasetId?: string | null;
+  rowKey?: string | null;
+  keywordKey?: string | null;
+  generatedAt?: string | null;
+  version?: string | null;
+  aiUsed?: boolean | null;
+};
+export type PageWithGeneratorDebug = PAGE_QUERY_RESULT & {
+  generator?: PageGeneratorDebug | null;
+};
 export type ReusablePlacementSlot =
   | "beforeHeader"
   | "afterHeader"
@@ -125,6 +138,26 @@ export const fetchSanityPageBySlug = async ({
   });
 
   return data;
+};
+
+export const fetchSanityPageGeneratorDebugBySlug = async ({
+  slug,
+  includeDrafts = false,
+}: {
+  slug: string;
+  includeDrafts?: boolean;
+}): Promise<PageWithGeneratorDebug | null> => {
+  const data = await client.fetch<PageWithGeneratorDebug | null>(
+    PAGE_QUERY,
+    { slug },
+    {
+      perspective: includeDrafts ? "drafts" : "published",
+      stega: false,
+      useCdn: false,
+    },
+  );
+
+  return data || null;
 };
 
 export const fetchSanityPageBySlugBuildOnly = async ({

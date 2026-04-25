@@ -3,6 +3,29 @@ import { Badge, Box, Card, Code, Flex, Heading, Stack, Text } from "@sanity/ui";
 export type PreviewStatus = {
   blockingIssues: string[];
   notes: string[];
+  mode?: "loading" | "ready" | "blocked" | "error";
+};
+
+export type PreviewDraftDetails = {
+  title: string;
+  slug: string;
+  blockCount: number;
+  blockTypes: string[];
+  generator: {
+    programId: string;
+    templateId: string;
+    datasetId?: string;
+    rowKey: string;
+    keywordKey: string;
+    version: string;
+  };
+};
+
+type PreviewSelection = {
+  templateTitle?: string;
+  datasetTitle?: string;
+  keywordSetLabel?: string;
+  rowLabel?: string;
 };
 
 type PreviewCardProps = {
@@ -10,6 +33,23 @@ type PreviewCardProps = {
   seoTitle?: string;
   seoDescription?: string;
   status: PreviewStatus;
+  draft?: PreviewDraftDetails;
+  selection?: PreviewSelection;
+};
+
+const resolveBadgeTone = (mode: PreviewStatus["mode"], hasBlockingIssues: boolean) => {
+  if (mode === "loading") return "primary" as const;
+  if (mode === "error") return "critical" as const;
+  if (hasBlockingIssues || mode === "blocked") return "caution" as const;
+  return "positive" as const;
+};
+
+const resolveBadgeLabel = (mode: PreviewStatus["mode"], hasBlockingIssues: boolean, hasDraft: boolean) => {
+  if (mode === "loading") return "Loading";
+  if (mode === "error") return "Error";
+  if (hasBlockingIssues || mode === "blocked") return "Blocked";
+  if (hasDraft) return "Draft Ready";
+  return "Ready";
 };
 
 export function PreviewCard({
@@ -17,10 +57,14 @@ export function PreviewCard({
   seoTitle,
   seoDescription,
   status,
+  draft,
+  selection,
 }: PreviewCardProps) {
   const hasBlockingIssues = status.blockingIssues.length > 0;
   const hasSeoPattern = Boolean(seoTitle || seoDescription);
   const hasNotes = status.notes.length > 0;
+  const badgeTone = resolveBadgeTone(status.mode, hasBlockingIssues);
+  const badgeLabel = resolveBadgeLabel(status.mode, hasBlockingIssues, Boolean(draft));
 
   return (
     <Card border padding={4} radius={3} tone="transparent">
@@ -29,9 +73,7 @@ export function PreviewCard({
           <Heading as="h4" size={1}>
             Preview Card
           </Heading>
-          <Badge tone={hasBlockingIssues ? "caution" : "positive"}>
-            {hasBlockingIssues ? "Blocked" : "Ready for Task 3 wiring"}
-          </Badge>
+          <Badge tone={badgeTone}>{badgeLabel}</Badge>
         </Flex>
 
         <Stack space={3}>
@@ -41,6 +83,29 @@ export function PreviewCard({
             </Text>
             <Code size={1}>{previewPath}</Code>
           </Box>
+
+          {selection ? (
+            <Box>
+              <Text muted size={1}>
+                Preview input
+              </Text>
+              <Stack as="ul" space={2} marginTop={2}>
+                <Text as="li" size={1}>
+                  Template: {selection.templateTitle || "Missing"}
+                </Text>
+                <Text as="li" size={1}>
+                  Dataset: {selection.datasetTitle || "Missing"}
+                </Text>
+                <Text as="li" size={1}>
+                  First keyword set: {selection.keywordSetLabel || "Missing"}
+                </Text>
+                <Text as="li" size={1}>
+                  First row: {selection.rowLabel || "Missing"}
+                </Text>
+              </Stack>
+            </Box>
+          ) : null}
+
           <Box>
             <Text muted size={1}>
               SEO title pattern
@@ -53,6 +118,36 @@ export function PreviewCard({
             </Text>
             <Text size={1}>{seoDescription || "Missing"}</Text>
           </Box>
+
+          {draft ? (
+            <Box>
+              <Text muted size={1}>
+                Deterministic draft
+              </Text>
+              <Stack as="ul" space={2} marginTop={2}>
+                <Text as="li" size={1}>
+                  Title: {draft.title}
+                </Text>
+                <Text as="li" size={1}>
+                  Slug: <Code size={1}>{draft.slug}</Code>
+                </Text>
+                <Text as="li" size={1}>
+                  Blocks: {draft.blockCount}
+                </Text>
+                <Text as="li" size={1}>
+                  Block types: {draft.blockTypes.join(", ") || "None"}
+                </Text>
+                <Text as="li" size={1}>
+                  Generator lineage: {draft.generator.programId} / {draft.generator.templateId}
+                  {draft.generator.datasetId ? ` / ${draft.generator.datasetId}` : ""}
+                </Text>
+                <Text as="li" size={1}>
+                  Row key / keyword key: {draft.generator.rowKey} / {draft.generator.keywordKey}
+                </Text>
+              </Stack>
+            </Box>
+          ) : null}
+
           <Box>
             <Text muted size={1}>
               Blocking issues
@@ -78,7 +173,7 @@ export function PreviewCard({
             <Stack as="ul" space={2} marginTop={2}>
               {!hasSeoPattern ? (
                 <Text as="li" size={1}>
-                  SEO patterns are incomplete, so Task 3 preview output should treat metadata as unresolved.
+                  SEO patterns are incomplete, so preview metadata remains partially unresolved.
                 </Text>
               ) : null}
               {hasNotes
@@ -90,12 +185,7 @@ export function PreviewCard({
                 : null}
               {!hasSeoPattern && !hasNotes ? (
                 <Text as="li" size={1}>
-                  Deterministic preview assembly lands in Task 3 after metadata and dataset wiring are in place.
-                </Text>
-              ) : null}
-              {hasSeoPattern && !hasNotes ? (
-                <Text as="li" size={1}>
-                  Minimal program inputs are present. Deterministic preview assembly lands in Task 3.
+                  Deterministic preview assembly is ready once template, dataset, and first-row inputs resolve.
                 </Text>
               ) : null}
             </Stack>

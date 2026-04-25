@@ -4,6 +4,87 @@ This document tracks all SEO-related changes made to the repository.
 
 ---
 
+## 2026-04-25 — Sanity Generator V2 Legacy Inventory Export
+
+### Changed Files
+- `studio/lib/generator/legacy.ts` (ADDED) - Added a read-only mapper that normalizes legacy `pageTemplate` records into minimal generator seed metadata for migration planning.
+- `frontend/scripts/generator/export-legacy-templates.mjs` (ADDED) - Added a read-only export script that fetches `pageTemplate`, `pageLocation`, and `serviceLocation` inventory and writes `frontend/tmp/generator-legacy-template-inventory.json`.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated the generator rollout snapshot and Sprint 3 checklist for Task 6.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+Implemented Task 6 of the Sanity Generator V2 plan with scope limited to legacy inventory and mapping. The new legacy mapper does not mutate any Sanity documents; it only converts a legacy `pageTemplate` record into a small generator-seed shape that keeps title, design family, shell binding, top-block default, and legacy lineage fields. The companion export script uses the existing read-only Sanity client to fetch `pageTemplate`, `pageLocation`, and `serviceLocation`, attaches a mapped generator seed to each template record, summarizes missing template references, and writes the resulting snapshot to `frontend/tmp/generator-legacy-template-inventory.json` for migration analysis.
+
+### Impact on SEO/Integration
+- `No direct SEO impact`
+- Positive migration integration impact: legacy template and location inventory is now captured in one deterministic JSON artifact that can be reviewed before any future generator migration or public-content write path.
+- Positive CMS safety impact: the task stayed read-only and did not write to public page content or generator docs.
+
+### Verification Status
+- ✅ `node frontend/scripts/generator/export-legacy-templates.mjs` passed and wrote `frontend/tmp/generator-legacy-template-inventory.json`.
+- ✅ Manual output review confirmed the export includes `pageTemplates`, `pageLocations`, `serviceLocations`, template-level `generatorSeed` previews, and missing-template-reference summaries.
+- ✅ `git diff --check -- studio/lib/generator/legacy.ts frontend/scripts/generator/export-legacy-templates.mjs docs/astro-migration-megaplan.md docs/seo-updates.md` passed.
+- ✅ Manual self-review completed for read-only behavior, field scope, mapper normalization, and inventory output structure.
+
+---
+
+## 2026-04-25 — Sanity Generator V2 Dev-Only Write Path
+
+### Changed Files
+- `studio/lib/generator/write.ts` (ADDED) - Added explicit development-dataset write guards plus deterministic generated page/draft ID helpers.
+- `frontend/scripts/generator/check-dev-write-guard.mjs` (ADDED) - Added a dev-write guard script that refuses production and requires a development write credential.
+- `frontend/scripts/generator/seed-generator-examples.mjs` (ADDED) - Added a development-only example seed script for `generatorTemplate`, `generatorDataset`, and `generatorProgram`.
+- `studio/components/generator/program-runner-pane.tsx` (MODIFIED) - Added real Generate Drafts behavior that validates the current dataset, runs a dry run first, then creates only missing draft `page` documents with deterministic generator IDs while skipping/conflicting existing pages.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated the generator rollout snapshot and execution checklist for Task 5.
+
+### Summary
+Implemented Task 5 of the Sanity Generator V2 plan. The generator now has a small shared write helper that hard-blocks non-development datasets and standardizes generated draft IDs. The Studio `Generator Run` pane now performs the expected guarded flow: validate the active dataset, calculate the same deterministic dry-run result already used for previewing, and then create only missing draft `page` documents under `drafts.generator-page-<slug>` without overwriting existing slug or lineage matches. A matching development-only guard script now checks the env contract up front, and a new example seed script can populate one development-only template, dataset, and program document set for operator testing.
+
+### Impact on SEO/Integration
+- `No direct SEO impact`
+- Positive Studio integration impact: generator writes are now explicitly limited to development and aligned with the existing deterministic preview/dedupe contract instead of adding a separate write code path.
+- Positive CMS safety impact: the write helper and guard script reinforce the repo rule that generator content must not touch production datasets.
+
+### Verification Status
+- ✅ `node frontend/scripts/generator/check-dev-write-guard.mjs` passed.
+- ✅ `pnpm --filter studio run typecheck` passed.
+- ✅ `pnpm --filter frontend run typecheck` passed.
+- ✅ `node frontend/scripts/generator/seed-generator-examples.mjs` passed against the live `development` dataset after rerunning with network access and reported `tokenSource: "SANITY_DEV"` plus the three expected upserted IDs.
+- ✅ `git diff --check -- studio/lib/generator/write.ts frontend/scripts/generator/seed-generator-examples.mjs frontend/scripts/generator/check-dev-write-guard.mjs studio/components/generator/program-runner-pane.tsx docs/seo-updates.md docs/astro-migration-megaplan.md` passed.
+- ⚠️ `pnpm --dir frontend exec node --import tsx scripts/generator/run-generator-smoke.mjs` passed only through its `sample-fallback` path even after seeding the development dataset; the seeded write succeeded, but the smoke read path still did not resolve a live `generatorProgram` document from the unauthenticated read client.
+- ✅ Manual self-review completed for development-dataset enforcement, pre-write dry-run reuse, deterministic draft ID generation, duplicate handling, and non-overwrite behavior.
+
+---
+
+## 2026-04-25 — Sanity Generator V2 Preview Wiring and Dry-Run Smoke
+
+### Changed Files
+- `studio/components/generator/program-runner-pane.tsx` (MODIFIED) - Wired the Generator Run pane to fetch the selected template and dataset, build a deterministic first-item preview, and calculate batch dry-run counts without writing pages.
+- `studio/components/generator/preview-card.tsx` (MODIFIED) - Expanded the preview card to show selected input labels, deterministic draft details, and richer preview status states.
+- `studio/components/generator/run-summary.tsx` (MODIFIED) - Expanded the run summary to show dry-run mode, inspected combination count, and preview slug context alongside result counts.
+- `frontend/scripts/generator/run-generator-smoke.mjs` (ADDED) - Added a dev-only dry-run smoke script that reads the development dataset when available and falls back to a deterministic fixture when generator docs are not seeded yet.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated the generator rollout snapshot and execution checklist for Task 4.
+
+### Summary
+Implemented Task 4 of the Sanity Generator V2 plan. The Studio pane now resolves the currently selected `generatorTemplate` and `generatorDataset`, chooses the first dataset `keywordSet` plus first `row`, and runs them through `buildGeneratedPageDraft` for a real deterministic preview. The same pane now supports a dry-run-only batch calculation across every keyword-set x row combination, using existing page slug and generator-lineage checks to count generated, skipped, conflicted, and failed outcomes without creating any content. A matching smoke script now exercises the same dry-run path in the frontend workspace with development-dataset enforcement; if generator docs are not seeded in `development`, the script falls back to an explicit deterministic fixture so the generator core and summary logic can still be verified end-to-end.
+
+### Impact on SEO/Integration
+- `No direct SEO impact`
+- Positive Studio integration impact: the custom Generator Run view is now connected to the deterministic generator core and a read-only dry-run workflow instead of placeholder UI only.
+- Verification-path impact: the new smoke script now validates the generator preview/dry-run contract without allowing content writes.
+
+### Verification Status
+- ✅ `pnpm --dir frontend exec node --import tsx scripts/generator/run-generator-smoke.mjs` passed and returned `ok: true`.
+- ✅ The smoke output confirmed `devOnly: true` and `dataset: "development"`.
+- ✅ The smoke output also confirmed the current environment concern: no `generatorProgram` documents exist in the `development` dataset yet, so verification used the script's labeled `sample-fallback` path.
+- ✅ `pnpm --filter studio run typecheck` passed.
+- ✅ `git diff --check -- studio/components/generator/program-runner-pane.tsx studio/components/generator/preview-card.tsx studio/components/generator/run-summary.tsx frontend/scripts/generator/run-generator-smoke.mjs` passed.
+- ✅ Manual self-review completed for read-only behavior, first-item preview selection, duplicate-count logic, and the fallback smoke-script path.
+
+---
+
 ## 2026-04-25 — Sanity Generator V2 Desk Structure and Program Pane
 
 ### Changed Files
@@ -1524,3 +1605,30 @@ Completed a conservative cleanup pass across frontend components and Sanity Stud
 - ✅ `rg` confirmed the removed component files had no active imports before deletion.
 - ✅ `pnpm --filter frontend run typecheck` passed.
 - ✅ `pnpm --filter studio run typecheck` passed.
+
+## 2026-04-25 — Generator V2 Frontend Verification and Live-Dev Smoke Path
+
+### Changed Files
+- `frontend/sanity/queries/page.ts` (MODIFIED) - Added optional `generator` metadata fields to the page query so generated-page lineage can be inspected during QA/debug verification.
+- `frontend/sanity/lib/fetch.ts` (MODIFIED) - Added a focused generator debug fetch helper and aligned draft-perspective reads to the current `drafts` perspective name.
+- `frontend/scripts/lib/sanity-page-guards.mjs` (MODIFIED) - Added token-aware read resolution and a draft-access Sanity client for development verification flows without changing write behavior.
+- `frontend/scripts/generator/run-generator-smoke.mjs` (MODIFIED) - Strengthened the smoke path to self-bootstrap `node` with TS support, prefer live development docs through token-backed draft reads, and report the effective read mode in output.
+- `docs/seo-updates.md` (MODIFIED) - Logged this verification cycle.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated generator rollout snapshot/checklist with Task 7 completion.
+
+### Summary
+Completed Task 7 for `Sanity Generator V2` by aligning the frontend page query/fetch contract with generator lineage metadata and fixing the smoke verification path so a seeded development dataset is read live before any fallback fixture is used. The smoke script remains read-only and development-scoped, while generator writes continue to rely on the existing dev-only guard path.
+
+### Impact on SEO/Integration
+- No direct SEO impact.
+- Integration impact:
+  - Frontend QA can now inspect generator lineage metadata from standard `page` queries/fetch helpers.
+  - Generator smoke verification now prefers real development dataset documents when credentials are present, which closes the earlier false-fallback concern after seeding.
+  - No production dataset writes or production read-target changes were introduced.
+
+### Verification Status
+- ✅ `pnpm --filter studio run typecheck` passed.
+- ✅ `pnpm --filter frontend run typecheck` passed.
+- ✅ `node frontend/scripts/generator/check-dev-write-guard.mjs` passed.
+- ✅ `node frontend/scripts/generator/export-legacy-templates.mjs` passed against the development dataset (live read-only run).
+- ✅ `node frontend/scripts/generator/run-generator-smoke.mjs` passed against live development generator docs with `readPath.auth = token-drafts` and `source = sanity-development`.

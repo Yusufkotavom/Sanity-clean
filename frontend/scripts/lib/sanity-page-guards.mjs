@@ -101,6 +101,33 @@ export async function createSanityReadClient() {
   });
 }
 
+export function resolveSanityReadToken(env) {
+  return env.SANITY_DEV || env.SANITY_AUTH_TOKEN || undefined;
+}
+
+export async function createSanityReadClientWithDraftAccess() {
+  const env = await loadSanityEnv();
+  const projectId = env.NEXT_PUBLIC_SANITY_PROJECT_ID;
+  const dataset = env.NEXT_PUBLIC_SANITY_DATASET;
+  const apiVersion = env.NEXT_PUBLIC_SANITY_API_VERSION || "2026-03-23";
+  const token = resolveSanityReadToken(env);
+
+  if (!projectId || !dataset) {
+    throw new Error(
+      "Missing Sanity read config. Expected NEXT_PUBLIC_SANITY_PROJECT_ID and NEXT_PUBLIC_SANITY_DATASET.",
+    );
+  }
+
+  return createClient({
+    projectId,
+    dataset,
+    apiVersion,
+    perspective: token ? "drafts" : "published",
+    token,
+    useCdn: false,
+  });
+}
+
 export function normalizeLinkObject(link, fallbackKey) {
   if (!link || typeof link !== "object" || Array.isArray(link)) return link;
 

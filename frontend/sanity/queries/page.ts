@@ -7,6 +7,16 @@ export const PAGE_QUERY = groq`
   *[_type == "page" && slug.current == $slug][0]{
     title,
     topBlockCount,
+    generator{
+      programId,
+      templateId,
+      datasetId,
+      rowKey,
+      keywordKey,
+      generatedAt,
+      version,
+      aiUsed
+    },
     thumbnail{
       ${imageQuery}
     },
