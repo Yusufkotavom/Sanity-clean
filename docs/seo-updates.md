@@ -34,6 +34,29 @@ Applied the lowest-risk cleanup from the legacy templating audit. The frontend n
 
 ---
 
+## 2026-04-25 — Visual-First Generator Starters Based On Legacy Output
+
+### Changed Files
+- `frontend/scripts/generator/seed-generator-service-starters.mjs` (MODIFIED) - Reworked the seeded generator starter families so they follow the old generator pages mainly as a visual section model, using `hero`, `highlights`, `serviceTypes`, `pricing`, `testimonials`, `faq`, and `finalCta` rather than flatter utilitarian section sets.
+- `studio/lib/generator/render.ts` (MODIFIED) - Added deterministic support for `service-types-block` and `testimonials-block`, keeping the new generator aligned with the more visual section rhythm from the legacy generator outputs.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated the status snapshot and cleanup checklist.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+Shifted the new generator from a mostly utilitarian scaffold to a more visual-first template model using the old generator pages as the main template reference. The starter families now prioritize the same kind of visual pacing that existed in the older generated pages: a stronger hero, visual benefit cards, service grids, pricing/testimonial sections, then FAQ and a closing CTA. The new generator keeps the cleaner architecture, but the visual composition is now inherited from the old output rather than from the old runtime logic.
+
+### Impact on SEO/Integration
+- Positive integration impact: the new generator templates are now structurally closer to the older proven landing-page outputs while still generating standard `page` documents in the new system.
+- No direct live SEO impact beyond the development generator setup because production-rendered pages were not switched in this batch.
+
+### Verification Status
+- ✅ `pnpm --filter studio run typecheck` passed.
+- ✅ `pnpm --filter frontend run typecheck` passed.
+- ✅ `pnpm dlx tsx --test studio/lib/generator/__tests__/render.test.ts` passed.
+- ✅ `node --check frontend/scripts/generator/seed-generator-service-starters.mjs` passed.
+
+---
+
 ## 2026-04-25 — Generator Dataset Input Flow And Richer Starter Output
 
 ### Changed Files

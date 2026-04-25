@@ -108,6 +108,70 @@ const toPricingBlock = (section: GeneratorSectionPlan, title: string, descriptio
   category,
 });
 
+const toTestimonialsBlock = (section: GeneratorSectionPlan, title: string, description: string, category: string) => ({
+  _type: "testimonials-block",
+  _key: section.key,
+  title,
+  description,
+  category,
+});
+
+const toServiceTypesBlock = (
+  section: GeneratorSectionPlan,
+  title: string,
+  description: string,
+  pagePath: string,
+) => ({
+  _type: "service-types-block",
+  _key: section.key,
+  title,
+  description,
+  services: [
+    {
+      _key: `${section.key}-service-1`,
+      title: `${title} Utama`,
+      description,
+      features: [
+        "Struktur visual lebih rapi",
+        "Copy tetap selaras dengan intent",
+        "Masih mudah dikoreksi manual",
+      ],
+      price: "Mulai dari konsultasi kebutuhan",
+      timeline: "Timeline menyesuaikan scope",
+      badge: "Fokus Utama",
+      link: {
+        _key: `${section.key}-service-link-1`,
+        _type: "link",
+        isExternal: true,
+        title: "Lihat Detail",
+        href: pagePath,
+        buttonVariant: "default",
+      },
+    },
+    {
+      _key: `${section.key}-service-2`,
+      title: `${title} Pendukung`,
+      description: "Cocok untuk variasi intent kedua tanpa membuat halaman terasa duplikat.",
+      features: [
+        "Sudut narasi berbeda",
+        "CTA lebih spesifik",
+        "Masih satu bahasa desain",
+      ],
+      price: "Disesuaikan dengan kebutuhan",
+      timeline: "Bisa disusun bertahap",
+      badge: "Variasi",
+      link: {
+        _key: `${section.key}-service-link-2`,
+        _type: "link",
+        isExternal: true,
+        title: "Diskusikan",
+        href: pagePath,
+        buttonVariant: "outline",
+      },
+    },
+  ],
+});
+
 const sectionPlanToBlock = (
   section: GeneratorSectionPlan,
   pageTitle: string,
@@ -124,6 +188,10 @@ const sectionPlanToBlock = (
       return toFaqBlock(section, section.title, description, faqCategory);
     case "pricing-block":
       return toPricingBlock(section, section.title, description, faqCategory);
+    case "testimonials-block":
+      return toTestimonialsBlock(section, section.title, description, faqCategory);
+    case "service-types-block":
+      return toServiceTypesBlock(section, section.title, description, pagePath);
     case "value-props-block":
     default:
       return toValuePropsBlock(section, section.title, description);
