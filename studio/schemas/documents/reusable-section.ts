@@ -51,12 +51,47 @@ export default defineType({
       },
     }),
     defineField({
+      name: "routeMode",
+      type: "string",
+      title: "Route Scope",
+      description:
+        "Apply this section everywhere, or only on selected page slugs managed in Sanity/frontend routing.",
+      initialValue: "all",
+      options: {
+        list: [
+          { title: "All Matching Routes", value: "all" },
+          { title: "Only Selected Slugs", value: "selected" },
+        ],
+        layout: "radio",
+      },
+    }),
+    defineField({
+      name: "routeSlugs",
+      type: "array",
+      title: "Route Keys",
+      description:
+        "Optional route keys without a leading slash. Examples: index, services, blog/post-slug, pembuatan-website/jakarta.",
+      hidden: ({ parent }) => (parent as { routeMode?: string } | undefined)?.routeMode !== "selected",
+      of: [{ type: "string" }],
+      validation: (Rule) =>
+        Rule.custom((value, context) => {
+          const routeMode = (context.parent as { routeMode?: string } | undefined)?.routeMode;
+
+          if (routeMode === "selected" && (!Array.isArray(value) || value.length === 0)) {
+            return "Add at least one route slug when using selected route scope.";
+          }
+
+          return true;
+        }),
+    }),
+    defineField({
       name: "blocks",
       title: "Reusable Blocks",
       type: "array",
       of: [
         { type: "hero-1" },
         { type: "hero-2" },
+        { type: "stats-hero-block" },
         { type: "section-header" },
         { type: "split-row" },
         { type: "grid-row" },
@@ -69,6 +104,16 @@ export default defineType({
         { type: "faqs" },
         { type: "form-newsletter" },
         { type: "all-posts" },
+        { type: "legacy-rich-content" },
+        { type: "company-info" },
+        { type: "testimonials-block" },
+        { type: "pricing-block" },
+        { type: "faq-block" },
+        { type: "benefits-block" },
+        { type: "features-package-block" },
+        { type: "service-types-block" },
+        { type: "problem-solution-block" },
+        { type: "value-props-block" },
       ],
       options: {
         insertMenu: {
@@ -76,7 +121,7 @@ export default defineType({
             {
               name: "hero",
               title: "Hero",
-              of: ["hero-1", "hero-2"],
+              of: ["hero-1", "hero-2", "stats-hero-block"],
             },
             {
               name: "logo-cloud",
@@ -128,6 +173,26 @@ export default defineType({
               title: "All Posts",
               of: ["all-posts"],
             },
+            {
+              name: "legacy",
+              title: "Legacy",
+              of: ["legacy-rich-content"],
+            },
+            {
+              name: "seo",
+              title: "SEO",
+              of: [
+                "company-info",
+                "testimonials-block",
+                "pricing-block",
+                "faq-block",
+                "benefits-block",
+                "features-package-block",
+                "service-types-block",
+                "problem-solution-block",
+                "value-props-block",
+              ],
+            },
           ],
           views: [
             {
@@ -146,12 +211,18 @@ export default defineType({
       title: "title",
       slots: "placements",
       active: "isActive",
+      routeMode: "routeMode",
+      routeSlugs: "routeSlugs",
     },
-    prepare({ title, slots, active }) {
+    prepare({ title, slots, active, routeMode, routeSlugs }) {
       const slotLabel = Array.isArray(slots) && slots.length > 0 ? slots.join(", ") : "No slot";
+      const routeLabel =
+        routeMode === "selected" && Array.isArray(routeSlugs) && routeSlugs.length > 0
+          ? ` • Routes: ${routeSlugs.join(", ")}`
+          : "";
       return {
         title: title || "Reusable Section",
-        subtitle: `${active ? "Active" : "Inactive"} • ${slotLabel}`,
+        subtitle: `${active ? "Active" : "Inactive"} • ${slotLabel}${routeLabel}`,
       };
     },
   },

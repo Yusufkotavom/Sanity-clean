@@ -13,6 +13,17 @@ import { logoCloud1Query } from "./logo-cloud/logo-cloud-1";
 import { faqsQuery } from "./faqs";
 import { formNewsletterQuery } from "./forms/newsletter";
 import { allPostsQuery } from "./all-posts";
+import { legacyRichContentQuery } from "./legacy/legacy-rich-content";
+import { companyInfoQuery } from "./seo/company-info";
+import { testimonialsBlockQuery } from "./seo/testimonials-block";
+import { pricingBlockQuery } from "./seo/pricing-block";
+import { faqBlockQuery } from "./seo/faq-block";
+import { benefitsBlockQuery } from "./seo/benefits-block";
+import { featuresPackageBlockQuery } from "./seo/features-package-block";
+import { serviceTypesBlockQuery } from "./seo/service-types-block";
+import { problemSolutionBlockQuery } from "./seo/problem-solution-block";
+import { valuePropsBlockQuery } from "./seo/value-props-block";
+import { statsHeroBlockQuery } from "./seo/stats-hero-block";
 
 export const REUSABLE_SECTIONS_QUERY = groq`
   *[_type == "reusableSection" && isActive == true] | order(priority asc, _createdAt asc){
@@ -20,9 +31,12 @@ export const REUSABLE_SECTIONS_QUERY = groq`
     title,
     priority,
     placements,
+    routeMode,
+    routeSlugs,
     blocks[]{
       ${hero1Query},
       ${hero2Query},
+      ${statsHeroBlockQuery},
       ${sectionHeaderQuery},
       ${splitRowQuery},
       ${gridRowQuery},
@@ -35,6 +49,16 @@ export const REUSABLE_SECTIONS_QUERY = groq`
       ${faqsQuery},
       ${formNewsletterQuery},
       ${allPostsQuery},
+      ${legacyRichContentQuery},
+      ${companyInfoQuery},
+      ${testimonialsBlockQuery},
+      ${pricingBlockQuery},
+      ${faqBlockQuery},
+      ${benefitsBlockQuery},
+      ${featuresPackageBlockQuery},
+      ${serviceTypesBlockQuery},
+      ${problemSolutionBlockQuery},
+      ${valuePropsBlockQuery},
     }
   }
 `;

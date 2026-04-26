@@ -35,9 +35,17 @@ export default async function PageHybridShell({
       {topBlocks.length > 0 ? (
         <Blocks blocks={topBlocks} pageTitle={cmsPage?.title} />
       ) : null}
-      <ReusableSlotSections sections={reusableSections} slot="afterHero" />
+      <ReusableSlotSections
+        sections={reusableSections}
+        slot="afterHero"
+        currentRouteKey={slug}
+      />
       {children}
-      <ReusableSlotSections sections={reusableSections} slot="beforeFinalCta" />
+      <ReusableSlotSections
+        sections={reusableSections}
+        slot="beforeFinalCta"
+        currentRouteKey={slug}
+      />
       {bottomBlocks.length > 0 ? (
         <Blocks blocks={bottomBlocks} pageTitle={cmsPage?.title} />
       ) : null}

@@ -10,9 +10,20 @@ type PageBlock = NonNullable<NonNullable<PAGE_QUERY_RESULT>["blocks"]>[number];
 function buildSlotBlocks(
   sections: ReusableSectionItem[],
   slot: ReusablePlacementSlot,
+  currentRouteKey?: string,
 ): PageBlock[] {
   return sections.flatMap((section) => {
+    const matchesRoute =
+      section.routeMode !== "selected" ||
+      !!currentRouteKey?.trim() &&
+        Array.isArray(section.routeSlugs) &&
+        section.routeSlugs.includes(currentRouteKey);
+
     if (!section.placements?.includes(slot) || !section.blocks?.length) {
+      return [];
+    }
+
+    if (!matchesRoute) {
       return [];
     }
 
@@ -26,11 +37,13 @@ function buildSlotBlocks(
 export default function ReusableSlotSections({
   sections,
   slot,
+  currentRouteKey,
 }: {
   sections: ReusableSectionItem[];
   slot: ReusablePlacementSlot;
+  currentRouteKey?: string;
 }) {
-  const slotBlocks = buildSlotBlocks(sections, slot);
+  const slotBlocks = buildSlotBlocks(sections, slot, currentRouteKey);
 
   if (!slotBlocks.length) return null;
 

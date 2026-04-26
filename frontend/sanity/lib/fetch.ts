@@ -93,6 +93,8 @@ export type ReusableSectionItem = {
   title?: string;
   priority?: number;
   placements?: ReusablePlacementSlot[];
+  routeMode?: "all" | "selected";
+  routeSlugs?: string[];
   blocks?: PageBlock[];
 };
 

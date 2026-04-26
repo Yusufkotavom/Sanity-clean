@@ -1990,6 +1990,32 @@ Finished the active runtime cleanup so the remaining machine-readable SEO surfac
 - ✅ `pnpm --filter studio run typecheck`
 - ✅ `git diff --check`
 
+## 2026-04-26 — Sanity-Managed Reusable Section Route Scope and Block Coverage
+
+### Changed Files
+- `studio/schemas/documents/reusable-section.ts` (MODIFIED) - Added route-scope controls (`all` vs selected route keys), route-key targeting, and expanded reusable-section block coverage to include the richer SEO and content block set already supported on standard pages.
+- `frontend/sanity/queries/reusable-section.ts` (MODIFIED) - Synced reusable-section GROQ projection with route-scope fields and the expanded reusable block library.
+- `frontend/sanity/lib/fetch.ts` (MODIFIED) - Extended reusable-section fetch typing with route-scope metadata for frontend filtering.
+- `frontend/components/reusable-slot-sections.tsx` (MODIFIED) - Added route-aware filtering so reusable sections can be controlled from Sanity per route key instead of only per slot.
+- `frontend/app/(main)/layout.tsx` (MODIFIED) - Wired route-aware reusable-slot rendering into the main layout using request-provided route keys.
+- `frontend/components/hybrid/page-hybrid-shell.tsx` (MODIFIED) - Passed the hybrid slug through the reusable-slot renderer so hybrid pages respect Sanity route targeting consistently.
+- `frontend/middleware.ts` (NEW) - Added lightweight request middleware that normalizes the current route into a reusable `x-route-key` header for server-side layout filtering.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated migration tracking to reflect the Sanity-managed route-scope expansion for reusable sections.
+
+### Summary
+Closed the remaining setup gap for reusable sections by moving normal route targeting into Sanity. Editors can now configure a reusable section to apply globally or only to selected route keys without code changes. At the same time, reusable sections now support a broader block library closer to the main `page.blocks` surface, reducing the need to patch code whenever a reusable section needs richer structured content.
+
+### Impact on SEO/Integration
+- No direct SEO impact.
+- Integration impact:
+  - Reusable-section behavior is more fully Sanity-managed across placement, route targeting, and supported block composition.
+  - Studio schema, GROQ query, frontend fetch types, middleware request context, and frontend rendering are now synchronized for the reusable-section contract.
+
+### Verification Status
+- ✅ `pnpm --filter frontend run typecheck`
+- ✅ `pnpm --filter studio run typecheck`
+- ✅ `git diff --check`
+
 ## 2026-04-26 — Reusable Slot Expansion for Hybrid Hero and Final CTA Zones
 
 ### Changed Files
