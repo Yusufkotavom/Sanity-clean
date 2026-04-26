@@ -56,7 +56,7 @@ const getSiteName = cache(async (): Promise<string> => {
 });
 
 const getSiteUrl = (seo?: SeoSettings | null) =>
-  seo?.siteUrl?.replace(/\/+$/, "") || process.env.NEXT_PUBLIC_SITE_URL || "";
+  seo?.siteUrl?.trim()?.replace(/\/+$/, "") || "";
 
 const getCanonicalUrl = (slug?: string, seo?: SeoSettings | null) => {
   const baseUrl = getSiteUrl(seo);
@@ -94,7 +94,9 @@ const resolveImage = (
   }
 
   return {
-    url: `${process.env.NEXT_PUBLIC_SITE_URL}${KOTACOM_SPLIT_DEFAULT_SEO_IMAGE}`,
+    url: getSiteUrl(seo)
+      ? `${getSiteUrl(seo)}${KOTACOM_SPLIT_DEFAULT_SEO_IMAGE}`
+      : KOTACOM_SPLIT_DEFAULT_SEO_IMAGE,
     width: 1200,
     height: 630,
   };

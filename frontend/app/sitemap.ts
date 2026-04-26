@@ -86,7 +86,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         includeTemplateRoutesInSitemap?: boolean;
       }
     | null;
-  const baseUrl = seo?.siteUrl || process.env.NEXT_PUBLIC_SITE_URL || "";
+  const baseUrl = seo?.siteUrl?.trim()?.replace(/\/+$/, "") || "";
   if (!baseUrl) return [];
 
   if (seo?.defaultNoIndex) return [];

@@ -1,10 +1,8 @@
 import { urlFor } from "@/sanity/lib/image";
 import { KOTACOM_SPLIT_DEFAULT_SEO_IMAGE } from "@/lib/illustrations/kotacom-split";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "";
-
 const normalizeSiteUrl = (siteUrl?: string | null) =>
-  siteUrl?.replace(/\/+$/, "") || SITE_URL;
+  siteUrl?.replace(/\/+$/, "") || "";
 
 const toAbsoluteUrl = (path: string, siteUrl?: string | null) =>
   `${normalizeSiteUrl(siteUrl)}${path.startsWith("/") ? path : `/${path}`}`;

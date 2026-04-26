@@ -52,14 +52,15 @@ export default function Logo({
   const showBrandName = (settings?.logo as { showBrandName?: boolean } | null)?.showBrandName;
   const brandNameSize = (settings?.logo as { brandNameSize?: string } | null)?.brandNameSize || "md";
   const brandNameClass = BRAND_NAME_SIZE_MAP[brandNameSize] || "text-base";
-  const brandName = settings?.siteName || settings?.brandName || "Kotacom";
+  const brandName = settings?.siteName || settings?.brandName || "Schema UI";
+  const logoLabel = settings?.siteName || settings?.brandName || "Site logo";
 
   if (logoToUse) {
     return (
       <span className={cn("inline-flex items-center gap-2.5", className)}>
         <Image
           src={urlFor(logoToUse).url()}
-          alt={settings.siteName || "kotacom.id"}
+          alt={logoLabel}
           width={
             (settings.logo?.width as number) ??
             logoToUse?.asset?.metadata?.dimensions?.width ??
@@ -70,7 +71,7 @@ export default function Logo({
             logoToUse?.asset?.metadata?.dimensions?.height ??
             KOTACOM_DEFAULT_LOGO_HEIGHT
           }
-          title={settings.siteName || "kotacom.id"}
+          title={logoLabel}
           className={cn("h-10 w-auto", imageClassName)}
           placeholder={
             logoToUse?.asset?.metadata?.lqip &&
@@ -100,8 +101,8 @@ export default function Logo({
     <span className={cn("inline-flex items-center gap-2.5", className)}>
       <Image
         src={KOTACOM_DEFAULT_LOGO}
-        alt={settings?.siteName || "kotacom.id"}
-        title={settings?.siteName || "kotacom.id"}
+        alt={logoLabel}
+        title={logoLabel}
         width={KOTACOM_DEFAULT_LOGO_WIDTH}
         height={KOTACOM_DEFAULT_LOGO_HEIGHT}
         className={cn("h-10 w-auto dark:invert", imageClassName)}

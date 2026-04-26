@@ -125,7 +125,7 @@ type SeoData = {
 };
 
 function getSiteUrl(seo: SeoData | null) {
-  return seo?.siteUrl?.trim() || process.env.NEXT_PUBLIC_SITE_URL || "";
+  return seo?.siteUrl?.trim()?.replace(/\/+$/, "") || "";
 }
 
 function imageUrlFromSanity(source: unknown): string | undefined {

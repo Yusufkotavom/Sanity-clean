@@ -21,10 +21,7 @@ export function ArticleSchema({
   datePublished,
   dateModified,
   author,
-  publisher = {
-    name: "Kotacom",
-    logo: "https://www.kotacom.id/assets/images/kotacom-logo-Cxnk7d9Z_1nOG2e.svg",
-  },
+  publisher,
 }: ArticleSchemaProps) {
   const schema = {
     "@context": "https://schema.org",
@@ -41,11 +38,15 @@ export function ArticleSchema({
     },
     publisher: {
       "@type": "Organization",
-      name: publisher.name,
-      logo: {
-        "@type": "ImageObject",
-        url: publisher.logo,
-      },
+      name: publisher?.name || "Schema UI",
+      ...(publisher?.logo
+        ? {
+            logo: {
+              "@type": "ImageObject",
+              url: publisher.logo,
+            },
+          }
+        : {}),
     },
   };
 

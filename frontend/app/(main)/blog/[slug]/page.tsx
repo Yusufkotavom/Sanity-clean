@@ -124,7 +124,7 @@ export default async function PostPage(props: {
         <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[minmax(0,1fr)_280px]">
           <article className="max-w-3xl">
             <Breadcrumbs links={links} />
-            <PostHero {...post} />
+            <PostHero {...post} siteUrl={siteUrl} />
             <TaxonomyBadgeList
               items={(post as any)?.categories}
               baseHref="/blog/category"

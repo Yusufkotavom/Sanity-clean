@@ -12,7 +12,11 @@ export default function PostHero({
   image,
   slug,
   _createdAt,
-}: PostHeroProps) {
+  siteUrl,
+}: PostHeroProps & { siteUrl?: string | null }) {
+  const normalizedSiteUrl = siteUrl?.replace(/\/+$/, "") || "";
+  const shareUrl = `${normalizedSiteUrl}/blog/${slug?.current || ""}`;
+
   return (
     <>
       {title && <h1 className="mb-4 md:mb-6 text-3xl lg:text-5xl">{title}</h1>}
@@ -62,7 +66,7 @@ export default function PostHero({
           <div className="flex gap-2">
             <a
               className="hover:opacity-70"
-              href={`https://www.facebook.com/sharer/sharer.php?u=${process.env.NEXT_PUBLIC_SITE_URL}/blog/${slug?.current}`}
+              href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Share on Facebook"
@@ -83,7 +87,7 @@ export default function PostHero({
             </a>
             <a
               className="hover:opacity-70"
-              href={`mailto:?subject=${title}&body=${title}%0A%0A${process.env.NEXT_PUBLIC_SITE_URL}/blog/${slug?.current}`}
+              href={`mailto:?subject=${encodeURIComponent(title || "")}&body=${encodeURIComponent(`${title || ""}\n\n${shareUrl}`)}`}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Share via email"

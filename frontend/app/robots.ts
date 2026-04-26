@@ -10,7 +10,7 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
         aiCrawlerAllowlist?: string[] | null;
       }
     | null;
-  const siteUrl = seo?.siteUrl || process.env.NEXT_PUBLIC_SITE_URL || "";
+  const siteUrl = seo?.siteUrl?.trim()?.replace(/\/+$/, "") || "";
   const disallowPaths = (seo?.robotsDisallowPaths || []).filter(
     (path): path is string => typeof path === "string" && path.startsWith("/"),
   );

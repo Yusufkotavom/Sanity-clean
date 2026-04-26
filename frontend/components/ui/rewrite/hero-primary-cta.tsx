@@ -51,8 +51,9 @@ export default function RewriteHeroPrimaryCta({
       return;
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/+$/, "") || "";
-    const currentPage = window.location.href || `${baseUrl}${canonicalPath}`;
+    const origin = window.location.origin?.replace(/\/+$/, "") || "";
+    const currentPage =
+      window.location.href || `${origin}${canonicalPath.startsWith("/") ? canonicalPath : `/${canonicalPath}`}`;
     const previousPage = document.referrer || "";
     const computed = buildWhatsAppHref({
       phoneNumber,

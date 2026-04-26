@@ -1953,3 +1953,39 @@ Shifted the remaining global SEO control surface away from hardcoded frontend de
 - ✅ `pnpm --filter studio run typecheck`
 - ✅ `pnpm --filter studio run typegen`
 - ✅ `git diff --check`
+
+## 2026-04-26 — Full Sanity Runtime Follow-up
+
+### Changed Files
+- `frontend/lib/llms-text.ts` (NEW) - Added a Sanity-driven plain-text generator for machine-readable `llms` output.
+- `frontend/app/llms.txt/route.ts` (NEW) - Added a dynamic `llms.txt` route generated from live Sanity content and settings.
+- `frontend/app/llms-full.txt/route.ts` (NEW) - Added a dynamic `llms-full.txt` route generated from live Sanity content and settings.
+- `frontend/public/llms.txt` (DELETED) - Removed the old static `llms.txt` file with hardcoded brand/domain content.
+- `frontend/public/llms-full.txt` (DELETED) - Removed the old static `llms-full.txt` file with hardcoded brand/domain content.
+- `frontend/components/blocks/post-hero.tsx` (MODIFIED) - Moved blog share URLs to the Sanity-managed site URL instead of env fallback.
+- `frontend/app/(main)/blog/[slug]/page.tsx` (MODIFIED) - Passed the Sanity-managed site URL into the post share surface.
+- `frontend/components/ui/rewrite/hero-primary-cta.tsx` (MODIFIED) - Removed env dependency from the client-side WhatsApp CTA URL builder and now derive the current page from browser origin/runtime only.
+- `frontend/app/layout.tsx` (MODIFIED) - Removed env fallback from root JSON-LD site URL normalization so the runtime path is Sanity-first.
+- `frontend/app/robots.ts` (MODIFIED) - Removed env fallback from robots sitemap URL generation.
+- `frontend/app/sitemap.ts` (MODIFIED) - Removed env fallback from sitemap base URL generation.
+- `frontend/sanity/lib/metadata.ts` (MODIFIED) - Removed env fallback from canonical-site resolution and OG fallback image URL composition.
+- `frontend/lib/seo-jsonld.ts` (MODIFIED) - Removed env fallback from shared JSON-LD URL normalization.
+- `frontend/components/logo.tsx` (MODIFIED) - Removed leftover `kotacom.id` fallback labels in the logo component.
+- `frontend/components/schema/article-schema.tsx` (MODIFIED) - Removed the hardcoded Kotacom publisher/logo default from the legacy schema component.
+
+### Summary
+Finished the active runtime cleanup so the remaining machine-readable SEO surfaces no longer depend on hardcoded Kotacom domain literals or env-based site URL fallbacks. `llms.txt` and `llms-full.txt` are now generated from Sanity, blog share URLs follow the Sanity-managed site URL, the rewrite WhatsApp CTA no longer depends on `NEXT_PUBLIC_SITE_URL`, and the shared metadata/JSON-LD helpers now operate Sanity-first with relative-path fallback instead of domain literals.
+
+### Impact on SEO/Integration
+- Direct SEO impact:
+  - `llms.txt` and `llms-full.txt` now follow the live Sanity content graph instead of stale static text files.
+  - Blog share URLs and machine-readable schema helpers no longer carry legacy hardcoded domain assumptions.
+  - Runtime SEO URL helpers now prefer Sanity-managed URL state and fall back to relative paths instead of env-owned absolute domains.
+- Integration impact:
+  - The Sanity content graph now drives another outward-facing machine-readable surface (`/llms.txt`, `/llms-full.txt`).
+  - Remaining hardcoded domain traces in active frontend runtime paths were removed; structural redirects remain intentionally code-owned.
+
+### Verification Status
+- ✅ `pnpm --filter frontend run typecheck`
+- ✅ `pnpm --filter studio run typecheck`
+- ✅ `git diff --check`
