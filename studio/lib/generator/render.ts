@@ -56,6 +56,9 @@ const buildSecondaryActionLabel = (visualPreset?: string) => {
   if (visualPreset === "conversion-stack") return "Lihat Alur";
   if (visualPreset === "immersive-story") return "Lihat Narasi";
   if (visualPreset === "trust-matrix") return "Lihat Pembeda";
+  if (visualPreset === "authority-canvas") return "Lihat Kredibilitas";
+  if (visualPreset === "offer-funnel") return "Lihat Penawaran";
+  if (visualPreset === "process-mosaic") return "Lihat Tahapan";
   return "Lihat Detail";
 };
 
@@ -197,6 +200,27 @@ const resolveSectionColorVariant = (
     return sectionKey === "finalCta" ? "primary" : "background";
   }
 
+  if (preset === "authority-canvas") {
+    if (sectionType === "testimonials-block") return "accent";
+    if (sectionType === "split-row") return "secondary";
+    if (sectionType === "cta-1") return "primary";
+    return sectionKey === "highlights" ? "card" : "background";
+  }
+
+  if (preset === "offer-funnel") {
+    if (sectionType === "pricing-block") return "primary";
+    if (sectionType === "service-types-block") return "accent";
+    if (sectionType === "cta-1") return "primary";
+    return sectionType === "faq-block" ? "muted" : "background";
+  }
+
+  if (preset === "process-mosaic") {
+    if (sectionType === "timeline-row") return "accent";
+    if (sectionType === "split-row") return "card";
+    if (sectionType === "service-types-block") return "secondary";
+    return sectionKey === "finalCta" ? "primary" : "background";
+  }
+
   if (sectionType === "service-types-block") return "card";
   if (sectionType === "testimonials-block") return "muted";
   if (sectionType === "pricing-block") return "secondary";
@@ -219,6 +243,29 @@ const toHeroBlock = (
   links: [
     buildLink(`${section.key}-link-primary`, primaryActionLabel, pagePath),
     buildLink(`${section.key}-link-secondary`, secondaryActionLabel, pagePath, "outline"),
+  ],
+});
+
+const toStatsHeroBlock = (
+  section: GeneratorSectionPlan,
+  title: string,
+  description: string,
+  pagePath: string,
+  colorVariant: string,
+  primaryActionLabel: string,
+  secondaryActionLabel: string,
+  location?: string,
+) => ({
+  _type: "stats-hero-block",
+  _key: section.key,
+  colorVariant,
+  padding: DEFAULT_PADDING,
+  eyebrow: location ? `Fokus ${toDisplayLabel(location)}` : "Fokus Intent Utama",
+  title,
+  description,
+  links: [
+    buildLink(`${section.key}-stats-primary`, primaryActionLabel, pagePath),
+    buildLink(`${section.key}-stats-secondary`, secondaryActionLabel, pagePath, "outline"),
   ],
 });
 
@@ -254,6 +301,103 @@ const toValuePropsBlock = (
       description: "Output tetap berupa page biasa sehingga editor masih bisa merapikan copy akhir tanpa mengulang generator.",
     },
   ],
+});
+
+const toBenefitsBlock = (
+  section: GeneratorSectionPlan,
+  title: string,
+  description: string,
+  colorVariant: string,
+  service?: string,
+  angle?: string,
+) => ({
+  _type: "benefits-block",
+  _key: section.key,
+  title,
+  subtitle: `Kenapa ${toDisplayLabel(service) || "layanan ini"} lebih mudah dipilih`,
+  description,
+  colorVariant,
+  padding: DEFAULT_PADDING,
+  benefits: [
+    {
+      _key: `${section.key}-benefit-1`,
+      icon: "🚀",
+      title: `${toDisplayLabel(service) || "Layanan"} lebih mudah ditemukan`,
+      description: `Halaman dibentuk agar intent ${toDisplayLabel(angle) || "utama"} lebih cepat tertangkap visitor.`,
+      badge: "Intent Lebih Jelas",
+      badgeIcon: "✨",
+    },
+    {
+      _key: `${section.key}-benefit-2`,
+      icon: "🧭",
+      title: "Alur keputusan lebih rapi",
+      description: "Struktur visual membawa visitor dari masalah, pembeda, sampai CTA tanpa terasa acak.",
+      badge: "Flow Lebih Terarah",
+      badgeIcon: "📍",
+    },
+    {
+      _key: `${section.key}-benefit-3`,
+      icon: "🤝",
+      title: "Masih mudah dipoles manual",
+      description: "Output tetap berupa page biasa sehingga tim tetap bisa menyesuaikan copy akhir sesuai kebutuhan.",
+      badge: "Editable",
+      badgeIcon: "🛠️",
+    },
+  ],
+});
+
+const toFeaturesPackageBlock = (
+  section: GeneratorSectionPlan,
+  title: string,
+  description: string,
+  colorVariant: string,
+  service?: string,
+  offer?: string,
+) => ({
+  _type: "features-package-block",
+  _key: section.key,
+  title,
+  subtitle: `Yang didapat dari ${toDisplayLabel(offer) || "langkah awal ini"}`,
+  description,
+  colorVariant,
+  padding: DEFAULT_PADDING,
+  features: [
+    {
+      _key: `${section.key}-feature-1`,
+      icon: "🧩",
+      title: `${toDisplayLabel(service) || "Layanan"} dibingkai lebih strategis`,
+      description: "Struktur section dipilih agar pesan utama tidak tenggelam di paragraf yang terlalu panjang.",
+      badge: "Positioning",
+    },
+    {
+      _key: `${section.key}-feature-2`,
+      icon: "📦",
+      title: "CTA dan scope lebih terbaca",
+      description: "Visitor bisa melihat langkah lanjut dan nilai offer dengan lebih cepat.",
+      badge: "Offer Clarity",
+    },
+    {
+      _key: `${section.key}-feature-3`,
+      icon: "🎯",
+      title: "Siap dijadikan dasar iterasi",
+      description: "Template bisa dipakai ulang untuk banyak jasa sambil tetap menjaga kesatuan bahasa desain.",
+      badge: "Reusable",
+    },
+  ],
+});
+
+const toCompanyInfoBlock = (
+  section: GeneratorSectionPlan,
+  title: string,
+  description: string,
+  colorVariant: string,
+) => ({
+  _type: "company-info",
+  _key: section.key,
+  title,
+  description,
+  colorVariant,
+  padding: DEFAULT_PADDING,
 });
 
 const toProblemSolutionBlock = (
@@ -479,8 +623,16 @@ const sectionPlanToBlock = (
   switch (section.sectionType) {
     case "hero-1":
       return toHeroBlock(section, pageTitle, description, pagePath, primaryActionLabel, secondaryActionLabel);
+    case "stats-hero-block":
+      return toStatsHeroBlock(section, pageTitle, description, pagePath, colorVariant, primaryActionLabel, secondaryActionLabel, location);
     case "problem-solution-block":
       return toProblemSolutionBlock(section, section.title, description, colorVariant);
+    case "benefits-block":
+      return toBenefitsBlock(section, section.title, description, colorVariant, service, angle);
+    case "features-package-block":
+      return toFeaturesPackageBlock(section, section.title, description, colorVariant, service, offer);
+    case "company-info":
+      return toCompanyInfoBlock(section, section.title, description, colorVariant);
     case "faq-block":
       return toFaqBlock(section, section.title, description, faqCategory, colorVariant);
     case "pricing-block":

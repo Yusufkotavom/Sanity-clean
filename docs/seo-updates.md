@@ -2082,3 +2082,31 @@ Simplified the generator in the direction of a lighter product tool instead of a
 - ✅ `node frontend/scripts/generator/seed-generator-service-starters.mjs --write`
 - ✅ `node frontend/scripts/generator/run-generator-smoke.mjs`
 - ✅ `git diff --check`
+
+## 2026-04-26 — Generator Visual Library Expansion with New Block Types
+
+### Changed Files
+- `studio/schemas/documents/generator-template.ts` (MODIFIED) - Added additional reusable visual preset options: `authority-canvas`, `offer-funnel`, and `process-mosaic`.
+- `studio/schemas/objects/generator-section-variant.ts` (MODIFIED) - Expanded supported generator section types to include `stats-hero-block`, `benefits-block`, `features-package-block`, and `company-info`.
+- `studio/lib/generator/render.ts` (MODIFIED) - Added deterministic rendering support for the new block-backed section types and extended preset-specific CTA/color behavior.
+- `frontend/scripts/generator/seed-generator-service-starters.mjs` (MODIFIED) - Expanded the visual template library to nine reusable multi-jasa templates and started using the richer block mix inside the new presets.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated migration tracking to reflect the larger visual library and richer generator block repertoire.
+
+### Summary
+Expanded the generator from “more presets” into “more visual language.” The visual library now includes three additional reusable presets and the generator can now emit richer existing repo blocks such as stats hero, benefits, feature package, and company info blocks. This makes template differences more visible at the page structure level instead of only changing section order or color rhythm.
+
+### Impact on SEO/Integration
+- Indirect SEO impact:
+  - Richer block combinations help generated pages avoid feeling structurally repetitive while still using the same controlled Sanity page schema.
+- Integration impact:
+  - Generator V2 now reuses more of the existing frontend/studio block system instead of inventing separate one-off visual paths.
+  - Development visual-library coverage increased from 6 presets to 9 presets under the same shared dataset and route base.
+
+### Verification Status
+- ✅ `pnpm --filter studio run typecheck`
+- ✅ `pnpm --filter frontend run typecheck`
+- ✅ `pnpm dlx tsx --test studio/lib/generator/__tests__/qa.test.ts`
+- ✅ `node --check frontend/scripts/generator/seed-generator-service-starters.mjs`
+- ✅ `node frontend/scripts/generator/seed-generator-service-starters.mjs --write`
+- ✅ `node frontend/scripts/generator/run-generator-smoke.mjs`
+- ✅ `git diff --check`
