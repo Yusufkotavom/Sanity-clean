@@ -2,6 +2,116 @@ import { buildGeneratedPagePath, buildGeneratorSlug } from "./slug";
 import { buildFaqCategory, buildGeneratorTokens, buildSectionPlan } from "./variation";
 import type { BuildGeneratedPageDraftInput, GeneratedPageDraft, GeneratorSectionPlan, ReferenceValue } from "./types";
 
+const toDisplayLabel = (value?: string) =>
+  `${value || ""}`
+    .trim()
+    .split(/[\s-]+/)
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
+
+const truncateSentence = (value: string, maxLength: number) => {
+  if (value.length <= maxLength) {
+    return value;
+  }
+
+  const truncated = value.slice(0, maxLength - 1).trimEnd();
+  const safe = truncated.slice(0, truncated.lastIndexOf(" ")).trim();
+  return `${safe || truncated}…`;
+};
+
+const buildMetaDescription = ({
+  seoDescriptionPattern,
+  offer,
+  location,
+  service,
+  angle,
+}: {
+  seoDescriptionPattern?: string;
+  offer: string;
+  location: string;
+  service?: string;
+  angle?: string;
+}) => {
+  const sentence = seoDescriptionPattern
+    ? `${seoDescriptionPattern} ${offer} di ${location}.`
+    : `${service || "Layanan ini"} untuk ${location} dengan fokus ${angle || "hasil yang lebih jelas"}.`;
+
+  return truncateSentence(sentence.replace(/\s+/g, " ").trim(), 160);
+};
+
+const buildPrimaryActionLabel = (offer?: string, service?: string) => {
+  const offerLabel = toDisplayLabel(offer);
+  if (offerLabel) {
+    return `Minta ${offerLabel}`;
+  }
+
+  const serviceLabel = toDisplayLabel(service);
+  return serviceLabel ? `Diskusikan ${serviceLabel}` : "Mulai Diskusi";
+};
+
+const buildSecondaryActionLabel = (visualPreset?: string) => {
+  if (visualPreset === "pricing-spotlight") return "Lihat Scope";
+  if (visualPreset === "proof-showcase") return "Lihat Bukti";
+  if (visualPreset === "conversion-stack") return "Lihat Alur";
+  if (visualPreset === "immersive-story") return "Lihat Narasi";
+  if (visualPreset === "trust-matrix") return "Lihat Pembeda";
+  return "Lihat Detail";
+};
+
+const buildServiceFeatureSet = (service?: string, angle?: string) => {
+  const serviceLabel = toDisplayLabel(service) || "layanan";
+  const angleLabel = toDisplayLabel(angle) || "intent utama";
+
+  return [
+    `${serviceLabel} dibingkai lebih jelas`,
+    `Narasi tetap selaras dengan ${angleLabel}`,
+    "Masih mudah dikoreksi manual",
+  ];
+};
+
+const buildSplitHighlights = (service?: string, location?: string) => {
+  const serviceLabel = toDisplayLabel(service) || "Layanan";
+  const locationLabel = toDisplayLabel(location) || "target utama";
+
+  return [
+    {
+      title: `${serviceLabel} lebih cepat dipahami`,
+      body: `Layout ini memecah manfaat, pembeda, dan CTA supaya intent ${locationLabel} lebih mudah ditangkap.`,
+      tags: ["Visual", "Clarity"],
+    },
+    {
+      title: "Tetap fleksibel untuk banyak jasa",
+      body: `Template menjaga struktur tetap stabil, lalu ${serviceLabel.toLowerCase()} dan konteks lokal mengisi detailnya.`,
+      tags: ["Reusable", "Multi Service"],
+    },
+  ];
+};
+
+const buildTimelineSteps = (service?: string, offer?: string, angle?: string) => {
+  const serviceLabel = toDisplayLabel(service) || "layanan";
+  const offerLabel = toDisplayLabel(offer) || "diskusi awal";
+  const angleLabel = toDisplayLabel(angle) || "intent utama";
+
+  return [
+    {
+      title: "Pilih sudut intent",
+      tagLine: "Step 1",
+      body: `Keyword dipetakan ke angle ${angleLabel.toLowerCase()} agar ${serviceLabel.toLowerCase()} tidak terasa generik.`,
+    },
+    {
+      title: "Susun ritme section",
+      tagLine: "Step 2",
+      body: `Section visual dipilih untuk membawa visitor dari masalah ke ${offerLabel.toLowerCase()} secara lebih runtut.`,
+    },
+    {
+      title: "Tutup dengan CTA jelas",
+      tagLine: "Step 3",
+      body: `Output tetap berupa page biasa sehingga editor masih bisa memoles copy ${serviceLabel.toLowerCase()} sebelum publish.`,
+    },
+  ];
+};
+
 const buildPortableText = (text: string, key: string) => [
   {
     _key: `${key}-block`,
@@ -73,21 +183,42 @@ const resolveSectionColorVariant = (
     return sectionKey === "finalCta" ? "primary" : "background";
   }
 
+  if (preset === "immersive-story") {
+    if (sectionType === "split-row") return "accent";
+    if (sectionType === "timeline-row") return "card";
+    if (sectionType === "cta-1") return "primary";
+    return sectionKey === "highlights" ? "secondary" : "background";
+  }
+
+  if (preset === "trust-matrix") {
+    if (sectionType === "testimonials-block") return "secondary";
+    if (sectionType === "value-props-block") return "accent";
+    if (sectionType === "pricing-block") return "muted";
+    return sectionKey === "finalCta" ? "primary" : "background";
+  }
+
   if (sectionType === "service-types-block") return "card";
   if (sectionType === "testimonials-block") return "muted";
   if (sectionType === "pricing-block") return "secondary";
   return sectionKey === "highlights" ? "accent" : "background";
 };
 
-const toHeroBlock = (section: GeneratorSectionPlan, title: string, description: string, pagePath: string) => ({
+const toHeroBlock = (
+  section: GeneratorSectionPlan,
+  title: string,
+  description: string,
+  pagePath: string,
+  primaryActionLabel: string,
+  secondaryActionLabel: string,
+) => ({
   _type: "hero-1",
   _key: section.key,
   tagLine: section.title,
   title,
   body: buildPortableText(description, section.key),
   links: [
-    buildLink(`${section.key}-link-primary`, "Konsultasi Sekarang", pagePath),
-    buildLink(`${section.key}-link-secondary`, "Lihat Detail Layanan", pagePath, "outline"),
+    buildLink(`${section.key}-link-primary`, primaryActionLabel, pagePath),
+    buildLink(`${section.key}-link-secondary`, secondaryActionLabel, pagePath, "outline"),
   ],
 });
 
@@ -114,7 +245,7 @@ const toValuePropsBlock = (
       _key: `${section.key}-value-2`,
       icon: "02",
       title: "Eksekusi lebih konsisten",
-      description: `Draft ini menjaga arah ${section.key.replace(/-/g, " ")} tetap konsisten tanpa AI.`,
+      description: `Draft ini menjaga arah ${section.key.replace(/-/g, " ")} tetap konsisten tanpa membuat halaman terasa copy-paste.`,
     },
     {
       _key: `${section.key}-value-3`,
@@ -198,6 +329,8 @@ const toServiceTypesBlock = (
   description: string,
   pagePath: string,
   colorVariant: string,
+  service?: string,
+  angle?: string,
 ) => ({
   _type: "service-types-block",
   _key: section.key,
@@ -210,11 +343,7 @@ const toServiceTypesBlock = (
       _key: `${section.key}-service-1`,
       title: `${title} Utama`,
       description,
-      features: [
-        "Struktur visual lebih rapi",
-        "Copy tetap selaras dengan intent",
-        "Masih mudah dikoreksi manual",
-      ],
+      features: buildServiceFeatureSet(service, angle),
       price: "Mulai dari konsultasi kebutuhan",
       timeline: "Timeline menyesuaikan scope",
       badge: "Fokus Utama",
@@ -257,6 +386,9 @@ const toSplitRowBlock = (
   description: string,
   pagePath: string,
   colorVariant: string,
+  service?: string,
+  location?: string,
+  primaryActionLabel?: string,
 ) => ({
   _type: "split-row",
   _key: section.key,
@@ -270,64 +402,40 @@ const toSplitRowBlock = (
       tagLine: section.title,
       title,
       body: buildPortableText(description, `${section.key}-intro`),
-      link: buildLink(`${section.key}-link-primary`, "Diskusikan Struktur Halaman", pagePath),
+      link: buildLink(`${section.key}-link-primary`, primaryActionLabel || "Diskusikan Struktur Halaman", pagePath),
     },
     {
       _key: `${section.key}-proofs`,
       _type: "split-info-list",
-      list: [
-        {
-          _key: `${section.key}-proof-1`,
-          _type: "split-info",
-          title: "Pesan utama lebih cepat tertangkap",
-          body: buildPortableText("Layout ini memecah manfaat, pembeda, dan CTA menjadi ritme baca yang lebih jelas.", `${section.key}-proof-1`),
-          tags: ["Visual", "Clarity"],
-        },
-        {
-          _key: `${section.key}-proof-2`,
-          _type: "split-info",
-          title: "Masih fleksibel untuk banyak jasa",
-          body: buildPortableText("Template tetap generik di level struktur, lalu service, lokasi, dan keyword mengisi detailnya.", `${section.key}-proof-2`),
-          tags: ["Reusable", "Multi Service"],
-        },
-      ],
+      list: buildSplitHighlights(service, location).map((item, index) => ({
+        _key: `${section.key}-proof-${index + 1}`,
+        _type: "split-info",
+        title: item.title,
+        body: buildPortableText(item.body, `${section.key}-proof-${index + 1}`),
+        tags: item.tags,
+      })),
     },
   ],
 });
 
 const toTimelineRowBlock = (
   section: GeneratorSectionPlan,
-  title: string,
-  description: string,
   colorVariant: string,
+  service?: string,
+  offer?: string,
+  angle?: string,
 ) => ({
   _type: "timeline-row",
   _key: section.key,
   colorVariant,
   padding: DEFAULT_PADDING,
-  timelines: [
-    {
-      _key: `${section.key}-timeline-1`,
-      _type: "timelines-1",
-      title: "Pilih sudut intent",
-      tagLine: "Step 1",
-      body: buildPortableText(`Keyword dipetakan ke angle yang tepat agar ${title.toLowerCase()} tidak terasa generik.`, `${section.key}-timeline-1`),
-    },
-    {
-      _key: `${section.key}-timeline-2`,
-      _type: "timelines-1",
-      title: "Susun section visual",
-      tagLine: "Step 2",
-      body: buildPortableText(description, `${section.key}-timeline-2`),
-    },
-    {
-      _key: `${section.key}-timeline-3`,
-      _type: "timelines-1",
-      title: "Siapkan CTA akhir",
-      tagLine: "Step 3",
-      body: buildPortableText("Output tetap berupa page biasa sehingga editor masih bisa memoles copy sebelum publish.", `${section.key}-timeline-3`),
-    },
-  ],
+  timelines: buildTimelineSteps(service, offer, angle).map((item, index) => ({
+    _key: `${section.key}-timeline-${index + 1}`,
+    _type: "timelines-1",
+    title: item.title,
+    tagLine: item.tagLine,
+    body: buildPortableText(item.body, `${section.key}-timeline-${index + 1}`),
+  })),
 });
 
 const toCtaBlock = (
@@ -336,6 +444,8 @@ const toCtaBlock = (
   description: string,
   pagePath: string,
   colorVariant: string,
+  primaryActionLabel: string,
+  secondaryActionLabel: string,
 ) => ({
   _type: "cta-1",
   _key: section.key,
@@ -346,8 +456,8 @@ const toCtaBlock = (
   title,
   body: buildPortableText(description, `${section.key}-cta`),
   links: [
-    buildLink(`${section.key}-cta-primary`, "Mulai Diskusi", pagePath),
-    buildLink(`${section.key}-cta-secondary`, "Lihat Detail", pagePath, "outline"),
+    buildLink(`${section.key}-cta-primary`, primaryActionLabel, pagePath),
+    buildLink(`${section.key}-cta-secondary`, secondaryActionLabel, pagePath, "outline"),
   ],
 });
 
@@ -358,11 +468,17 @@ const sectionPlanToBlock = (
   pagePath: string,
   faqCategory: string,
   visualPreset: string | undefined,
+  service?: string,
+  location?: string,
+  offer?: string,
+  angle?: string,
 ) => {
   const colorVariant = resolveSectionColorVariant(section.colorVariant, visualPreset, section.sectionType, section.key);
+  const primaryActionLabel = buildPrimaryActionLabel(offer, service);
+  const secondaryActionLabel = buildSecondaryActionLabel(visualPreset);
   switch (section.sectionType) {
     case "hero-1":
-      return toHeroBlock(section, pageTitle, description, pagePath);
+      return toHeroBlock(section, pageTitle, description, pagePath, primaryActionLabel, secondaryActionLabel);
     case "problem-solution-block":
       return toProblemSolutionBlock(section, section.title, description, colorVariant);
     case "faq-block":
@@ -372,13 +488,13 @@ const sectionPlanToBlock = (
     case "testimonials-block":
       return toTestimonialsBlock(section, section.title, description, faqCategory, colorVariant);
     case "service-types-block":
-      return toServiceTypesBlock(section, section.title, description, pagePath, colorVariant);
+      return toServiceTypesBlock(section, section.title, description, pagePath, colorVariant, service, angle);
     case "split-row":
-      return toSplitRowBlock(section, section.title, description, pagePath, colorVariant);
+      return toSplitRowBlock(section, section.title, description, pagePath, colorVariant, service, location, primaryActionLabel);
     case "timeline-row":
-      return toTimelineRowBlock(section, section.title, description, colorVariant);
+      return toTimelineRowBlock(section, colorVariant, service, offer, angle);
     case "cta-1":
-      return toCtaBlock(section, section.title, description, pagePath, colorVariant);
+      return toCtaBlock(section, section.title, description, pagePath, colorVariant, primaryActionLabel, secondaryActionLabel);
     case "value-props-block":
     default:
       return toValuePropsBlock(section, section.title, description, colorVariant);
@@ -408,13 +524,19 @@ export const buildGeneratedPageDraft = ({
   const seoDescriptionPattern = program.defaultSeoPattern?.description?.trim();
   const location = tokens.location ?? tokens.city ?? tokens.service ?? "target utama";
   const offer = tokens.offer ?? `Konsultasi ${tokens.service ?? keywordSet.primaryKeyword}`;
+  const service = tokens.service ?? row.service ?? keywordSet.primaryKeyword;
+  const angle = tokens.angle ?? keywordSet.angle;
   const secondaryKeywords =
     Array.isArray(keywordSet.secondaryKeywords) && keywordSet.secondaryKeywords.length > 0
       ? keywordSet.secondaryKeywords
       : [];
-  const description = seoDescriptionPattern
-    ? `${seoDescriptionPattern} ${offer} di ${location}.`.trim()
-    : `${pageTitle} untuk ${location} dengan fokus ${tokens.angle ?? "default"}.`;
+  const description = buildMetaDescription({
+    seoDescriptionPattern,
+    offer,
+    location,
+    service,
+    angle,
+  });
 
   const blocks = sectionPlan.map((section) =>
     sectionPlanToBlock(
@@ -424,6 +546,10 @@ export const buildGeneratedPageDraft = ({
       pagePath,
       buildFaqCategory(template, row),
       template.visualPreset,
+      service,
+      location,
+      offer,
+      angle,
     ),
   );
 

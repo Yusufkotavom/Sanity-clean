@@ -534,6 +534,12 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
         datasetTitle: linkedData.dataset?.title,
         keywordSetLabel: formatItemLabel(previewInput.keywordSet, previewInput.keywordSet.primaryKeyword),
         rowLabel: formatItemLabel(previewInput.row, previewInput.row.service || "row"),
+        primaryKeyword: previewInput.keywordSet.primaryKeyword,
+        angle: previewInput.keywordSet.angle,
+        service: previewInput.row.service,
+        city: previewInput.row.city,
+        offer: previewInput.row.offer,
+        combinationCount: (linkedData.dataset?.keywordSets?.length ?? 0) * (linkedData.dataset?.rows?.length ?? 0),
       }
     : undefined;
 
@@ -979,6 +985,9 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
               <Text size={1}>Resolved dataset: {valueOrFallback(linkedData.dataset?.title)}</Text>
               <Text size={1}>Keyword sets: {linkedData.dataset?.keywordSets?.length ?? 0}</Text>
               <Text size={1}>Rows: {linkedData.dataset?.rows?.length ?? 0}</Text>
+              <Text size={1}>
+                Possible combinations: {(linkedData.dataset?.keywordSets?.length ?? 0) * (linkedData.dataset?.rows?.length ?? 0)}
+              </Text>
               {isLoadingLinkedData ? (
                 <Text size={1}>
                   <Spinner muted /> Loading linked template, dataset, and existing-page inputs.
@@ -996,6 +1005,21 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
             <Text size={1}>
               Pilih satu keyword set dan satu row untuk preview serta generate draft terpilih. Batch masih tersedia untuk inspeksi menyeluruh.
             </Text>
+            {previewInput ? (
+              <Card border padding={3} radius={2}>
+                <Stack space={2}>
+                  <Text size={1} weight="semibold">
+                    Selected combination
+                  </Text>
+                  <Text size={1}>
+                    {previewInput.keywordSet.primaryKeyword} · {previewInput.row.service || "service"} · {previewInput.row.city || "city"}
+                  </Text>
+                  <Text size={1}>
+                    Offer: {previewInput.row.offer || "Not set"}{previewInput.keywordSet.angle ? ` · Angle: ${previewInput.keywordSet.angle}` : ""}
+                  </Text>
+                </Stack>
+              </Card>
+            ) : null}
             <Grid columns={[1, 1, 2]} gap={4}>
               <Card border padding={3} radius={2}>
                 <Stack space={3}>

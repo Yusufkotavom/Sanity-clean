@@ -1,4 +1,4 @@
-import { Badge, Box, Card, Code, Flex, Heading, Stack, Text } from "@sanity/ui";
+import { Badge, Box, Card, Code, Flex, Grid, Heading, Stack, Text } from "@sanity/ui";
 
 export type PreviewStatus = {
   blockingIssues: string[];
@@ -26,6 +26,12 @@ type PreviewSelection = {
   datasetTitle?: string;
   keywordSetLabel?: string;
   rowLabel?: string;
+  primaryKeyword?: string;
+  angle?: string;
+  service?: string;
+  city?: string;
+  offer?: string;
+  combinationCount?: number;
 };
 
 type PreviewCardProps = {
@@ -89,20 +95,34 @@ export function PreviewCard({
               <Text muted size={1}>
                 Preview input
               </Text>
-              <Stack as="ul" space={2} marginTop={2}>
-                <Text as="li" size={1}>
-                  Template: {selection.templateTitle || "Missing"}
-                </Text>
-                <Text as="li" size={1}>
-                  Dataset: {selection.datasetTitle || "Missing"}
-                </Text>
-                <Text as="li" size={1}>
-                  Selected keyword set: {selection.keywordSetLabel || "Missing"}
-                </Text>
-                <Text as="li" size={1}>
-                  Selected row: {selection.rowLabel || "Missing"}
-                </Text>
-              </Stack>
+              <Grid columns={[1, 1, 2]} gap={3} marginTop={2}>
+                <Card border padding={3} radius={2}>
+                  <Stack space={2}>
+                    <Text muted size={1}>
+                      Template / Dataset
+                    </Text>
+                    <Text size={1}>Template: {selection.templateTitle || "Missing"}</Text>
+                    <Text size={1}>Dataset: {selection.datasetTitle || "Missing"}</Text>
+                    <Text size={1}>
+                      Kombinasi tersedia: {typeof selection.combinationCount === "number" ? selection.combinationCount : "Unknown"}
+                    </Text>
+                  </Stack>
+                </Card>
+                <Card border padding={3} radius={2}>
+                  <Stack space={2}>
+                    <Text muted size={1}>
+                      Keyword / Row
+                    </Text>
+                    <Text size={1}>Keyword set: {selection.keywordSetLabel || "Missing"}</Text>
+                    <Text size={1}>Row: {selection.rowLabel || "Missing"}</Text>
+                    <Text size={1}>Primary keyword: {selection.primaryKeyword || "Missing"}</Text>
+                    <Text size={1}>Angle: {selection.angle || "Not set"}</Text>
+                    <Text size={1}>Service: {selection.service || "Not set"}</Text>
+                    <Text size={1}>City: {selection.city || "Not set"}</Text>
+                    <Text size={1}>Offer: {selection.offer || "Not set"}</Text>
+                  </Stack>
+                </Card>
+              </Grid>
             </Box>
           ) : null}
 

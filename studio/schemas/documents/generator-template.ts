@@ -162,6 +162,8 @@ export default defineType({
           { title: "Proof Showcase", value: "proof-showcase" },
           { title: "Pricing Spotlight", value: "pricing-spotlight" },
           { title: "Conversion Stack", value: "conversion-stack" },
+          { title: "Immersive Story", value: "immersive-story" },
+          { title: "Trust Matrix", value: "trust-matrix" },
         ],
         layout: "radio",
       },

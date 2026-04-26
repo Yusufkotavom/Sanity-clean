@@ -2054,3 +2054,31 @@ Added a real QA gate to Generator V2 in Studio. Previewed drafts are now assesse
 - ✅ `pnpm --filter studio run typecheck`
 - ✅ `pnpm dlx tsx --test studio/lib/generator/__tests__/qa.test.ts`
 - ✅ `git diff --check`
+
+## 2026-04-26 — Generator UX and Visual Template Simplification
+
+### Changed Files
+- `studio/components/generator/program-runner-pane.tsx` (MODIFIED) - Simplified the generator pane by making the selected combination clearer, exposing total keyword-row combinations, and reducing operator guesswork before preview or generate.
+- `studio/components/generator/preview-card.tsx` (MODIFIED) - Reworked preview input display into a more editorial-friendly summary with keyword, angle, service, city, offer, and combination counts instead of a thin technical list.
+- `studio/lib/generator/render.ts` (MODIFIED) - Improved deterministic output quality by trimming meta descriptions to safer lengths, varying CTA labels by offer/preset, and making split/timeline/service blocks less generic.
+- `studio/schemas/documents/generator-template.ts` (MODIFIED) - Added reusable visual preset options for `immersive-story` and `trust-matrix`.
+- `frontend/scripts/generator/seed-generator-service-starters.mjs` (MODIFIED) - Expanded the reusable visual template library with additional multi-jasa starter templates and updated descriptions so the development dataset offers a broader set of visual directions.
+
+### Summary
+Simplified the generator in the direction of a lighter product tool instead of a heavy governance system. The Studio pane now surfaces the selected combination more clearly, preview inputs are easier to read, and the deterministic renderer produces cleaner metadata and more contextual CTA/copy defaults. The reusable visual starter library also now covers more visual directions without tying templates to one business category.
+
+### Impact on SEO/Integration
+- Indirect SEO impact:
+  - Deterministic meta descriptions now stay within a safer range more often, reducing avoidable QA warnings on generated pages.
+- Integration impact:
+  - Generator Studio is easier for editors to operate without adding more workflow layers.
+  - Development starter templates now better represent the intended reusable visual-library direction across many services.
+
+### Verification Status
+- ✅ `pnpm --filter studio run typecheck`
+- ✅ `pnpm --filter frontend run typecheck`
+- ✅ `pnpm dlx tsx --test studio/lib/generator/__tests__/qa.test.ts`
+- ✅ `node --check frontend/scripts/generator/seed-generator-service-starters.mjs`
+- ✅ `node frontend/scripts/generator/seed-generator-service-starters.mjs --write`
+- ✅ `node frontend/scripts/generator/run-generator-smoke.mjs`
+- ✅ `git diff --check`
