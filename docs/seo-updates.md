@@ -1989,3 +1989,25 @@ Finished the active runtime cleanup so the remaining machine-readable SEO surfac
 - ✅ `pnpm --filter frontend run typecheck`
 - ✅ `pnpm --filter studio run typecheck`
 - ✅ `git diff --check`
+
+## 2026-04-26 — Finished Generator Sample for Development Dataset
+
+### Changed Files
+- `frontend/scripts/generator/seed-generator-finished-sample.mjs` (NEW) - Added a dev-only generator sample seeding script that creates one ready-to-run template, dataset, and program, then can generate matched sample draft pages.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated migration status snapshot to record the finished generator sample workflow.
+
+### Summary
+Added a finished generator sample workflow for the development dataset. The new script seeds a complete `generatorTemplate`, `generatorDataset`, and `generatorProgram` under a safe dev-only route base (`/sample-generator`), then generates a small set of matched draft pages instead of a noisy cross-product batch. This gives the Studio a concrete sample that is useful for evaluation, not just starter scaffolding.
+
+### Impact on SEO/Integration
+- No direct SEO impact on production.
+- Integration impact:
+  - Improves the generator workflow by providing a clean end-to-end sample in the development dataset.
+  - Keeps the sample isolated from production and from live primary routes by using a dedicated dev route base and deterministic draft page ids.
+
+### Verification Status
+- ✅ `node --check frontend/scripts/generator/seed-generator-finished-sample.mjs`
+- ✅ `node frontend/scripts/generator/seed-generator-finished-sample.mjs`
+- ✅ `node frontend/scripts/generator/seed-generator-finished-sample.mjs --write --generate-pages`
+- ✅ `pnpm --filter frontend run typecheck`
+- ✅ `git diff --check`
