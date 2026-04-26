@@ -2083,6 +2083,30 @@ Simplified the generator in the direction of a lighter product tool instead of a
 - ✅ `node frontend/scripts/generator/run-generator-smoke.mjs`
 - ✅ `git diff --check`
 
+## 2026-04-26 — Reusable Section Placement Expansion and Dark Mode Fix
+
+### Changed Files
+- `studio/schemas/documents/reusable-section.ts` (MODIFIED) - Expanded reusable section placement options with `beforeMainContent` and `afterMainContent` so reusable content is not limited to header/footer boundaries.
+- `frontend/sanity/lib/fetch.ts` (MODIFIED) - Synced the frontend reusable placement slot contract with the new Sanity placement options.
+- `frontend/app/(main)/layout.tsx` (MODIFIED) - Rendered reusable sections inside the main shell before and after page content in addition to the existing global header/footer slots.
+- `frontend/components/ui/section-container.tsx` (MODIFIED) - Replaced dynamic Tailwind background classes with static color-variant mapping so reusable sections inherit working light/dark theme styles reliably.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated the migration tracker with the reusable placement expansion and dark-mode support hardening.
+
+### Summary
+Expanded reusable sections beyond the previous global shell-only placement model by adding two additional main-content slots. In parallel, fixed the real dark mode regression source in the shared `SectionContainer`: background colors were being generated from dynamic `bg-${color}` classes, which made Tailwind output unreliable for dark-mode variants. The container now uses an explicit static class map for each allowed color variant.
+
+### Impact on SEO/Integration
+- No direct SEO impact.
+- Integration impact:
+  - Reusable section placement is now broader but still controlled and layout-safe.
+  - Studio schema, frontend reusable-slot typing, and frontend layout rendering are now aligned again.
+  - Dark mode support for reusable section blocks is more reliable because shared section styling no longer depends on dynamic Tailwind class generation.
+
+### Verification Status
+- ✅ `pnpm --filter frontend run typecheck`
+- ✅ `pnpm --filter studio run typecheck`
+- ✅ `git diff --check`
+
 ## 2026-04-26 — Generator Visual Library Expansion with New Block Types
 
 ### Changed Files

@@ -82,6 +82,8 @@ export type PageWithGeneratorDebug = PAGE_QUERY_RESULT & {
 export type ReusablePlacementSlot =
   | "beforeHeader"
   | "afterHeader"
+  | "beforeMainContent"
+  | "afterMainContent"
   | "beforeFooter"
   | "afterFooter";
 export type ReusableSectionItem = {

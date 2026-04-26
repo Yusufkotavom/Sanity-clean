@@ -5,6 +5,8 @@ import { orderRankField } from "@sanity/orderable-document-list";
 const REUSABLE_PLACEMENTS = [
   { title: "Before Header", value: "beforeHeader" },
   { title: "After Header", value: "afterHeader" },
+  { title: "Before Main Content", value: "beforeMainContent" },
+  { title: "After Main Content", value: "afterMainContent" },
   { title: "Before Footer", value: "beforeFooter" },
   { title: "After Footer", value: "afterFooter" },
 ];
