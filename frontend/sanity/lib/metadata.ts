@@ -27,6 +27,8 @@ type SeoSettings = {
   defaultTitle?: string;
   defaultDescription?: string;
   defaultNoIndex?: boolean;
+  siteUrl?: string;
+  siteSearchPath?: string;
   twitterHandle?: string;
   defaultImage?: {
     asset?: {
@@ -53,8 +55,12 @@ const getSiteName = cache(async (): Promise<string> => {
   return settings?.siteName || settings?.brandName || "Schema UI";
 });
 
-const getCanonicalUrl = (slug?: string) => {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
+const getSiteUrl = (seo?: SeoSettings | null) =>
+  seo?.siteUrl?.replace(/\/+$/, "") || process.env.NEXT_PUBLIC_SITE_URL || "";
+
+const getCanonicalUrl = (slug?: string, seo?: SeoSettings | null) => {
+  const baseUrl = getSiteUrl(seo);
+  if (!baseUrl) return slug && slug !== "index" ? `/${slug.replace(/^\/+/, "")}` : "/";
   if (!slug || slug === "index") return `${baseUrl}/`;
   return `${baseUrl}/${slug.replace(/^\/+/, "")}`;
 };
@@ -121,7 +127,8 @@ const buildMetadata = ({
     description || seo?.defaultDescription || "",
   );
   const resolvedDescription = normalizedDescription || undefined;
-  const resolvedCanonical = canonicalUrl || getCanonicalUrl(slug);
+  const resolvedCanonical = canonicalUrl || getCanonicalUrl(slug, seo);
+  const siteUrl = getSiteUrl(seo);
   const robotsValue =
     !isProduction || noindex || seo?.defaultNoIndex ? "noindex, nofollow" : "index, follow";
 
@@ -147,9 +154,13 @@ const buildMetadata = ({
     robots: robotsValue,
     alternates: {
       canonical: resolvedCanonical,
-      languages: {
-        'id-ID': 'https://www.kotacom.id/',
-      },
+      ...(siteUrl
+        ? {
+            languages: {
+              "id-ID": `${siteUrl}/`,
+            },
+          }
+        : {}),
     },
   };
 };
@@ -158,9 +169,10 @@ export async function generateRootMetadata(): Promise<Metadata> {
   const seo = await getSeoSettings();
   const siteName = await getSiteName();
   const suffix = seo?.titleSuffix || siteName;
+  const siteUrl = getSiteUrl(seo);
 
   return {
-    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL!),
+    metadataBase: siteUrl ? new URL(siteUrl) : undefined,
     title: {
       template: `%s | ${suffix}`,
       default: seo?.defaultTitle || siteName,

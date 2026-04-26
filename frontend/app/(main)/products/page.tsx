@@ -3,6 +3,7 @@ import ProductGrid from "@/components/products/product-grid";
 import {
   fetchSanityProductCategories,
   fetchSanityProducts,
+  fetchSanitySeoSettings,
 } from "@/sanity/lib/fetch";
 import { generateBasicMetadata } from "@/sanity/lib/metadata";
 import JsonLd from "@/components/seo/json-ld";
@@ -18,19 +19,24 @@ export async function generateMetadata() {
 }
 
 export default async function ProductsPage() {
-  const products = await fetchSanityProducts();
-  const categories = await fetchSanityProductCategories();
+  const [products, categories, seo] = await Promise.all([
+    fetchSanityProducts(),
+    fetchSanityProductCategories(),
+    fetchSanitySeoSettings(),
+  ]);
+  const siteUrl = (seo as any)?.siteUrl;
 
   const breadcrumbJsonLd = buildBreadcrumbJsonLd([
     { name: "Home", path: "/" },
     { name: "Produk", path: "/products" },
-  ]);
+  ], { siteUrl });
 
   const collectionJsonLd = buildCollectionPageJsonLd({
     name: "Produk IT & Percetakan – Kotacom",
     description:
       "Katalog produk IT, perlengkapan kantor, dan percetakan dari Kotacom Surabaya.",
     url: "/products",
+    siteUrl,
     items: (products as any[])
       .filter((p: any) => p.title && p.slug?.current)
       .map((p: any) => ({

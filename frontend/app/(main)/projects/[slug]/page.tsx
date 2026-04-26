@@ -13,6 +13,7 @@ import { Code, ExternalLink, Link as LinkIcon } from "lucide-react";
 import {
   fetchSanityProjectBySlug,
   fetchSanityProjectsStaticParams,
+  fetchSanitySeoSettings,
 } from "@/sanity/lib/fetch";
 import { generatePageMetadata } from "@/sanity/lib/metadata";
 import JsonLd from "@/components/seo/json-ld";
@@ -45,7 +46,11 @@ export default async function ProjectPage(props: {
   params: Promise<{ slug: string }>;
 }) {
   const params = await props.params;
-  const project = await fetchSanityProjectBySlug({ slug: params.slug });
+  const [project, seo] = await Promise.all([
+    fetchSanityProjectBySlug({ slug: params.slug }),
+    fetchSanitySeoSettings(),
+  ]);
+  const siteUrl = (seo as any)?.siteUrl;
 
   if (!project) notFound();
 
@@ -62,12 +67,13 @@ export default async function ProjectPage(props: {
     image: project.meta?.image || project.image,
     datePublished: project._createdAt || undefined,
     dateModified: project._updatedAt || undefined,
+    siteUrl,
   });
   const breadcrumbJsonLd = buildBreadcrumbJsonLd([
     { name: "Home", path: "/" },
     { name: "Projects", path: "/projects" },
     { name: project.title || "Project", path: projectPath },
-  ]);
+  ], { siteUrl });
 
   return (
     <section>

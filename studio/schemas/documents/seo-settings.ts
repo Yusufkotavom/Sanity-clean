@@ -40,6 +40,31 @@ export default defineType({
       description: "Applied when a page does not define its own noindex setting.",
     }),
     defineField({
+      name: "siteUrl",
+      title: "Canonical Site URL",
+      type: "url",
+      initialValue: "https://www.kotacom.id",
+      description:
+        "Canonical production site URL used for metadata, robots, sitemap, and structured data.",
+      validation: (Rule) =>
+        Rule.required().uri({
+          scheme: ["http", "https"],
+        }),
+    }),
+    defineField({
+      name: "siteSearchPath",
+      title: "Site Search Path",
+      type: "string",
+      initialValue: "/search",
+      description:
+        "Optional search route used in WebSite SearchAction structured data. Must start with '/'.",
+      validation: (Rule) =>
+        Rule.custom((value: string | undefined) => {
+          if (!value) return true;
+          return value.startsWith("/") ? true : "Search path must start with '/'.";
+        }),
+    }),
+    defineField({
       name: "noIndexBlogCategories",
       title: "No Index Blog Category Pages",
       type: "boolean",
@@ -76,6 +101,62 @@ export default defineType({
           const invalid = paths.find((path) => !path || !path.startsWith("/"));
           return invalid ? "Each disallow path must start with '/'" : true;
         }),
+    }),
+    defineField({
+      name: "aiCrawlerAllowlist",
+      title: "AI Crawler Allowlist",
+      type: "array",
+      of: [{ type: "string" }],
+      initialValue: [
+        "GPTBot",
+        "ChatGPT-User",
+        "ClaudeBot",
+        "PerplexityBot",
+        "Google-Extended",
+        "Applebot-Extended",
+        "Bytespider",
+        "CCBot",
+        "anthropic-ai",
+        "FacebookBot",
+        "Amazonbot",
+      ],
+      description:
+        "User-agent names that should receive explicit allow rules in robots.txt.",
+    }),
+    defineField({
+      name: "sitemapStaticRoutes",
+      title: "Sitemap Static Routes",
+      type: "array",
+      of: [{ type: "string" }],
+      initialValue: [
+        "/about",
+        "/contact",
+        "/privacy",
+        "/pembuatan-website",
+        "/percetakan",
+        "/software",
+        "/sistem-pos",
+        "/blog",
+        "/products",
+        "/projects",
+        "/services",
+      ],
+      description:
+        "Static routes that should always be included in the sitemap even when they are not backed by a Sanity page document.",
+      validation: (Rule) =>
+        Rule.custom((paths: string[] | undefined) => {
+          if (!paths?.length) return true;
+          const invalid = paths.find((path) => !path || !path.startsWith("/"));
+          return invalid ? "Each sitemap static route must start with '/'" : true;
+        }),
+    }),
+    defineField({
+      name: "includeTemplateRoutesInSitemap",
+      title: "Include Template Routes in Sitemap",
+      type: "boolean",
+      initialValue: true,
+      description:
+        "When enabled, template-backed routes from legacy location documents are included in sitemap output.",
     }),
     defineField({
       name: "twitterHandle",

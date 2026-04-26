@@ -5,12 +5,17 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
   const seo = (await fetchSanitySeoSettings()) as
     | {
         defaultNoIndex?: boolean;
+        siteUrl?: string;
         robotsDisallowPaths?: string[] | null;
+        aiCrawlerAllowlist?: string[] | null;
       }
     | null;
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
+  const siteUrl = seo?.siteUrl || process.env.NEXT_PUBLIC_SITE_URL || "";
   const disallowPaths = (seo?.robotsDisallowPaths || []).filter(
     (path): path is string => typeof path === "string" && path.startsWith("/"),
+  );
+  const aiCrawlers = (seo?.aiCrawlerAllowlist || []).filter(
+    (crawler): crawler is string => typeof crawler === "string" && crawler.trim().length > 0,
   );
   const siteWideNoIndex = Boolean(seo?.defaultNoIndex);
 
@@ -27,21 +32,6 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
       disallow: disallowPaths,
     });
   }
-
-  // AI Crawler Management - Allow all AI crawlers for better discoverability
-  const aiCrawlers = [
-    "GPTBot",
-    "ChatGPT-User",
-    "ClaudeBot",
-    "PerplexityBot",
-    "Google-Extended",
-    "Applebot-Extended",
-    "Bytespider",
-    "CCBot",
-    "anthropic-ai",
-    "FacebookBot",
-    "Amazonbot",
-  ];
 
   aiCrawlers.forEach((crawler) => {
     rules.push({

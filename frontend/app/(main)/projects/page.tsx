@@ -1,5 +1,5 @@
 import ProjectGrid from "@/components/projects/project-grid";
-import { fetchSanityProjects } from "@/sanity/lib/fetch";
+import { fetchSanityProjects, fetchSanitySeoSettings } from "@/sanity/lib/fetch";
 import { generateBasicMetadata } from "@/sanity/lib/metadata";
 import { Suspense } from "react";
 import JsonLd from "@/components/seo/json-ld";
@@ -15,18 +15,23 @@ export async function generateMetadata() {
 }
 
 export default async function ProjectsPage() {
-  const projects = await fetchSanityProjects();
+  const [projects, seo] = await Promise.all([
+    fetchSanityProjects(),
+    fetchSanitySeoSettings(),
+  ]);
+  const siteUrl = (seo as any)?.siteUrl;
 
   const breadcrumbJsonLd = buildBreadcrumbJsonLd([
     { name: "Home", path: "/" },
     { name: "Portfolio", path: "/projects" },
-  ]);
+  ], { siteUrl });
 
   const collectionJsonLd = buildCollectionPageJsonLd({
     name: "Portfolio Proyek – Kotacom",
     description:
       "Portofolio website, software, dan percetakan oleh Kotacom Surabaya.",
     url: "/projects",
+    siteUrl,
     items: (projects as any[])
       .filter((p: any) => p.title && p.slug?.current)
       .map((p: any) => ({

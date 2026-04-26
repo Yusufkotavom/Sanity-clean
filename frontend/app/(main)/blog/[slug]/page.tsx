@@ -10,6 +10,7 @@ import { extractTableOfContents } from "@/lib/table-of-contents";
 import {
   fetchSanityPostBySlug,
   fetchSanityPostsStaticParams,
+  fetchSanitySeoSettings,
 } from "@/sanity/lib/fetch";
 import { generatePageMetadata } from "@/sanity/lib/metadata";
 import JsonLd from "@/components/seo/json-ld";
@@ -56,7 +57,11 @@ export default async function PostPage(props: {
   params: Promise<{ slug: string }>;
 }) {
   const params = await props.params;
-  const post = await fetchSanityPostBySlug(params);
+  const [post, seo] = await Promise.all([
+    fetchSanityPostBySlug(params),
+    fetchSanitySeoSettings(),
+  ]);
+  const siteUrl = (seo as any)?.siteUrl;
 
   if (!post) {
     notFound();
@@ -93,12 +98,13 @@ export default async function PostPage(props: {
     datePublished: post._createdAt || undefined,
     dateModified: post._updatedAt || undefined,
     authorName: post.author?.name || undefined,
+    siteUrl,
   });
   const breadcrumbJsonLd = buildBreadcrumbJsonLd([
     { name: "Home", path: "/" },
     { name: "Blog", path: "/blog" },
     { name: post.title || "Post", path: postPath },
-  ]);
+  ], { siteUrl });
 
   // Auto-detect affiliate items
   const affiliateItems = (post as any)?.affiliateItems || [];
@@ -109,7 +115,7 @@ export default async function PostPage(props: {
       <JsonLd data={breadcrumbJsonLd} />
       {/* Auto-detected affiliate/review JSON-LD */}
       {affiliateItems.length > 1 && (
-        <JsonLd data={buildItemListJsonLd(affiliateItems, post.title || undefined)} />
+        <JsonLd data={buildItemListJsonLd(affiliateItems, post.title || undefined, { siteUrl })} />
       )}
       {affiliateItems.length === 1 && (
         <JsonLd data={buildAffiliateItemJsonLd(affiliateItems[0])} />

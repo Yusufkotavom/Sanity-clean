@@ -3,7 +3,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import ArchiveCategoryFilter from "@/components/ui/archive-category-filter";
 import PostGrid from "@/components/posts/post-grid";
-import { fetchSanityBlogCategories, fetchSanityPosts } from "@/sanity/lib/fetch";
+import { fetchSanityBlogCategories, fetchSanityPosts, fetchSanitySeoSettings } from "@/sanity/lib/fetch";
 import { generateBasicMetadata } from "@/sanity/lib/metadata";
 import JsonLd from "@/components/seo/json-ld";
 import { buildBreadcrumbJsonLd, buildCollectionPageJsonLd } from "@/lib/seo-jsonld";
@@ -18,20 +18,25 @@ export async function generateMetadata() {
 }
 
 export default async function BlogPage() {
-  const posts = (await fetchSanityPosts()) as any[];
-  const categories = await fetchSanityBlogCategories();
+  const [posts, categories, seo] = await Promise.all([
+    fetchSanityPosts(),
+    fetchSanityBlogCategories(),
+    fetchSanitySeoSettings(),
+  ]);
+  const siteUrl = (seo as any)?.siteUrl;
 
   const breadcrumbJsonLd = buildBreadcrumbJsonLd([
     { name: "Home", path: "/" },
     { name: "Blog", path: "/blog" },
-  ]);
+  ], { siteUrl });
 
   const collectionJsonLd = buildCollectionPageJsonLd({
     name: "Blog & Artikel IT – Kotacom",
     description:
       "Kumpulan artikel teknologi, tips IT, panduan website, software, dan percetakan dari tim Kotacom.",
     url: "/blog",
-    items: posts
+    siteUrl,
+    items: (posts as any[])
       .filter((p: any) => p.title && p.slug?.current)
       .map((p: any) => ({
         name: p.title,

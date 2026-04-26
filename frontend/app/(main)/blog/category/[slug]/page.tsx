@@ -50,7 +50,11 @@ export default async function BlogCategoryDetailPage(props: {
   params: Promise<{ slug: string }>;
 }) {
   const params = await props.params;
-  const category = await fetchSanityCategoryBySlug({ slug: params.slug });
+  const [category, seo] = await Promise.all([
+    fetchSanityCategoryBySlug({ slug: params.slug }),
+    fetchSanitySeoSettings(),
+  ]);
+  const siteUrl = (seo as any)?.siteUrl;
   if (!category) notFound();
 
   const categories = await fetchSanityBlogCategories();
@@ -61,12 +65,13 @@ export default async function BlogCategoryDetailPage(props: {
     { name: "Home", path: "/" },
     { name: "Blog", path: "/blog" },
     { name: category.title || "Kategori", path: categoryPath },
-  ]);
+  ], { siteUrl });
 
   const collectionJsonLd = buildCollectionPageJsonLd({
     name: `${category.title || "Kategori Blog"} – Kotacom`,
     description: category.description || `Artikel kategori ${category.title || ""} dari tim Kotacom.`,
     url: categoryPath,
+    siteUrl,
     items: (posts as any[])
       .filter((p: any) => p.title && p.slug?.current)
       .map((p: any) => ({

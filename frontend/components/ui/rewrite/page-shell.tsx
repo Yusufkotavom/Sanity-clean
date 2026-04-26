@@ -21,7 +21,7 @@ import RewriteRelatedLinks from "@/components/ui/rewrite/related-links";
 import MicroBadges from "@/components/micro-badges";
 import { kotacomSplitIllustrations } from "@/lib/illustrations/kotacom-split";
 import { urlFor } from "@/sanity/lib/image";
-import { fetchLegacyPageOverrideByRoute, fetchTemplatePageByRoute } from "@/sanity/lib/fetch";
+import { fetchLegacyPageOverrideByRoute, fetchSanitySeoSettings, fetchTemplatePageByRoute } from "@/sanity/lib/fetch";
 import {
   resolveNarrativeSections,
   resolveTemplateCopy,
@@ -61,10 +61,14 @@ export default async function RewritePageShell({
     sectionHrefOverride ?? (page.section ? `/${page.section}` : resolvedRoute);
   const resolvedSectionLabel =
     sectionLabelOverride ?? page.section.replace(/-/g, " ");
-  const templatePage = await fetchTemplatePageByRoute({ route: resolvedRoute });
-  const override = (await fetchLegacyPageOverrideByRoute({
-    route: resolvedRoute,
-  })) as LegacyPageOverride;
+  const [templatePage, seo, override] = await Promise.all([
+    fetchTemplatePageByRoute({ route: resolvedRoute }),
+    fetchSanitySeoSettings(),
+    fetchLegacyPageOverrideByRoute({
+      route: resolvedRoute,
+    }) as Promise<LegacyPageOverride>,
+  ]);
+  const siteUrl = (seo as any)?.siteUrl;
   const baseCopy = buildLegacyRewriteCopy(page);
   const templateCopy = resolveTemplateCopy({
     base: baseCopy,
@@ -91,7 +95,7 @@ export default async function RewritePageShell({
         .join(" "),
       path: `/${breadcrumbParts.slice(0, index + 1).join("/")}`,
     })),
-  ]);
+  ], { siteUrl });
   const showServiceSchema = [
     "pembuatan-website",
     "percetakan",
@@ -104,6 +108,7 @@ export default async function RewritePageShell({
         title: copy.primaryKeyword,
         description: copy.description,
         path: resolvedRoute,
+        siteUrl,
       })
     : null;
   const faqJsonLd = copy.faqs.length > 0 ? buildFaqJsonLd(copy.faqs) : null;

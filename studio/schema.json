@@ -9529,6 +9529,20 @@
         },
         "optional": true
       },
+      "siteUrl": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "siteSearchPath": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
       "noIndexBlogCategories": {
         "type": "objectAttribute",
         "value": {
@@ -9557,6 +9571,33 @@
           "of": {
             "type": "string"
           }
+        },
+        "optional": true
+      },
+      "aiCrawlerAllowlist": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "array",
+          "of": {
+            "type": "string"
+          }
+        },
+        "optional": true
+      },
+      "sitemapStaticRoutes": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "array",
+          "of": {
+            "type": "string"
+          }
+        },
+        "optional": true
+      },
+      "includeTemplateRoutesInSitemap": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
         },
         "optional": true
       },

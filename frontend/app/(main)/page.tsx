@@ -15,12 +15,7 @@ export async function generateMetadata(): Promise<Metadata> {
     });
   }
 
-  return generateBasicMetadata({
-    title: "Kotacom - Website, Software, IT Support, dan Percetakan",
-    description:
-      "Kotacom membantu bisnis bergerak lebih cepat lewat website, software custom, IT support, dan percetakan yang dirancang sebagai satu sistem delivery.",
-    slug: "index",
-  });
+  return generateBasicMetadata({ slug: "index" });
 }
 
 export default async function IndexPage() {

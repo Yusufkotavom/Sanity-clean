@@ -7,7 +7,8 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import Ga4Tracker from "@/components/analytics/ga4-tracker";
 import { generateRootMetadata } from "@/sanity/lib/metadata";
-import { fetchSanityThemeSettings, fetchSanitySeoSettings } from "@/sanity/lib/fetch";
+import { urlFor } from "@/sanity/lib/image";
+import { fetchSanitySettings, fetchSanityThemeSettings, fetchSanitySeoSettings } from "@/sanity/lib/fetch";
 
 const THEME_PRESETS: Record<
   string,
@@ -92,6 +93,138 @@ function toHexColor(value?: string | null): string | undefined {
     : undefined;
 }
 
+type SettingsData = {
+  siteName?: string | null;
+  brandName?: string | null;
+  logo?: {
+    dark?: unknown;
+    light?: unknown;
+  } | null;
+  socialLinks?: Array<{ url?: string | null }> | null;
+};
+
+type SeoData = {
+  siteUrl?: string | null;
+  siteSearchPath?: string | null;
+  defaultDescription?: string | null;
+  defaultAggregateRating?: {
+    ratingValue?: number | null;
+    reviewCount?: number | null;
+    bestRating?: number | null;
+  } | null;
+  companyInfo?: {
+    name?: string | null;
+    foundedYear?: number | null;
+    address?: string | null;
+    phone?: string | null;
+    whatsapp?: string | null;
+    email?: string | null;
+    operatingHours?: string | null;
+    serviceAreas?: string[] | null;
+  } | null;
+};
+
+function getSiteUrl(seo: SeoData | null) {
+  return seo?.siteUrl?.trim() || process.env.NEXT_PUBLIC_SITE_URL || "";
+}
+
+function imageUrlFromSanity(source: unknown): string | undefined {
+  try {
+    return source ? urlFor(source as any).quality(85).url() : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+function buildJsonLdScripts(settings: SettingsData | null, seo: SeoData | null) {
+  const siteUrl = getSiteUrl(seo);
+  if (!siteUrl) return [] as string[];
+
+  const companyName = seo?.companyInfo?.name || settings?.brandName || settings?.siteName || "Schema UI";
+  const description = seo?.defaultDescription || undefined;
+  const logoSource = settings?.logo?.dark || settings?.logo?.light;
+  const logoUrl = imageUrlFromSanity(logoSource);
+  const socials = (settings?.socialLinks || [])
+    .map((entry) => entry?.url?.trim())
+    .filter((value): value is string => Boolean(value));
+  const searchPath = seo?.siteSearchPath?.trim();
+  const searchUrl = searchPath && searchPath.startsWith("/") ? `${siteUrl}${searchPath}` : null;
+  const phone = seo?.companyInfo?.phone || seo?.companyInfo?.whatsapp || undefined;
+
+  const organization: Record<string, unknown> = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: companyName,
+    url: siteUrl,
+    ...(logoUrl ? { logo: logoUrl } : {}),
+    ...(description ? { description } : {}),
+    ...(seo?.companyInfo?.foundedYear ? { foundingDate: String(seo.companyInfo.foundedYear) } : {}),
+    ...(socials.length ? { sameAs: socials } : {}),
+    ...(phone
+      ? {
+          contactPoint: {
+            "@type": "ContactPoint",
+            telephone: phone,
+            contactType: "customer service",
+          },
+        }
+      : {}),
+  };
+
+  const website: Record<string, unknown> = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: companyName,
+    url: siteUrl,
+    ...(description ? { description } : {}),
+    ...(searchUrl
+      ? {
+          potentialAction: {
+            "@type": "SearchAction",
+            target: {
+              "@type": "EntryPoint",
+              urlTemplate: `${searchUrl}?q={search_term_string}`,
+            },
+            "query-input": "required name=search_term_string",
+          },
+        }
+      : {}),
+  };
+
+  const localBusiness: Record<string, unknown> = {
+    "@context": "https://schema.org",
+    "@type": ["LocalBusiness", "ProfessionalService"],
+    name: companyName,
+    url: siteUrl,
+    ...(logoUrl ? { logo: logoUrl, image: logoUrl } : {}),
+    ...(description ? { description } : {}),
+    ...(phone ? { telephone: phone } : {}),
+    ...(seo?.companyInfo?.email ? { email: seo.companyInfo.email } : {}),
+    ...(seo?.companyInfo?.address ? { address: seo.companyInfo.address } : {}),
+    ...((seo?.companyInfo?.serviceAreas || []).length
+      ? {
+          areaServed: (seo?.companyInfo?.serviceAreas || []).map((name) => ({
+            "@type": "Place",
+            name,
+          })),
+        }
+      : {}),
+    ...(socials.length ? { sameAs: socials } : {}),
+    ...(seo?.defaultAggregateRating?.ratingValue
+      ? {
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: String(seo.defaultAggregateRating.ratingValue),
+            reviewCount: String(seo.defaultAggregateRating.reviewCount || 1),
+            bestRating: String(seo.defaultAggregateRating.bestRating || 5),
+          },
+        }
+      : {}),
+  };
+
+  return [organization, website, localBusiness].map((entry) => JSON.stringify(entry));
+}
+
 export async function generateMetadata(): Promise<Metadata> {
   return generateRootMetadata();
 }
@@ -101,7 +234,8 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [themeSettings, seoSettings] = await Promise.all([
+  const [settings, themeSettings, seoSettings] = await Promise.all([
+    fetchSanitySettings(),
     fetchSanityThemeSettings(),
     fetchSanitySeoSettings(),
   ]);
@@ -148,6 +282,8 @@ export default async function RootLayout({
   const darkRing = toHexColor(colors?.darkRing);
   if (darkRing) themeVars["--studio-dark-ring"] = darkRing;
 
+  const jsonLdScripts = buildJsonLdScripts(settings as SettingsData | null, seoSettings as SeoData | null);
+
   return (
     <html
       lang="en"
@@ -169,156 +305,13 @@ export default async function RootLayout({
         </ThemeProvider>
         <Toaster position="top-center" richColors />
         <Ga4Tracker />
-        {/* Organization Schema */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Organization",
-              "name": "Kotacom",
-              "url": "https://www.kotacom.id",
-              "logo": "https://www.kotacom.id/assets/images/kotacom-logo-Cxnk7d9Z_1nOG2e.svg",
-              "description": "Solusi IT & Digital Terpadu untuk Bisnis Anda",
-              "foundingDate": "2008",
-              "sameAs": [
-                "https://www.instagram.com/kotacom.id",
-                "https://www.facebook.com/kotacom"
-              ],
-              "contactPoint": {
-                "@type": "ContactPoint",
-                "telephone": "+6285799520350",
-                "contactType": "customer service",
-                "areaServed": "ID",
-                "availableLanguage": ["Indonesian", "English"]
-              }
-            }),
-          }}
-        />
-        {/* WebSite Schema with SearchAction */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "WebSite",
-              "name": "Kotacom",
-              "url": "https://www.kotacom.id",
-              "description": "Solusi IT, Website, Software & Percetakan Profesional Surabaya",
-              "potentialAction": {
-                "@type": "SearchAction",
-                "target": {
-                  "@type": "EntryPoint",
-                  "urlTemplate": "https://www.kotacom.id/search?q={search_term_string}"
-                },
-                "query-input": "required name=search_term_string"
-              }
-            }),
-          }}
-        />
-        {/* LocalBusiness Schema */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": ["LocalBusiness", "ProfessionalService"],
-              "name": "Kotacom IT Service & Percetakan",
-              "url": "https://www.kotacom.id",
-              "logo": "https://www.kotacom.id/assets/images/kotacom-logo-Cxnk7d9Z_1nOG2e.svg",
-              "image": "https://www.kotacom.id/assets/images/kotacom-logo-Cxnk7d9Z_1nOG2e.svg",
-              "description": "Solusi IT & Digital Terpadu untuk Bisnis Anda. IT Service & Percetakan - Pengadaan, Service, Penjualan, Website Development, Software Development, Percetakan, Social Media Management.",
-              "telephone": "+6285799520350",
-              "priceRange": "$$",
-              "address": [
-                {
-                  "@type": "PostalAddress",
-                  "streetAddress": "Graha Indraprasta G7/15",
-                  "addressLocality": "Tulangan",
-                  "addressRegion": "Sidoarjo",
-                  "postalCode": "61273",
-                  "addressCountry": "ID"
-                },
-                {
-                  "@type": "PostalAddress",
-                  "streetAddress": "Jl. Tenggilis Mulya 76",
-                  "addressLocality": "Surabaya",
-                  "addressRegion": "Jawa Timur",
-                  "postalCode": "60292",
-                  "addressCountry": "ID"
-                }
-              ],
-              "areaServed": [
-                {
-                  "@type": "City",
-                  "name": "Surabaya"
-                },
-                {
-                  "@type": "City",
-                  "name": "Sidoarjo"
-                },
-                {
-                  "@type": "Country",
-                  "name": "Indonesia"
-                }
-              ],
-              "contactPoint": {
-                "@type": "ContactPoint",
-                "telephone": "+6285799520350",
-                "contactType": "customer service",
-                "areaServed": "ID",
-                "availableLanguage": ["Indonesian", "English"]
-              },
-              "openingHoursSpecification": [
-                {
-                  "@type": "OpeningHoursSpecification",
-                  "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-                  "opens": "09:00",
-                  "closes": "17:00"
-                }
-              ],
-              "sameAs": [
-                "https://www.instagram.com/kotacom.id",
-                "https://www.facebook.com/kotacom"
-              ],
-              ...((seoSettings as any)?.defaultAggregateRating?.ratingValue ? {
-                "aggregateRating": {
-                  "@type": "AggregateRating",
-                  "ratingValue": String((seoSettings as any).defaultAggregateRating.ratingValue),
-                  "reviewCount": String((seoSettings as any).defaultAggregateRating.reviewCount || 1),
-                  "bestRating": String((seoSettings as any).defaultAggregateRating.bestRating || 5)
-                }
-              } : {}),
-              "hasOfferCatalog": {
-                "@type": "OfferCatalog",
-                "name": "Layanan Utama Kotacom",
-                "itemListElement": [
-                  {
-                    "@type": "Offer",
-                    "itemOffered": {
-                      "@type": "Service",
-                      "name": "Jasa Service Komputer & Jaringan"
-                    }
-                  },
-                  {
-                    "@type": "Offer",
-                    "itemOffered": {
-                      "@type": "Service",
-                      "name": "Jasa Pembuatan Website & Software Development"
-                    }
-                  },
-                  {
-                    "@type": "Offer",
-                    "itemOffered": {
-                      "@type": "Service",
-                      "name": "Jasa Percetakan Buku & Digital Printing"
-                    }
-                  }
-                ]
-              }
-            }),
-          }}
-        />
+        {jsonLdScripts.map((jsonLd, index) => (
+          <script
+            key={`json-ld-${index}`}
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: jsonLd }}
+          />
+        ))}
       </body>
     </html>
   );

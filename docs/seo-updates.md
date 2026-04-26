@@ -1908,3 +1908,48 @@ Audited the Sanity block library and filled top-level `initialValue` coverage ac
 - ✅ Re-audit confirmed no schema file under `studio/schemas/blocks` remains without a top-level `initialValue`.
 - ✅ `pnpm --filter studio run typecheck` passed.
 - ⚠️ A follow-up schema extract was started for `studio/schema.json`, but the Sanity CLI process did not return a clean completion line within this cycle.
+
+## 2026-04-26 — Sanity-First Global SEO Settings Pass
+
+### Changed Files
+- `studio/schemas/documents/seo-settings.ts` (MODIFIED) - Added operational SEO fields for canonical site URL, search path, AI crawler allowlist, sitemap static routes, and template-route sitemap inclusion policy.
+- `studio/schema.json` (MODIFIED) - Refreshed extracted Sanity schema after extending `seoSettings`.
+- `frontend/sanity/queries/seo-settings.ts` (MODIFIED) - Expanded the frontend SEO settings query to fetch the new global operational fields.
+- `frontend/sanity/lib/metadata.ts` (MODIFIED) - Moved canonical URL, `metadataBase`, language alternate, and fallback OG image URL resolution to prefer Sanity `seoSettings.siteUrl`.
+- `frontend/app/layout.tsx` (MODIFIED) - Replaced hardcoded Organization/WebSite/LocalBusiness JSON-LD with Sanity-driven structured data built from `settings` and `seoSettings`.
+- `frontend/app/robots.ts` (MODIFIED) - Moved sitemap URL and AI crawler rules to Sanity-first `seoSettings` values.
+- `frontend/app/sitemap.ts` (MODIFIED) - Moved base URL, static route inclusion, and template-route sitemap policy to Sanity-first `seoSettings` values.
+- `frontend/app/(main)/page.tsx` (MODIFIED) - Removed hardcoded homepage metadata fallback copy so the homepage now falls back to global Sanity SEO defaults.
+- `frontend/lib/seo-jsonld.ts` (MODIFIED) - Added `siteUrl` support to shared JSON-LD builders so page-level structured data can resolve absolute URLs from Sanity.
+- `frontend/app/(main)/blog/page.tsx` (MODIFIED) - Wired collection/breadcrumb JSON-LD to Sanity `siteUrl`.
+- `frontend/app/(main)/blog/[slug]/page.tsx` (MODIFIED) - Wired article/breadcrumb/list JSON-LD to Sanity `siteUrl`.
+- `frontend/app/(main)/blog/category/page.tsx` (MODIFIED) - Wired category collection/breadcrumb JSON-LD to Sanity `siteUrl`.
+- `frontend/app/(main)/blog/category/[slug]/page.tsx` (MODIFIED) - Wired category-detail collection/breadcrumb JSON-LD to Sanity `siteUrl`.
+- `frontend/app/(main)/products/page.tsx` (MODIFIED) - Wired collection/breadcrumb JSON-LD to Sanity `siteUrl`.
+- `frontend/app/(main)/products/[slug]/page.tsx` (MODIFIED) - Wired product/breadcrumb JSON-LD to Sanity `siteUrl`.
+- `frontend/app/(main)/services/page.tsx` (MODIFIED) - Wired collection/breadcrumb JSON-LD to Sanity `siteUrl`.
+- `frontend/app/(main)/services/[slug]/page.tsx` (MODIFIED) - Wired service/breadcrumb JSON-LD to Sanity `siteUrl`.
+- `frontend/app/(main)/projects/page.tsx` (MODIFIED) - Wired collection/breadcrumb JSON-LD to Sanity `siteUrl`.
+- `frontend/app/(main)/projects/[slug]/page.tsx` (MODIFIED) - Wired article/breadcrumb JSON-LD to Sanity `siteUrl`.
+- `frontend/components/ui/json-usaha-page.tsx` (MODIFIED) - Wired service/breadcrumb JSON-LD to Sanity `siteUrl`.
+- `frontend/components/ui/rewrite/page-shell.tsx` (MODIFIED) - Wired legacy rewrite breadcrumb/service JSON-LD to Sanity `siteUrl`.
+- `frontend/sanity.types.ts` (MODIFIED) - Regenerated query/schema types after the SEO settings expansion.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated migration status snapshot for the Sanity-first SEO pass.
+
+### Summary
+Shifted the remaining global SEO control surface away from hardcoded frontend defaults and into Sanity `seoSettings`. Canonical site URL, WebSite search path, AI crawler allowlist, sitemap static routes, template-route sitemap policy, homepage metadata fallback, and root structured data now resolve from Sanity-first data, while page-level JSON-LD builders and their active server-page callsites now inherit the Sanity-managed site URL for absolute schema links.
+
+### Impact on SEO/Integration
+- Direct SEO impact:
+  - Canonical URL generation, `metadataBase`, robots sitemap URL, and root/page structured-data URLs now use the CMS-managed site URL instead of code-owned literals.
+  - Global crawler allow rules and static sitemap route policy are now editable in Sanity.
+  - Homepage metadata fallback is now aligned with global `seoSettings` defaults instead of a separate code-owned copy block.
+- Integration impact:
+  - Studio schema, frontend GROQ query, metadata helpers, robots, sitemap, root layout JSON-LD, and active JSON-LD callsites were updated together to keep the CMS contract synchronized.
+  - Structural wildcard redirects remain intentionally code-owned in `frontend/next.config.mjs`; this pass does not change that repo rule.
+
+### Verification Status
+- ✅ `pnpm --filter frontend run typecheck`
+- ✅ `pnpm --filter studio run typecheck`
+- ✅ `pnpm --filter studio run typegen`
+- ✅ `git diff --check`

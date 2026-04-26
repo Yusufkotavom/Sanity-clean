@@ -3,17 +3,25 @@ import { KOTACOM_SPLIT_DEFAULT_SEO_IMAGE } from "@/lib/illustrations/kotacom-spl
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "";
 
-const toAbsoluteUrl = (path: string) => `${SITE_URL}${path.startsWith("/") ? path : `/${path}`}`;
+const normalizeSiteUrl = (siteUrl?: string | null) =>
+  siteUrl?.replace(/\/+$/, "") || SITE_URL;
 
-const resolveImageUrl = (image: any, fallback = KOTACOM_SPLIT_DEFAULT_SEO_IMAGE) => {
+const toAbsoluteUrl = (path: string, siteUrl?: string | null) =>
+  `${normalizeSiteUrl(siteUrl)}${path.startsWith("/") ? path : `/${path}`}`;
+
+const resolveImageUrl = (
+  image: any,
+  fallback = KOTACOM_SPLIT_DEFAULT_SEO_IMAGE,
+  siteUrl?: string | null,
+) => {
   if (image) {
     try {
       return urlFor(image).quality(100).url();
     } catch {
-      return toAbsoluteUrl(fallback);
+      return toAbsoluteUrl(fallback, siteUrl);
     }
   }
-  return toAbsoluteUrl(fallback);
+  return toAbsoluteUrl(fallback, siteUrl);
 };
 
 // ---------- Types ----------
@@ -138,6 +146,7 @@ export function resolveAggregateRating(
 
 export const buildBreadcrumbJsonLd = (
   items: Array<{ name: string; path: string }>,
+  options?: { siteUrl?: string | null },
 ) => ({
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
@@ -145,7 +154,7 @@ export const buildBreadcrumbJsonLd = (
     "@type": "ListItem",
     position: idx + 1,
     name: item.name,
-    item: toAbsoluteUrl(item.path),
+    item: toAbsoluteUrl(item.path, options?.siteUrl),
   })),
 });
 
@@ -157,6 +166,7 @@ export const buildArticleJsonLd = ({
   datePublished,
   dateModified,
   authorName,
+  siteUrl,
 }: {
   title: string;
   description?: string | null;
@@ -165,13 +175,14 @@ export const buildArticleJsonLd = ({
   datePublished?: string;
   dateModified?: string;
   authorName?: string;
+  siteUrl?: string | null;
 }) => ({
   "@context": "https://schema.org",
   "@type": "Article",
   headline: title,
   description: description || undefined,
-  image: resolveImageUrl(image),
-  mainEntityOfPage: toAbsoluteUrl(path),
+  image: resolveImageUrl(image, KOTACOM_SPLIT_DEFAULT_SEO_IMAGE, siteUrl),
+  mainEntityOfPage: toAbsoluteUrl(path, siteUrl),
   datePublished: datePublished || undefined,
   dateModified: dateModified || undefined,
   author: authorName
@@ -192,6 +203,7 @@ export const buildProductJsonLd = ({
   availability,
   aggregateRating,
   reviews,
+  siteUrl,
 }: {
   title: string;
   description?: string | null;
@@ -202,13 +214,14 @@ export const buildProductJsonLd = ({
   availability?: string;
   aggregateRating?: AggregateRatingData;
   reviews?: ReviewItemData[];
+  siteUrl?: string | null;
 }) => ({
   "@context": "https://schema.org",
   "@type": "Product",
   name: title,
   description: description || undefined,
-  image: resolveImageUrl(image),
-  url: toAbsoluteUrl(path),
+  image: resolveImageUrl(image, KOTACOM_SPLIT_DEFAULT_SEO_IMAGE, siteUrl),
+  url: toAbsoluteUrl(path, siteUrl),
   offers:
     typeof price === "number"
       ? {
@@ -233,6 +246,7 @@ export const buildServiceJsonLd = ({
   currency,
   aggregateRating,
   reviews,
+  siteUrl,
 }: {
   title: string;
   description?: string | null;
@@ -242,13 +256,14 @@ export const buildServiceJsonLd = ({
   currency?: string;
   aggregateRating?: AggregateRatingData;
   reviews?: ReviewItemData[];
+  siteUrl?: string | null;
 }) => ({
   "@context": "https://schema.org",
   "@type": "Service",
   name: title,
   description: description || undefined,
-  image: resolveImageUrl(image),
-  url: toAbsoluteUrl(path),
+  image: resolveImageUrl(image, KOTACOM_SPLIT_DEFAULT_SEO_IMAGE, siteUrl),
+  url: toAbsoluteUrl(path, siteUrl),
   offers:
     typeof startingPrice === "number"
       ? {
@@ -340,6 +355,7 @@ export const buildAffiliateItemJsonLd = (item: AffiliateItemData) => {
 export const buildItemListJsonLd = (
   items: AffiliateItemData[],
   listName?: string,
+  options?: { siteUrl?: string | null },
 ) => ({
   "@context": "https://schema.org",
   "@type": "ItemList",
@@ -370,17 +386,19 @@ export const buildCollectionPageJsonLd = ({
   description,
   url,
   items,
+  siteUrl,
 }: {
   name: string;
   description?: string;
   url: string;
   items: CollectionItemData[];
+  siteUrl?: string | null;
 }) => ({
   "@context": "https://schema.org",
   "@type": "CollectionPage",
   name,
   description: description || undefined,
-  url: toAbsoluteUrl(url),
+  url: toAbsoluteUrl(url, siteUrl),
   mainEntity: {
     "@type": "ItemList",
     numberOfItems: items.length,
@@ -388,7 +406,7 @@ export const buildCollectionPageJsonLd = ({
       "@type": "ListItem",
       position: idx + 1,
       name: item.name,
-      url: item.url.startsWith("http") ? item.url : toAbsoluteUrl(item.url),
+      url: item.url.startsWith("http") ? item.url : toAbsoluteUrl(item.url, siteUrl),
     })),
   },
 });

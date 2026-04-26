@@ -18,18 +18,23 @@ export async function generateMetadata() {
 }
 
 export default async function BlogCategoriesPage() {
-  const categories = await fetchSanityCategories();
+  const [categories, seo] = await Promise.all([
+    fetchSanityCategories(),
+    fetchSanitySeoSettings(),
+  ]);
+  const siteUrl = (seo as any)?.siteUrl;
 
   const breadcrumbJsonLd = buildBreadcrumbJsonLd([
     { name: "Home", path: "/" },
     { name: "Blog", path: "/blog" },
     { name: "Kategori", path: "/blog/category" },
-  ]);
+  ], { siteUrl });
 
   const collectionJsonLd = buildCollectionPageJsonLd({
     name: "Kategori Blog – Kotacom",
     description: "Daftar kategori artikel blog seputar IT, website, software, dan percetakan dari Kotacom.",
     url: "/blog/category",
+    siteUrl,
     items: (categories as any[])
       .filter((c: any) => c.title && c.slug?.current)
       .map((c: any) => ({

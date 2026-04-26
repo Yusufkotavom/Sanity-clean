@@ -88,10 +88,12 @@ export default async function ProductSlugPage(props: {
   params: Promise<{ slug: string }>;
 }) {
   const params = await props.params;
-  const [categories, product] = await Promise.all([
+  const [categories, product, seo] = await Promise.all([
     fetchSanityProductCategories(),
     fetchSanityProductBySlug({ slug: params.slug }),
+    fetchSanitySeoSettings(),
   ]);
+  const siteUrl = (seo as any)?.siteUrl;
 
   const isProductCategory = (categories as any[]).some(
     (item) => item?.slug?.current === params.slug,
@@ -109,7 +111,7 @@ export default async function ProductSlugPage(props: {
       { name: "Home", path: "/" },
       { name: "Products", path: "/products" },
       { name: category.title || "Category", path: categoryPath },
-    ]);
+    ], { siteUrl });
 
     return (
       <section>
@@ -171,7 +173,6 @@ export default async function ProductSlugPage(props: {
     { label: product.title as string, href: "#" },
   ];
   const productPath = `/products/${params.slug}`;
-  const seo = await fetchSanitySeoSettings();
   const resolvedRating = resolveAggregateRating(
     product.aggregateRating,
     product.reviews,
@@ -187,12 +188,13 @@ export default async function ProductSlugPage(props: {
     availability: product.availability,
     aggregateRating: resolvedRating,
     reviews: product.reviews,
+    siteUrl,
   });
   const breadcrumbJsonLd = buildBreadcrumbJsonLd([
     { name: "Home", path: "/" },
     { name: "Products", path: "/products" },
     { name: product.title || "Product", path: productPath },
-  ]);
+  ], { siteUrl });
 
   return (
     <section>

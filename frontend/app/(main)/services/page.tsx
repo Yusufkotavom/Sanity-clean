@@ -2,6 +2,7 @@ import ArchiveCategoryFilter from "@/components/ui/archive-category-filter";
 import ServiceGrid from "@/components/services/service-grid";
 import {
   fetchSanityPageBySlug,
+  fetchSanitySeoSettings,
   fetchSanityServiceCategories,
   fetchSanityServices,
 } from "@/sanity/lib/fetch";
@@ -32,15 +33,17 @@ export async function generateMetadata() {
 }
 
 export default async function ServicesPage() {
-  const [services, categories] = await Promise.all([
+  const [services, categories, seo] = await Promise.all([
     fetchSanityServices(),
     fetchSanityServiceCategories(),
+    fetchSanitySeoSettings(),
   ]);
+  const siteUrl = (seo as any)?.siteUrl;
 
   const breadcrumbJsonLd = buildBreadcrumbJsonLd([
     { name: "Home", path: "/" },
     { name: "Layanan", path: "/services" },
-  ]);
+  ], { siteUrl });
 
   const allServiceItems = [
     ...(services as any[]).filter((s: any) => s.title && s.slug?.current).map((s: any) => ({
@@ -53,6 +56,7 @@ export default async function ServicesPage() {
     name: "Layanan IT & Percetakan – Kotacom",
     description: "Katalog lengkap layanan website, software, IT service, dan percetakan dari Kotacom Surabaya.",
     url: "/services",
+    siteUrl,
     items: allServiceItems,
   });
 

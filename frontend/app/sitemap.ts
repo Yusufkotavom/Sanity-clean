@@ -2,7 +2,6 @@ import { MetadataRoute } from "next";
 import { groq } from "next-sanity";
 import { sanityFetch } from "@/sanity/lib/live";
 import { fetchSanitySeoSettings } from "@/sanity/lib/fetch";
-import { isAllowedTemplateRoute } from "@/lib/templates/route-policy";
 
 type SitemapItem = {
   _type: "page" | "post" | "product" | "service" | "project";
@@ -76,17 +75,19 @@ function mapContentPath(item: SitemapItem): string | null {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
-  if (!baseUrl) return [];
-
   const seo = (await fetchSanitySeoSettings()) as
     | {
         defaultNoIndex?: boolean;
+        siteUrl?: string;
         noIndexBlogCategories?: boolean;
         noIndexProductCategories?: boolean;
         noIndexServiceCategories?: boolean;
+        sitemapStaticRoutes?: string[] | null;
+        includeTemplateRoutesInSitemap?: boolean;
       }
     | null;
+  const baseUrl = seo?.siteUrl || process.env.NEXT_PUBLIC_SITE_URL || "";
+  if (!baseUrl) return [];
 
   if (seo?.defaultNoIndex) return [];
 
@@ -155,32 +156,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   }
 
-  for (const template of templateItems) {
-    if (!isAllowedTemplateRoute(template.route)) continue;
-    addEntry({
-      url: makeAbsoluteUrl(baseUrl, template.route!),
-      lastModified: template._updatedAt || undefined,
-      changeFrequency: "weekly",
-      priority: 0.7,
-    });
+  if (seo?.includeTemplateRoutesInSitemap !== false) {
+    for (const template of templateItems) {
+      if (!template.route || !template.route.startsWith("/")) continue;
+      addEntry({
+        url: makeAbsoluteUrl(baseUrl, template.route),
+        lastModified: template._updatedAt || undefined,
+        changeFrequency: "weekly",
+        priority: 0.7,
+      });
+    }
   }
 
-  // Include static core routes that might not exist in Sanity
-  const localStaticRoutes = [
-    "/about",
-    "/contact",
-    "/privacy",
-    "/pembuatan-website",
-    "/percetakan",
-    "/software",
-    "/sistem-pos",
-    "/blog",
-    "/products",
-    "/projects",
-    "/services"
-  ];
+  const staticRoutes = (seo?.sitemapStaticRoutes || []).filter(
+    (route): route is string => typeof route === "string" && route.startsWith("/"),
+  );
 
-  for (const route of localStaticRoutes) {
+  for (const route of staticRoutes) {
     addEntry({
       url: makeAbsoluteUrl(baseUrl, route),
       lastModified: new Date().toISOString(),

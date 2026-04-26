@@ -5,6 +5,7 @@ import JsonLd from "@/components/seo/json-ld";
 import { Button } from "@/components/ui/button";
 import type { JsonUsahaPage } from "@/lib/local-content/json-usaha";
 import { buildBreadcrumbJsonLd, buildFaqJsonLd, buildServiceJsonLd } from "@/lib/seo-jsonld";
+import { fetchSanitySeoSettings } from "@/sanity/lib/fetch";
 
 type JsonUsahaPageProps = {
   page: JsonUsahaPage;
@@ -41,18 +42,21 @@ export default async function JsonUsahaPageView({
   basePath = "/services",
   breadcrumbLabel = "Layanan",
 }: JsonUsahaPageProps) {
+  const seo = await fetchSanitySeoSettings();
+  const siteUrl = (seo as any)?.siteUrl;
   const resolvedPath = `${basePath}/${page.slug}`;
   const breadcrumbJsonLd = buildBreadcrumbJsonLd([
     { name: "Home", path: "/" },
     { name: breadcrumbLabel, path: basePath },
     { name: page.title, path: resolvedPath },
-  ]);
+  ], { siteUrl });
   const faqJsonLd =
     page.faqs.length > 0 ? buildFaqJsonLd(page.faqs) : null;
   const serviceJsonLd = buildServiceJsonLd({
     title: page.title,
     description: page.description,
     path: resolvedPath,
+    siteUrl,
   });
   const heroPrimaryCta = page.heroCta?.href || "/contact";
   const heroPrimaryLabel = page.heroCta?.label || "Konsultasi Kebutuhan";

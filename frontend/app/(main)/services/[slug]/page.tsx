@@ -88,10 +88,12 @@ export default async function ServiceSlugPage(props: {
   params: Promise<{ slug: string }>;
 }) {
   const params = await props.params;
-  const [categories, service] = await Promise.all([
+  const [categories, service, seo] = await Promise.all([
     fetchSanityServiceCategories(),
     fetchSanityServiceBySlug({ slug: params.slug }),
+    fetchSanitySeoSettings(),
   ]);
+  const siteUrl = (seo as any)?.siteUrl;
 
   const isServiceCategory = (categories as any[]).some(
     (item) => item?.slug?.current === params.slug,
@@ -109,7 +111,7 @@ export default async function ServiceSlugPage(props: {
       { name: "Home", path: "/" },
       { name: "Services", path: "/services" },
       { name: category.title || "Category", path: categoryPath },
-    ]);
+    ], { siteUrl });
 
     return (
       <section>
@@ -147,7 +149,6 @@ export default async function ServiceSlugPage(props: {
     { label: service.title as string, href: "#" },
   ];
   const servicePath = `/services/${params.slug}`;
-  const seo = await fetchSanitySeoSettings();
   const resolvedRating = resolveAggregateRating(
     service.aggregateRating,
     service.reviews,
@@ -162,12 +163,13 @@ export default async function ServiceSlugPage(props: {
     currency: service.currency,
     aggregateRating: resolvedRating,
     reviews: service.reviews,
+    siteUrl,
   });
   const breadcrumbJsonLd = buildBreadcrumbJsonLd([
     { name: "Home", path: "/" },
     { name: "Services", path: "/services" },
     { name: service.title || "Service", path: servicePath },
-  ]);
+  ], { siteUrl });
 
   return (
     <section>
