@@ -1847,3 +1847,64 @@ Restructured `Sanity Generator V2` from service-specific starter families into a
 - ✅ `node frontend/scripts/generator/seed-generator-service-starters.mjs --write` passed against the Sanity `development` dataset using dev credentials.
 - ✅ `node frontend/scripts/generator/run-generator-smoke.mjs` passed live against the Sanity `development` dataset and now resolves `generator-program-conversion-stack-dev` with `9` successful dry-run combinations.
 - ⚠️ `pnpm --filter frontend run typegen` still fails with `PROJECT_ROOT_NOT_FOUND` because `frontend` is not a standalone Sanity project root in the current repo layout.
+
+## 2026-04-26 — Orderable Desk Schema Fix for Generator and Service Type
+
+### Changed Files
+- `studio/schemas/documents/generator-template.ts` (MODIFIED) - Added `orderRankField({ type: "generatorTemplate" })` so the Generator Template schema matches the orderable desk contract.
+- `studio/schemas/documents/generator-program.ts` (MODIFIED) - Added `orderRankField({ type: "generatorProgram" })` for the orderable Program desk list.
+- `studio/schemas/documents/generator-dataset.ts` (MODIFIED) - Added `orderRankField({ type: "generatorDataset" })` for the orderable Dataset desk list.
+- `studio/schemas/documents/service-type.ts` (MODIFIED) - Added `orderRankField({ type: "serviceType" })` because Service Types also use the orderable desk list.
+- `studio/schema.json` (MODIFIED) - Refreshed extracted Studio schema after adding the missing orderable rank fields.
+
+### Summary
+Fixed the Sanity Studio orderable-list contract for generator and service-type document schemas. These document types were already mounted through `orderableDocumentListDeskItem`, but their schemas did not yet expose the required `orderRank: string` field.
+
+### Impact on SEO/Integration
+- No direct SEO impact.
+- Integration impact:
+  - Prevents Studio runtime errors when opening orderable desk lists for Generator and Service Types.
+  - Keeps desk structure and schema contract aligned.
+
+### Verification Status
+- ✅ `pnpm --filter studio run typecheck` passed.
+- ⚠️ `pnpm --filter studio run typegen` was started to refresh extracted schema; `studio/schema.json` was regenerated, but the long-running process did not return clean completion output within this cycle.
+
+## 2026-04-26 — Sanity Block Initial Value Audit and Hardening
+
+### Changed Files
+- `studio/schemas/blocks/all-posts.ts` (MODIFIED) - Added safe wrapper-level `initialValue` for section padding and background tone.
+- `studio/schemas/blocks/carousel/carousel-1.ts` (MODIFIED) - Added top-level defaults for padding, color, size, and indicators.
+- `studio/schemas/blocks/carousel/carousel-2.ts` (MODIFIED) - Added top-level defaults for padding and color.
+- `studio/schemas/blocks/faqs.ts` (MODIFIED) - Added safe wrapper-level `initialValue` for padding and color.
+- `studio/schemas/blocks/grid/grid-post.ts` (MODIFIED) - Added neutral empty object `initialValue` so the block can be inserted cleanly before a post reference is chosen.
+- `studio/schemas/blocks/legacy/legacy-rich-content.ts` (MODIFIED) - Added valid legacy content starter values so required content fields are present on insert.
+- `studio/schemas/blocks/seo/benefits-block.ts` (MODIFIED) - Added valid starter values including array items with `_key` and required text fields.
+- `studio/schemas/blocks/seo/company-info.ts` (MODIFIED) - Added safe title/description defaults plus wrapper defaults.
+- `studio/schemas/blocks/seo/faq-block.ts` (MODIFIED) - Added top-level defaults including required `category`.
+- `studio/schemas/blocks/seo/features-package-block.ts` (MODIFIED) - Added valid starter features array plus wrapper defaults.
+- `studio/schemas/blocks/seo/pricing-block.ts` (MODIFIED) - Added top-level defaults including required `category`.
+- `studio/schemas/blocks/seo/problem-solution-block.ts` (MODIFIED) - Added valid defaults for problems and solution copy.
+- `studio/schemas/blocks/seo/service-types-block.ts` (MODIFIED) - Added valid starter service card content including `_key` and a valid link object.
+- `studio/schemas/blocks/seo/stats-hero-block.ts` (MODIFIED) - Added valid defaults for required title and CTA links.
+- `studio/schemas/blocks/seo/testimonials-block.ts` (MODIFIED) - Added wrapper defaults and category starter value.
+- `studio/schemas/blocks/seo/value-props-block.ts` (MODIFIED) - Added valid starter proposition cards with required fields.
+- `studio/schemas/blocks/shared/block-content.ts` (MODIFIED) - Added starter Portable Text paragraph so block-content fields do not insert empty.
+- `studio/schemas/blocks/shared/link.ts` (MODIFIED) - Added a valid link starter object that satisfies current validation rules.
+- `studio/schemas/blocks/shared/navigation-link-child.ts` (MODIFIED) - Added a valid submenu-link starter object that satisfies current validation rules.
+- `studio/schemas/blocks/shared/section-padding.ts` (MODIFIED) - Added default top/bottom padding values.
+- `studio/schemas/blocks/split/split-image.ts` (MODIFIED) - Added neutral empty object `initialValue` so the block inserts cleanly before an image is chosen.
+
+### Summary
+Audited the Sanity block library and filled top-level `initialValue` coverage across every block schema under `studio/schemas/blocks`. The fix was not limited to wrapper defaults: blocks with required fields or validation rules now receive valid starter payloads, including arrays with `_key` and links that already satisfy the current `isExternal`/`href` validation contract.
+
+### Impact on SEO/Integration
+- No direct SEO impact.
+- Integration impact:
+  - Block insertion in Studio is now more reliable and less likely to start from invalid partial objects.
+  - Generator and editorial flows benefit because many shared blocks now open with valid starter structures instead of empty states that immediately fail validation.
+
+### Verification Status
+- ✅ Re-audit confirmed no schema file under `studio/schemas/blocks` remains without a top-level `initialValue`.
+- ✅ `pnpm --filter studio run typecheck` passed.
+- ⚠️ A follow-up schema extract was started for `studio/schema.json`, but the Sanity CLI process did not return a clean completion line within this cycle.

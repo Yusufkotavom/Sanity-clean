@@ -5,6 +5,14 @@ export default defineType({
   name: "faqs",
   type: "object",
   icon: ListCollapse,
+  initialValue: {
+    padding: {
+      _type: "section-padding",
+      top: true,
+      bottom: true,
+    },
+    colorVariant: "background",
+  },
   fields: [
     defineField({
       name: "padding",

@@ -1,3 +1,4 @@
+import { orderRankField } from "@sanity/orderable-document-list";
 import { defineField, defineType } from "sanity";
 
 const validateUniqueKeys = (value: unknown, label: string) => {
@@ -143,6 +144,7 @@ export default defineType({
       options: { source: "title", maxLength: 96 },
       validation: (Rule) => Rule.required(),
     }),
+    orderRankField({ type: "generatorTemplate" }),
     defineField({
       name: "description",
       title: "Description",

@@ -6,6 +6,17 @@ export default defineType({
   title: "Testimonials Block",
   type: "object",
   icon: MessageSquareQuote,
+  initialValue: {
+    padding: {
+      _type: "section-padding",
+      top: true,
+      bottom: true,
+    },
+    colorVariant: "background",
+    title: "Apa Kata Klien Kami",
+    description: "Testimoni nyata dari klien yang telah merasakan hasil kerja sama dengan Kotacom",
+    category: "",
+  },
   fields: [
     defineField({
       name: "padding",

@@ -4,6 +4,12 @@ export default defineType({
   name: "legacy-rich-content",
   title: "Legacy Rich Content",
   type: "object",
+  initialValue: {
+    title: "Konten Legacy",
+    excerpt: "Ringkasan singkat untuk konten legacy ini.",
+    contentFormat: "markdown",
+    contentRaw: "Tulis konten legacy di sini.",
+  },
   fields: [
     defineField({
       name: "title",

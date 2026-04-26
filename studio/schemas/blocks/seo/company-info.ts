@@ -6,6 +6,16 @@ export default defineType({
   title: "Company Info",
   type: "object",
   icon: Building2,
+  initialValue: {
+    padding: {
+      _type: "section-padding",
+      top: true,
+      bottom: true,
+    },
+    colorVariant: "background",
+    title: "Tentang Kotacom",
+    description: "Partner terpercaya untuk solusi IT dan percetakan di Surabaya sejak 2015",
+  },
   fields: [
     defineField({
       name: "padding",

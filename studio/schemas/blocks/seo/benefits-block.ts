@@ -6,6 +6,31 @@ export default defineType({
   title: "Benefits Block",
   type: "object",
   icon: Sparkles,
+  initialValue: {
+    padding: {
+      _type: "section-padding",
+      top: true,
+      bottom: true,
+    },
+    colorVariant: "background",
+    title: "Keuntungan Website",
+    subtitle: "Mengapa Anda Harus Memiliki Website?",
+    description: "Website bukan lagi pilihan, tapi kebutuhan utama untuk bisnis modern di era digital",
+    benefits: [
+      {
+        _key: "benefit-1",
+        icon: "🚀",
+        title: "Mudah ditemukan calon pelanggan",
+        description: "Website membantu bisnis tampil lebih profesional dan lebih mudah dicari.",
+      },
+      {
+        _key: "benefit-2",
+        icon: "📈",
+        title: "Mendukung pertumbuhan penjualan",
+        description: "Konten dan CTA yang tepat membantu mengubah traffic menjadi peluang bisnis.",
+      },
+    ],
+  },
   fields: [
     defineField({
       name: "padding",

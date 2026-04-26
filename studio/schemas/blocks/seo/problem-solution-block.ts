@@ -6,6 +6,21 @@ export default defineType({
   title: "Problem Solution Block",
   type: "object",
   icon: AlertCircle,
+  initialValue: {
+    padding: {
+      _type: "section-padding",
+      top: true,
+      bottom: true,
+    },
+    colorVariant: "background",
+    title: "Apakah Bisnis Anda Mengalami Masalah Ini?",
+    problems: [
+      "Pesan layanan belum cukup jelas untuk calon pelanggan.",
+      "Halaman terlalu datar dan tidak mengarahkan ke CTA utama.",
+    ],
+    solutionTitle: "💡 Solusi:",
+    solution: "Struktur halaman yang lebih rapi dan fokus dapat membantu visitor memahami penawaran lebih cepat.",
+  },
   fields: [
     defineField({
       name: "padding",

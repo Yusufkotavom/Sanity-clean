@@ -6,6 +6,22 @@ export default defineType({
   title: "Block Content",
   name: "block-content",
   type: "array",
+  initialValue: [
+    {
+      _key: "block-content-1",
+      _type: "block",
+      style: "normal",
+      markDefs: [],
+      children: [
+        {
+          _key: "block-content-1-span-1",
+          _type: "span",
+          marks: [],
+          text: "Tulis konten di sini.",
+        },
+      ],
+    },
+  ],
   of: [
     defineArrayMember({
       title: "Block",

@@ -5,6 +5,10 @@ export default defineType({
   type: "object",
   title: "Padding",
   description: "Add padding to the section. Based on design system spacing",
+  initialValue: {
+    top: true,
+    bottom: true,
+  },
   fields: [
     defineField({
       name: "top",

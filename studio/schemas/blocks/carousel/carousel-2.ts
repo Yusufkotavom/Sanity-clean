@@ -7,6 +7,14 @@ export default defineType({
   title: "Carousel 2",
   icon: Quote,
   description: "A carousel of testimonials",
+  initialValue: {
+    padding: {
+      _type: "section-padding",
+      top: true,
+      bottom: true,
+    },
+    colorVariant: "background",
+  },
   fields: [
     defineField({
       name: "padding",

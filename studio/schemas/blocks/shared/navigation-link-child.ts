@@ -4,6 +4,12 @@ export default defineType({
   name: "navigation-link-child",
   type: "object",
   title: "Navigation Sub Link",
+  initialValue: {
+    isExternal: true,
+    title: "Submenu Link",
+    href: "https://example.com",
+    target: false,
+  },
   validation: (Rule) =>
     Rule.custom((value) => {
       if (!value) return true;

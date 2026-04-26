@@ -7,6 +7,14 @@ export default defineType({
   title: "All Posts",
   description: "A list of all posts",
   icon: Newspaper,
+  initialValue: {
+    padding: {
+      _type: "section-padding",
+      top: true,
+      bottom: true,
+    },
+    colorVariant: "background",
+  },
   fields: [
     defineField({
       name: "padding",

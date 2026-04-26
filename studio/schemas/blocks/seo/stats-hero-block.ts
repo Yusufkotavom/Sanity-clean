@@ -6,6 +6,27 @@ export default defineType({
   title: "Stats Hero Block",
   type: "object",
   icon: TrendingUp,
+  initialValue: {
+    padding: {
+      _type: "section-padding",
+      top: true,
+      bottom: true,
+    },
+    colorVariant: "background",
+    eyebrow: "200+ proyek berjalan",
+    title: "Fondasi visual yang membantu visitor lebih cepat paham",
+    description: "Gabungkan headline, angka, dan CTA untuk memberi konteks lebih kuat di area atas halaman.",
+    links: [
+      {
+        _key: "stats-hero-link-1",
+        _type: "link",
+        isExternal: true,
+        title: "Pelajari Lebih Lanjut",
+        href: "https://example.com",
+        target: false,
+      },
+    ],
+  },
   fields: [
     defineField({
       name: "padding",

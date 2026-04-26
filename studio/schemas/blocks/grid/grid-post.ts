@@ -5,6 +5,7 @@ export default defineType({
   name: "grid-post",
   type: "object",
   icon: LayoutGrid,
+  initialValue: {},
   fields: [
     defineField({
       name: "post",

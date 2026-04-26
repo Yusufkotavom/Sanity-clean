@@ -6,6 +6,17 @@ export default defineType({
   title: "FAQ Block",
   type: "object",
   icon: HelpCircle,
+  initialValue: {
+    padding: {
+      _type: "section-padding",
+      top: true,
+      bottom: true,
+    },
+    colorVariant: "background",
+    title: "Pertanyaan yang Sering Diajukan",
+    description: "Temukan jawaban untuk pertanyaan umum seputar layanan kami",
+    category: "website",
+  },
   fields: [
     defineField({
       name: "padding",

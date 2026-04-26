@@ -6,6 +6,7 @@ export default defineType({
   type: "object",
   icon: Image,
   description: "Column with full image.",
+  initialValue: {},
   fields: [
     defineField({
       name: "image",

@@ -6,6 +6,31 @@ export default defineType({
   title: "Features Package Block",
   type: "object",
   icon: Package,
+  initialValue: {
+    padding: {
+      _type: "section-padding",
+      top: true,
+      bottom: true,
+    },
+    colorVariant: "background",
+    title: "Paket Lengkap",
+    subtitle: "Apa Yang Akan Anda Dapatkan?",
+    description: "Lebih dari sekadar website, Anda mendapatkan solusi digital lengkap untuk bisnis Anda",
+    features: [
+      {
+        _key: "feature-1",
+        icon: "🛠️",
+        title: "Setup inti siap jalan",
+        description: "Konfigurasi dasar disiapkan agar proyek bisa langsung dipakai.",
+      },
+      {
+        _key: "feature-2",
+        icon: "📊",
+        title: "Fondasi optimasi",
+        description: "Struktur awal dibangun agar mudah dikembangkan dan diukur hasilnya.",
+      },
+    ],
+  },
   fields: [
     defineField({
       name: "padding",

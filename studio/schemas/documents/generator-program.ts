@@ -1,3 +1,4 @@
+import { orderRankField } from "@sanity/orderable-document-list";
 import { defineField, defineType } from "sanity";
 
 const validateRouteBase = (value: unknown) => {
@@ -42,6 +43,7 @@ export default defineType({
       options: { source: "title", maxLength: 96 },
       validation: (Rule) => Rule.required(),
     }),
+    orderRankField({ type: "generatorProgram" }),
     defineField({
       name: "template",
       title: "Template",

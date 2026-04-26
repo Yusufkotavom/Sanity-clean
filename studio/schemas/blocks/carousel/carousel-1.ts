@@ -7,6 +7,16 @@ export default defineType({
   title: "Carousel 1",
   icon: GalleryHorizontal,
   description: "A carousel of images",
+  initialValue: {
+    padding: {
+      _type: "section-padding",
+      top: true,
+      bottom: true,
+    },
+    colorVariant: "background",
+    size: "one",
+    indicators: "none",
+  },
   fields: [
     defineField({
       name: "padding",

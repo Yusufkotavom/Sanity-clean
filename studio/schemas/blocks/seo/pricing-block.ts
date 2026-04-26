@@ -6,6 +6,17 @@ export default defineType({
   title: "Pricing Block",
   type: "object",
   icon: DollarSign,
+  initialValue: {
+    padding: {
+      _type: "section-padding",
+      top: true,
+      bottom: true,
+    },
+    colorVariant: "background",
+    title: "Paket Harga",
+    description: "Pilih paket yang sesuai dengan kebutuhan bisnis Anda",
+    category: "website",
+  },
   fields: [
     defineField({
       name: "padding",

@@ -1,3 +1,4 @@
+import { orderRankField } from "@sanity/orderable-document-list";
 import { defineField, defineType } from "sanity";
 import { Tag } from "lucide-react";
 
@@ -24,6 +25,7 @@ export default defineType({
       },
       validation: (Rule) => Rule.required().error("Slug is required"),
     }),
+    orderRankField({ type: "serviceType" }),
     defineField({
       name: "category",
       title: "Category",

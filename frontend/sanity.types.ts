@@ -1111,6 +1111,7 @@ export type GeneratorProgram = {
   _rev: string;
   title?: string;
   slug?: Slug;
+  orderRank?: string;
   template?: GeneratorTemplateReference;
   dataset?: GeneratorDatasetReference;
   programType?: "landing-pages" | "location-pages";
@@ -1133,6 +1134,7 @@ export type GeneratorDataset = {
   _rev: string;
   title?: string;
   slug?: Slug;
+  orderRank?: string;
   keywordSets?: Array<
     {
       _key: string;
@@ -1165,6 +1167,7 @@ export type GeneratorTemplate = {
   _rev: string;
   title?: string;
   slug?: Slug;
+  orderRank?: string;
   description?: string;
   visualPreset?:
     | "editorial-grid"
@@ -1970,6 +1973,7 @@ export type ServiceType = {
   _rev: string;
   title?: string;
   slug?: Slug;
+  orderRank?: string;
   category?:
     | "software"
     | "percetakan"

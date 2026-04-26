@@ -4,6 +4,12 @@ export default defineType({
   name: "link",
   type: "object",
   title: "Link",
+  initialValue: {
+    isExternal: true,
+    title: "Pelajari Lebih Lanjut",
+    href: "https://example.com",
+    target: false,
+  },
   validation: (Rule) =>
     Rule.custom((value) => {
       if (!value) return true;
