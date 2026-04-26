@@ -1,7 +1,11 @@
 import type { ReactNode } from "react";
 
 import Blocks from "@/components/blocks";
-import { fetchSanityPageBySlugBuildOnly } from "@/sanity/lib/fetch";
+import ReusableSlotSections from "@/components/reusable-slot-sections";
+import {
+  fetchSanityPageBySlugBuildOnly,
+  fetchSanityReusableSections,
+} from "@/sanity/lib/fetch";
 
 type PageHybridShellProps = {
   slug: string;
@@ -13,6 +17,7 @@ export default async function PageHybridShell({
   children,
 }: PageHybridShellProps) {
   const cmsPage = await fetchSanityPageBySlugBuildOnly({ slug });
+  const reusableSections = await fetchSanityReusableSections();
   const cmsPageWithSplit = cmsPage as (typeof cmsPage & {
     topBlockCount?: number;
   }) | null;
@@ -30,7 +35,9 @@ export default async function PageHybridShell({
       {topBlocks.length > 0 ? (
         <Blocks blocks={topBlocks} pageTitle={cmsPage?.title} />
       ) : null}
+      <ReusableSlotSections sections={reusableSections} slot="afterHero" />
       {children}
+      <ReusableSlotSections sections={reusableSections} slot="beforeFinalCta" />
       {bottomBlocks.length > 0 ? (
         <Blocks blocks={bottomBlocks} pageTitle={cmsPage?.title} />
       ) : null}

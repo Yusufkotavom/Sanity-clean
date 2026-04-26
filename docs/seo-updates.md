@@ -1990,6 +1990,28 @@ Finished the active runtime cleanup so the remaining machine-readable SEO surfac
 - ✅ `pnpm --filter studio run typecheck`
 - ✅ `git diff --check`
 
+## 2026-04-26 — Reusable Slot Expansion for Hybrid Hero and Final CTA Zones
+
+### Changed Files
+- `studio/schemas/documents/reusable-section.ts` (MODIFIED) - Added `afterHero` and `beforeFinalCta` placement options for reusable sections.
+- `frontend/sanity/lib/fetch.ts` (MODIFIED) - Extended the reusable placement slot type to match the new Sanity schema options.
+- `frontend/components/hybrid/page-hybrid-shell.tsx` (MODIFIED) - Rendered reusable sections around the code-owned middle shell so hybrid pages can inject reusable content after the top hero zone and before the final lower CTA/content zone.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated migration tracking to reflect the new reusable placement surface for hybrid main pages.
+
+### Summary
+Expanded reusable placement beyond global layout slots into the hybrid page shell itself. Reusable sections can now be inserted after the upper hero-oriented block zone and before the lower final-CTA/content zone on code-owned hybrid pages. This makes reusable templates more useful for the homepage and similar landing routes without forcing every route to adopt a full page-builder structure.
+
+### Impact on SEO/Integration
+- No direct SEO impact.
+- Integration impact:
+  - Reusable sections can now support hybrid landing-page composition more naturally.
+  - Studio placement options, frontend fetch typing, and hybrid shell rendering are aligned for the new slot positions.
+
+### Verification Status
+- ✅ `pnpm --filter frontend run typecheck`
+- ✅ `pnpm --filter studio run typecheck`
+- ✅ `git diff --check`
+
 ## 2026-04-26 — Finished Generator Sample for Development Dataset
 
 ### Changed Files

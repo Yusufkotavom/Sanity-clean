@@ -7,6 +7,8 @@ const REUSABLE_PLACEMENTS = [
   { title: "After Header", value: "afterHeader" },
   { title: "Before Main Content", value: "beforeMainContent" },
   { title: "After Main Content", value: "afterMainContent" },
+  { title: "After Hero", value: "afterHero" },
+  { title: "Before Final CTA", value: "beforeFinalCta" },
   { title: "Before Footer", value: "beforeFooter" },
   { title: "After Footer", value: "afterFooter" },
 ];

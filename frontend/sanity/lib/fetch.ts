@@ -84,6 +84,8 @@ export type ReusablePlacementSlot =
   | "afterHeader"
   | "beforeMainContent"
   | "afterMainContent"
+  | "afterHero"
+  | "beforeFinalCta"
   | "beforeFooter"
   | "afterFooter";
 export type ReusableSectionItem = {
