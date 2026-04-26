@@ -2011,3 +2011,22 @@ Added a finished generator sample workflow for the development dataset. The new 
 - ✅ `node frontend/scripts/generator/seed-generator-finished-sample.mjs --write --generate-pages`
 - ✅ `pnpm --filter frontend run typecheck`
 - ✅ `git diff --check`
+
+## 2026-04-26 — Generator Operator Workflow Upgrade
+
+### Changed Files
+- `studio/components/generator/program-runner-pane.tsx` (MODIFIED) - Upgraded the Generator Run pane so operators can select a keyword set and row, run a selected dry run, and generate only the selected draft instead of being locked to the first dataset items.
+- `studio/components/generator/preview-card.tsx` (MODIFIED) - Updated preview copy to reflect selected inputs instead of implicit first-item preview behavior.
+
+### Summary
+Upgraded the Studio generator workflow from a fixed first-row preview into a more product-like operator flow. Editors can now explicitly choose the keyword set and row that drive the preview, run dry-run validation for only that selection, and generate only the selected draft before using broader batch actions.
+
+### Impact on SEO/Integration
+- No direct SEO impact on production.
+- Integration impact:
+  - Makes Generator V2 more usable as an editorial tool instead of a developer-only proof of concept.
+  - Reduces accidental batch generation because operators can validate one combination first before touching the full dataset.
+
+### Verification Status
+- ✅ `pnpm --filter studio run typecheck`
+- ✅ `git diff --check`

@@ -97,10 +97,10 @@ export function PreviewCard({
                   Dataset: {selection.datasetTitle || "Missing"}
                 </Text>
                 <Text as="li" size={1}>
-                  First keyword set: {selection.keywordSetLabel || "Missing"}
+                  Selected keyword set: {selection.keywordSetLabel || "Missing"}
                 </Text>
                 <Text as="li" size={1}>
-                  First row: {selection.rowLabel || "Missing"}
+                  Selected row: {selection.rowLabel || "Missing"}
                 </Text>
               </Stack>
             </Box>

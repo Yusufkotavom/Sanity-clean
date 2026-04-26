@@ -168,6 +168,8 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
     mode: "idle",
   });
   const [activeAction, setActiveAction] = useState<"dry-run" | "write" | null>(null);
+  const [selectedKeywordKey, setSelectedKeywordKey] = useState<string | null>(null);
+  const [selectedRowKey, setSelectedRowKey] = useState<string | null>(null);
   const currentDataset = `${client.config().dataset || ""}`.trim();
 
   useEffect(() => {
@@ -225,6 +227,35 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
     };
   }, [client, program.dataset?._ref, program.template?._ref]);
 
+  useEffect(() => {
+    const nextKeywordKey =
+      linkedData.dataset?.keywordSets?.[0]?.key ||
+      linkedData.dataset?.keywordSets?.[0]?._key ||
+      null;
+    const nextRowKey =
+      linkedData.dataset?.rows?.[0]?.key ||
+      linkedData.dataset?.rows?.[0]?._key ||
+      null;
+
+    setSelectedKeywordKey((current) => {
+      if (!linkedData.dataset?.keywordSets?.length) return null;
+
+      const stillExists = linkedData.dataset.keywordSets.some(
+        (item) => (item.key || item._key) === current,
+      );
+      return stillExists ? current : nextKeywordKey;
+    });
+
+    setSelectedRowKey((current) => {
+      if (!linkedData.dataset?.rows?.length) return null;
+
+      const stillExists = linkedData.dataset.rows.some(
+        (item) => (item.key || item._key) === current,
+      );
+      return stillExists ? current : nextRowKey;
+    });
+  }, [linkedData.dataset]);
+
   const programLite = useMemo<GeneratorProgramLite>(() => {
     const datasetRef = program.dataset?._ref
       ? {
@@ -263,8 +294,13 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
       return null;
     }
 
-    const keywordSet = linkedData.dataset.keywordSets?.[0];
-    const row = linkedData.dataset.rows?.[0];
+    const keywordSet =
+      linkedData.dataset.keywordSets?.find(
+        (item) => (item.key || item._key) === selectedKeywordKey,
+      ) || linkedData.dataset.keywordSets?.[0];
+    const row =
+      linkedData.dataset.rows?.find((item) => (item.key || item._key) === selectedRowKey) ||
+      linkedData.dataset.rows?.[0];
 
     if (!keywordSet || !row) {
       return null;
@@ -297,7 +333,15 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
       keywordSet,
       row,
     };
-  }, [linkedData.dataset, linkedData.template, program.dataset?._ref, program.template?._ref, programLite]);
+  }, [
+    linkedData.dataset,
+    linkedData.template,
+    program.dataset?._ref,
+    program.template?._ref,
+    programLite,
+    selectedKeywordKey,
+    selectedRowKey,
+  ]);
 
   const runProgramInput = useMemo<GeneratorProgramLite | null>(() => {
     if (!linkedData.dataset) {
@@ -426,7 +470,7 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
 
     if (previewInput?.keywordSet && previewInput?.row) {
       notes.push(
-        `Preview uses the first dataset items: keyword set \"${formatItemLabel(
+        `Preview uses the selected dataset items: keyword set \"${formatItemLabel(
           previewInput.keywordSet,
           previewInput.keywordSet.primaryKeyword,
         )}\" and row \"${formatItemLabel(previewInput.row, previewInput.row.service || "row")}\".`,
@@ -434,7 +478,7 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
     }
 
     notes.push(
-      "Dry run stays read-only until you explicitly use Generate Drafts. Any write path remains limited to development-dataset drafts only.",
+      "Dry run stays read-only until you explicitly generate drafts. Any write path remains limited to development-dataset drafts only.",
     );
 
     return {
@@ -476,14 +520,22 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
       }
     : undefined;
 
-  const buildDryRunResult = (): DryRunResult => {
+  const buildDryRunResult = (options?: {
+    selectedOnly?: boolean;
+    selectedKeywordSet?: GeneratorKeywordSet;
+    selectedRow?: GeneratorRow;
+  }): DryRunResult => {
     if (!runProgramInput || !runTemplateInput || !linkedData.dataset) {
       throw new Error("Generator template and dataset must both resolve before running.");
     }
 
     const keywordSets = linkedData.dataset.keywordSets ?? [];
     const rows = linkedData.dataset.rows ?? [];
-    const combinations = keywordSets.flatMap((keywordSet) => rows.map((row) => ({ keywordSet, row })));
+    const combinations = options?.selectedOnly
+      ? options.selectedKeywordSet && options.selectedRow
+        ? [{ keywordSet: options.selectedKeywordSet, row: options.selectedRow }]
+        : []
+      : keywordSets.flatMap((keywordSet) => rows.map((row) => ({ keywordSet, row })));
     const existingPages = [...linkedData.existingPages];
     const generatedDrafts: GeneratedDraftCandidate[] = [];
     let skipped = 0;
@@ -545,7 +597,9 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
     }
 
     const notes = [
-      `Dry run inspected ${combinations.length} keyword-set x row combinations without writing page drafts.`,
+      options?.selectedOnly
+        ? `Dry run inspected 1 selected keyword-set x row combination without writing page drafts.`
+        : `Dry run inspected ${combinations.length} keyword-set x row combinations without writing page drafts.`,
       `Dedupe policy in effect: ${formatLabel(linkedData.dataset.dedupePolicy)}.`,
     ];
 
@@ -604,6 +658,44 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
         conflicts: 0,
         failed: 1,
         notes: [error instanceof Error ? error.message : "Dry-run execution failed."],
+        mode: "error",
+      });
+    } finally {
+      setActiveAction(null);
+    }
+  };
+
+  const handleSelectedDryRun = () => {
+    if (!linkedData.template || !linkedData.dataset || !previewInput) {
+      return;
+    }
+
+    setActiveAction("dry-run");
+    setRunSummary({
+      generated: 0,
+      skipped: 0,
+      conflicts: 0,
+      failed: 0,
+      notes: ["Calculating a dry run for the selected keyword set and row."],
+      mode: "running",
+      combinationCount: 1,
+    });
+
+    try {
+      setRunSummary(
+        buildDryRunResult({
+          selectedOnly: true,
+          selectedKeywordSet: previewInput.keywordSet,
+          selectedRow: previewInput.row,
+        }).summary,
+      );
+    } catch (error) {
+      setRunSummary({
+        generated: 0,
+        skipped: 0,
+        conflicts: 0,
+        failed: 1,
+        notes: [error instanceof Error ? error.message : "Selected dry-run execution failed."],
         mode: "error",
       });
     } finally {
@@ -708,7 +800,92 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
     }
   };
 
+  const handleGenerateSelectedDraft = async () => {
+    if (!linkedData.template || !linkedData.dataset || !previewInput) {
+      return;
+    }
+
+    setActiveAction("write");
+    setRunSummary({
+      generated: 0,
+      skipped: 0,
+      conflicts: 0,
+      failed: 0,
+      notes: ["Validating development dataset and generating the selected draft only."],
+      mode: "running",
+      combinationCount: 1,
+    });
+
+    try {
+      assertGeneratorWriteTarget(currentDataset);
+
+      const dryRun = buildDryRunResult({
+        selectedOnly: true,
+        selectedKeywordSet: previewInput.keywordSet,
+        selectedRow: previewInput.row,
+      });
+      const candidate = dryRun.generatedDrafts[0];
+
+      if (!candidate) {
+        setRunSummary({
+          ...dryRun.summary,
+          notes: [
+            ...dryRun.summary.notes,
+            "Selected combination did not produce a writable draft because it was skipped, conflicted, or failed validation.",
+          ],
+        });
+        return;
+      }
+
+      await client.createIfNotExists({
+        _id: candidate.documentId,
+        ...candidate.draft,
+      });
+
+      setLinkedData((current) => ({
+        ...current,
+        existingPages: [
+          ...current.existingPages,
+          {
+            _id: candidate.documentId,
+            title: candidate.draft.title,
+            slug: candidate.draft.slug,
+            generator: candidate.draft.generator,
+          },
+        ],
+      }));
+
+      setRunSummary({
+        generated: 1,
+        skipped: 0,
+        conflicts: 0,
+        failed: 0,
+        notes: [
+          `Validated write target dataset: ${currentDataset || "<empty>"}.`,
+          `Created selected draft page ${candidate.pageId} with document id ${candidate.documentId}.`,
+          ...dryRun.summary.notes,
+        ],
+        mode: "complete",
+        combinationCount: 1,
+        sampleSlug: candidate.draft.slug.current,
+      });
+    } catch (error) {
+      setRunSummary({
+        generated: 0,
+        skipped: 0,
+        conflicts: 0,
+        failed: 1,
+        notes: [error instanceof Error ? error.message : "Selected draft write failed."],
+        mode: "error",
+      });
+    } finally {
+      setActiveAction(null);
+    }
+  };
+
   const hasBlockingIssues = previewStatus.blockingIssues.length > 0;
+  const keywordSets = linkedData.dataset?.keywordSets ?? [];
+  const rows = linkedData.dataset?.rows ?? [];
 
   return (
     <Box padding={4}>
@@ -768,6 +945,67 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
         <Card {...sectionCardProps}>
           <Stack space={3}>
             <Heading as="h3" size={1}>
+              Selection
+            </Heading>
+            <Text size={1}>
+              Pilih satu keyword set dan satu row untuk preview serta generate draft terpilih. Batch masih tersedia untuk inspeksi menyeluruh.
+            </Text>
+            <Grid columns={[1, 1, 2]} gap={4}>
+              <Card border padding={3} radius={2}>
+                <Stack space={3}>
+                  <Heading as="h4" size={1}>
+                    Keyword Set
+                  </Heading>
+                  {keywordSets.length > 0 ? (
+                    keywordSets.map((item) => {
+                      const itemKey = item.key || item._key || item.primaryKeyword;
+                      const isActive = itemKey === selectedKeywordKey;
+                      return (
+                        <Button
+                          key={itemKey}
+                          mode={isActive ? "default" : "ghost"}
+                          tone={isActive ? "primary" : "default"}
+                          onClick={() => setSelectedKeywordKey(itemKey)}
+                          text={formatItemLabel(item, item.primaryKeyword)}
+                        />
+                      );
+                    })
+                  ) : (
+                    <Text size={1}>No keyword sets available.</Text>
+                  )}
+                </Stack>
+              </Card>
+              <Card border padding={3} radius={2}>
+                <Stack space={3}>
+                  <Heading as="h4" size={1}>
+                    Row
+                  </Heading>
+                  {rows.length > 0 ? (
+                    rows.map((item) => {
+                      const itemKey = item.key || item._key || item.service || "row";
+                      const isActive = itemKey === selectedRowKey;
+                      return (
+                        <Button
+                          key={itemKey}
+                          mode={isActive ? "default" : "ghost"}
+                          tone={isActive ? "primary" : "default"}
+                          onClick={() => setSelectedRowKey(itemKey)}
+                          text={formatItemLabel(item, item.service || "row")}
+                        />
+                      );
+                    })
+                  ) : (
+                    <Text size={1}>No rows available.</Text>
+                  )}
+                </Stack>
+              </Card>
+            </Grid>
+          </Stack>
+        </Card>
+
+        <Card {...sectionCardProps}>
+          <Stack space={3}>
+            <Heading as="h3" size={1}>
               Preview
             </Heading>
             <PreviewCard
@@ -790,7 +1028,21 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
               Generate Drafts always runs a dry run first, then creates only missing draft page documents in the
               development dataset with deterministic generator-page-slug ids.
             </Text>
-            <Grid columns={[1, 1, 2]} gap={3}>
+            <Grid columns={[1, 1, 2, 2]} gap={3}>
+              <Button
+                disabled={isLoadingLinkedData || hasBlockingIssues || !previewInput || activeAction === "write"}
+                mode="ghost"
+                onClick={handleSelectedDryRun}
+                text={activeAction === "dry-run" ? "Calculating selected dry run..." : "Dry run selected"}
+              />
+              <Button
+                disabled={isLoadingLinkedData || hasBlockingIssues || !previewInput || activeAction === "dry-run"}
+                onClick={() => {
+                  void handleGenerateSelectedDraft();
+                }}
+                text={activeAction === "write" ? "Generating selected draft..." : "Generate selected draft"}
+                tone="primary"
+              />
               <Button
                 disabled={isLoadingLinkedData || hasBlockingIssues || activeAction === "write"}
                 mode="ghost"
