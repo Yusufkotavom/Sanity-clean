@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Box, Button, Card, Code, Grid, Heading, Spinner, Stack, Text } from "@sanity/ui";
 import { useClient } from "sanity";
 import { findDuplicatePage } from "../../lib/generator/dedupe";
+import { assessGeneratedDraftQuality } from "../../lib/generator/qa";
 import { buildGeneratedPageDraft } from "../../lib/generator/render";
 import { assertGeneratorWriteTarget, buildGeneratedDraftId, buildGeneratedPageId } from "../../lib/generator/write";
 import type {
@@ -10,12 +11,14 @@ import type {
   GeneratorDatasetLite,
   GeneratorKeywordSet,
   GeneratorProgramLite,
+  GeneratorQaResult,
   GeneratorRow,
   GeneratorTemplateLite,
   ReferenceValue,
   SlugValue,
 } from "../../lib/generator/types";
 import { PreviewCard, type PreviewDraftDetails, type PreviewStatus } from "./preview-card";
+import { QaSummary } from "./qa-summary";
 import { RunSummary, type RunSummaryState } from "./run-summary";
 
 type SeoPatternValue = {
@@ -68,6 +71,7 @@ type GeneratedDraftCandidate = {
   documentId: string;
   pageId: string;
   draft: GeneratedPageDraft;
+  qa: GeneratorQaResult;
 };
 
 type DryRunResult = {
@@ -504,6 +508,19 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
   ]);
 
   const previewDraft = previewDraftResult.draft;
+  const previewQa = useMemo<GeneratorQaResult | null>(() => {
+    if (!previewDraft || !previewInput) {
+      return null;
+    }
+
+    return assessGeneratedDraftQuality({
+      draft: previewDraft,
+      keywordSet: previewInput.keywordSet,
+      row: previewInput.row,
+      existingPages: linkedData.existingPages,
+    });
+  }, [linkedData.existingPages, previewDraft, previewInput]);
+  const previewHasBlockedQa = previewQa?.severity === "blocked";
 
   const previewPath = previewDraft?.slug.current
     ? `/${previewDraft.slug.current}`
@@ -541,8 +558,10 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
     let skipped = 0;
     let conflicts = 0;
     let failed = 0;
+    let blocked = 0;
     const conflictExamples: string[] = [];
     const failureExamples: string[] = [];
+    const blockedExamples: string[] = [];
 
     for (const combination of combinations) {
       try {
@@ -576,11 +595,27 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
           continue;
         }
 
+        const qa = assessGeneratedDraftQuality({
+          draft,
+          keywordSet: combination.keywordSet,
+          row: combination.row,
+          existingPages,
+        });
+
+        if (qa.severity === "blocked") {
+          blocked += 1;
+          if (blockedExamples.length < 3) {
+            blockedExamples.push(`${pageId} (${qa.issues.map((issue) => issue.code).join(", ")})`);
+          }
+          continue;
+        }
+
         const draftDocumentId = buildGeneratedDraftId(draft.slug.current);
         generatedDrafts.push({
           documentId: draftDocumentId,
           pageId,
           draft,
+          qa,
         });
         existingPages.push({
           _id: draftDocumentId,
@@ -611,6 +646,14 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
       notes.push(`Example build failures: ${failureExamples.join("; ")}.`);
     }
 
+    if (blockedExamples.length > 0) {
+      notes.push(`QA blocked combinations: ${blockedExamples.join("; ")}.`);
+    }
+
+    if (blocked > 0) {
+      notes.push(`QA blocked ${blocked} combination(s); blocked drafts were not written.`);
+    }
+
     if (previewDraft?.slug.current) {
       notes.push(`Current preview slug: ${previewDraft.slug.current}.`);
     }
@@ -621,9 +664,9 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
         generated: generatedDrafts.length,
         skipped,
         conflicts,
-        failed,
+        failed: failed + blocked,
         notes,
-        mode: failed > 0 ? "error" : "complete",
+        mode: failed > 0 || blocked > 0 ? "error" : "complete",
         combinationCount: combinations.length,
         sampleSlug: previewDraft?.slug.current,
       },
@@ -818,6 +861,9 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
 
     try {
       assertGeneratorWriteTarget(currentDataset);
+      if (previewHasBlockedQa) {
+        throw new Error("Selected draft is blocked by generator QA. Resolve the QA issues before writing.");
+      }
 
       const dryRun = buildDryRunResult({
         selectedOnly: true,
@@ -1019,6 +1065,8 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
           </Stack>
         </Card>
 
+        <QaSummary qa={previewQa} />
+
         <Card {...sectionCardProps}>
           <Stack space={3}>
             <Heading as="h3" size={1}>
@@ -1036,7 +1084,7 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
                 text={activeAction === "dry-run" ? "Calculating selected dry run..." : "Dry run selected"}
               />
               <Button
-                disabled={isLoadingLinkedData || hasBlockingIssues || !previewInput || activeAction === "dry-run"}
+                disabled={isLoadingLinkedData || hasBlockingIssues || previewHasBlockedQa || !previewInput || activeAction === "dry-run"}
                 onClick={() => {
                   void handleGenerateSelectedDraft();
                 }}

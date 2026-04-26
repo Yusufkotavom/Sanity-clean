@@ -2030,3 +2030,27 @@ Upgraded the Studio generator workflow from a fixed first-row preview into a mor
 ### Verification Status
 - ✅ `pnpm --filter studio run typecheck`
 - ✅ `git diff --check`
+
+## 2026-04-26 — Generator QA Validation in Studio
+
+### Changed Files
+- `studio/components/generator/program-runner-pane.tsx` (MODIFIED) - Integrated generator QA into the Studio run pane so selected previews are assessed before write, blocked drafts cannot be generated, and batch dry runs report QA-blocked combinations.
+- `studio/components/generator/qa-summary.tsx` (NEW) - Added a dedicated QA summary card for selected preview drafts with pending, warning, blocked, and ready states.
+- `studio/lib/generator/qa.ts` (NEW) - Added deterministic QA rules for generated drafts covering duplicate lineage/slug checks, SEO title/description ranges, slug length, required block presence, and content token coverage.
+- `studio/lib/generator/types.ts` (MODIFIED) - Added shared QA result and issue types for the generator workflow.
+- `studio/lib/generator/__tests__/qa.test.ts` (NEW) - Added focused QA tests for healthy drafts and duplicate blocking behavior.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated generator migration tracking to record the new QA gate in the Studio workflow.
+
+### Summary
+Added a real QA gate to Generator V2 in Studio. Previewed drafts are now assessed before write, the selected-draft action is disabled when QA returns a blocked result, and batch dry runs skip combinations that fail deterministic QA instead of quietly treating them as writable candidates. This moves the generator closer to a production workflow instead of a simple draft writer.
+
+### Impact on SEO/Integration
+- No direct SEO impact on production.
+- Integration impact:
+  - Studio generator runs now enforce deterministic pre-write quality checks instead of relying only on duplicate detection.
+  - QA state is now part of the generator contract shared across preview, dry run, and write flows.
+
+### Verification Status
+- ✅ `pnpm --filter studio run typecheck`
+- ✅ `pnpm dlx tsx --test studio/lib/generator/__tests__/qa.test.ts`
+- ✅ `git diff --check`

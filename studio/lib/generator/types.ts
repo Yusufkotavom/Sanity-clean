@@ -157,3 +157,16 @@ export type DuplicateMatch = {
   reason: "slug" | "lineage";
   existing: ExistingPageLike;
 };
+
+export type GeneratorQaSeverity = "ready" | "warning" | "blocked";
+
+export type GeneratorQaIssue = {
+  severity: GeneratorQaSeverity;
+  code: string;
+  message: string;
+};
+
+export type GeneratorQaResult = {
+  severity: GeneratorQaSeverity;
+  issues: GeneratorQaIssue[];
+};
