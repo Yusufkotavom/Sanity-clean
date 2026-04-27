@@ -4,6 +4,32 @@ This document tracks all SEO-related changes made to the repository.
 
 ---
 
+## 2026-04-27 — Sanity Studio Bulk Actions Table Integration
+
+### Changed Files
+- `studio/package.json` (MODIFIED) - Added the `sanity-plugin-bulk-actions-table` dependency to the Studio workspace.
+- `pnpm-lock.yaml` (MODIFIED) - Recorded the new Studio dependency resolution for `sanity-plugin-bulk-actions-table`.
+- `studio/structure.ts` (MODIFIED) - Added a dedicated `Bulk Actions` navigation group with table-based bulk management entries for core content, dev-only generator docs, and legacy templating docs.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated the current-status snapshot and the Studio/generator checklist with the new bulk-actions surface.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+Installed `sanity-plugin-bulk-actions-table` into the Sanity Studio workspace and wired it into the existing desk structure as a dedicated `Bulk Actions` group instead of replacing the normal editing lists. The new group gives operators a batch-management surface for frequent cleanup tasks such as publish, unpublish, delete, and discard changes across core content types, development-only generator documents, and the legacy templating document families that still need periodic maintenance during migration work.
+
+### Impact on SEO/Integration
+- `No direct SEO impact`
+- Positive Studio operations impact: bulk cleanup is now much faster for generator, legacy templating, redirect, and page-management workflows.
+- Positive migration hygiene impact: the operator no longer needs repetitive one-by-one deletion for large Sanity cleanup passes.
+- Compatibility note: the plugin currently advertises `sanity@^3` as its peer range, but local `studio` typecheck and `sanity build` both passed against the current `sanity@5.19.0` workspace.
+
+### Verification Status
+- ✅ `pnpm --filter studio run typecheck` passed.
+- ✅ `pnpm --filter studio run build` passed.
+- ✅ Manual diff review confirmed the new bulk-actions entries were added as a separate desk group, leaving the existing editor-oriented lists intact.
+- ⚠️ No live Studio UI click-through test was performed in this shell-only cycle, so first interactive use should still be smoke-checked in the browser.
+
+---
+
 ## 2026-04-25 — Sanity Generator V2 Legacy Inventory Export
 
 ## 2026-04-25 — Legacy Template Runtime Cleanup

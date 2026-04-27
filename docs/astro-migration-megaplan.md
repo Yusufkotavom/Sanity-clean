@@ -30,6 +30,7 @@ Migrate legacy Astro source into current Next.js + Sanity stack with:
 
 ## Current Status Snapshot (Already Done)
 
+- [x] Sanity Studio now has a dedicated `Bulk Actions` management surface for fast cleanup and batch operations across live, generator, and legacy content types: `sanity-plugin-bulk-actions-table` is installed in the Studio workspace, wired into `structure.ts` as a separate navigation group, and exposes table-based bulk publish/unpublish/delete/discard workflows for core docs such as `page`, `post`, `service`, `redirect`, plus dev-only generator docs and legacy templating docs. Verification note: `studio` typecheck and `studio` build both passed after the integration, despite the package advertising an older `sanity@^3` peer range.
 - [x] Reusable global sections are now less constrained and more theme-safe: the `reusableSection` placement model now supports `beforeMainContent` and `afterMainContent` in addition to the existing header/footer slots, the main frontend layout now renders those new slots inside `<main>`, and the shared `SectionContainer` no longer relies on dynamic `bg-${color}` Tailwind classes, which fixes dark-mode background support for reusable blocks more reliably. Verification note: `frontend` typecheck, `studio` typecheck, and `git diff --check` all passed after the placement and dark-mode hardening.
 - [x] Reusable sections now also support hybrid landing-page composition, not only global layout composition: `reusableSection` includes `afterHero` and `beforeFinalCta` placement slots, and the shared `PageHybridShell` now renders those slots around its code-owned middle shell so reusable content can sit closer to the landing-page flow instead of only at the outer page frame. Verification note: `frontend` typecheck, `studio` typecheck, and `git diff --check` all passed after the hybrid slot expansion.
 - [x] Reusable sections are now materially more Sanity-managed instead of code-managed: `reusableSection` supports route scope (`all` vs selected route keys), selected route-key targeting from Studio, and a richer reusable block repertoire aligned more closely with the main page block library; frontend middleware now exposes a normalized route key to the main layout so reusable sections can be filtered server-side by Sanity-defined route keys without hardcoded per-route logic. Verification note: `frontend` typecheck, `studio` typecheck, and `git diff --check` all passed after the route-scope and block-coverage expansion.
@@ -598,6 +599,7 @@ Migrate legacy Astro source into current Next.js + Sanity stack with:
 - [x] Add deterministic generator QA validation to the Studio run pane and pre-write flow
 - [x] Simplify Generator V2 UX and expand the reusable visual template library without adding heavier approval workflow layers
 - [x] Expand Generator V2 with richer reusable block types and additional visual presets for broader visual diversity
+- [x] Add a dedicated Studio bulk-actions table surface for batch cleanup across core, generator, and legacy document types
 - [ ] Stabilize index coverage and remove residual gaps
 
 ## Risks & Controls

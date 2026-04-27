@@ -27,6 +27,7 @@
     "react-dom": "19.2.4",
     "react-player": "^3.4.0",
     "sanity": "^5.19.0",
+    "sanity-plugin-bulk-actions-table": "^1.0.4",
     "sanity-plugin-icon-picker-v2": "^1.0.4",
     "sanity-plugin-iframe-pane": "^5.0.11",
     "sanity-plugin-media": "^4.1.1",

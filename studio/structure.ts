@@ -1,4 +1,5 @@
 import { orderableDocumentListDeskItem } from "@sanity/orderable-document-list";
+import { createBulkActionsTable } from "sanity-plugin-bulk-actions-table";
 import {
   Files,
   BookA,
@@ -21,6 +22,27 @@ import {
 
 const isGeneratorDeskEnabled = (context: any) =>
   (context?.dataset ?? process.env.SANITY_STUDIO_DATASET ?? "production") === "development";
+
+const createBulkTableItem = (
+  S: any,
+  context: any,
+  {
+    type,
+    title,
+    icon,
+  }: {
+    type: string;
+    title: string;
+    icon?: any;
+  },
+) =>
+  createBulkActionsTable({
+    type,
+    title,
+    icon,
+    S,
+    context,
+  });
 
 export const structure = (S: any, context: any) =>
   S.list()
@@ -104,6 +126,62 @@ export const structure = (S: any, context: any) =>
         S,
         context,
       }),
+      S.listItem()
+        .title("Bulk Actions")
+        .icon(Files)
+        .child(
+          S.list()
+            .title("Bulk Actions")
+            .items([
+              createBulkTableItem(S, context, { type: "page", title: "Pages Table", icon: Files }),
+              createBulkTableItem(S, context, { type: "post", title: "Posts Table", icon: BookA }),
+              createBulkTableItem(S, context, { type: "product", title: "Products Table", icon: Package }),
+              createBulkTableItem(S, context, { type: "service", title: "Services Table", icon: BriefcaseBusiness }),
+              createBulkTableItem(S, context, { type: "serviceType", title: "Service Types Table", icon: BriefcaseBusiness }),
+              createBulkTableItem(S, context, { type: "project", title: "Projects Table", icon: FolderKanban }),
+              createBulkTableItem(S, context, { type: "faq", title: "FAQs Table", icon: ListCollapse }),
+              createBulkTableItem(S, context, { type: "testimonial", title: "Testimonials Table", icon: Quote }),
+              createBulkTableItem(S, context, { type: "reusableSection", title: "Reusable Sections Table", icon: Blocks }),
+              createBulkTableItem(S, context, { type: "location", title: "Locations Table", icon: MapPin }),
+              createBulkTableItem(S, context, { type: "redirect", title: "Redirects Table", icon: Link2 }),
+              ...(isGeneratorDeskEnabled(context)
+                ? [
+                    S.divider(),
+                    createBulkTableItem(S, context, {
+                      type: "generatorProgram",
+                      title: "Generator Programs Table",
+                      icon: LayoutTemplate,
+                    }),
+                    createBulkTableItem(S, context, {
+                      type: "generatorTemplate",
+                      title: "Generator Templates Table",
+                      icon: Blocks,
+                    }),
+                    createBulkTableItem(S, context, {
+                      type: "generatorDataset",
+                      title: "Generator Datasets Table",
+                      icon: Files,
+                    }),
+                  ]
+                : []),
+              S.divider(),
+              createBulkTableItem(S, context, {
+                type: "pageTemplate",
+                title: "Legacy Page Templates Table",
+                icon: LayoutTemplate,
+              }),
+              createBulkTableItem(S, context, {
+                type: "pageLocation",
+                title: "Legacy Page Locations Table",
+                icon: MapPin,
+              }),
+              createBulkTableItem(S, context, {
+                type: "serviceLocation",
+                title: "Legacy Service Locations Table",
+                icon: MapPin,
+              }),
+            ])
+        ),
       ...(isGeneratorDeskEnabled(context)
         ? [
             S.listItem()
