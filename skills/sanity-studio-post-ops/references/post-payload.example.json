@@ -1,0 +1,38 @@
+{
+  "title": "Panduan Memilih Software POS untuk UMKM",
+  "slug": "panduan-memilih-software-pos-untuk-umkm",
+  "excerpt": "Checklist praktis memilih sistem POS yang tepat untuk bisnis kecil dan menengah.",
+  "body": [
+    {
+      "_type": "block",
+      "style": "normal",
+      "children": [
+        {
+          "_type": "span",
+          "text": "Software POS yang tepat harus menyesuaikan alur transaksi, stok, dan laporan bisnis Anda."
+        }
+      ],
+      "markDefs": []
+    }
+  ],
+  "meta": {
+    "title": "Panduan Memilih Software POS untuk UMKM",
+    "description": "Pelajari kriteria penting sebelum memilih software POS agar operasional dan laporan bisnis lebih rapi.",
+    "noindex": false
+  },
+  "categoryRefs": [
+    "category-software"
+  ],
+  "affiliateItems": [
+    {
+      "itemType": "software",
+      "name": "POS Starter",
+      "description": "Solusi POS dasar untuk kasir dan laporan harian.",
+      "rating": 4.5,
+      "affiliateUrl": "https://example.com/pos-starter",
+      "affiliateLabel": "Cek Detail"
+    }
+  ],
+  "overallRating": 4.5,
+  "verdict": "Cocok untuk UMKM yang butuh sistem kasir sederhana dan cepat dipakai."
+}

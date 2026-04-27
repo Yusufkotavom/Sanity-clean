@@ -1,0 +1,22 @@
+{
+  "title": "Layanan IT Surabaya",
+  "slug": "layanan-it-surabaya",
+  "topBlockCount": 2,
+  "blocks": [
+    {
+      "_type": "hero-1",
+      "title": "Layanan IT Surabaya",
+      "description": "Solusi IT terintegrasi untuk bisnis di Surabaya."
+    },
+    {
+      "_type": "cta-1",
+      "title": "Diskusi Kebutuhan Anda",
+      "description": "Hubungi tim kami untuk konsultasi gratis."
+    }
+  ],
+  "meta": {
+    "title": "Layanan IT Surabaya",
+    "description": "Jasa IT Surabaya untuk website, software, dan support bisnis.",
+    "noindex": false
+  }
+}

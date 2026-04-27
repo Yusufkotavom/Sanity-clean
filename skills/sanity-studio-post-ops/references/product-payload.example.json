@@ -1,0 +1,29 @@
+{
+  "title": "Paket Website Company Profile",
+  "slug": "paket-website-company-profile",
+  "excerpt": "Produk paket website siap pakai untuk profil perusahaan.",
+  "price": 4500000,
+  "currency": "IDR",
+  "availability": "in-stock",
+  "featured": true,
+  "categories": [
+    {
+      "_type": "reference",
+      "_ref": "category-website",
+      "_weak": true
+    }
+  ],
+  "reviews": [
+    {
+      "_type": "reviewItem",
+      "author": "Client A",
+      "rating": 5,
+      "reviewBody": "Pengerjaan rapi dan cepat."
+    }
+  ],
+  "meta": {
+    "title": "Paket Website Company Profile",
+    "description": "Solusi website profil perusahaan yang profesional dan cepat tayang.",
+    "noindex": false
+  }
+}

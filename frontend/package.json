@@ -28,7 +28,8 @@
     "test:templates": "node --import tsx tests/template-resolver.contract.test.ts",
     "typegen": "npx sanity schema extract && npx sanity typegen generate",
     "typecheck": "tsc --noEmit",
-    "psi:batch": "node scripts/pagespeed-insights-batch.mjs"
+    "psi:batch": "node scripts/pagespeed-insights-batch.mjs",
+    "sanity:content:create": "node scripts/create-content-from-json.mjs"
   },
   "dependencies": {
     "@ai-sdk/gateway": "^3.0.85",

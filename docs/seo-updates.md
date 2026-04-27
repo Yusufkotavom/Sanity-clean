@@ -4,506 +4,110 @@ This document tracks all SEO-related changes made to the repository.
 
 ---
 
-## 2026-04-27 — Sanity Studio Bulk Actions Table Integration
+## 2026-04-27 — Extend Canonical Sanity Automation Support (`category`, `pageTemplate`, `redirect`)
 
 ### Changed Files
-- `studio/package.json` (MODIFIED) - Added the `sanity-plugin-bulk-actions-table` dependency to the Studio workspace.
-- `pnpm-lock.yaml` (MODIFIED) - Recorded the new Studio dependency resolution for `sanity-plugin-bulk-actions-table`.
-- `studio/structure.ts` (MODIFIED) - Added a dedicated `Bulk Actions` navigation group with table-based bulk management entries for core content, dev-only generator docs, and legacy templating docs.
-- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated the current-status snapshot and the Studio/generator checklist with the new bulk-actions surface.
+- `frontend/scripts/create-content-from-json.mjs` (MODIFIED) - Extended supported types to include `category`, `pageTemplate`, and `redirect`, with per-type required-field rules (`slug/title/source`) and redirect-specific existence lookup by `source`.
+- `docs/sanity-post-types-map.md` (MODIFIED) - Added explicit support map + field list for `category`, `pageTemplate`, and `redirect`; expanded verification section.
+- `skills/sanity-studio-post-ops/SKILL.md` (MODIFIED) - Updated skill scope and commands to cover the newly supported types.
+- `skills/sanity-studio-post-ops/references/category-payload.example.json` (ADDED) - Added category payload example.
+- `skills/sanity-studio-post-ops/references/page-template-payload.example.json` (ADDED) - Added pageTemplate payload example.
+- `skills/sanity-studio-post-ops/references/redirect-payload.example.json` (ADDED) - Added redirect payload example.
+- `skills/sanity-studio-post-ops/references/category-payload.example.json` (MODIFIED) - Adjusted sample slug/title to avoid collisions in live env tests.
+- `skills/sanity-studio-post-ops/references/page-template-payload.example.json` (MODIFIED) - Adjusted sample slug/title to avoid collisions in live env tests.
+- `skills/sanity-studio-post-ops/references/redirect-payload.example.json` (MODIFIED) - Adjusted sample source path to avoid collisions in live env tests.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated current snapshot checklist for expanded support.
 - `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
 
 ### Summary
-Installed `sanity-plugin-bulk-actions-table` into the Sanity Studio workspace and wired it into the existing desk structure as a dedicated `Bulk Actions` group instead of replacing the normal editing lists. The new group gives operators a batch-management surface for frequent cleanup tasks such as publish, unpublish, delete, and discard changes across core content types, development-only generator documents, and the legacy templating document families that still need periodic maintenance during migration work.
+Expanded the canonical Sanity automation script (`sanity:content:create`) to handle three additional CMS document types requested for operational use:
+1. `category`
+2. `pageTemplate`
+3. `redirect`
+
+Validation rules remain tight and type-aware, while keeping one single write path for all supported types.
 
 ### Impact on SEO/Integration
+- Integration impact: removes the need for custom one-off scripts for category/template/redirect writes and keeps automation behavior consistent in one pipeline.
+- SEO impact: indirect positive impact for redirect and taxonomy operations by reducing manual write inconsistencies.
+
+### Verification Status
+- ✅ `node --check frontend/scripts/create-content-from-json.mjs` passed.
+- ✅ `pnpm --filter frontend run sanity:content:create -- --help` passed with updated type list.
+- ✅ Env-backed dry-run + draft write passed for `category`, `pageTemplate`, and `redirect`.
+- ✅ Raw-perspective verification confirmed payload keys persisted on:
+  - `drafts.qa-category-automation`
+  - `drafts.qa-pageTemplate-automation`
+  - `drafts.qa-redirect-automation`
+
+---
+
+## 2026-04-27 — Sanity Automation Cleanup (Single Script Path)
+
+### Changed Files
+- `frontend/scripts/create-post-from-json.mjs` (DELETED) - Removed legacy post-only automation script to avoid duplicate write pathways.
+- `frontend/package.json` (MODIFIED) - Removed legacy `sanity:post:create` command; retained `sanity:content:create` as single automation entrypoint.
+- `docs/sanity-post-types-map.md` (MODIFIED) - Clarified script structure to one canonical CLI flow.
+- `skills/sanity-studio-post-ops/SKILL.md` (MODIFIED) - Removed legacy script references and aligned operational instructions to single-script workflow.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Synced workstream snapshot references to canonical automation script.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+Consolidated Sanity automation into one clear path by removing the duplicate post-only script and standardizing all guidance to `sanity:content:create` (multi-type).
+
+### Impact on SEO/Integration
+- Integration impact: reduces operational drift and mismatch risk between multiple script paths for CMS writes.
 - `No direct SEO impact`
-- Positive Studio operations impact: bulk cleanup is now much faster for generator, legacy templating, redirect, and page-management workflows.
-- Positive migration hygiene impact: the operator no longer needs repetitive one-by-one deletion for large Sanity cleanup passes.
-- Compatibility note: the plugin currently advertises `sanity@^3` as its peer range, but local `studio` typecheck and `sanity build` both passed against the current `sanity@5.19.0` workspace.
 
 ### Verification Status
-- ✅ `pnpm --filter studio run typecheck` passed.
-- ✅ `pnpm --filter studio run build` passed.
-- ✅ Manual diff review confirmed the new bulk-actions entries were added as a separate desk group, leaving the existing editor-oriented lists intact.
-- ⚠️ No live Studio UI click-through test was performed in this shell-only cycle, so first interactive use should still be smoke-checked in the browser.
+- ✅ `node --check frontend/scripts/create-content-from-json.mjs` passed.
+- ✅ `pnpm --filter frontend run sanity:content:create -- --help` passed.
+- ✅ Env-backed dry-run succeeded for all post-like types (`post/service/product/project/page`) using reference payloads.
+- ✅ Env-backed draft upsert re-verified for `drafts.qa-post-automation` after cleanup.
+- ✅ Manual grep verification: no remaining active workflow references to `sanity:post:create` in current operational docs/skill.
 
 ---
 
-## 2026-04-25 — Sanity Generator V2 Legacy Inventory Export
-
-## 2026-04-25 — Legacy Template Runtime Cleanup
+## 2026-04-27 — Sanity Post-Like Mapping + External Multi-Type Automation
 
 ### Changed Files
-- `frontend/app/(main)/about/page.tsx` (MODIFIED) - Removed the dead template-route branch so `/about` now only uses the real Sanity page path or the existing fallback metadata title.
-- `frontend/app/(main)/about/[slug]/page.tsx` (MODIFIED) - Removed the dead template-route branch so nested `/about/*` routes now stay on the legacy-local path only.
-- `frontend/app/(main)/privacy/page.tsx` (MODIFIED) - Removed the dead template-route branch for `/privacy`.
-- `frontend/app/(main)/sistem-pos/page.tsx` (MODIFIED) - Removed the dead template-route branch for `/sistem-pos`.
-- `frontend/lib/templates/resolve-template.ts` (MODIFIED) - Deleted the unused `resolveTemplateBlocks` and `resolveTopBlockCount` exports.
-- `frontend/sanity/queries/template-page.ts` (MODIFIED) - Trimmed legacy template query fields that are no longer consumed by runtime rendering.
-- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated the current-status snapshot and Sprint 3 cleanup checklist.
+- `docs/sanity-post-types-map.md` (ADDED) - Added mapping of all Studio document types, post-like content types, and post automation contract.
+- `frontend/scripts/create-post-from-json.mjs` (ADDED) - Added JSON-driven CLI for create/upsert Sanity `post` documents with dry-run/write modes.
+- `frontend/scripts/create-content-from-json.mjs` (ADDED) - Added JSON-driven CLI for create/upsert multi-type Sanity content (`post`, `service`, `product`, `project`, `page`) with payload pass-through to accommodate all fields.
+- `frontend/package.json` (MODIFIED) - Added script aliases `sanity:post:create` and `sanity:content:create`.
+- `skills/sanity-studio-post-ops/SKILL.md` (ADDED) - Added repo-local skill for Sanity communication workflow for post-like types (`post/service/product/project/page`).
+- `skills/sanity-studio-post-ops/references/post-payload.example.json` (ADDED) - Added payload reference for external automation pipelines.
+- `skills/sanity-studio-post-ops/references/service-payload.example.json` (ADDED) - Added service payload reference.
+- `skills/sanity-studio-post-ops/references/product-payload.example.json` (ADDED) - Added product payload reference.
+- `skills/sanity-studio-post-ops/references/project-payload.example.json` (ADDED) - Added project payload reference.
+- `skills/sanity-studio-post-ops/references/page-payload.example.json` (ADDED) - Added page payload reference.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated current snapshot and workstream checklist.
 - `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
 
 ### Summary
-Applied the lowest-risk cleanup from the legacy templating audit. The frontend no longer carries template-page branches for routes that can never match the current template allowlist, the legacy resolver no longer exports dead block/top-count helpers, and the template-page GROQ query no longer fetches fields that the runtime does not consume. This reduces mental overhead and payload size while leaving the active template-driven routes untouched.
+Added a complete operational package for Sanity post-like automation:
+1. Mapped all active Studio document types and identified post-like public content contracts.
+2. Documented detailed field map per type (`post`, `service`, `product`, `project`, `page`) including required and optional fields.
+3. Added a CLI script to create or upsert multi-type documents from external JSON payloads with field pass-through, so all schema fields can be included without rewriting mapper logic.
+4. Added a repo-local skill + per-type payload examples to standardize Sanity automation workflow for future agent runs.
 
 ### Impact on SEO/Integration
-- `No direct SEO impact`
-- Positive frontend integration impact: unreachable branches and unused query fields are gone, so the live legacy templating surface is smaller and easier to reason about.
-- Positive runtime hygiene impact: template-page fetches now carry less dead data without changing the active route-policy contract.
+- Integration impact: improves consistency and repeatability for external ingestion into post-like documents (`post/service/product/project/page`).
+- SEO impact: indirect positive impact by reducing malformed payload risk (slug/id/key/link guardrails) across SEO-sensitive content routes.
 
 ### Verification Status
-- ✅ `pnpm --filter frontend run typecheck` passed.
-- ✅ `pnpm --filter studio run typecheck` passed.
-- ✅ `rg -n "resolveTemplateBlocks|resolveTopBlockCount"` confirmed the dead helper exports are no longer referenced.
-- ✅ Manual self-review confirmed the cleanup stayed outside the active template route allowlist (`/pembuatan-website`, `/software`, `/percetakan`, and root `/jasa-*`).
-
----
-
-## 2026-04-25 — Visual-First Generator Starters Based On Legacy Output
-
-### Changed Files
-- `frontend/scripts/generator/seed-generator-service-starters.mjs` (MODIFIED) - Reworked the seeded generator starter families so they follow the old generator pages mainly as a visual section model, using `hero`, `highlights`, `serviceTypes`, `pricing`, `testimonials`, `faq`, and `finalCta` rather than flatter utilitarian section sets.
-- `studio/lib/generator/render.ts` (MODIFIED) - Added deterministic support for `service-types-block` and `testimonials-block`, keeping the new generator aligned with the more visual section rhythm from the legacy generator outputs.
-- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated the status snapshot and cleanup checklist.
-- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
-
-### Summary
-Shifted the new generator from a mostly utilitarian scaffold to a more visual-first template model using the old generator pages as the main template reference. The starter families now prioritize the same kind of visual pacing that existed in the older generated pages: a stronger hero, visual benefit cards, service grids, pricing/testimonial sections, then FAQ and a closing CTA. The new generator keeps the cleaner architecture, but the visual composition is now inherited from the old output rather than from the old runtime logic.
-
-### Impact on SEO/Integration
-- Positive integration impact: the new generator templates are now structurally closer to the older proven landing-page outputs while still generating standard `page` documents in the new system.
-- No direct live SEO impact beyond the development generator setup because production-rendered pages were not switched in this batch.
-
-### Verification Status
-- ✅ `pnpm --filter studio run typecheck` passed.
-- ✅ `pnpm --filter frontend run typecheck` passed.
-- ✅ `pnpm dlx tsx --test studio/lib/generator/__tests__/render.test.ts` passed.
-- ✅ `node --check frontend/scripts/generator/seed-generator-service-starters.mjs` passed.
-
----
-
-## 2026-04-25 — Generator Dataset Input Flow And Richer Starter Output
-
-### Changed Files
-- `studio/schemas/documents/generator-dataset.ts` (MODIFIED) - Added `csv-ready` input support with pasted `keywordSetCsv` and `rowCsv` fields, relaxed array validation so CSV mode is valid before sync, and improved dataset preview labeling.
-- `frontend/scripts/generator/sync-generator-dataset-inputs.mjs` (ADDED) - Added a development-only sync script that parses pasted dataset CSV inputs and writes normalized `keywordSets` and `rows` back into `generatorDataset` documents.
-- `studio/lib/generator/types.ts` (MODIFIED) - Extended generated page draft typing to include page-level SEO metadata.
-- `studio/lib/generator/render.ts` (MODIFIED) - Added page-level `meta` generation, richer value-props content, and support for `pricing-block` output in deterministic generator drafts.
-- `frontend/scripts/generator/seed-generator-service-starters.mjs` (MODIFIED) - Refined starter family titles and upgraded the printing starter to use `pricing-block` for a more realistic generated layout.
-- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated the current-status snapshot and Sprint 3 cleanup checklist.
-- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
-
-### Summary
-Upgraded the new generator from scaffold status to a more practical authoring flow. Dataset documents can now accept pasted CSV input in Studio, and the repo includes a dedicated dev-only sync script that converts that pasted CSV into normalized generator arrays. The deterministic page builder now emits better structured output as well: generated pages carry page-level meta fields, value-props sections are less placeholder-like, and pricing-oriented starter sections can render as real `pricing-block` output.
-
-### Impact on SEO/Integration
-- Positive integration impact: generated `page` drafts now include `meta.title`, `meta.description`, `focusKeyword`, and secondary keywords, which keeps generated output more aligned with the frontend metadata contract.
-- Positive Studio integration impact: operators now have a CSV/manual input path inside `generatorDataset` instead of relying only on direct array editing.
-- No direct live SEO impact in this batch because production runtime and production datasets were not changed.
-
-### Verification Status
-- ✅ `pnpm --filter studio run typecheck` passed.
-- ✅ `pnpm --filter frontend run typecheck` passed.
-- ✅ `pnpm dlx tsx --test studio/lib/generator/__tests__/render.test.ts` passed.
-- ✅ `node --check frontend/scripts/generator/sync-generator-dataset-inputs.mjs` passed.
-- ✅ `node --check frontend/scripts/generator/seed-generator-service-starters.mjs` passed.
-- ⚠️ A second live run of the dataset sync/reseed scripts against Sanity `development` was not completed in this batch because the current approval layer rejected additional networked write commands due usage limits.
-
----
-
-## 2026-04-25 — Generator Dev Dataset Cleanup And Starter Reset
-
-### Changed Files
-- `frontend/scripts/generator/seed-generator-examples.mjs` (DELETED) - Retired the old one-off printing seed script that kept recreating the legacy generator clutter.
-- `frontend/scripts/generator/seed-generator-service-starters.mjs` (ADDED) - Added a new development-only starter seeding script that provisions aligned `website`, `software`, and `printing` generator families.
-- `docs/superpowers/plans/2026-04-25-sanity-generator-v2.md` (MODIFIED) - Updated the implementation plan so Task 5 now points to the new starter seed script instead of the retired one-off example seed.
-- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated the current-status snapshot and Sprint 3 cleanup checklist.
-- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
-
-### Summary
-Cleaned the development generator workspace for real, not just in code. The old one-off printing seed script was removed from the repo, replaced by a new starter-family seeding script, and the stale `generator-template-printing-dev` / `generator-dataset-printing-dev` / `generator-program-printing-dev` documents were deleted from the development Sanity dataset. The new starter script then seeded three consistent generator families for `website`, `software`, and `printing`, each with one template, one dataset, and one program.
-
-### Impact on SEO/Integration
-- `No direct SEO impact`
-- Positive Studio integration impact: the development generator workspace is now much cleaner and no longer shows the old legacy seed set mixed with the new starter families.
-- Positive operational impact: rerunning generator seeds now produces a controlled, aligned starter inventory instead of restoring the old clutter.
-
-### Verification Status
-- ✅ Live delete on the development Sanity dataset removed the old `generator-template-printing-dev`, `generator-dataset-printing-dev`, and `generator-program-printing-dev` documents.
-- ✅ `node frontend/scripts/generator/seed-generator-service-starters.mjs --write` seeded the clean starter families using `SANITY_DEV`.
-- ✅ Live post-cleanup query confirmed exactly these generator docs remain in `development`: `generator-template-*starter-dev`, `generator-dataset-*starter-dev`, and `generator-program-*starter-dev` for `website`, `software`, and `printing`.
-
----
-
-## 2026-04-25 — Legacy Template Migration Tooling
-
-### Changed Files
-- `studio/schemas/documents/page-template.ts` (MODIFIED) - Hid the misleading legacy `variant` editor field so operators do not treat it as an effective runtime control.
-- `frontend/scripts/generator/migrate-legacy-templates-to-generator.mjs` (ADDED) - Added a development-only migration script that reads legacy `pageTemplate` documents and maps them into minimal `generatorTemplate` documents for Generator V2.
-- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated the current-status snapshot and Sprint 3 cleanup checklist.
-- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
-
-### Summary
-Completed the next safe migration step for the new generator system. The remaining misleading `variant` field in the legacy template editor is now hidden, and the repo now includes a dedicated migration script that converts legacy `pageTemplate` records into minimal `generatorTemplate` documents in the `development` dataset only. The script uses a defensive contract: dry-run by default, dev-only enforcement, and `createOrReplace` only when explicitly run with `--write`.
-
-### Impact on SEO/Integration
-- `No direct SEO impact`
-- Positive migration integration impact: the repo now has a concrete bridge from legacy template records into Generator V2 without touching production runtime or production datasets.
-- Positive editor clarity impact: `variant` is no longer presented as if it still controlled the live runtime.
-
-### Verification Status
-- ✅ `pnpm --filter studio run typecheck` passed.
-- ✅ `pnpm --filter frontend run typecheck` passed.
-- ✅ `node frontend/scripts/generator/migrate-legacy-templates-to-generator.mjs` dry run succeeded against the live `development` dataset.
-- ℹ️ The live dry run reported `totalLegacyTemplates: 0`, so no `generatorTemplate` documents were created yet because the current development dataset does not contain legacy `pageTemplate` documents.
-
----
-
-## 2026-04-25 — Legacy Template Schema Minimization
-
-### Changed Files
-- `studio/schemas/documents/page-template.ts` (MODIFIED) - Relabeled the document as `Legacy Page Template`, clarified `variant` as migration-era config, and hid inert legacy-only fields (`isHybrid`, `topBlockCountDefault`, and legacy blocks) from the Studio editor.
-- `studio/schemas/documents/page-location.ts` (MODIFIED) - Relabeled the document as `Legacy Page Location`, hid inert legacy-only fields (`pageBlocks` and `topBlockCount`), and clarified that `contentStatus` is only for internal indexing/audit tooling.
-- `studio/schemas/documents/service-location.ts` (MODIFIED) - Relabeled the document as `Legacy Service Location`, hid inert legacy-only fields (`pageBlocks` and `topBlockCount`), and clarified that `contentStatus` is only for internal indexing/audit tooling.
-- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated the current-status snapshot and Sprint 3 cleanup checklist.
-- `docs/seo-updates.md` (MODIFIED) - Added this update log entry and repaired adjacent section headings.
-
-### Summary
-Minimized the legacy templating content model in Studio without deleting any stored content. The editor surface now matches the current direction: Generator V2 is the forward workflow, while old template documents remain available as migration/reference material only. Fields that no longer affect the current runtime are hidden from editors, and the remaining operational field `contentStatus` is explicitly labeled as an internal indexing/audit signal instead of page-render logic.
-
-### Impact on SEO/Integration
-- `No direct SEO impact`
-- Positive Studio integration impact: editors now see a simpler, more honest legacy schema surface that matches the reduced runtime contract.
-- Positive migration safety impact: no stored fields were deleted and no frontend query/render contracts changed.
-
-### Verification Status
-- ✅ `pnpm --filter studio run typecheck` passed.
-- ✅ `pnpm --filter frontend run typecheck` passed.
-- ✅ Manual self-review confirmed the task hides legacy-only fields in Studio rather than deleting content-model data.
-
----
-
-## 2026-04-25 — Sanity Generator V2 Studio Boundary Cleanup
-
-### Changed Files
-- `studio/structure.ts` (MODIFIED) - Reorganized the Studio desk so the new `Generator` workflow remains separate while `pageTemplate`, `pageLocation`, and `serviceLocation` now live under a dedicated `Legacy Templating` section with explicit legacy labels.
-- `studio/.gitignore` (MODIFIED) - Added `tmp` so local generator schema artifacts under `studio/tmp/` stop polluting repo status.
-- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated the current-status snapshot and Sprint 3 cleanup checklist to reflect the Studio boundary cleanup and the remaining local temp-folder deletion blocker.
-- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
-
-### Summary
-Cleaned up the Studio editing surface around the new generator rollout. The active `Generator` workspace remains the forward path for new programmatic content work in the development dataset, while the old runtime-driven templating documents are now intentionally grouped under `Legacy Templating` so editors can see that they are migration-era surfaces rather than the preferred system going forward. I also ignored `studio/tmp/` artifacts at the repo level because the generator schema checks produce local temporary files that should not keep reappearing in `git status`.
-
-### Impact on SEO/Integration
-- `No direct SEO impact`
-- Positive Studio integration impact: the migration boundary is now clearer for operators, which reduces the risk of editing the old templating surface when the intent is to work in Generator V2.
-- Positive repo hygiene impact: recurring local temp artifacts from Studio generator checks no longer pollute the worktree.
-
-### Verification Status
-- ✅ `node studio/scripts/check-generator-structure.mjs` passed.
-- ✅ `pnpm --filter studio run typecheck` passed.
-- ✅ Manual self-review confirmed no schema/query/frontend runtime contracts changed; only the Studio desk organization and local ignore rules were updated.
-- ⚠️ Physical deletion of the already-created local `studio/tmp/` folder is still pending because the destructive shell command was blocked by the current tool approval layer, but future artifacts are now ignored.
-
----
-
-## 2026-04-25 — Sanity Generator V2 Legacy Inventory Export
-
-### Changed Files
-- `studio/lib/generator/legacy.ts` (ADDED) - Added a read-only mapper that normalizes legacy `pageTemplate` records into minimal generator seed metadata for migration planning.
-- `frontend/scripts/generator/export-legacy-templates.mjs` (ADDED) - Added a read-only export script that fetches `pageTemplate`, `pageLocation`, and `serviceLocation` inventory and writes `frontend/tmp/generator-legacy-template-inventory.json`.
-- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated the generator rollout snapshot and Sprint 3 checklist for Task 6.
-- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
-
-### Summary
-Implemented Task 6 of the Sanity Generator V2 plan with scope limited to legacy inventory and mapping. The new legacy mapper does not mutate any Sanity documents; it only converts a legacy `pageTemplate` record into a small generator-seed shape that keeps title, design family, shell binding, top-block default, and legacy lineage fields. The companion export script uses the existing read-only Sanity client to fetch `pageTemplate`, `pageLocation`, and `serviceLocation`, attaches a mapped generator seed to each template record, summarizes missing template references, and writes the resulting snapshot to `frontend/tmp/generator-legacy-template-inventory.json` for migration analysis.
-
-### Impact on SEO/Integration
-- `No direct SEO impact`
-- Positive migration integration impact: legacy template and location inventory is now captured in one deterministic JSON artifact that can be reviewed before any future generator migration or public-content write path.
-- Positive CMS safety impact: the task stayed read-only and did not write to public page content or generator docs.
-
-### Verification Status
-- ✅ `node frontend/scripts/generator/export-legacy-templates.mjs` passed and wrote `frontend/tmp/generator-legacy-template-inventory.json`.
-- ✅ Manual output review confirmed the export includes `pageTemplates`, `pageLocations`, `serviceLocations`, template-level `generatorSeed` previews, and missing-template-reference summaries.
-- ✅ `git diff --check -- studio/lib/generator/legacy.ts frontend/scripts/generator/export-legacy-templates.mjs docs/astro-migration-megaplan.md docs/seo-updates.md` passed.
-- ✅ Manual self-review completed for read-only behavior, field scope, mapper normalization, and inventory output structure.
-
----
-
-## 2026-04-25 — Sanity Generator V2 Dev-Only Write Path
-
-### Changed Files
-- `studio/lib/generator/write.ts` (ADDED) - Added explicit development-dataset write guards plus deterministic generated page/draft ID helpers.
-- `frontend/scripts/generator/check-dev-write-guard.mjs` (ADDED) - Added a dev-write guard script that refuses production and requires a development write credential.
-- `frontend/scripts/generator/seed-generator-examples.mjs` (ADDED) - Added a development-only example seed script for `generatorTemplate`, `generatorDataset`, and `generatorProgram`.
-- `studio/components/generator/program-runner-pane.tsx` (MODIFIED) - Added real Generate Drafts behavior that validates the current dataset, runs a dry run first, then creates only missing draft `page` documents with deterministic generator IDs while skipping/conflicting existing pages.
-- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
-- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated the generator rollout snapshot and execution checklist for Task 5.
-
-### Summary
-Implemented Task 5 of the Sanity Generator V2 plan. The generator now has a small shared write helper that hard-blocks non-development datasets and standardizes generated draft IDs. The Studio `Generator Run` pane now performs the expected guarded flow: validate the active dataset, calculate the same deterministic dry-run result already used for previewing, and then create only missing draft `page` documents under `drafts.generator-page-<slug>` without overwriting existing slug or lineage matches. A matching development-only guard script now checks the env contract up front, and a new example seed script can populate one development-only template, dataset, and program document set for operator testing.
-
-### Impact on SEO/Integration
-- `No direct SEO impact`
-- Positive Studio integration impact: generator writes are now explicitly limited to development and aligned with the existing deterministic preview/dedupe contract instead of adding a separate write code path.
-- Positive CMS safety impact: the write helper and guard script reinforce the repo rule that generator content must not touch production datasets.
-
-### Verification Status
-- ✅ `node frontend/scripts/generator/check-dev-write-guard.mjs` passed.
-- ✅ `pnpm --filter studio run typecheck` passed.
-- ✅ `pnpm --filter frontend run typecheck` passed.
-- ✅ `node frontend/scripts/generator/seed-generator-examples.mjs` passed against the live `development` dataset after rerunning with network access and reported `tokenSource: "SANITY_DEV"` plus the three expected upserted IDs.
-- ✅ `git diff --check -- studio/lib/generator/write.ts frontend/scripts/generator/seed-generator-examples.mjs frontend/scripts/generator/check-dev-write-guard.mjs studio/components/generator/program-runner-pane.tsx docs/seo-updates.md docs/astro-migration-megaplan.md` passed.
-- ⚠️ `pnpm --dir frontend exec node --import tsx scripts/generator/run-generator-smoke.mjs` passed only through its `sample-fallback` path even after seeding the development dataset; the seeded write succeeded, but the smoke read path still did not resolve a live `generatorProgram` document from the unauthenticated read client.
-- ✅ Manual self-review completed for development-dataset enforcement, pre-write dry-run reuse, deterministic draft ID generation, duplicate handling, and non-overwrite behavior.
-
----
-
-## 2026-04-25 — Sanity Generator V2 Preview Wiring and Dry-Run Smoke
-
-### Changed Files
-- `studio/components/generator/program-runner-pane.tsx` (MODIFIED) - Wired the Generator Run pane to fetch the selected template and dataset, build a deterministic first-item preview, and calculate batch dry-run counts without writing pages.
-- `studio/components/generator/preview-card.tsx` (MODIFIED) - Expanded the preview card to show selected input labels, deterministic draft details, and richer preview status states.
-- `studio/components/generator/run-summary.tsx` (MODIFIED) - Expanded the run summary to show dry-run mode, inspected combination count, and preview slug context alongside result counts.
-- `frontend/scripts/generator/run-generator-smoke.mjs` (ADDED) - Added a dev-only dry-run smoke script that reads the development dataset when available and falls back to a deterministic fixture when generator docs are not seeded yet.
-- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
-- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated the generator rollout snapshot and execution checklist for Task 4.
-
-### Summary
-Implemented Task 4 of the Sanity Generator V2 plan. The Studio pane now resolves the currently selected `generatorTemplate` and `generatorDataset`, chooses the first dataset `keywordSet` plus first `row`, and runs them through `buildGeneratedPageDraft` for a real deterministic preview. The same pane now supports a dry-run-only batch calculation across every keyword-set x row combination, using existing page slug and generator-lineage checks to count generated, skipped, conflicted, and failed outcomes without creating any content. A matching smoke script now exercises the same dry-run path in the frontend workspace with development-dataset enforcement; if generator docs are not seeded in `development`, the script falls back to an explicit deterministic fixture so the generator core and summary logic can still be verified end-to-end.
-
-### Impact on SEO/Integration
-- `No direct SEO impact`
-- Positive Studio integration impact: the custom Generator Run view is now connected to the deterministic generator core and a read-only dry-run workflow instead of placeholder UI only.
-- Verification-path impact: the new smoke script now validates the generator preview/dry-run contract without allowing content writes.
-
-### Verification Status
-- ✅ `pnpm --dir frontend exec node --import tsx scripts/generator/run-generator-smoke.mjs` passed and returned `ok: true`.
-- ✅ The smoke output confirmed `devOnly: true` and `dataset: "development"`.
-- ✅ The smoke output also confirmed the current environment concern: no `generatorProgram` documents exist in the `development` dataset yet, so verification used the script's labeled `sample-fallback` path.
-- ✅ `pnpm --filter studio run typecheck` passed.
-- ✅ `git diff --check -- studio/components/generator/program-runner-pane.tsx studio/components/generator/preview-card.tsx studio/components/generator/run-summary.tsx frontend/scripts/generator/run-generator-smoke.mjs` passed.
-- ✅ Manual self-review completed for read-only behavior, first-item preview selection, duplicate-count logic, and the fallback smoke-script path.
-
----
-
-## 2026-04-25 — Sanity Generator V2 Desk Structure and Program Pane
-
-### Changed Files
-- `studio/structure.ts` (MODIFIED) - Added a dev-only `Generator` desk section with entries for `generatorProgram`, `generatorTemplate`, and `generatorDataset`.
-- `studio/defaultDocumentNode.ts` (MODIFIED) - Added a dedicated `Generator Run` document view for `generatorProgram`.
-- `studio/components/generator/program-runner-pane.tsx` (ADDED) - Added the minimal four-section Generator Run pane scaffold for Program Setup, Inputs, Preview, and Run.
-- `studio/components/generator/preview-card.tsx` (ADDED) - Added a focused placeholder preview card for route and SEO pattern visibility.
-- `studio/components/generator/run-summary.tsx` (ADDED) - Added a focused placeholder run-summary card for generated/skipped/conflict/failed counts.
-- `studio/scripts/check-generator-structure.mjs` (ADDED) - Added a structure smoke check for Generator desk entries.
-- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
-- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated status snapshot and execution checklist tracking for Task 2.
-
-### Summary
-Implemented Task 2 of the Sanity Generator V2 plan in Studio. The desk now exposes a dedicated dev-only `Generator` section for programs, templates, and datasets, matching the existing dev-only direction already used for generator document creation. `generatorProgram` documents now include a second Studio view titled `Generator Run`, backed by a minimal pane that surfaces current setup values, placeholder input messaging, a focused preview card, and a placeholder run-summary card. No generator runtime, page writes, or fake execution flow were added in this task; the pane is strictly a structural/operator scaffold for later deterministic preview and run work. The `check-generator-structure.mjs` smoke script verifies the presence of the desk gate helper and generator list-entry strings in `studio/structure.ts`; it does not execute the Studio structure resolver or prove runtime gating behavior.
-
-### Impact on SEO/Integration
-- No direct SEO impact.
-- Positive Studio integration impact: generator navigation and document workflow now exist as explicit Studio surfaces without changing frontend rendering or production dataset behavior.
-
-### Verification Status
-- ✅ `node studio/scripts/check-generator-structure.mjs` failed before the desk update with `Missing structure contract: Generator`, then passed after the implementation.
-- ✅ `pnpm --filter studio run typecheck` passed.
-- ✅ Manual self-review completed for dev-only desk gating, pane scope, and no-runtime placeholder behavior.
-
----
-
-## 2026-04-25 — Sanity Generator V2 Deterministic Core
-
-### Changed Files
-- `studio/lib/generator/types.ts` (ADDED) - Added shared lightweight generator types for program, template, keyword-set, row, draft output, and duplicate detection.
-- `studio/lib/generator/slug.ts` (ADDED) - Added deterministic slug and route-path builders for generator outputs.
-- `studio/lib/generator/variation.ts` (ADDED) - Added deterministic angle normalization, token resolution, section-plan selection, and FAQ category helpers.
-- `studio/lib/generator/render.ts` (ADDED) - Added `buildGeneratedPageDraft` to assemble a minimal standard `page` draft with generator lineage metadata and schema-aligned blocks.
-- `studio/lib/generator/dedupe.ts` (ADDED) - Added duplicate detection helpers for slug and generator-lineage conflicts.
-- `studio/lib/generator/__tests__/render.test.ts` (ADDED) - Added deterministic tests for page draft assembly, angle-driven variation differences, and duplicate detection.
-- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
-- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated status snapshot and execution checklist tracking for Task 3.
-
-### Summary
-Implemented and then hardened Task 3 of the Sanity Generator V2 plan under `studio/lib/generator`. The deterministic core now keeps output stable from `generatorProgram + generatorTemplate + keywordSet + row` inputs only, without AI or implicit clock-based mutations in the default path. Slug generation remains repeatable, but derived page-path behavior is now aligned with the live frontend root-slug `page` contract, so generated page links resolve to `/${slug}` instead of `/routeBase/${slug}`. Token resolution now honors the template contract by reading declared `tokenDefinitions`, resolving values from keyword-set fields, row fields, derived fields, and fallback values, and skipping sections whose `requiredTokens` cannot be satisfied. Section selection is also restricted to the template's ordered `baseSections` plus angle-filtered `optionalSections`, so arbitrary `sectionVariants` outside those lists are no longer rendered. `buildGeneratedPageDraft` now returns a standard `page` draft with read-only generator lineage metadata that includes reference fields for program/template and dataset metadata when available, while duplicate protection still covers both exact slug collisions and generator-lineage collisions for later write flows.
-
-### Impact on SEO/Integration
-- No direct live SEO impact.
-- Positive Studio integration impact: generator preview/run work now relies on a deterministic draft builder that matches the current root-slug frontend page contract, the schema token contract, and the fuller `generatorPageMeta` lineage shape.
-
-### Verification Status
-- ✅ `pnpm dlx tsx --test studio/lib/generator/__tests__/render.test.ts` passed.
-- ✅ `pnpm --filter studio run typecheck` passed.
-- ✅ `git diff --check -- studio/lib/generator/types.ts studio/lib/generator/slug.ts studio/lib/generator/variation.ts studio/lib/generator/render.ts studio/lib/generator/dedupe.ts studio/lib/generator/__tests__/render.test.ts docs/seo-updates.md docs/astro-migration-megaplan.md` passed.
-- ⚠️ `pnpm --filter studio exec vitest run studio/lib/generator/__tests__/render.test.ts` could not run because `vitest` is not installed in this repo (`ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL Command "vitest" not found`).
-- ✅ Manual self-review completed for root-slug path behavior, token-definition resolution, required-token gating, ordered section selection, and lineage metadata completeness.
-
-### 2026-04-25 Follow-up Quality Hardening
-- `studio/defaultDocumentNode.ts` (MODIFIED) - Applied the same development-dataset gate to the `generatorProgram` custom view so `Generator Run` is not exposed outside dev dataset contexts.
-- `studio/components/generator/program-runner-pane.tsx` (MODIFIED) - Reshaped preview and run state for Task 3 integration, separated blocking setup issues from informational notes, and stopped masking missing SEO patterns with fake placeholder values.
-- `studio/components/generator/preview-card.tsx` (MODIFIED) - Switched preview status handling from `string[]` to a richer blocking-issues plus notes contract.
-- `studio/components/generator/run-summary.tsx` (MODIFIED) - Switched to a single summary-object prop for cleaner future integration.
-- `studio/scripts/check-generator-structure.mjs` (MODIFIED) - Strengthened the smoke check to look for both the desk gate helper and generator list-entry strings, and clarified the contract language.
-- `docs/seo-updates.md` (MODIFIED) - Updated Task 2 verification wording to describe the structure check honestly.
-- `docs/astro-migration-megaplan.md` (MODIFIED) - Refined the Task 2 snapshot wording to note that generator desk/view gating and pane contracts were hardened.
-
----
-
-## 2026-04-25 — Sanity Generator V2 Schema Scaffolding
-
-### Changed Files
-- `studio/sanity.config.ts` (MODIFIED) - Gated generator new-document template exposure to the development dataset only, while keeping singleton filtering intact.
-- `studio/schemas/documents/generator-template.ts` (ADDED) - Added the minimal dev-only generator template schema with token and section variant arrays.
-- `studio/schemas/documents/generator-program.ts` (ADDED) - Added the minimal program schema linking template, dataset, route base, and run status.
-- `studio/schemas/documents/generator-dataset.ts` (ADDED) - Added the minimal dataset schema for keyword sets, rows, and dedupe/import policy.
-- `studio/schemas/objects/generator-token-definition.ts` (ADDED) - Added the token contract object for generator templates.
-- `studio/schemas/objects/generator-keyword-set.ts` (ADDED) - Added the keyword set object for primary and secondary keywords.
-- `studio/schemas/objects/generator-row.ts` (ADDED) - Added the row object for service/city/industry/offer variations.
-- `studio/schemas/objects/generator-section-variant.ts` (ADDED) - Added the minimal section variant object for future deterministic assembly.
-- `studio/schemas/objects/generator-page-meta.ts` (ADDED) - Added namespaced generator metadata for generated `page` documents.
-- `studio/schema-types.ts` (MODIFIED) - Registered all new generator document and object schemas.
-- `studio/schemas/documents/page.ts` (MODIFIED) - Added the `generator` metadata field under the `settings` group on pages.
-- `studio/scripts/check-generator-schema.mjs` (ADDED) - Added a targeted schema registration smoke check for generator types.
-- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
-- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated status snapshot and checklist tracking for this schema task.
-
-### Summary
-Implemented Task 1 of the Sanity Generator V2 plan by introducing the minimal Studio schema surface for `generatorTemplate`, `generatorProgram`, `generatorDataset`, and their supporting objects. The review follow-up completed the approved minimal document fields: template output/section/variation/status fields, program type/generation/SEO pattern fields, and dataset status. The quality hardening pass then made lineage safer with read-only references in `generatorPageMeta`, added a stable `key` to `generatorKeywordSet`, clarified section source-of-truth by storing `baseSections`/`optionalSections` as keyed arrays backed by `sectionVariants`, enforced duplicate-key and minimum-usable-state validation on the new generator documents, added pragmatic route-root validation for `generatorProgram.routeBase`, and made the schema smoke script verify both schema registration and schema-file `name` declarations. The current isolation pass now gates generator new-document templates to the `development` dataset only at the document-creation/menu exposure level and tightens generator template/dataset validation further by requiring `designFamily`, `optionalSections`, `importMode`, `dedupePolicy`, preventing section overlap, rejecting duplicate token names, validating section required-token references against template token definitions, and requiring every `required` token to have a usable `sourceField` or `fallbackValue`. Full dataset/runtime cutover isolation is still deferred to later tasks. The standard `page` document still includes a namespaced generator metadata object under `settings`, and that metadata is now read-only in Studio to reduce accidental lineage drift.
-
-### Impact on SEO/Integration
-- No direct SEO impact.
-- Positive Studio integration impact: generator metadata now has an explicit schema contract, and the new generator surface remains isolated to dev-only Studio scaffolding without changing frontend runtime behavior.
-
-### Verification Status
-- ✅ `node studio/scripts/check-generator-schema.mjs` passed.
-- ✅ `pnpm --filter studio run typecheck` passed.
-- ✅ `pnpm --filter studio run build` passed.
-- ✅ Manual code review confirmed generator new-document templates are gated to the `development` dataset only at the Studio new-document menu layer in `studio/sanity.config.ts`.
-- ✅ Manual self-review completed to confirm the task stayed within the requested file scope for code changes.
-
----
-
-## 2026-04-25 — Sanity Generator V2 Design Spec
-
-### Changed Files
-- `docs/superpowers/specs/2026-04-25-sanity-generator-v2-design.md` (ADDED) - Added the new generator architecture/design spec for a dev-only Page Generator Pro-like workflow on top of Sanity + Next.js.
-- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
-- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated the migration/status snapshot to reflect the new generator direction and legacy templating freeze plan.
-
-### Summary
-Documented the replacement direction for the current templating system: a new Sanity Studio generator that uses `generatorTemplate`, `generatorProgram`, and `generatorDataset`, produces normal `page` documents, supports bulk keyword diversification plus row-based variation, and preserves manual editing. The spec also defines the anti-duplicate strategy, AI integration boundary for later LiteLLM hookup, and a safe dev-only migration plan that does not affect production.
-
-### Impact on SEO/Integration
-- Positive integration impact: future programmatic content generation is now explicitly tied to standard `page` output instead of runtime template inference, reducing duplication risk and simplifying frontend/render contracts.
-- No direct live SEO change yet because this task is design/spec only and remains dev-isolated.
-
-### Verification Status
-- ✅ Manual spec review completed for scope, consistency, and migration sequencing.
-- ✅ Repository tracking docs updated in the same task per repo policy.
-
----
-
-## 2026-04-25 — Sanity Generator V2 Implementation Plan
-
-### Changed Files
-- `docs/superpowers/plans/2026-04-25-sanity-generator-v2.md` (ADDED) - Added the file-by-file implementation plan for the new dev-only Sanity generator workflow.
-- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
-- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated migration tracking to note that implementation planning is complete and ready for execution.
-
-### Summary
-Converted the approved generator design into an execution-ready implementation plan. The plan breaks work into schema scaffolding, Studio desk/pane setup, deterministic render logic, dev-only write guards, legacy templating export/freeze, and final verification/docs. It is structured to keep the new generator isolated from production while preserving the current frontend contract that renders standard `page` documents only.
-
-### Impact on SEO/Integration
-- Positive integration impact: the migration path from legacy templating to standard generated `page` output is now explicit and staged, reducing the chance of runtime duplication or accidental production coupling.
-- No direct live SEO impact yet because this is planning/documentation only.
-
-### Verification Status
-- ✅ Manual plan review completed for spec coverage, placeholder scan, and type consistency.
-- ✅ Required repo tracking docs updated in the same task.
-
-## 2026-04-21 — Homepage Lane Grid Layout Set to 2x2
-
-### Changed Files
-- `frontend/components/hybrid/generated/home-pepar-middle-section.tsx` (MODIFIED) - Changed lane card grid from `xl:grid-cols-4` to 2-column layout.
-- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
-- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated status snapshot/workstream checklist.
-
-### Summary
-Adjusted the homepage lane-card block layout to consistently render as two columns on non-mobile screens (`2 atas, 2 bawah`) instead of expanding into four columns on extra-large screens.
-
-### Impact on SEO/Integration
-- `No direct SEO impact`
-- Frontend UX impact: improved scanning readability for lane cards on large screens.
-
-### Verification Status
-- ✅ `pnpm --filter frontend run typecheck` passed.
-- ✅ Manual class verification: grid now uses `sm:grid-cols-2` without `xl:grid-cols-4`.
-
----
-
-## 2026-04-21 — Homepage Frontend Source & Copywriting Polish
-
-### Changed Files
-- `frontend/components/hybrid/generated/home-pepar-middle-section.tsx` (MODIFIED) - Refined homepage hero composition/copy, replaced static testimonial quotes with operational proof cards, improved lane card label clarity, and fixed blog CTA routes.
-- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
-- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated status snapshot/workstream checklist.
-
-### Summary
-Improved the code-owned homepage middle shell to make the first viewport clearer and more conversion-focused: stronger headline/subheadline hierarchy, more specific CTA labels, and cleaner lane scannability. Replaced static personal testimonial quotes with a neutral operational proof section to keep trust messaging credible. Fixed homepage article CTA links from `/posts` to the existing `/blog` route.
-
-### Impact on SEO/Integration
-- Positive integration impact: homepage internal links now point to the valid blog listing route (`/blog`), reducing dead-route risk for users/crawlers.
-- Copy/UX impact: clearer above-the-fold value proposition and CTA intent on homepage.
-- No schema/query contract changes were required for this task.
-
-### Verification Status
-- ✅ `pnpm --filter frontend run typecheck` passed.
-- ✅ Manual code verification: homepage post-list CTAs now target `/blog`.
-
----
-
-## 2026-04-21 — Make Studio Dev Port Auto-Fallback
-
-### Changed Files
-- `studio/scripts/dev.mjs` (ADDED) - Added Studio dev launcher that auto-selects the first available port, starting from `3333`.
-- `studio/package.json` (MODIFIED) - Updated `dev` script to use the new launcher.
-- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
-
-### Summary
-Replaced the fixed-port `sanity dev` command with a small Node launcher that checks port availability and falls back to the next open port when `3333` is occupied. This prevents monorepo `pnpm --parallel -r run dev` from failing when another process is already bound to Studio's default port.
-
-### Impact on SEO/Integration
-- `No direct SEO impact`
-- Integration impact: local dev orchestration is now resilient to Studio port collisions.
-
-### Verification Status
-- ✅ Verified port conflict existed on `3333` (listener PID `569080`).
-- ✅ Ran `pnpm --filter studio run dev` and confirmed launcher starts Sanity on fallback port when needed.
-
----
-
-## 2026-04-21 — Add Example Sanity Seed Script (Development Dataset)
-
-### Changed Files
-- `frontend/scripts/seed-example-db.mjs` (ADDED) - New idempotent seed script for example baseline content in Sanity.
-- `frontend/package.json` (MODIFIED) - Added `sanity:seed:example` script shortcut.
-- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
-- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated status snapshot/workstream checklist.
-
-### Summary
-Implemented a new seed utility to bootstrap example content for Sanity in one run (category, settings, seoSettings, navigation, page, post, product, service, project). Script defaults to safe behavior (dry-run unless `--write`) and supports current env contract via existing Sanity write-client guard.
-
-### Impact on SEO/Integration
-- Indirect positive integration impact: accelerates provisioning of valid baseline CMS content for development/testing workflows.
-- No structural SEO logic changes in frontend rendering pipeline.
-
-### Verification Status
-- ✅ Executed write seed against `project=ww3aejg2`, `dataset=development`.
-- ✅ Post-seed verification counts:
-  - `category=2`, `navigation=1`, `page=1`, `post=1`, `product=1`, `project=1`, `seoSettings=1`, `service=1`, `settings=1`.
+- ✅ `node --check frontend/scripts/create-post-from-json.mjs` passed.
+- ✅ `pnpm --filter frontend run sanity:post:create -- --help` executed and command wiring is valid.
+- ✅ `node --check frontend/scripts/create-content-from-json.mjs` passed.
+- ✅ `pnpm --filter frontend run sanity:content:create -- --help` executed and command wiring is valid.
+- ✅ Env-backed dry-run + draft write executed for all post-like types (`post`, `service`, `product`, `project`, `page`) using reference payloads.
+- ✅ Draft verification via `perspective: "raw"` confirmed all payload top-level keys were written with `missingFromDoc: []` on:
+  - `drafts.qa-post-automation`
+  - `drafts.qa-service-automation`
+  - `drafts.qa-product-automation`
+  - `drafts.qa-project-automation`
+  - `drafts.qa-page-automation`
+- ✅ Manual review completed for mapping doc + skill references consistency with Studio schemas (`post/service/product/project/page`) and frontend post contracts.
 
 ---
 
@@ -1719,492 +1323,91 @@ Synchronized AI runtime contracts across frontend query layer, shared package ex
 ### Verification Status
 - ⚠️ No additional full test/build run in this cycle before push (changes are contract-sync follow-up).
 
-## 2026-04-22 — Sanity Studio AI Surface Cleanup (Actions + Settings + Setup)
+## 2026-04-24 — Template Universalization + Contract Test Restoration
 
 ### Changed Files
-- `studio/sanity.config.ts` (MODIFIED) - Removed `AI Rewrite/AI Extend` document action registration and dropped `aiWriterSettings` from Studio singleton types.
-- `studio/schema-types.ts` (MODIFIED) - Removed `aiWriterSettings` schema import/registration from Studio schema bundle.
-- `studio/structure.ts` (MODIFIED) - Removed `AI Writer Settings` singleton item from Studio desk structure.
-- `studio/.env.example` (MODIFIED) - Removed deprecated `SANITY_STUDIO_AI_WRITER_ACTION_SECRET` setup variable.
-- `studio/document-actions/ai-rewrite-action.ts` (DELETED) - Removed unused Studio AI rewrite action implementation.
-- `studio/document-actions/ai-extend-action.ts` (DELETED) - Removed unused Studio AI extend action implementation.
-- `studio/schemas/documents/ai-writer-settings.ts` (DELETED) - Removed AI writer settings schema from Studio-managed schema set.
-- `studio/schema.json` (MODIFIED) - Regenerated extracted schema after removing AI writer Studio schema.
-- `frontend/sanity/lib/fetch.ts` (MODIFIED) - Removed unused frontend AI writer settings fetch helpers tied to deleted query contract.
-- `frontend/sanity/queries/ai-writer-settings.ts` (DELETED) - Removed unused frontend AI writer settings query file.
-- `frontend/schema.json` (MODIFIED) - Synced frontend schema artifact with latest Studio extract after AI writer schema removal.
-- `frontend/sanity.types.ts` (MODIFIED) - Regenerated types from updated Studio schema (AI writer schema/query types removed).
-- `docs/env-reference.md` (MODIFIED) - Removed Studio AI action-secret setup guidance from env reference.
-- `docs/ai-writer-gateway-setup.md` (MODIFIED) - Updated guide to match current flow (no Studio document action wiring) and removed stale Studio rewrite smoke-check step.
-- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated current status snapshot and legacy AI bullets to explicitly mark Studio action flow as retired.
+- `frontend/tests/template-resolver.contract.test.ts` (ADDED) - Restored missing template resolver contract test from upstream history and adjusted one assertion to match current dynamic section ordering behavior.
+- `frontend/lib/templates/route-policy.ts` (MODIFIED) - Added env-driven route prefix configuration and broader neutral root pattern support.
+- `frontend/lib/templates/resolve-template.ts` (MODIFIED) - Extended lane inference to support neutral English route conventions in addition to existing localized ones.
+- `frontend/sanity/lib/metadata.ts` (MODIFIED) - Removed Kotacom-specific fallback metadata values, introduced env-driven OpenGraph locale/default image behavior, and made root metadata base URL resilient.
+- `frontend/app/layout.tsx` (MODIFIED) - Replaced hardcoded Kotacom JSON-LD with dynamic Organization/WebSite/LocalBusiness schema sourced from Sanity settings + seoSettings and site env.
+- `frontend/.env.example` (MODIFIED) - Replaced project-specific values with generic placeholders and documented new template/SEO metadata env controls.
+- `studio/.env.example` (MODIFIED) - Replaced project-specific preview/project/hostname values with generic placeholders.
 
 ### Summary
-Removed deprecated AI-specific authoring integration from Sanity Studio, including document actions, singleton settings schema, desk entry, and Studio env setup variable. Also cleaned related frontend fetch/query remnants that were no longer used by active runtime paths, synchronized frontend schema/type artifacts, and updated docs to avoid stale Studio-action instructions.
+- Repaired broken `test:templates` workflow by restoring the missing test file and aligning assertions with current resolver behavior.
+- Refactored critical template + SEO metadata points to avoid brand-locked defaults and support broader multi-project reuse.
+- Kept backward compatibility through env-based defaults rather than hardcoding one specific business/domain.
 
 ### Impact on SEO/Integration
-- No direct SEO impact.
+- SEO impact:
+  - Global metadata fallback behavior is now generic and env-driven (no Kotacom-only fallback image/domain/locale assumptions).
+  - JSON-LD output now follows CMS/site settings so schema can be reused safely across projects without manual code rewrites.
 - Integration impact:
-  - Studio editing surface is cleaner and no longer exposes inactive AI rewrite controls.
-  - AI runtime capability remains available through SEO Dashboard/backend flows; this change only removes inactive Studio-side hooks.
-  - Reduces configuration drift by removing stale Studio action-secret setup instructions.
+  - Template route allowlist can now be tuned per project via env, reducing code edits when onboarding new route structures.
+  - Template contract test coverage is active again to guard resolver regressions.
 
 ### Verification Status
-- ✅ `pnpm --filter studio run typecheck` passed.
-- ✅ `pnpm --filter frontend run typecheck` passed.
-- ✅ `pnpm --filter studio run typegen` passed (regenerated `studio/schema.json` and `frontend/sanity.types.ts`).
-- ⚠️ `pnpm --filter frontend run typegen` failed with `PROJECT_ROOT_NOT_FOUND` (expected in current frontend package context); not required for this cleanup.
+- ✅ `pnpm run typecheck` passed.
+- ✅ `pnpm --filter frontend run test:templates` passed.
 
-## 2026-04-22 — Remove `seo-dashboard` Workspace App
+## 2026-04-24 — Remove Generic Lane, Make Website Primary Template Lane
 
 ### Changed Files
-- `seo-dashboard/**` (DELETED) - Removed the entire dashboard application package (API routes, UI pages, libs, scripts, env examples, and package metadata).
-- `pnpm-workspace.yaml` (MODIFIED) - Removed `seo-dashboard` from workspace package list.
-- `package.json` (MODIFIED) - Removed root script `dev:dashboard`.
-- `frontend/app/api/revalidate/route.ts` (MODIFIED) - Removed webhook forwarding logic that posted revalidate URLs to SEO dashboard indexing endpoint.
-- `frontend/.env.example` (MODIFIED) - Removed `SEO_DASHBOARD_URL` and `SEO_DASHBOARD_WEBHOOK_SECRET` env examples.
-- `DEPLOYMENT.md` (MODIFIED) - Removed deployment instructions that referenced `seo-dashboard`.
-- `netlify.toml` (MODIFIED) - Removed separate `seo-dashboard` deployment comment block and generalized env-pruning comment.
-- `CLOUDFLARE-DEPLOYMENT-GUIDE.md` (MODIFIED) - Rewrote guide to active deploy targets (`frontend`, `studio`, `worker`) and marked `seo-dashboard` as retired.
-- `ENV_SETUP.md` (MODIFIED) - Removed `docs/seo-dashboard-setup.md` from active references.
-- `docs/astro-migration-megaplan.md` (MODIFIED) - Added snapshot note about dashboard retirement.
+- `studio/schemas/documents/page-template.ts` (MODIFIED) - Removed `generic` from lane options and locked template baseline to `website` lane.
+- `studio/schemas/objects/template-content-variant.ts` (MODIFIED) - Removed `generic` lane option for content variants.
+- `frontend/types/template.ts` (MODIFIED) - Removed `generic` from `TemplateLane` type union.
+- `frontend/lib/templates/resolve-template.ts` (MODIFIED) - Updated lane model to website/software/printing only, with legacy `generic -> website` normalization for safety.
+- `frontend/components/ui/rewrite/page-shell.tsx` (MODIFIED) - Removed `generic` lane section copy branch.
+- `frontend/components/ui/rewrite/landing-sections/final-cta-section.tsx` (MODIFIED) - Removed `generic` lane defaults/fallback and switched default CTA lane to `website`.
 
 ### Summary
-Removed the `seo-dashboard` app from the repository and cleaned root workspace/runtime integrations that depended on it, including monorepo package registration, root dev script, and frontend revalidate webhook forwarding to dashboard indexing API.
+- Eliminated `generic` as an active lane from Studio schema and frontend template contracts.
+- Established `website` as the only universal/default lane for new template-driven pages.
+- Preserved runtime safety by mapping legacy `generic` values to `website` in resolver normalization.
 
 ### Impact on SEO/Integration
-- SEO integration impact:
-  - Disables SEO Ops dashboard/API surfaces that previously handled indexing automation, AI scheduling, and dashboard-driven operations.
-  - Frontend revalidate flow now only performs local cache/path revalidation and no longer triggers external dashboard indexing webhook.
-- No direct change to page metadata rendering logic in `frontend` or Studio schema contracts.
-
-### Verification Status
-- ✅ `test -d seo-dashboard` returns `deleted`.
-- ✅ `pnpm --filter studio run typecheck` passed.
-- ✅ `pnpm --filter frontend run typecheck` passed.
-
-## 2026-04-25 — Component and Studio Artifact Cleanup (Safe Legacy Prune)
-
-### Changed Files
-- `frontend/components/archive/README.md` (DELETED) - Removed archive-only component notes after removing the dormant archive tree.
-- `frontend/components/archive/legacy-rewrite-v0/*` (DELETED) - Removed unused first-generation rewrite components that no longer have any active imports.
-- `frontend/components/hybrid/home-middle-section.tsx` (DELETED) - Removed unused homepage middle-shell variant superseded by the active generated homepage section.
-- `frontend/components/ui/jasa-cetak-buku-city-shell.tsx` (DELETED) - Removed unused rewrite city shell with no active runtime imports.
-- `studio/.gitignore` (MODIFIED) - Added `.sanity` and `dist` ignores to keep Studio runtime/build artifacts out of source control.
-- `studio/.sanity/runtime/app.js` (DELETED) - Removed tracked generated Studio runtime artifact.
-- `studio/.sanity/runtime/index.html` (DELETED) - Removed tracked generated Studio runtime artifact.
-- `studio/Starting New Development Session.md` (DELETED) - Removed tracked session transcript file from Studio source tree.
-- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated current status snapshot for safe legacy/component pruning.
-
-### Summary
-Completed a conservative cleanup pass across frontend components and Sanity Studio files. The removed files were either archive-only components with no active imports or generated/session artifacts that do not belong in the source tree. Active legacy contracts were reviewed and intentionally preserved where runtime still depends on them.
-
-### Impact on SEO/Integration
-- No direct SEO impact.
+- SEO impact:
+  - No direct ranking impact; metadata/indexing behavior remains unchanged.
+  - Content lane consistency improves template quality control for broad business websites.
 - Integration impact:
-  - No active frontend render path was changed.
-  - Active Studio/frontend legacy contracts such as `legacyPage` and `legacy-rich-content` were kept because they are still part of live route and conversion tooling flows.
-  - Studio repository hygiene improved by removing generated/session artifacts from tracked source.
+  - Studio schema and frontend resolver/types are now aligned to a cleaner 3-lane model (`website`, `software`, `printing`).
+  - Legacy documents carrying `generic` lane no longer break rendering due to normalization guard.
 
 ### Verification Status
-- ✅ `rg` confirmed the removed component files had no active imports before deletion.
-- ✅ `pnpm --filter frontend run typecheck` passed.
+- ✅ `pnpm run typecheck` passed.
+- ✅ `pnpm --filter frontend run test:templates` passed.
 - ✅ `pnpm --filter studio run typecheck` passed.
 
-## 2026-04-25 — Generator V2 Frontend Verification and Live-Dev Smoke Path
+## 2026-04-24 — Template Runtime Decoupling from Legacy Page Shape
 
 ### Changed Files
-- `frontend/sanity/queries/page.ts` (MODIFIED) - Added optional `generator` metadata fields to the page query so generated-page lineage can be inspected during QA/debug verification.
-- `frontend/sanity/lib/fetch.ts` (MODIFIED) - Added a focused generator debug fetch helper and aligned draft-perspective reads to the current `drafts` perspective name.
-- `frontend/scripts/lib/sanity-page-guards.mjs` (MODIFIED) - Added token-aware read resolution and a draft-access Sanity client for development verification flows without changing write behavior.
-- `frontend/scripts/generator/run-generator-smoke.mjs` (MODIFIED) - Strengthened the smoke path to self-bootstrap `node` with TS support, prefer live development docs through token-backed draft reads, and report the effective read mode in output.
-- `docs/seo-updates.md` (MODIFIED) - Logged this verification cycle.
-- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated generator rollout snapshot/checklist with Task 7 completion.
+- `frontend/types/rewrite-page.ts` (ADDED) - Introduced a template/runtime page context type that is independent from `legacy-pages` internals.
+- `frontend/app/(main)/[slug]/page.tsx` (MODIFIED) - Replaced `LegacyAstroPage` virtual objects with `RewritePageContext` for template route rendering.
+- `frontend/app/(main)/[...segments]/page.tsx` (MODIFIED) - Replaced `LegacyAstroPage` virtual objects and removed legacy sibling lookup for template route rendering.
+- `frontend/app/(main)/pembuatan-website/[slug]/page.tsx` (MODIFIED) - Replaced template virtual page typing with `RewritePageContext`.
+- `frontend/app/(main)/software/[slug]/page.tsx` (MODIFIED) - Replaced template virtual page typing with `RewritePageContext`.
+- `frontend/components/ui/rewrite/hero.tsx` (MODIFIED) - Updated hero page contract to use the new runtime page context type.
+- `frontend/components/ui/rewrite/related-links.tsx` (MODIFIED) - Updated related-links page contract to use the new runtime page context type.
+- `frontend/components/ui/rewrite/page-shell.tsx` (MODIFIED) - Added template-first behavior: for Sanity template routes, skip legacy override fetch, use neutral template base copy fallback, derive strategic links from template CTA links, and avoid legacy section hero hardcoding.
+- `frontend/lib/templates/resolve-template.ts` (MODIFIED) - Added `buildTemplateBaseCopy()` with lane-aware neutral fallback content for template routes.
+- `frontend/components/logo.tsx` (MODIFIED) - Replaced explicit `kotacom.id` / `Kotacom` fallback labels with neutral site identity defaults.
+- `frontend/components/schema/article-schema.tsx` (MODIFIED) - Replaced hardcoded Kotacom publisher/author defaults with neutral env-driven site fallback.
 
 ### Summary
-Completed Task 7 for `Sanity Generator V2` by aligning the frontend page query/fetch contract with generator lineage metadata and fixing the smoke verification path so a seeded development dataset is read live before any fallback fixture is used. The smoke script remains read-only and development-scoped, while generator writes continue to rely on the existing dev-only guard path.
+- Implemented a template-first runtime path so Sanity template pages no longer require `LegacyAstroPage` coupling in dynamic routes.
+- Reduced legacy-specific dependencies in rewrite rendering by disabling legacy override/sibling assumptions when route content is sourced from `templatePage`.
+- Added neutral fallback copy for template lanes (`website`, `software`, `printing`) so unresolved structured fields do not silently fall back to business-specific archive strings.
 
 ### Impact on SEO/Integration
-- No direct SEO impact.
+- SEO impact:
+  - No direct indexing/ranking logic change.
+  - Structured content fallback is now more neutral and reusable across non-Kotacom projects.
 - Integration impact:
-  - Frontend QA can now inspect generator lineage metadata from standard `page` queries/fetch helpers.
-  - Generator smoke verification now prefers real development dataset documents when credentials are present, which closes the earlier false-fallback concern after seeding.
-  - No production dataset writes or production read-target changes were introduced.
+  - Better separation between Sanity-driven template routes and legacy local content adapters.
+  - Lower risk of regressions when migrating remaining legacy routes to Sanity contracts.
 
 ### Verification Status
+- ✅ `pnpm run typecheck` passed.
+- ✅ `pnpm --filter frontend run test:templates` passed.
 - ✅ `pnpm --filter studio run typecheck` passed.
-- ✅ `pnpm --filter frontend run typecheck` passed.
-- ✅ `node frontend/scripts/generator/check-dev-write-guard.mjs` passed.
-- ✅ `node frontend/scripts/generator/export-legacy-templates.mjs` passed against the development dataset (live read-only run).
-- ✅ `node frontend/scripts/generator/run-generator-smoke.mjs` passed against live development generator docs with `readPath.auth = token-drafts` and `source = sanity-development`.
-
-## 2026-04-25 — Sanity Generator Visual Template Library Cleanup
-
-### Changed Files
-- `studio/schemas/documents/generator-template.ts` (MODIFIED) - Added Sanity-side `visualPreset`, `motionPreset`, and `styleNotes` so generator templates can be managed as reusable visual systems instead of service-specific records.
-- `studio/schemas/objects/generator-section-variant.ts` (MODIFIED) - Replaced free-form section typing with supported block-type options and added optional `colorVariant` overrides for per-section visual control in Studio.
-- `studio/lib/generator/types.ts` (MODIFIED) - Extended generator template and section contracts with visual preset and section color metadata.
-- `studio/lib/generator/variation.ts` (MODIFIED) - Simplified optional-section selection so visual-library templates render full optional stacks by default while preserving legacy angle-gated behavior when explicitly requested.
-- `studio/lib/generator/render.ts` (MODIFIED) - Added richer reusable visual output blocks (`split-row`, `timeline-row`, `cta-1`) and preset-aware color selection for generated page drafts.
-- `studio/lib/generator/__tests__/render.test.ts` (MODIFIED) - Added regression coverage for richer visual blocks, color overrides, and explicit angle-gating behavior.
-- `studio/components/generator/program-runner-pane.tsx` (MODIFIED) - Exposed visual preset, motion preset, and style notes in the Studio generator run pane for operator visibility.
-- `frontend/scripts/generator/run-generator-smoke.mjs` (MODIFIED) - Synced live smoke queries to the richer template contract including visual preset metadata.
-- `frontend/scripts/generator/seed-generator-service-starters.mjs` (MODIFIED) - Replaced the old `website/software/printing` starter seeding with a reusable multi-jasa visual template library (`editorial-grid`, `proof-showcase`, `pricing-spotlight`, `conversion-stack`) plus shared dataset cleanup/reseed logic for the development dataset.
-- `studio/schema.json` (MODIFIED) - Regenerated extracted Studio schema after the generator model updates.
-- `frontend/sanity.types.ts` (MODIFIED) - Regenerated Sanity query/schema types after Studio typegen.
-- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated generator migration status/checklist for the new visual template library milestone.
-
-### Summary
-Restructured `Sanity Generator V2` from service-specific starter families into a reusable Sanity-managed visual template library. The generator now models reusable visual direction directly in Studio, supports richer block output in deterministic rendering, and reseeds the development dataset to a cleaner multi-jasa library that can drive many services without carrying old one-off template clutter.
-
-### Impact on SEO/Integration
-- No direct SEO impact.
-- Integration impact:
-  - Studio and generator runtime contracts are now aligned around reusable visual-template metadata.
-  - Development Sanity generator docs are cleaner and no longer organized around legacy per-service starter families.
-  - Live smoke verification now resolves the new visual-library program set from the development dataset under `/layanan`.
-
-### Verification Status
-- ✅ `pnpm --filter studio run typecheck` passed.
-- ✅ `pnpm --filter frontend run typecheck` passed.
-- ✅ `pnpm dlx tsx --test studio/lib/generator/__tests__/render.test.ts` passed.
-- ✅ `node --check frontend/scripts/generator/seed-generator-service-starters.mjs` passed.
-- ✅ `node --check frontend/scripts/generator/run-generator-smoke.mjs` passed.
-- ✅ `pnpm --filter studio run typegen` passed and regenerated `studio/schema.json` plus `frontend/sanity.types.ts`.
-- ✅ `node frontend/scripts/generator/seed-generator-service-starters.mjs --write` passed against the Sanity `development` dataset using dev credentials.
-- ✅ `node frontend/scripts/generator/run-generator-smoke.mjs` passed live against the Sanity `development` dataset and now resolves `generator-program-conversion-stack-dev` with `9` successful dry-run combinations.
-- ⚠️ `pnpm --filter frontend run typegen` still fails with `PROJECT_ROOT_NOT_FOUND` because `frontend` is not a standalone Sanity project root in the current repo layout.
-
-## 2026-04-26 — Orderable Desk Schema Fix for Generator and Service Type
-
-### Changed Files
-- `studio/schemas/documents/generator-template.ts` (MODIFIED) - Added `orderRankField({ type: "generatorTemplate" })` so the Generator Template schema matches the orderable desk contract.
-- `studio/schemas/documents/generator-program.ts` (MODIFIED) - Added `orderRankField({ type: "generatorProgram" })` for the orderable Program desk list.
-- `studio/schemas/documents/generator-dataset.ts` (MODIFIED) - Added `orderRankField({ type: "generatorDataset" })` for the orderable Dataset desk list.
-- `studio/schemas/documents/service-type.ts` (MODIFIED) - Added `orderRankField({ type: "serviceType" })` because Service Types also use the orderable desk list.
-- `studio/schema.json` (MODIFIED) - Refreshed extracted Studio schema after adding the missing orderable rank fields.
-
-### Summary
-Fixed the Sanity Studio orderable-list contract for generator and service-type document schemas. These document types were already mounted through `orderableDocumentListDeskItem`, but their schemas did not yet expose the required `orderRank: string` field.
-
-### Impact on SEO/Integration
-- No direct SEO impact.
-- Integration impact:
-  - Prevents Studio runtime errors when opening orderable desk lists for Generator and Service Types.
-  - Keeps desk structure and schema contract aligned.
-
-### Verification Status
-- ✅ `pnpm --filter studio run typecheck` passed.
-- ⚠️ `pnpm --filter studio run typegen` was started to refresh extracted schema; `studio/schema.json` was regenerated, but the long-running process did not return clean completion output within this cycle.
-
-## 2026-04-26 — Sanity Block Initial Value Audit and Hardening
-
-### Changed Files
-- `studio/schemas/blocks/all-posts.ts` (MODIFIED) - Added safe wrapper-level `initialValue` for section padding and background tone.
-- `studio/schemas/blocks/carousel/carousel-1.ts` (MODIFIED) - Added top-level defaults for padding, color, size, and indicators.
-- `studio/schemas/blocks/carousel/carousel-2.ts` (MODIFIED) - Added top-level defaults for padding and color.
-- `studio/schemas/blocks/faqs.ts` (MODIFIED) - Added safe wrapper-level `initialValue` for padding and color.
-- `studio/schemas/blocks/grid/grid-post.ts` (MODIFIED) - Added neutral empty object `initialValue` so the block can be inserted cleanly before a post reference is chosen.
-- `studio/schemas/blocks/legacy/legacy-rich-content.ts` (MODIFIED) - Added valid legacy content starter values so required content fields are present on insert.
-- `studio/schemas/blocks/seo/benefits-block.ts` (MODIFIED) - Added valid starter values including array items with `_key` and required text fields.
-- `studio/schemas/blocks/seo/company-info.ts` (MODIFIED) - Added safe title/description defaults plus wrapper defaults.
-- `studio/schemas/blocks/seo/faq-block.ts` (MODIFIED) - Added top-level defaults including required `category`.
-- `studio/schemas/blocks/seo/features-package-block.ts` (MODIFIED) - Added valid starter features array plus wrapper defaults.
-- `studio/schemas/blocks/seo/pricing-block.ts` (MODIFIED) - Added top-level defaults including required `category`.
-- `studio/schemas/blocks/seo/problem-solution-block.ts` (MODIFIED) - Added valid defaults for problems and solution copy.
-- `studio/schemas/blocks/seo/service-types-block.ts` (MODIFIED) - Added valid starter service card content including `_key` and a valid link object.
-- `studio/schemas/blocks/seo/stats-hero-block.ts` (MODIFIED) - Added valid defaults for required title and CTA links.
-- `studio/schemas/blocks/seo/testimonials-block.ts` (MODIFIED) - Added wrapper defaults and category starter value.
-- `studio/schemas/blocks/seo/value-props-block.ts` (MODIFIED) - Added valid starter proposition cards with required fields.
-- `studio/schemas/blocks/shared/block-content.ts` (MODIFIED) - Added starter Portable Text paragraph so block-content fields do not insert empty.
-- `studio/schemas/blocks/shared/link.ts` (MODIFIED) - Added a valid link starter object that satisfies current validation rules.
-- `studio/schemas/blocks/shared/navigation-link-child.ts` (MODIFIED) - Added a valid submenu-link starter object that satisfies current validation rules.
-- `studio/schemas/blocks/shared/section-padding.ts` (MODIFIED) - Added default top/bottom padding values.
-- `studio/schemas/blocks/split/split-image.ts` (MODIFIED) - Added neutral empty object `initialValue` so the block inserts cleanly before an image is chosen.
-
-### Summary
-Audited the Sanity block library and filled top-level `initialValue` coverage across every block schema under `studio/schemas/blocks`. The fix was not limited to wrapper defaults: blocks with required fields or validation rules now receive valid starter payloads, including arrays with `_key` and links that already satisfy the current `isExternal`/`href` validation contract.
-
-### Impact on SEO/Integration
-- No direct SEO impact.
-- Integration impact:
-  - Block insertion in Studio is now more reliable and less likely to start from invalid partial objects.
-  - Generator and editorial flows benefit because many shared blocks now open with valid starter structures instead of empty states that immediately fail validation.
-
-### Verification Status
-- ✅ Re-audit confirmed no schema file under `studio/schemas/blocks` remains without a top-level `initialValue`.
-- ✅ `pnpm --filter studio run typecheck` passed.
-- ⚠️ A follow-up schema extract was started for `studio/schema.json`, but the Sanity CLI process did not return a clean completion line within this cycle.
-
-## 2026-04-26 — Sanity-First Global SEO Settings Pass
-
-### Changed Files
-- `studio/schemas/documents/seo-settings.ts` (MODIFIED) - Added operational SEO fields for canonical site URL, search path, AI crawler allowlist, sitemap static routes, and template-route sitemap inclusion policy.
-- `studio/schema.json` (MODIFIED) - Refreshed extracted Sanity schema after extending `seoSettings`.
-- `frontend/sanity/queries/seo-settings.ts` (MODIFIED) - Expanded the frontend SEO settings query to fetch the new global operational fields.
-- `frontend/sanity/lib/metadata.ts` (MODIFIED) - Moved canonical URL, `metadataBase`, language alternate, and fallback OG image URL resolution to prefer Sanity `seoSettings.siteUrl`.
-- `frontend/app/layout.tsx` (MODIFIED) - Replaced hardcoded Organization/WebSite/LocalBusiness JSON-LD with Sanity-driven structured data built from `settings` and `seoSettings`.
-- `frontend/app/robots.ts` (MODIFIED) - Moved sitemap URL and AI crawler rules to Sanity-first `seoSettings` values.
-- `frontend/app/sitemap.ts` (MODIFIED) - Moved base URL, static route inclusion, and template-route sitemap policy to Sanity-first `seoSettings` values.
-- `frontend/app/(main)/page.tsx` (MODIFIED) - Removed hardcoded homepage metadata fallback copy so the homepage now falls back to global Sanity SEO defaults.
-- `frontend/lib/seo-jsonld.ts` (MODIFIED) - Added `siteUrl` support to shared JSON-LD builders so page-level structured data can resolve absolute URLs from Sanity.
-- `frontend/app/(main)/blog/page.tsx` (MODIFIED) - Wired collection/breadcrumb JSON-LD to Sanity `siteUrl`.
-- `frontend/app/(main)/blog/[slug]/page.tsx` (MODIFIED) - Wired article/breadcrumb/list JSON-LD to Sanity `siteUrl`.
-- `frontend/app/(main)/blog/category/page.tsx` (MODIFIED) - Wired category collection/breadcrumb JSON-LD to Sanity `siteUrl`.
-- `frontend/app/(main)/blog/category/[slug]/page.tsx` (MODIFIED) - Wired category-detail collection/breadcrumb JSON-LD to Sanity `siteUrl`.
-- `frontend/app/(main)/products/page.tsx` (MODIFIED) - Wired collection/breadcrumb JSON-LD to Sanity `siteUrl`.
-- `frontend/app/(main)/products/[slug]/page.tsx` (MODIFIED) - Wired product/breadcrumb JSON-LD to Sanity `siteUrl`.
-- `frontend/app/(main)/services/page.tsx` (MODIFIED) - Wired collection/breadcrumb JSON-LD to Sanity `siteUrl`.
-- `frontend/app/(main)/services/[slug]/page.tsx` (MODIFIED) - Wired service/breadcrumb JSON-LD to Sanity `siteUrl`.
-- `frontend/app/(main)/projects/page.tsx` (MODIFIED) - Wired collection/breadcrumb JSON-LD to Sanity `siteUrl`.
-- `frontend/app/(main)/projects/[slug]/page.tsx` (MODIFIED) - Wired article/breadcrumb JSON-LD to Sanity `siteUrl`.
-- `frontend/components/ui/json-usaha-page.tsx` (MODIFIED) - Wired service/breadcrumb JSON-LD to Sanity `siteUrl`.
-- `frontend/components/ui/rewrite/page-shell.tsx` (MODIFIED) - Wired legacy rewrite breadcrumb/service JSON-LD to Sanity `siteUrl`.
-- `frontend/sanity.types.ts` (MODIFIED) - Regenerated query/schema types after the SEO settings expansion.
-- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated migration status snapshot for the Sanity-first SEO pass.
-
-### Summary
-Shifted the remaining global SEO control surface away from hardcoded frontend defaults and into Sanity `seoSettings`. Canonical site URL, WebSite search path, AI crawler allowlist, sitemap static routes, template-route sitemap policy, homepage metadata fallback, and root structured data now resolve from Sanity-first data, while page-level JSON-LD builders and their active server-page callsites now inherit the Sanity-managed site URL for absolute schema links.
-
-### Impact on SEO/Integration
-- Direct SEO impact:
-  - Canonical URL generation, `metadataBase`, robots sitemap URL, and root/page structured-data URLs now use the CMS-managed site URL instead of code-owned literals.
-  - Global crawler allow rules and static sitemap route policy are now editable in Sanity.
-  - Homepage metadata fallback is now aligned with global `seoSettings` defaults instead of a separate code-owned copy block.
-- Integration impact:
-  - Studio schema, frontend GROQ query, metadata helpers, robots, sitemap, root layout JSON-LD, and active JSON-LD callsites were updated together to keep the CMS contract synchronized.
-  - Structural wildcard redirects remain intentionally code-owned in `frontend/next.config.mjs`; this pass does not change that repo rule.
-
-### Verification Status
-- ✅ `pnpm --filter frontend run typecheck`
-- ✅ `pnpm --filter studio run typecheck`
-- ✅ `pnpm --filter studio run typegen`
-- ✅ `git diff --check`
-
-## 2026-04-26 — Full Sanity Runtime Follow-up
-
-### Changed Files
-- `frontend/lib/llms-text.ts` (NEW) - Added a Sanity-driven plain-text generator for machine-readable `llms` output.
-- `frontend/app/llms.txt/route.ts` (NEW) - Added a dynamic `llms.txt` route generated from live Sanity content and settings.
-- `frontend/app/llms-full.txt/route.ts` (NEW) - Added a dynamic `llms-full.txt` route generated from live Sanity content and settings.
-- `frontend/public/llms.txt` (DELETED) - Removed the old static `llms.txt` file with hardcoded brand/domain content.
-- `frontend/public/llms-full.txt` (DELETED) - Removed the old static `llms-full.txt` file with hardcoded brand/domain content.
-- `frontend/components/blocks/post-hero.tsx` (MODIFIED) - Moved blog share URLs to the Sanity-managed site URL instead of env fallback.
-- `frontend/app/(main)/blog/[slug]/page.tsx` (MODIFIED) - Passed the Sanity-managed site URL into the post share surface.
-- `frontend/components/ui/rewrite/hero-primary-cta.tsx` (MODIFIED) - Removed env dependency from the client-side WhatsApp CTA URL builder and now derive the current page from browser origin/runtime only.
-- `frontend/app/layout.tsx` (MODIFIED) - Removed env fallback from root JSON-LD site URL normalization so the runtime path is Sanity-first.
-- `frontend/app/robots.ts` (MODIFIED) - Removed env fallback from robots sitemap URL generation.
-- `frontend/app/sitemap.ts` (MODIFIED) - Removed env fallback from sitemap base URL generation.
-- `frontend/sanity/lib/metadata.ts` (MODIFIED) - Removed env fallback from canonical-site resolution and OG fallback image URL composition.
-- `frontend/lib/seo-jsonld.ts` (MODIFIED) - Removed env fallback from shared JSON-LD URL normalization.
-- `frontend/components/logo.tsx` (MODIFIED) - Removed leftover `kotacom.id` fallback labels in the logo component.
-- `frontend/components/schema/article-schema.tsx` (MODIFIED) - Removed the hardcoded Kotacom publisher/logo default from the legacy schema component.
-
-### Summary
-Finished the active runtime cleanup so the remaining machine-readable SEO surfaces no longer depend on hardcoded Kotacom domain literals or env-based site URL fallbacks. `llms.txt` and `llms-full.txt` are now generated from Sanity, blog share URLs follow the Sanity-managed site URL, the rewrite WhatsApp CTA no longer depends on `NEXT_PUBLIC_SITE_URL`, and the shared metadata/JSON-LD helpers now operate Sanity-first with relative-path fallback instead of domain literals.
-
-### Impact on SEO/Integration
-- Direct SEO impact:
-  - `llms.txt` and `llms-full.txt` now follow the live Sanity content graph instead of stale static text files.
-  - Blog share URLs and machine-readable schema helpers no longer carry legacy hardcoded domain assumptions.
-  - Runtime SEO URL helpers now prefer Sanity-managed URL state and fall back to relative paths instead of env-owned absolute domains.
-- Integration impact:
-  - The Sanity content graph now drives another outward-facing machine-readable surface (`/llms.txt`, `/llms-full.txt`).
-  - Remaining hardcoded domain traces in active frontend runtime paths were removed; structural redirects remain intentionally code-owned.
-
-### Verification Status
-- ✅ `pnpm --filter frontend run typecheck`
-- ✅ `pnpm --filter studio run typecheck`
-- ✅ `git diff --check`
-
-## 2026-04-26 — Sanity-Managed Reusable Section Route Scope and Block Coverage
-
-### Changed Files
-- `studio/schemas/documents/reusable-section.ts` (MODIFIED) - Added route-scope controls (`all` vs selected route keys), route-key targeting, and expanded reusable-section block coverage to include the richer SEO and content block set already supported on standard pages.
-- `frontend/sanity/queries/reusable-section.ts` (MODIFIED) - Synced reusable-section GROQ projection with route-scope fields and the expanded reusable block library.
-- `frontend/sanity/lib/fetch.ts` (MODIFIED) - Extended reusable-section fetch typing with route-scope metadata for frontend filtering.
-- `frontend/components/reusable-slot-sections.tsx` (MODIFIED) - Added route-aware filtering so reusable sections can be controlled from Sanity per route key instead of only per slot.
-- `frontend/app/(main)/layout.tsx` (MODIFIED) - Wired route-aware reusable-slot rendering into the main layout using request-provided route keys.
-- `frontend/components/hybrid/page-hybrid-shell.tsx` (MODIFIED) - Passed the hybrid slug through the reusable-slot renderer so hybrid pages respect Sanity route targeting consistently.
-- `frontend/middleware.ts` (NEW) - Added lightweight request middleware that normalizes the current route into a reusable `x-route-key` header for server-side layout filtering.
-- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated migration tracking to reflect the Sanity-managed route-scope expansion for reusable sections.
-
-### Summary
-Closed the remaining setup gap for reusable sections by moving normal route targeting into Sanity. Editors can now configure a reusable section to apply globally or only to selected route keys without code changes. At the same time, reusable sections now support a broader block library closer to the main `page.blocks` surface, reducing the need to patch code whenever a reusable section needs richer structured content.
-
-### Impact on SEO/Integration
-- No direct SEO impact.
-- Integration impact:
-  - Reusable-section behavior is more fully Sanity-managed across placement, route targeting, and supported block composition.
-  - Studio schema, GROQ query, frontend fetch types, middleware request context, and frontend rendering are now synchronized for the reusable-section contract.
-
-### Verification Status
-- ✅ `pnpm --filter frontend run typecheck`
-- ✅ `pnpm --filter studio run typecheck`
-- ✅ `git diff --check`
-
-## 2026-04-26 — Reusable Slot Expansion for Hybrid Hero and Final CTA Zones
-
-### Changed Files
-- `studio/schemas/documents/reusable-section.ts` (MODIFIED) - Added `afterHero` and `beforeFinalCta` placement options for reusable sections.
-- `frontend/sanity/lib/fetch.ts` (MODIFIED) - Extended the reusable placement slot type to match the new Sanity schema options.
-- `frontend/components/hybrid/page-hybrid-shell.tsx` (MODIFIED) - Rendered reusable sections around the code-owned middle shell so hybrid pages can inject reusable content after the top hero zone and before the final lower CTA/content zone.
-- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated migration tracking to reflect the new reusable placement surface for hybrid main pages.
-
-### Summary
-Expanded reusable placement beyond global layout slots into the hybrid page shell itself. Reusable sections can now be inserted after the upper hero-oriented block zone and before the lower final-CTA/content zone on code-owned hybrid pages. This makes reusable templates more useful for the homepage and similar landing routes without forcing every route to adopt a full page-builder structure.
-
-### Impact on SEO/Integration
-- No direct SEO impact.
-- Integration impact:
-  - Reusable sections can now support hybrid landing-page composition more naturally.
-  - Studio placement options, frontend fetch typing, and hybrid shell rendering are aligned for the new slot positions.
-
-### Verification Status
-- ✅ `pnpm --filter frontend run typecheck`
-- ✅ `pnpm --filter studio run typecheck`
-- ✅ `git diff --check`
-
-## 2026-04-26 — Finished Generator Sample for Development Dataset
-
-### Changed Files
-- `frontend/scripts/generator/seed-generator-finished-sample.mjs` (NEW) - Added a dev-only generator sample seeding script that creates one ready-to-run template, dataset, and program, then can generate matched sample draft pages.
-- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated migration status snapshot to record the finished generator sample workflow.
-
-### Summary
-Added a finished generator sample workflow for the development dataset. The new script seeds a complete `generatorTemplate`, `generatorDataset`, and `generatorProgram` under a safe dev-only route base (`/sample-generator`), then generates a small set of matched draft pages instead of a noisy cross-product batch. This gives the Studio a concrete sample that is useful for evaluation, not just starter scaffolding.
-
-### Impact on SEO/Integration
-- No direct SEO impact on production.
-- Integration impact:
-  - Improves the generator workflow by providing a clean end-to-end sample in the development dataset.
-  - Keeps the sample isolated from production and from live primary routes by using a dedicated dev route base and deterministic draft page ids.
-
-### Verification Status
-- ✅ `node --check frontend/scripts/generator/seed-generator-finished-sample.mjs`
-- ✅ `node frontend/scripts/generator/seed-generator-finished-sample.mjs`
-- ✅ `node frontend/scripts/generator/seed-generator-finished-sample.mjs --write --generate-pages`
-- ✅ `pnpm --filter frontend run typecheck`
-- ✅ `git diff --check`
-
-## 2026-04-26 — Generator Operator Workflow Upgrade
-
-### Changed Files
-- `studio/components/generator/program-runner-pane.tsx` (MODIFIED) - Upgraded the Generator Run pane so operators can select a keyword set and row, run a selected dry run, and generate only the selected draft instead of being locked to the first dataset items.
-- `studio/components/generator/preview-card.tsx` (MODIFIED) - Updated preview copy to reflect selected inputs instead of implicit first-item preview behavior.
-
-### Summary
-Upgraded the Studio generator workflow from a fixed first-row preview into a more product-like operator flow. Editors can now explicitly choose the keyword set and row that drive the preview, run dry-run validation for only that selection, and generate only the selected draft before using broader batch actions.
-
-### Impact on SEO/Integration
-- No direct SEO impact on production.
-- Integration impact:
-  - Makes Generator V2 more usable as an editorial tool instead of a developer-only proof of concept.
-  - Reduces accidental batch generation because operators can validate one combination first before touching the full dataset.
-
-### Verification Status
-- ✅ `pnpm --filter studio run typecheck`
-- ✅ `git diff --check`
-
-## 2026-04-26 — Generator QA Validation in Studio
-
-### Changed Files
-- `studio/components/generator/program-runner-pane.tsx` (MODIFIED) - Integrated generator QA into the Studio run pane so selected previews are assessed before write, blocked drafts cannot be generated, and batch dry runs report QA-blocked combinations.
-- `studio/components/generator/qa-summary.tsx` (NEW) - Added a dedicated QA summary card for selected preview drafts with pending, warning, blocked, and ready states.
-- `studio/lib/generator/qa.ts` (NEW) - Added deterministic QA rules for generated drafts covering duplicate lineage/slug checks, SEO title/description ranges, slug length, required block presence, and content token coverage.
-- `studio/lib/generator/types.ts` (MODIFIED) - Added shared QA result and issue types for the generator workflow.
-- `studio/lib/generator/__tests__/qa.test.ts` (NEW) - Added focused QA tests for healthy drafts and duplicate blocking behavior.
-- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated generator migration tracking to record the new QA gate in the Studio workflow.
-
-### Summary
-Added a real QA gate to Generator V2 in Studio. Previewed drafts are now assessed before write, the selected-draft action is disabled when QA returns a blocked result, and batch dry runs skip combinations that fail deterministic QA instead of quietly treating them as writable candidates. This moves the generator closer to a production workflow instead of a simple draft writer.
-
-### Impact on SEO/Integration
-- No direct SEO impact on production.
-- Integration impact:
-  - Studio generator runs now enforce deterministic pre-write quality checks instead of relying only on duplicate detection.
-  - QA state is now part of the generator contract shared across preview, dry run, and write flows.
-
-### Verification Status
-- ✅ `pnpm --filter studio run typecheck`
-- ✅ `pnpm dlx tsx --test studio/lib/generator/__tests__/qa.test.ts`
-- ✅ `git diff --check`
-
-## 2026-04-26 — Generator UX and Visual Template Simplification
-
-### Changed Files
-- `studio/components/generator/program-runner-pane.tsx` (MODIFIED) - Simplified the generator pane by making the selected combination clearer, exposing total keyword-row combinations, and reducing operator guesswork before preview or generate.
-- `studio/components/generator/preview-card.tsx` (MODIFIED) - Reworked preview input display into a more editorial-friendly summary with keyword, angle, service, city, offer, and combination counts instead of a thin technical list.
-- `studio/lib/generator/render.ts` (MODIFIED) - Improved deterministic output quality by trimming meta descriptions to safer lengths, varying CTA labels by offer/preset, and making split/timeline/service blocks less generic.
-- `studio/schemas/documents/generator-template.ts` (MODIFIED) - Added reusable visual preset options for `immersive-story` and `trust-matrix`.
-- `frontend/scripts/generator/seed-generator-service-starters.mjs` (MODIFIED) - Expanded the reusable visual template library with additional multi-jasa starter templates and updated descriptions so the development dataset offers a broader set of visual directions.
-
-### Summary
-Simplified the generator in the direction of a lighter product tool instead of a heavy governance system. The Studio pane now surfaces the selected combination more clearly, preview inputs are easier to read, and the deterministic renderer produces cleaner metadata and more contextual CTA/copy defaults. The reusable visual starter library also now covers more visual directions without tying templates to one business category.
-
-### Impact on SEO/Integration
-- Indirect SEO impact:
-  - Deterministic meta descriptions now stay within a safer range more often, reducing avoidable QA warnings on generated pages.
-- Integration impact:
-  - Generator Studio is easier for editors to operate without adding more workflow layers.
-  - Development starter templates now better represent the intended reusable visual-library direction across many services.
-
-### Verification Status
-- ✅ `pnpm --filter studio run typecheck`
-- ✅ `pnpm --filter frontend run typecheck`
-- ✅ `pnpm dlx tsx --test studio/lib/generator/__tests__/qa.test.ts`
-- ✅ `node --check frontend/scripts/generator/seed-generator-service-starters.mjs`
-- ✅ `node frontend/scripts/generator/seed-generator-service-starters.mjs --write`
-- ✅ `node frontend/scripts/generator/run-generator-smoke.mjs`
-- ✅ `git diff --check`
-
-## 2026-04-26 — Reusable Section Placement Expansion and Dark Mode Fix
-
-### Changed Files
-- `studio/schemas/documents/reusable-section.ts` (MODIFIED) - Expanded reusable section placement options with `beforeMainContent` and `afterMainContent` so reusable content is not limited to header/footer boundaries.
-- `frontend/sanity/lib/fetch.ts` (MODIFIED) - Synced the frontend reusable placement slot contract with the new Sanity placement options.
-- `frontend/app/(main)/layout.tsx` (MODIFIED) - Rendered reusable sections inside the main shell before and after page content in addition to the existing global header/footer slots.
-- `frontend/components/ui/section-container.tsx` (MODIFIED) - Replaced dynamic Tailwind background classes with static color-variant mapping so reusable sections inherit working light/dark theme styles reliably.
-- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated the migration tracker with the reusable placement expansion and dark-mode support hardening.
-
-### Summary
-Expanded reusable sections beyond the previous global shell-only placement model by adding two additional main-content slots. In parallel, fixed the real dark mode regression source in the shared `SectionContainer`: background colors were being generated from dynamic `bg-${color}` classes, which made Tailwind output unreliable for dark-mode variants. The container now uses an explicit static class map for each allowed color variant.
-
-### Impact on SEO/Integration
-- No direct SEO impact.
-- Integration impact:
-  - Reusable section placement is now broader but still controlled and layout-safe.
-  - Studio schema, frontend reusable-slot typing, and frontend layout rendering are now aligned again.
-  - Dark mode support for reusable section blocks is more reliable because shared section styling no longer depends on dynamic Tailwind class generation.
-
-### Verification Status
-- ✅ `pnpm --filter frontend run typecheck`
-- ✅ `pnpm --filter studio run typecheck`
-- ✅ `git diff --check`
-
-## 2026-04-26 — Generator Visual Library Expansion with New Block Types
-
-### Changed Files
-- `studio/schemas/documents/generator-template.ts` (MODIFIED) - Added additional reusable visual preset options: `authority-canvas`, `offer-funnel`, and `process-mosaic`.
-- `studio/schemas/objects/generator-section-variant.ts` (MODIFIED) - Expanded supported generator section types to include `stats-hero-block`, `benefits-block`, `features-package-block`, and `company-info`.
-- `studio/lib/generator/render.ts` (MODIFIED) - Added deterministic rendering support for the new block-backed section types and extended preset-specific CTA/color behavior.
-- `frontend/scripts/generator/seed-generator-service-starters.mjs` (MODIFIED) - Expanded the visual template library to nine reusable multi-jasa templates and started using the richer block mix inside the new presets.
-- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated migration tracking to reflect the larger visual library and richer generator block repertoire.
-
-### Summary
-Expanded the generator from “more presets” into “more visual language.” The visual library now includes three additional reusable presets and the generator can now emit richer existing repo blocks such as stats hero, benefits, feature package, and company info blocks. This makes template differences more visible at the page structure level instead of only changing section order or color rhythm.
-
-### Impact on SEO/Integration
-- Indirect SEO impact:
-  - Richer block combinations help generated pages avoid feeling structurally repetitive while still using the same controlled Sanity page schema.
-- Integration impact:
-  - Generator V2 now reuses more of the existing frontend/studio block system instead of inventing separate one-off visual paths.
-  - Development visual-library coverage increased from 6 presets to 9 presets under the same shared dataset and route base.
-
-### Verification Status
-- ✅ `pnpm --filter studio run typecheck`
-- ✅ `pnpm --filter frontend run typecheck`
-- ✅ `pnpm dlx tsx --test studio/lib/generator/__tests__/qa.test.ts`
-- ✅ `node --check frontend/scripts/generator/seed-generator-service-starters.mjs`
-- ✅ `node frontend/scripts/generator/seed-generator-service-starters.mjs --write`
-- ✅ `node frontend/scripts/generator/run-generator-smoke.mjs`
-- ✅ `git diff --check`

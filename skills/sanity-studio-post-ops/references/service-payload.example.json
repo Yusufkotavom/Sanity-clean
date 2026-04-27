@@ -1,0 +1,45 @@
+{
+  "title": "Jasa Maintenance Website Bulanan",
+  "slug": "jasa-maintenance-website-bulanan",
+  "excerpt": "Paket maintenance website untuk update, backup, dan monitoring rutin.",
+  "body": [
+    {
+      "_type": "block",
+      "style": "normal",
+      "children": [
+        {
+          "_type": "span",
+          "text": "Layanan ini cocok untuk bisnis yang ingin website selalu stabil."
+        }
+      ],
+      "markDefs": []
+    }
+  ],
+  "deliverables": [
+    "Update plugin",
+    "Backup mingguan",
+    "Monitoring uptime"
+  ],
+  "duration": "1 bulan",
+  "startingPrice": 1500000,
+  "currency": "IDR",
+  "featured": true,
+  "categories": [
+    {
+      "_type": "reference",
+      "_ref": "category-website",
+      "_weak": true
+    }
+  ],
+  "cta": {
+    "_type": "link",
+    "label": "Konsultasi Sekarang",
+    "isExternal": true,
+    "href": "https://www.kotacom.id/contact"
+  },
+  "meta": {
+    "title": "Jasa Maintenance Website Bulanan",
+    "description": "Layanan maintenance website untuk keamanan, backup, dan performa.",
+    "noindex": false
+  }
+}

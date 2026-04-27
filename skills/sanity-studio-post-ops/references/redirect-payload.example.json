@@ -1,0 +1,6 @@
+{
+  "source": "/promo-lama-qa",
+  "destination": "/blog",
+  "permanent": true,
+  "isEnabled": true
+}

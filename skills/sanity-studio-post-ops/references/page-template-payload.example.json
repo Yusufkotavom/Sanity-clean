@@ -1,0 +1,13 @@
+{
+  "title": "Template Website Umum QA",
+  "slug": "template-website-umum-qa",
+  "lane": "website",
+  "trustMode": "aggressive",
+  "variant": "service-hero",
+  "shellId": "website-shell",
+  "structured": {
+    "_type": "templateRewriteCopy",
+    "headline": "Template Website untuk Bisnis",
+    "subheadline": "Bisa dipakai lintas niche dengan penyesuaian ringan."
+  }
+}

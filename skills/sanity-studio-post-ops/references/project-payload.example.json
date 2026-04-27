@@ -1,0 +1,25 @@
+{
+  "title": "Implementasi POS Toko Retail X",
+  "slug": "implementasi-pos-toko-retail-x",
+  "excerpt": "Project implementasi sistem POS untuk optimasi transaksi dan stok.",
+  "clientName": "Retail X",
+  "industry": "Retail",
+  "completionYear": 2026,
+  "projectType": "software",
+  "projectUrl": "https://example.com/case-study-pos",
+  "previewUrl": "https://example.com/demo-pos",
+  "repositoryUrl": "https://github.com/example/pos-case",
+  "featured": true,
+  "categories": [
+    {
+      "_type": "reference",
+      "_ref": "category-software",
+      "_weak": true
+    }
+  ],
+  "meta": {
+    "title": "Implementasi POS Toko Retail X",
+    "description": "Studi kasus implementasi POS untuk efisiensi operasional retail.",
+    "noindex": false
+  }
+}
