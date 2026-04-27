@@ -6,6 +6,7 @@ import { SEO_SETTINGS_QUERY } from "@/sanity/queries/seo-settings";
 import { THEME_SETTINGS_QUERY } from "@/sanity/queries/theme-settings";
 import { REUSABLE_SECTIONS_QUERY } from "@/sanity/queries/reusable-section";
 import { LEGACY_PAGE_OVERRIDE_QUERY } from "@/sanity/queries/legacy-page";
+import { BLOCKS_SHOWCASE_QUERY } from "@/sanity/queries/blocks-showcase";
 import {
   TEMPLATE_PAGE_BY_ROUTE_QUERY,
   TEMPLATE_PAGE_BY_PATTERN_QUERY,
@@ -96,6 +97,20 @@ export type ReusableSectionItem = {
   routeMode?: "all" | "selected";
   routeSlugs?: string[];
   blocks?: PageBlock[];
+};
+
+type BlocksShowcaseSource = {
+  _id: string;
+  _type: string;
+  title?: string | null;
+  slug?: string | null;
+  blocks?: PageBlock[] | null;
+};
+
+export type BlocksShowcaseData = {
+  blocks: PageBlock[];
+  blockTypes: string[];
+  sourceCount: number;
 };
 
 const fetchPublished = async <T>({
@@ -295,6 +310,32 @@ export const fetchSanityPages = async (): Promise<any[]> => {
   });
 
   return data || [];
+};
+
+export const fetchSanityBlocksShowcase = async (): Promise<BlocksShowcaseData> => {
+  const sources = await fetchPublished<BlocksShowcaseSource[]>({
+    query: BLOCKS_SHOWCASE_QUERY,
+  });
+
+  const seen = new Set<string>();
+  const blocks: PageBlock[] = [];
+
+  for (const source of sources || []) {
+    for (const block of source.blocks || []) {
+      if (!block?._type || seen.has(block._type)) continue;
+      seen.add(block._type);
+      blocks.push({
+        ...(block as any),
+        _key: `showcase-${block._type}-${blocks.length}`,
+      } as PageBlock);
+    }
+  }
+
+  return {
+    blocks,
+    blockTypes: Array.from(seen),
+    sourceCount: (sources || []).length,
+  };
 };
 
 export const fetchSanityPosts = async (): Promise<POSTS_QUERY_RESULT> => {

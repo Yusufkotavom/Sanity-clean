@@ -44,6 +44,22 @@ Tidak disupport saat ini:
 
 - `tag` (schema `tag` tidak ada di Studio saat ini)
 
+### Routing Intent -> Type (Wajib)
+
+- Blog/article/tutorial -> `post`
+- Service/layanan jual -> `service`
+- Portfolio/case study -> `project`
+- Product/paket produk -> `product`
+- Static company page (home/about/contact/privacy/terms) -> `page`
+- Category taxonomy -> `category`
+- Template generator -> `pageTemplate`
+- Redirect mapping -> `redirect`
+
+Rule penting:
+
+- `service` dan `project` tidak boleh diturunkan menjadi `page` hanya karena butuh landing slug.
+- Jika butuh halaman shell statis, tetap simpan entity inti di type domain-nya (`service`/`project`) agar query listing/detail tetap konsisten.
+
 ## 3. Field Map Lengkap per Type
 
 ### 3.1 `post` (`studio/schemas/documents/post.ts`)

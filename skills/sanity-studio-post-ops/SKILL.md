@@ -22,6 +22,25 @@ Skill ini dipakai untuk komunikasi operasional dengan Sanity Studio pada repo in
 - User minta semua field schema harus bisa diakomodasi (tanpa mapping sempit).
 - User minta SOP write Sanity yang aman dan konsisten.
 
+## Routing Wajib (Intent -> Type)
+
+Gunakan pemetaan ini secara ketat agar konten tidak salah type.
+
+- Artikel, berita, insight, tutorial blog -> `post`
+- Layanan/jasa yang dijual (mis. jasa pembuatan software) -> `service`
+- Portfolio/case study/project showcase -> `project`
+- Produk/paket produk -> `product`
+- Halaman statis company profile (home, about, contact, privacy, terms) -> `page`
+- Taxonomy kategori -> `category`
+- Template generator/legacy template doc -> `pageTemplate`
+- Redirect URL -> `redirect`
+
+Aturan tegas:
+
+- Jangan simpan layanan utama ke `page` jika intent-nya layanan jual.
+- Jangan simpan portfolio ke `page` jika intent-nya showcase project/case study.
+- Jika ada halaman marketing yang butuh listing service/project, tetap buat dokumen inti di `service/project`; `page` hanya untuk shell statisnya.
+
 ## Sumber Kebenaran Contract
 
 - Studio schemas:
