@@ -237,6 +237,8 @@ Untuk script multi-type (`create-content-from-json.mjs`):
 - Create mode: `--mode=create` (fail jika slug sudah ada)
 - Upsert mode: `--mode=upsert`
 - Draft write: `--draft`
+- Read single check: `--read --slug=...` / `--read --source=...` / `--read --doc-id=...`
+- Read listing: `--read --list --limit=... --offset=... --order=...`
 
 ## 8. Referensi Payload per Type
 
@@ -276,3 +278,14 @@ Verifikasi dijalankan dengan env aktif di workspace ini pada tanggal `2026-04-27
    - semua draft ditemukan
    - `missingFromDoc` kosong pada semua type
    - artinya key payload pada contoh per-type seluruhnya masuk ke dokumen.
+
+## 11. Read/Listing Command (Untuk Konfirmasi)
+
+- Read by slug:
+  - `pnpm --filter frontend run sanity:content:create -- --type=post --read --slug=<slug> --perspective=raw`
+- Read by source (redirect):
+  - `pnpm --filter frontend run sanity:content:create -- --type=redirect --read --source=/path --perspective=raw`
+- Read by doc id:
+  - `pnpm --filter frontend run sanity:content:create -- --type=page --read --doc-id=<id> --perspective=raw`
+- Listing:
+  - `pnpm --filter frontend run sanity:content:create -- --type=post --read --list --limit=20 --offset=0 --order=updated-desc`

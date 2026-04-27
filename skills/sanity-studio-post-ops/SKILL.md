@@ -82,6 +82,15 @@ pnpm --filter frontend run sanity:content:create -- --type=service --input=./pay
 pnpm --filter frontend run sanity:content:create -- --type=product --input=./payload.json --draft --write
 ```
 
+Read/check:
+
+```bash
+pnpm --filter frontend run sanity:content:create -- --type=post --read --slug=<slug> --perspective=raw
+pnpm --filter frontend run sanity:content:create -- --type=redirect --read --source=/path --perspective=raw
+pnpm --filter frontend run sanity:content:create -- --type=page --read --doc-id=<id> --perspective=raw
+pnpm --filter frontend run sanity:content:create -- --type=post --read --list --limit=20 --offset=0 --order=updated-desc
+```
+
 ## Akomodasi Semua Field
 
 `frontend/scripts/create-content-from-json.mjs` mengakomodasi semua field payload dengan pendekatan pass-through:

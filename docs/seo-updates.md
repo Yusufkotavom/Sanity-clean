@@ -4,6 +4,30 @@ This document tracks all SEO-related changes made to the repository.
 
 ---
 
+## 2026-04-27 — Add Read/Listing Mode to Canonical Sanity Automation Script
+
+### Changed Files
+- `frontend/scripts/create-content-from-json.mjs` (MODIFIED) - Added read-only mode (`--read`) with lookup support by `slug`, `source` (redirect), and `_id` (`--doc-id`), plus listing support (`--read --list`) with pagination/order options.
+- `docs/sanity-post-types-map.md` (MODIFIED) - Added read/listing command documentation.
+- `skills/sanity-studio-post-ops/SKILL.md` (MODIFIED) - Added read/check usage examples for ops confirmation workflows.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated status snapshot with read/list support completion.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+Extended the same canonical script (`sanity:content:create`) to support operational read/check workflows so teams can verify existence and inspect records without mutating data.
+
+### Impact on SEO/Integration
+- Integration impact: improves operator confidence and auditability by enabling non-write verification on the same toolchain.
+- `No direct SEO impact`
+
+### Verification Status
+- ✅ `node --check frontend/scripts/create-content-from-json.mjs` passed.
+- ✅ `pnpm --filter frontend run sanity:content:create -- --type=post --read --list --limit=3` passed.
+- ✅ `pnpm --filter frontend run sanity:content:create -- --type=redirect --read --list --limit=3 --perspective=raw` passed.
+- ✅ `pnpm --filter frontend run sanity:content:create -- --type=post --read --slug=panduan-memilih-software-pos-untuk-umkm --perspective=raw` passed.
+
+---
+
 ## 2026-04-27 — Extend Canonical Sanity Automation Support (`category`, `pageTemplate`, `redirect`)
 
 ### Changed Files
