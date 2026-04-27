@@ -30,10 +30,12 @@ Migrate legacy Astro source into current Next.js + Sanity stack with:
 
 ## Current Status Snapshot (Already Done)
 
+- [x] Frontend performance hotfix shipped for public pages: removed wildcard `lucide-react`/`simple-icons` imports from the Sanity icon renderer path (eliminating a multi-megabyte client chunk source), and lowered non-critical header logo eager cost (`priority` default off, quality reduced) with successful production build verification.
 - [x] Sanity post-like type mapping documentation has been published (`docs/sanity-post-types-map.md`) and a repo-local automation skill for Sanity operations has been added (`skills/sanity-studio-post-ops`), including JSON-driven create/upsert scripts for `post`, `service`, `product`, `project`, and `page`.
 - [x] Env-backed smoke verification completed for post-like automation scripts: dry-run + draft write succeeded for `post/service/product/project/page`, and raw-perspective checks confirmed payload keys are persisted on QA draft documents.
 - [x] Sanity automation support has been expanded (without widening scope) to include `category`, `pageTemplate`, and `redirect` on the same canonical CLI path (`sanity:content:create`), and env-backed draft verification has passed for all three new types.
 - [x] Canonical Sanity CLI now also supports read/check operations (`--read`) including single lookup (`slug/source/doc-id`) and listing mode (`--read --list`) for operational confirmation without write.
+- [x] Sanity content automation routing is now explicitly documented by intent (`service -> service`, `portfolio -> project`, etc.) to prevent future misclassification into `page` docs.
 - [x] Local runtime fallback sources have been fully disabled in frontend (`legacy-pages/astro-static`, `local-content/json-usaha`, `local-content/astro-catalog`, and `jasa-cetak-buku-kota`), and explicit local fallback hooks were removed from `/services/[slug]`, `/services`, and `sitemap.xml` generation.
 - [x] Dependabot automation has been disabled by removing `.github/dependabot.yml`, so dependency/GitHub Actions update PRs are no longer auto-opened by Dependabot.
 - [x] **GSC MIGRATION 100% DONE:** All Top 300 manual curations + Top 1000 auto-redirects fully synced, seeded, and mapped via Sanity and Next.js wildcards.

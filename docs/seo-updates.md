@@ -4,6 +4,70 @@ This document tracks all SEO-related changes made to the repository.
 
 ---
 
+## 2026-04-27 — Frontend Performance Patch (Icon Bundle + Logo Priority)
+
+### Changed Files
+- `frontend/components/icons/sanity-icon.tsx` (MODIFIED) - Removed client-side wildcard icon library imports (`lucide-react`, `simple-icons`) and kept rendering path focused on stored SVG payload/legacy map to prevent massive bundle inclusion.
+- `frontend/components/logo.tsx` (MODIFIED) - Changed logo image defaults to `priority=false` and reduced logo quality from `100` to `85` to lower non-critical eager image cost in global header.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+Applied a focused frontend performance optimization to remove the largest client-bundle source (wildcard icon imports from the Sanity icon renderer) and reduce unnecessary eager image pressure from global logo loading behavior.
+
+### Impact on SEO/Integration
+- SEO impact: indirect positive impact through faster JS delivery and improved Core Web Vitals potential (especially mobile performance scoring).
+- Integration impact: Sanity `uiIcon` contract remains compatible (`svg` is still rendered as primary source); legacy icon string mapping remains intact.
+
+### Verification Status
+- ✅ `pnpm --filter frontend run build` passed.
+- ✅ Bundle verification after patch:
+  - Previous largest client chunk observed before patch: `~5.25 MB` raw (`~2.16 MB` gzip).
+  - Current largest client chunk after patch: `~398 KB` raw (`~120 KB` gzip).
+
+---
+
+## 2026-04-27 — Add Sanity Blocks Showcase Page
+
+### Changed Files
+- `frontend/sanity/queries/blocks-showcase.ts` (ADDED) - Added GROQ query to collect block arrays from public `page/post/service/product/project` documents.
+- `frontend/sanity/lib/fetch.ts` (MODIFIED) - Added `fetchSanityBlocksShowcase()` helper to flatten and deduplicate block samples by `_type`.
+- `frontend/app/(main)/sanity-blocks/page.tsx` (ADDED) - Added a single frontend page that renders all detected Sanity block types using existing `Blocks` renderer.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+Implemented one dedicated page (`/sanity-blocks`) that aggregates Sanity content blocks from existing public content documents and renders one sample per block type in a single place.
+
+### Impact on SEO/Integration
+- Integration impact: improves operational validation of block rendering coverage from live Sanity content.
+- `No direct SEO impact`
+
+### Verification Status
+- ✅ `pnpm --filter frontend run typecheck` passed.
+- ✅ Manual code review completed for query/fetch/route wiring.
+
+---
+
+## 2026-04-27 — Enforce Sanity Content Type Routing Rules in Skill/Docs
+
+### Changed Files
+- `skills/sanity-studio-post-ops/SKILL.md` (MODIFIED) - Added strict intent-to-type routing rules so agent workflows map requests to the correct Sanity document type.
+- `docs/sanity-post-types-map.md` (MODIFIED) - Added routing matrix and anti-misclassification rules (`service`/`project` should not be downgraded to `page`).
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated status snapshot with routing rule completion.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+Defined explicit routing guidance for Sanity content automation so specific request intents always map to the right document type (for example, service requests to `service` and portfolio requests to `project`).
+
+### Impact on SEO/Integration
+- Integration impact: reduces schema/query drift caused by wrong content type placement.
+- SEO impact: indirect positive impact by keeping listing/detail routes aligned with intended content models.
+
+### Verification Status
+- ✅ Manual verification completed: skill + docs now include clear, enforceable intent routing rules.
+- ✅ No runtime script change required for this update.
+
+---
+
 ## 2026-04-27 — Add Read/Listing Mode to Canonical Sanity Automation Script
 
 ### Changed Files

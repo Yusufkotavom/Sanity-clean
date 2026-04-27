@@ -22,7 +22,7 @@ export default function Logo({
   settings,
   className,
   imageClassName,
-  priority = true,
+  priority = false,
 }: {
   settings: SETTINGS_QUERY_RESULT;
   className?: string;
@@ -80,7 +80,7 @@ export default function Logo({
               : undefined
           }
           blurDataURL={logoToUse?.asset?.metadata?.lqip || undefined}
-          quality={100}
+          quality={85}
           priority={priority}
         />
         {showBrandName && (
