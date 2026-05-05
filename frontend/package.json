@@ -20,6 +20,7 @@
     "hybrid:create": "node scripts/create-hybrid-page.mjs",
     "hybrid:route:create": "node scripts/create-hybrid-route.mjs",
     "sanity:bulk:delete": "node scripts/bulk-delete-by-query.mjs",
+    "sanity:migrate:content": "tsx scripts/migrate-content.ts",
     "page:to-post": "node scripts/convert-page-to-post.mjs",
     "nav:icons:migrate": "node scripts/migrate-navigation-ui-icons.mjs",
     "templates:activate-indexing": "node scripts/activate-template-page-indexing.mjs --write",

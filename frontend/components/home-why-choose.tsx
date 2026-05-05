@@ -1,30 +1,25 @@
-import { Award, HeartHandshake, Shield, TrendingUp } from "lucide-react";
+import { Award, HeartHandshake, Shield, TrendingUp, CheckCircle, Star, Zap, Users } from "lucide-react";
 import { SectionIntro, SectionPanel, SectionShell } from "@/components/ui/section-shell";
+import { fetchWhyChooseReasons } from "@/sanity/lib/content";
 
-const reasons = [
-  {
-    icon: Award,
-    title: "Berpengalaman Sejak 2008",
-    description: "Lebih dari 15 tahun melayani bisnis di Surabaya dan sekitarnya dengan track record yang terbukti."
-  },
-  {
-    icon: HeartHandshake,
-    title: "One-Stop Solution",
-    description: "Tidak perlu koordinasi dengan banyak vendor. Semua kebutuhan IT dan digital dalam satu partner terpercaya."
-  },
-  {
-    icon: TrendingUp,
-    title: "Support Berkelanjutan",
-    description: "Kami tidak hanya build dan pergi. Tim kami siap support jangka panjang untuk memastikan sistem Anda tetap optimal."
-  },
-  {
-    icon: Shield,
-    title: "Harga Transparan",
-    description: "Tidak ada biaya tersembunyi. Semua dijelaskan di awal sebelum project dimulai dengan penawaran yang jelas."
-  },
-];
+const iconMap = {
+  "award": Award,
+  "heart-handshake": HeartHandshake,
+  "shield": Shield,
+  "trending-up": TrendingUp,
+  "check-circle": CheckCircle,
+  "star": Star,
+  "zap": Zap,
+  "users": Users,
+} as const;
 
-export default function HomeWhyChoose() {
+export default async function HomeWhyChoose() {
+  const reasons = await fetchWhyChooseReasons();
+
+  if (!reasons || reasons.length === 0) {
+    return null;
+  }
+
   return (
     <SectionShell>
       <SectionIntro
@@ -33,11 +28,11 @@ export default function HomeWhyChoose() {
         description="Lebih dari sekadar vendor IT, kami adalah partner yang membantu bisnis Anda tumbuh dengan solusi teknologi yang tepat."
       />
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        {reasons.map((reason, index) => {
-          const Icon = reason.icon;
+        {reasons.map((reason: any, index: number) => {
+          const Icon = iconMap[reason.icon as keyof typeof iconMap] || Award;
           return (
             <SectionPanel
-              key={index}
+              key={reason._id}
               tone={index % 2 === 0 ? "neutral" : "sky"}
               className="rounded-[1.65rem] p-6"
             >
