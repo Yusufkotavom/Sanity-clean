@@ -1,6 +1,7 @@
 import { type DefaultDocumentNodeResolver } from "sanity/structure";
 import { Iframe } from "sanity-plugin-iframe-pane";
 import { ProgramRunnerPane } from "./components/generator/program-runner-pane";
+import { OgPreviewPane } from "./components/seo/og-preview-pane";
 
 const SANITY_STUDIO_PREVIEW_URL =
   process.env.SANITY_STUDIO_PREVIEW_URL || "http://localhost:3000";
@@ -14,6 +15,13 @@ export const defaultDocumentNode: DefaultDocumentNodeResolver = (
   S,
   { schemaType },
 ) => {
+  if (schemaType === "seoSettings") {
+    return S.document().views([
+      S.view.form(),
+      S.view.component(OgPreviewPane).title("OG Preview"),
+    ]);
+  }
+
   if (schemaType === "generatorProgram" && isGeneratorStudioEnabled) {
     return S.document().views([
       S.view.form(),

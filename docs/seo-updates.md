@@ -106,6 +106,52 @@ Implemented one dedicated page (`/sanity-blocks`) that aggregates Sanity content
 ### Verification Status
 - ✅ `pnpm --filter studio run typecheck` passed.
 
+## 2026-05-21 — Advanced OG theme controls (font URL, border, spacing, typography)
+
+### Changed Files
+- `studio/schemas/documents/seo-settings.ts` (MODIFIED) - Expanded `ogTheme` with advanced controls: `fontFamily`, `fontUrl`, title size/line-height/spacing/clamp, canvas padding, dot size, badge border width/radius, footer border color/opacity, overlay toggle/opacity, and max title length.
+- `frontend/sanity/queries/seo-settings.ts` (MODIFIED) - Extended SEO settings query to include all new `ogTheme` fields.
+- `frontend/app/api/og/route.tsx` (MODIFIED) - OG renderer now consumes advanced theme settings with validation/fallback guards and optional remote font loading.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated status snapshot for advanced OG customization support.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+- Upgraded OG customization from basic colors to a near full-theme editor in Sanity.
+- Editors can now tune typography, spacing, borders, overlays, and optional custom font URL without code edits.
+
+### Impact on SEO/Integration
+- SEO impact:
+  - No contract changes to metadata keys, but OG visual consistency and brand control improved substantially.
+- Integration impact:
+  - `/api/og` remains backward compatible with safe defaults when optional fields are empty or invalid.
+
+### Verification Status
+- ✅ `pnpm --filter frontend run typecheck` passed.
+- ✅ `pnpm --filter studio run typecheck` passed.
+
+## 2026-05-21 — Add in-Studio OG live preview panel (single location)
+
+### Changed Files
+- `studio/components/seo/og-preview-pane.tsx` (ADDED) - New live OG preview pane with editable title/badge and embedded iframe to `/api/og`.
+- `studio/defaultDocumentNode.ts` (MODIFIED) - Added `OG Preview` document view tab for `seoSettings` singleton.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+- Added one centralized place in Studio to preview OG output live:
+  - Open `SEO Settings`
+  - Switch to `OG Preview` tab
+  - Adjust sample title/badge and see immediate visual result.
+
+### Impact on SEO/Integration
+- SEO impact:
+  - No direct metadata output change.
+- Integration impact:
+  - Faster editor feedback loop for OG theme tuning without leaving Studio.
+
+### Verification Status
+- ✅ `pnpm --filter studio run typecheck` passed.
+- ✅ `pnpm --filter studio run build` passed.
+
 ## 2026-05-21 — Metadata base fallback + /posts redirects + image quality warning cleanup
 
 ### Changed Files
@@ -128,6 +174,31 @@ Implemented one dedicated page (`/sanity-blocks`) that aggregates Sanity content
 
 ### Verification Status
 - ✅ `pnpm --filter frontend run typecheck` passed.
+- ✅ `pnpm --filter studio run typecheck` passed.
+
+## 2026-05-21 — OG generate action expanded beyond Post
+
+### Changed Files
+- `studio/sanity.config.ts` (MODIFIED) - Enabled `Generate OG Image` action for `page`, `service`, `product`, `project` in addition to `post`.
+- `studio/document-actions/generate-post-og-action.ts` (MODIFIED) - Added doc-type-aware OG badge and filename (`Blog`, `Page`, `Service`, `Product`, `Project`) based on document `_type`.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated status snapshot for multi-type OG action support.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+- OG generate-save workflow now supports all major public doc types, not only posts.
+- Same behavior across types:
+  - fetch `/api/og`
+  - upload asset to Sanity
+  - patch `meta.image`
+  - optionally backfill top-level `image` when empty.
+
+### Impact on SEO/Integration
+- SEO impact:
+  - Broader OG image coverage across page/service/product/project content.
+- Integration impact:
+  - One unified editor action for OG generation across core document models.
+
+### Verification Status
 - ✅ `pnpm --filter studio run typecheck` passed.
 
 ## 2026-05-21 — Simplified Studio desk structure with nested groups and shared docs hub

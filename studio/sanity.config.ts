@@ -72,7 +72,7 @@ export default defineConfig({
         return [applyHybridPresetAction, convertPageToPostAction, ...input];
       }
 
-      if (context.schemaType === "post") {
+      if (["post", "page", "service", "product", "project"].includes(context.schemaType)) {
         return [generatePostOgAction, ...input];
       }
 

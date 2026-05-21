@@ -10,14 +10,13 @@ const DEFAULTS = {
   accent: "#22D3EE",
   text: "#FFFFFF",
   eyebrow: "KotaCom",
+  fontFamily: "Inter",
 };
 
-const MAX_TITLE = 140;
-
-const clampTitle = (value: string) => {
+const clampTitle = (value: string, maxLength: number) => {
   const clean = value.trim();
-  if (clean.length <= MAX_TITLE) return clean;
-  return `${clean.slice(0, MAX_TITLE - 1)}…`;
+  if (clean.length <= maxLength) return clean;
+  return `${clean.slice(0, Math.max(1, maxLength - 1))}…`;
 };
 
 const normalizeHex = (value: unknown, fallback: string) => {
@@ -27,10 +26,44 @@ const normalizeHex = (value: unknown, fallback: string) => {
   return normalized;
 };
 
+const normalizeNumber = (
+  value: unknown,
+  fallback: number,
+  min: number,
+  max: number,
+) => {
+  const num = typeof value === "number" ? value : Number(value);
+  if (!Number.isFinite(num)) return fallback;
+  if (num < min) return min;
+  if (num > max) return max;
+  return num;
+};
+
+const withHexOpacity = (hex: string, opacity: number) => {
+  const c = normalizeHex(hex, "#FFFFFF");
+  const o = normalizeNumber(opacity, 1, 0, 1);
+  const expanded =
+    c.length === 4
+      ? `#${c[1]}${c[1]}${c[2]}${c[2]}${c[3]}${c[3]}`
+      : c;
+  const n = parseInt(expanded.slice(1), 16);
+  const r = (n >> 16) & 255;
+  const g = (n >> 8) & 255;
+  const b = n & 255;
+  return `rgba(${r}, ${g}, ${b}, ${o})`;
+};
+
+const normalizeFontUrl = (value: unknown) => {
+  if (typeof value !== "string") return "";
+  const trimmed = value.trim();
+  if (!trimmed) return "";
+  if (!/^https?:\/\//i.test(trimmed)) return "";
+  return trimmed;
+};
+
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const rawTitle = searchParams.get("title") || "";
-  const title = clampTitle(rawTitle || "KotaCom");
   const badge = searchParams.get("badge") || "";
 
   const [seoSettings, siteSettings] = await Promise.all([
@@ -46,15 +79,58 @@ export async function GET(request: NextRequest) {
   const domain = siteUrl ? new URL(siteUrl).hostname : "kotacom.id";
 
   const ogTheme = (seoSettings as { ogTheme?: any } | null)?.ogTheme || {};
+  const maxTitle = normalizeNumber(ogTheme.titleMaxLength, 140, 40, 220);
+  const title = clampTitle(rawTitle || "KotaCom", maxTitle);
   const gradientFrom = normalizeHex(ogTheme.gradientFrom, DEFAULTS.gradientFrom);
   const gradientTo = normalizeHex(ogTheme.gradientTo, DEFAULTS.gradientTo);
   const accent = normalizeHex(ogTheme.accentColor, DEFAULTS.accent);
   const textColor = normalizeHex(ogTheme.textColor, DEFAULTS.text);
+  const footerBorderColor = normalizeHex(ogTheme.footerBorderColor, "#FFFFFF");
+  const footerBorderOpacity = normalizeNumber(ogTheme.footerBorderOpacity, 0.18, 0, 1);
   const eyebrow =
     (typeof ogTheme.eyebrow === "string" && ogTheme.eyebrow.trim()) || DEFAULTS.eyebrow;
+  const fontFamily =
+    (typeof ogTheme.fontFamily === "string" && ogTheme.fontFamily.trim()) || DEFAULTS.fontFamily;
+  const fontUrl = normalizeFontUrl(ogTheme.fontUrl);
 
-  const fontSize = title.length > 100 ? 52 : title.length > 60 ? 66 : 82;
+  const canvasPaddingX = normalizeNumber(ogTheme.canvasPaddingX, 76, 24, 180);
+  const canvasPaddingY = normalizeNumber(ogTheme.canvasPaddingY, 68, 24, 180);
+  const headerDotSize = normalizeNumber(ogTheme.headerDotSize, 10, 4, 24);
+  const badgeBorderWidth = normalizeNumber(ogTheme.badgeBorderWidth, 1, 0, 8);
+  const badgeBorderRadius = normalizeNumber(ogTheme.badgeBorderRadius, 999, 0, 999);
+  const titleFontSize = normalizeNumber(ogTheme.titleFontSize, 82, 32, 120);
+  const titleLineHeight = normalizeNumber(ogTheme.titleLineHeight, 1.08, 0.9, 1.6);
+  const titleLetterSpacing = normalizeNumber(ogTheme.titleLetterSpacingEm, -0.03, -0.2, 0.2);
+  const titleClampLines = normalizeNumber(ogTheme.titleClampLines, 3, 1, 5);
+  const overlayEnabled = Boolean(ogTheme.overlayEnabled ?? true);
+  const overlayOpacity = normalizeNumber(ogTheme.overlayOpacity, 0.12, 0, 1);
+
+  const computedFontSize =
+    title.length > 100 ? Math.max(32, titleFontSize - 24) : title.length > 60 ? Math.max(32, titleFontSize - 16) : titleFontSize;
   const badgeText = badge || (typeof ogTheme.defaultBadge === "string" ? ogTheme.defaultBadge : "");
+
+  const fonts: Array<{
+    name: string;
+    data: ArrayBuffer;
+    style?: "normal" | "italic";
+    weight?: 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900;
+  }> = [];
+  if (fontUrl) {
+    try {
+      const data = await fetch(fontUrl).then((res) => {
+        if (!res.ok) throw new Error(`font fetch failed: ${res.status}`);
+        return res.arrayBuffer();
+      });
+      fonts.push({
+        name: fontFamily,
+        data,
+        style: "normal",
+        weight: 600,
+      });
+    } catch {
+      // fallback to system fonts when remote font is unavailable
+    }
+  }
 
   const image = new ImageResponse(
     (
@@ -65,23 +141,40 @@ export async function GET(request: NextRequest) {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          padding: "68px 76px",
+          position: "relative",
+          padding: `${canvasPaddingY}px ${canvasPaddingX}px`,
           color: textColor,
           backgroundImage: `linear-gradient(135deg, ${gradientFrom} 0%, ${gradientTo} 100%)`,
-          fontFamily: "Inter, system-ui, sans-serif",
+          fontFamily: `${fontFamily}, system-ui, sans-serif`,
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        {overlayEnabled ? (
+          <div
+            style={{
+              position: "absolute",
+              inset: "0",
+              backgroundImage: `radial-gradient(circle at 14% 15%, ${withHexOpacity(accent, overlayOpacity)} 0%, transparent 44%)`,
+            }}
+          />
+        ) : null}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", zIndex: 1 }}>
           <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
-            <div style={{ width: "10px", height: "10px", borderRadius: "999px", backgroundColor: accent }} />
+            <div
+              style={{
+                width: `${headerDotSize}px`,
+                height: `${headerDotSize}px`,
+                borderRadius: "999px",
+                backgroundColor: accent,
+              }}
+            />
             <span style={{ fontSize: "28px", opacity: 0.95 }}>{eyebrow}</span>
           </div>
           {badgeText ? (
             <div
               style={{
                 fontSize: "22px",
-                border: `1px solid ${accent}`,
-                borderRadius: "999px",
+                border: `${badgeBorderWidth}px solid ${accent}`,
+                borderRadius: `${badgeBorderRadius}px`,
                 padding: "8px 18px",
                 opacity: 0.95,
               }}
@@ -91,15 +184,15 @@ export async function GET(request: NextRequest) {
           ) : null}
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "24px", zIndex: 1 }}>
           <div
             style={{
-              fontSize: `${fontSize}px`,
-              lineHeight: 1.08,
+              fontSize: `${computedFontSize}px`,
+              lineHeight: titleLineHeight,
               fontWeight: 700,
-              letterSpacing: "-0.03em",
+              letterSpacing: `${titleLetterSpacing}em`,
               display: "-webkit-box",
-              WebkitLineClamp: 3,
+              WebkitLineClamp: titleClampLines,
               WebkitBoxOrient: "vertical",
               overflow: "hidden",
             }}
@@ -113,7 +206,8 @@ export async function GET(request: NextRequest) {
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            borderTop: "1px solid rgba(255,255,255,0.18)",
+            zIndex: 1,
+            borderTop: `1px solid ${withHexOpacity(footerBorderColor, footerBorderOpacity)}`,
             paddingTop: "28px",
             fontSize: "24px",
             opacity: 0.92,
@@ -124,7 +218,7 @@ export async function GET(request: NextRequest) {
         </div>
       </div>
     ),
-    { width: 1200, height: 630 },
+    { width: 1200, height: 630, fonts },
   );
 
   image.headers.set("Access-Control-Allow-Origin", "*");

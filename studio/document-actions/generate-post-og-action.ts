@@ -4,6 +4,7 @@ import { useClient } from "sanity";
 import { useToast } from "@sanity/ui";
 
 type PostDoc = SanityDocumentLike & {
+  _type?: string;
   title?: string;
   slug?: { current?: string };
   image?: unknown;
@@ -13,10 +14,10 @@ type PostDoc = SanityDocumentLike & {
   };
 };
 
-const buildOgUrl = (baseUrl: string, title: string) => {
+const buildOgUrl = (baseUrl: string, title: string, badge: string) => {
   const params = new URLSearchParams({
     title,
-    badge: "Blog",
+    badge,
   });
   return `${baseUrl.replace(/\/+$/, "")}/api/og?${params.toString()}`;
 };
@@ -30,9 +31,18 @@ export const generatePostOgAction: DocumentActionComponent = (props) => {
   const [running, setRunning] = useState(false);
 
   const source = (draft || published) as PostDoc | null;
+  const documentType = source?._type || "";
   const docTitle = source?.meta?.title || source?.title || "";
   const slug = source?.slug?.current || id.replace(/^drafts\./, "");
   const hasOg = Boolean(source?.meta?.image);
+  const badgeByType: Record<string, string> = {
+    post: "Blog",
+    page: "Page",
+    service: "Service",
+    product: "Product",
+    project: "Project",
+  };
+  const badge = badgeByType[documentType] || "Content";
 
   return {
     label: hasOg ? "Regenerate OG Image" : "Generate OG Image",
@@ -86,7 +96,7 @@ export const generatePostOgAction: DocumentActionComponent = (props) => {
         let lastError = "";
 
         for (const baseUrl of uniqueBases) {
-          const ogUrl = buildOgUrl(baseUrl, docTitle);
+          const ogUrl = buildOgUrl(baseUrl, docTitle, badge);
           try {
             const response = await fetch(ogUrl, {
               method: "GET",
@@ -115,7 +125,7 @@ export const generatePostOgAction: DocumentActionComponent = (props) => {
         if (!blob || !resolvedUrl) {
           throw new Error(lastError || "Failed to fetch OG image from all configured URLs.");
         }
-        const fileName = `og-post-${slug}-${Date.now()}.png`;
+        const fileName = `og-${documentType || "content"}-${slug}-${Date.now()}.png`;
         const asset = await client.assets.upload("image", blob, {
           filename: fileName,
           contentType: "image/png",
