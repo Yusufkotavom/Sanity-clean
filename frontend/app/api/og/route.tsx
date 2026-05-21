@@ -1,6 +1,10 @@
 import { ImageResponse } from "next/og";
 import type { NextRequest } from "next/server";
-import { fetchSanitySeoSettings, fetchSanitySettings } from "@/sanity/lib/fetch";
+import {
+  fetchSanityOgSettings,
+  fetchSanitySeoSettings,
+  fetchSanitySettings,
+} from "@/sanity/lib/fetch";
 
 export const runtime = "edge";
 
@@ -66,8 +70,9 @@ export async function GET(request: NextRequest) {
   const rawTitle = searchParams.get("title") || "";
   const badge = searchParams.get("badge") || "";
 
-  const [seoSettings, siteSettings] = await Promise.all([
+  const [seoSettings, ogSettings, siteSettings] = await Promise.all([
     fetchSanitySeoSettings().catch(() => null),
+    fetchSanityOgSettings().catch(() => null),
     fetchSanitySettings().catch(() => null),
   ]);
 
@@ -78,36 +83,44 @@ export async function GET(request: NextRequest) {
   const siteUrl = (seoSettings as { siteUrl?: string } | null)?.siteUrl || "";
   const domain = siteUrl ? new URL(siteUrl).hostname : "kotacom.id";
 
-  const ogTheme = (seoSettings as { ogTheme?: any } | null)?.ogTheme || {};
-  const maxTitle = normalizeNumber(ogTheme.titleMaxLength, 140, 40, 220);
+  const maxTitle = normalizeNumber((ogSettings as any)?.titleMaxLength, 140, 40, 220);
   const title = clampTitle(rawTitle || "KotaCom", maxTitle);
-  const gradientFrom = normalizeHex(ogTheme.gradientFrom, DEFAULTS.gradientFrom);
-  const gradientTo = normalizeHex(ogTheme.gradientTo, DEFAULTS.gradientTo);
-  const accent = normalizeHex(ogTheme.accentColor, DEFAULTS.accent);
-  const textColor = normalizeHex(ogTheme.textColor, DEFAULTS.text);
-  const footerBorderColor = normalizeHex(ogTheme.footerBorderColor, "#FFFFFF");
-  const footerBorderOpacity = normalizeNumber(ogTheme.footerBorderOpacity, 0.18, 0, 1);
+  const gradientFrom = normalizeHex((ogSettings as any)?.gradientFrom, DEFAULTS.gradientFrom);
+  const gradientTo = normalizeHex((ogSettings as any)?.gradientTo, DEFAULTS.gradientTo);
+  const accent = normalizeHex((ogSettings as any)?.accentColor, DEFAULTS.accent);
+  const textColor = normalizeHex((ogSettings as any)?.textColor, DEFAULTS.text);
+  const footerBorderColor = normalizeHex((ogSettings as any)?.footerBorderColor, "#FFFFFF");
+  const footerBorderOpacity = normalizeNumber((ogSettings as any)?.footerBorderOpacity, 0.18, 0, 1);
   const eyebrow =
-    (typeof ogTheme.eyebrow === "string" && ogTheme.eyebrow.trim()) || DEFAULTS.eyebrow;
+    (typeof (ogSettings as any)?.eyebrow === "string" && (ogSettings as any).eyebrow.trim()) ||
+    DEFAULTS.eyebrow;
   const fontFamily =
-    (typeof ogTheme.fontFamily === "string" && ogTheme.fontFamily.trim()) || DEFAULTS.fontFamily;
-  const fontUrl = normalizeFontUrl(ogTheme.fontUrl);
+    (typeof (ogSettings as any)?.fontFamily === "string" &&
+      (ogSettings as any).fontFamily.trim()) ||
+    DEFAULTS.fontFamily;
+  const fontUrl = normalizeFontUrl((ogSettings as any)?.fontUrl);
 
-  const canvasPaddingX = normalizeNumber(ogTheme.canvasPaddingX, 76, 24, 180);
-  const canvasPaddingY = normalizeNumber(ogTheme.canvasPaddingY, 68, 24, 180);
-  const headerDotSize = normalizeNumber(ogTheme.headerDotSize, 10, 4, 24);
-  const badgeBorderWidth = normalizeNumber(ogTheme.badgeBorderWidth, 1, 0, 8);
-  const badgeBorderRadius = normalizeNumber(ogTheme.badgeBorderRadius, 999, 0, 999);
-  const titleFontSize = normalizeNumber(ogTheme.titleFontSize, 82, 32, 120);
-  const titleLineHeight = normalizeNumber(ogTheme.titleLineHeight, 1.08, 0.9, 1.6);
-  const titleLetterSpacing = normalizeNumber(ogTheme.titleLetterSpacingEm, -0.03, -0.2, 0.2);
-  const titleClampLines = normalizeNumber(ogTheme.titleClampLines, 3, 1, 5);
-  const overlayEnabled = Boolean(ogTheme.overlayEnabled ?? true);
-  const overlayOpacity = normalizeNumber(ogTheme.overlayOpacity, 0.12, 0, 1);
+  const canvasPaddingX = normalizeNumber((ogSettings as any)?.canvasPaddingX, 76, 24, 180);
+  const canvasPaddingY = normalizeNumber((ogSettings as any)?.canvasPaddingY, 68, 24, 180);
+  const headerDotSize = normalizeNumber((ogSettings as any)?.headerDotSize, 10, 4, 24);
+  const badgeBorderWidth = normalizeNumber((ogSettings as any)?.badgeBorderWidth, 1, 0, 8);
+  const badgeBorderRadius = normalizeNumber((ogSettings as any)?.badgeBorderRadius, 999, 0, 999);
+  const titleFontSize = normalizeNumber((ogSettings as any)?.titleFontSize, 82, 32, 120);
+  const titleLineHeight = normalizeNumber((ogSettings as any)?.titleLineHeight, 1.08, 0.9, 1.6);
+  const titleLetterSpacing = normalizeNumber(
+    (ogSettings as any)?.titleLetterSpacingEm,
+    -0.03,
+    -0.2,
+    0.2,
+  );
+  const titleClampLines = normalizeNumber((ogSettings as any)?.titleClampLines, 3, 1, 5);
+  const overlayEnabled = Boolean((ogSettings as any)?.overlayEnabled ?? true);
+  const overlayOpacity = normalizeNumber((ogSettings as any)?.overlayOpacity, 0.12, 0, 1);
 
   const computedFontSize =
     title.length > 100 ? Math.max(32, titleFontSize - 24) : title.length > 60 ? Math.max(32, titleFontSize - 16) : titleFontSize;
-  const badgeText = badge || (typeof ogTheme.defaultBadge === "string" ? ogTheme.defaultBadge : "");
+  const badgeText =
+    badge || (typeof (ogSettings as any)?.defaultBadge === "string" ? (ogSettings as any).defaultBadge : "");
 
   const fonts: Array<{
     name: string;

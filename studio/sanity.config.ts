@@ -26,6 +26,7 @@ const singletonTypes = new Set([
   "settings",
   "navigation",
   "seoSettings",
+  "ogSettings",
   "seoOpsSettings",
   "themeSettings",
 ]);

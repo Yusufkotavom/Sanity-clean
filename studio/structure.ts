@@ -12,6 +12,7 @@ import {
   Menu,
   Settings,
   Palette,
+  Image as ImageIcon,
   SearchCheck,
   Link2,
   Blocks,
@@ -319,6 +320,15 @@ export const structure = (S: any, context: any) =>
             .id("seoSettings")
             .schemaType("seoSettings")
             .documentId("seoSettings")
+        ),
+      S.listItem()
+        .title("OG Settings")
+        .icon(ImageIcon)
+        .child(
+          S.editor()
+            .id("ogSettings")
+            .schemaType("ogSettings")
+            .documentId("ogSettings")
         ),
       S.listItem()
         .title("SEO Ops Settings")

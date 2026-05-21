@@ -3,6 +3,7 @@ import { PAGE_QUERY, PAGES_QUERY, PAGES_SLUGS_QUERY } from "@/sanity/queries/pag
 import { NAVIGATION_QUERY } from "@/sanity/queries/navigation";
 import { SETTINGS_QUERY } from "@/sanity/queries/settings";
 import { SEO_SETTINGS_QUERY } from "@/sanity/queries/seo-settings";
+import { OG_SETTINGS_QUERY } from "@/sanity/queries/og-settings";
 import { THEME_SETTINGS_QUERY } from "@/sanity/queries/theme-settings";
 import { REUSABLE_SECTIONS_QUERY } from "@/sanity/queries/reusable-section";
 import { LEGACY_PAGE_OVERRIDE_QUERY } from "@/sanity/queries/legacy-page";
@@ -418,6 +419,15 @@ export const fetchSanitySeoSettings = async (): Promise<any | null> => {
   const data = await fetchPublishedCached<any | null>({
     query: SEO_SETTINGS_QUERY,
     tags: ["seo-settings"],
+  });
+
+  return data;
+};
+
+export const fetchSanityOgSettings = async (): Promise<any | null> => {
+  const data = await fetchPublishedCached<any | null>({
+    query: OG_SETTINGS_QUERY,
+    tags: ["og-settings"],
   });
 
   return data;

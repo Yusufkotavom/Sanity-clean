@@ -65,7 +65,8 @@ function collectPaths(payload: WebhookPayload | null) {
   if (
     contentType === "settings" ||
     contentType === "navigation" ||
-    contentType === "seoSettings"
+    contentType === "seoSettings" ||
+    contentType === "ogSettings"
   ) {
     paths.add("/");
     paths.add("/blog");

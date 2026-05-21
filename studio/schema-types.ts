@@ -13,6 +13,7 @@ import navigation from "./schemas/documents/navigation";
 import settings from "./schemas/documents/settings";
 import themeSettings from "./schemas/documents/theme-settings";
 import seoSettings from "./schemas/documents/seo-settings";
+import ogSettings from "./schemas/documents/og-settings";
 import pageTemplate from "./schemas/documents/page-template";
 import pageLocation from "./schemas/documents/page-location";
 import serviceLocation from "./schemas/documents/service-location";
@@ -113,6 +114,7 @@ export const schemaTypes = [
   settings,
   themeSettings,
   seoSettings,
+  ogSettings,
   pageTemplate,
   pageLocation,
   serviceLocation,

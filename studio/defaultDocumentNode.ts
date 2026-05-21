@@ -15,7 +15,7 @@ export const defaultDocumentNode: DefaultDocumentNodeResolver = (
   S,
   { schemaType },
 ) => {
-  if (schemaType === "seoSettings") {
+  if (schemaType === "ogSettings") {
     return S.document().views([
       S.view.form(),
       S.view.component(OgPreviewPane).title("OG Preview"),

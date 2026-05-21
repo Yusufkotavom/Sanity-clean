@@ -2046,3 +2046,40 @@ Synchronized AI runtime contracts across frontend query layer, shared package ex
 ### Verification Status
 - ✅ `pnpm --filter frontend run typecheck` passed.
 - ✅ `pnpm --filter studio run typecheck` passed.
+
+## 2026-05-21 — OG settings decoupled from SEO settings
+
+### Changed Files
+- `studio/schemas/documents/og-settings.ts` (ADDED) - New singleton document schema for full OG visual configuration.
+- `studio/schemas/documents/seo-settings.ts` (MODIFIED) - Removed embedded `ogTheme` block from SEO settings.
+- `studio/schema-types.ts` (MODIFIED) - Registered `ogSettings` schema type.
+- `studio/sanity.config.ts` (MODIFIED) - Added `ogSettings` to singleton types.
+- `studio/structure.ts` (MODIFIED) - Added global `OG Settings` menu entry.
+- `studio/defaultDocumentNode.ts` (MODIFIED) - OG preview tab now attached to `ogSettings` document.
+- `studio/components/seo/og-preview-pane.tsx` (MODIFIED) - Preview pane reads `defaultBadge` directly from `ogSettings`.
+- `frontend/sanity/queries/og-settings.ts` (ADDED) - Dedicated GROQ query for OG configuration.
+- `frontend/sanity/queries/seo-settings.ts` (MODIFIED) - Removed OG config fields from SEO query.
+- `frontend/sanity/lib/fetch.ts` (MODIFIED) - Added `fetchSanityOgSettings()` helper.
+- `frontend/app/api/og/route.tsx` (MODIFIED) - `/api/og` now reads style config from `ogSettings` and keeps `siteUrl` source from `seoSettings`.
+- `frontend/app/api/revalidate/route.ts` (MODIFIED) - Revalidate hooks now include `ogSettings` changes.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated status snapshot.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+- Split OG customization out of SEO singleton into dedicated `OG Settings` singleton so editor flow is simpler and isolated.
+- Preserved existing OG generation behavior and URL contract (`/api/og`) while changing config source to the new OG document.
+- Kept canonical site URL source in `seoSettings.siteUrl` to avoid SEO contract drift.
+
+### Impact on SEO/Integration
+- SEO impact:
+  - No metadata field removal in frontend SEO rendering paths.
+  - OG styling now has separate content source but output endpoint remains stable.
+- Integration impact:
+  - Studio and frontend now use explicit two-singleton model: `seoSettings` for metadata/robots/sitemap and `ogSettings` for OG visual rendering.
+
+### Verification Status
+- ✅ `pnpm --filter studio run typecheck` passed.
+- ✅ `pnpm --filter frontend run typecheck` passed.
+- ✅ `pnpm --filter studio run build` passed.
+- ✅ `pnpm --filter frontend run build` passed.
+

@@ -12,15 +12,13 @@ const FRONTEND_URL = (
 type PaneProps = {
   document?: {
     displayed?: {
-      ogTheme?: {
-        defaultBadge?: string;
-      };
+      defaultBadge?: string;
     };
   };
 };
 
 export function OgPreviewPane(props: PaneProps) {
-  const defaultBadge = props?.document?.displayed?.ogTheme?.defaultBadge || "Insights";
+  const defaultBadge = props?.document?.displayed?.defaultBadge || "Insights";
   const [title, setTitle] = useState("Contoh Judul OG KotaCom");
   const [badge, setBadge] = useState(defaultBadge);
 
