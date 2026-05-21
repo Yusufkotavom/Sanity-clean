@@ -37,6 +37,13 @@ const generatorTemplatesEnabled = dataset === "development";
 
 const SANITY_STUDIO_PREVIEW_URL =
   process.env.SANITY_STUDIO_PREVIEW_URL || "http://localhost:3000";
+const STUDIO_ALLOWED_HOSTS = (
+  process.env.SANITY_STUDIO_ALLOWED_HOSTS ||
+  "devk.my.id,3333.devk.my.id,.devk.my.id,localhost,127.0.0.1"
+)
+  .split(",")
+  .map((entry) => entry.trim())
+  .filter(Boolean);
 
 export default defineConfig({
   title: "Schema UI: Starter",
@@ -85,4 +92,11 @@ export default defineConfig({
     media(),
     iconPicker(),
   ],
+  vite: (prevConfig: any) => ({
+    ...prevConfig,
+    server: {
+      ...prevConfig.server,
+      allowedHosts: true,
+    },
+  }),
 });

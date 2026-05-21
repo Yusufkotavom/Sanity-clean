@@ -76,6 +76,7 @@ Migrate legacy Astro source into current Next.js + Sanity stack with:
 - [x] Default GA4 measurement ID now set to `G-P0DQM5CH0D` with env override support (`NEXT_PUBLIC_GA_MEASUREMENT_ID` / `NEXT_PUBLIC_GA_ID`) to simplify deployment activation.
 - [x] Netlify prerender blocker resolved for GA4 instrumentation: root tracker no longer uses `useSearchParams`, preventing suspense-boundary errors on `/_not-found` and dynamic slug pages.
 - [x] Netlify edge bundling blocker mitigated by removing unused frontend `proxy.ts`, preventing generation of `___netlify-edge-handler-node-middleware` artifact that crashed plugin bundling on Next.js 16.1.7.
+- [x] Next.js 16 frontend build warning cleanup completed: `turbopack.root` now matches workspace tracing root and deprecated `middleware` convention has been migrated to `proxy`, removing warning noise during production build.
 - [x] SEO dashboard operations UX now includes functional manual `Run Audit` input form (URL batch enqueue), and internal worker cron now supports `pull-ga4` for GA4-to-DB daily sync automation.
 - [x] Frontend manual trigger bridge now available for internal worker jobs (`/api/seo/ops/trigger` + dashboard Analytics trigger panel), so ops can run GA4/GSC/audit pipelines on-demand in addition to scheduled cron.
 - [x] Internal cron worker now returns actionable API feedback for queue-misconfiguration cases: `type=drain-queues` no longer collapses into opaque `500` when Upstash env is missing, improving production schedule diagnostics.
@@ -307,10 +308,15 @@ Migrate legacy Astro source into current Next.js + Sanity stack with:
 - [x] `seo-dashboard` OG upload now has permission guardrails: prefers `SANITY_DEV` token first and disables repeated asset-upload attempts after detecting `403 create permission` errors.
 - [x] `seo-dashboard` OG layout overflow hardening shipped: long title/description now capped with adaptive type scale and overflow guards so WA footer badge no longer gets clipped.
 - [x] `seo-dashboard` mobile UI remap shipped for AI operations pages (`History`, `Templates`, `Generate`, `Content Ideas`): mobile card/list patterns and stacked action controls now replace cramped desktop layouts on small screens.
+- [x] Generator V3 cut-over shipped: `generatorTemplate` now uses native `blocks` + `{{token}}` replacement, while `baseSections`/`optionalSections`/`sectionVariants` renderer flow has been removed from active generation logic.
+- [x] Frontend cross-origin guardrail updated for `devk.my.id` origins: proxy now handles API CORS preflight (`OPTIONS`) and origin allowlist response headers for `/api/*` requests.
+- [x] Generator Program now supports customizable slug pattern tokens (`{{routeBase}}`, `{{city}}`, `{{service}}`, `{{primaryKeyword}}`) so route format is no longer fixed to one automatic composition.
+- [x] Studio generator now shows quick-copy token references above `Slug Pattern` and above `Template Blocks` for faster manual token authoring.
 ## Workstream A - Platform & Data Foundation
 
 ### A1. CMS Contract Freeze
 - [ ] Finalize document contracts for `post`, `service`, `product`, `project`, `category`, `seoSettings`, `redirect`.
+- [x] Generator document contract simplified and synchronized: template authoring is now block-native (`blocks`) with deterministic token replacement, and Studio runner/runtime scripts are aligned to the new shape.
 - [ ] Remove/disable unused Supabase dependencies in migration path.
 - [x] Confirm frontend query contracts mirror studio schema exactly.
 - [x] Post-like contract mapping + external automation playbook completed for `post/service/product/project/page` via `docs/sanity-post-types-map.md`, `frontend/scripts/create-content-from-json.mjs`, and `skills/sanity-studio-post-ops`.

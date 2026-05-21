@@ -174,10 +174,12 @@ async function fetchSanityRedirects() {
 
 const nextConfig = {
   turbopack: {
-    root: __dirname,
+    root: path.resolve(__dirname, ".."),
   },
   allowedDevOrigins: [
     '168.110.210.101',
+    'devk.my.id',
+    '.devk.my.id',
     'localhost',
     '127.0.0.1',
   ],
@@ -200,6 +202,27 @@ const nextConfig = {
   },
   async headers() {
     return [
+      {
+        source: "/api/:path*",
+        headers: [
+          {
+            key: "Access-Control-Allow-Methods",
+            value: "GET, POST, PUT, PATCH, DELETE, OPTIONS",
+          },
+          {
+            key: "Access-Control-Allow-Headers",
+            value: "Content-Type, Authorization, X-Requested-With",
+          },
+          {
+            key: "Access-Control-Allow-Credentials",
+            value: "true",
+          },
+          {
+            key: "Vary",
+            value: "Origin",
+          },
+        ],
+      },
       {
         source: "/_next/image(.*)",
         headers: [

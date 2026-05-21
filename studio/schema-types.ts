@@ -59,7 +59,6 @@ import faqItem from "./schemas/objects/faqItem";
 import generatorTokenDefinition from "./schemas/objects/generator-token-definition";
 import generatorKeywordSet from "./schemas/objects/generator-keyword-set";
 import generatorRow from "./schemas/objects/generator-row";
-import generatorSectionVariant from "./schemas/objects/generator-section-variant";
 import generatorPageMeta from "./schemas/objects/generator-page-meta";
 // Schema UI objects
 import hero1 from "./schemas/blocks/hero/hero-1";
@@ -159,7 +158,6 @@ export const schemaTypes = [
   generatorTokenDefinition,
   generatorKeywordSet,
   generatorRow,
-  generatorSectionVariant,
   generatorPageMeta,
   // blocks
   hero1,

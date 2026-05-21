@@ -47,6 +47,7 @@ export type GeneratorDatasetLite = {
 export type GeneratorProgramLite = {
   _id: string;
   routeBase: string;
+  slugPattern?: string;
   slug?: SlugValue;
   title?: string;
   ref?: ReferenceValue;
@@ -55,17 +56,6 @@ export type GeneratorProgramLite = {
     title?: string;
     description?: string;
   };
-};
-
-export type GeneratorSectionVariantLite = {
-  _key?: string;
-  key: string;
-  title: string;
-  sectionType?: string;
-  copy?: string;
-  colorVariant?: string;
-  requiredTokens?: string[];
-  optional?: boolean;
 };
 
 export type GeneratorTemplateLite = {
@@ -77,10 +67,7 @@ export type GeneratorTemplateLite = {
   styleNotes?: string;
   ref?: ReferenceValue;
   tokenDefinitions?: GeneratorTokenDefinitionLite[];
-  baseSections?: string[];
-  optionalSections?: string[];
-  variationRules?: string[];
-  sectionVariants?: GeneratorSectionVariantLite[];
+  blocks?: Array<Record<string, unknown>>;
 };
 
 export type GeneratorSlugInput = {
@@ -88,19 +75,10 @@ export type GeneratorSlugInput = {
   service?: string;
   city?: string;
   primaryKeyword: string;
+  slugPattern?: string;
 };
 
 export type GeneratorTokenMap = Record<string, string>;
-
-export type GeneratorSectionPlan = {
-  key: string;
-  sectionType: string;
-  title: string;
-  copy: string;
-  colorVariant?: string;
-  optional: boolean;
-  requiredTokens: string[];
-};
 
 export type GeneratedPageDraft = {
   _type: "page";

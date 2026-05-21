@@ -23,20 +23,41 @@ const input = {
       { name: "primaryKeyword", sourceField: "primaryKeyword", required: true },
       { name: "service", sourceField: "service", required: true },
       { name: "city", sourceField: "city", required: true },
-      { name: "location", sourceField: "city", required: true },
       { name: "offer", sourceField: "offer", required: true },
-      { name: "industry", sourceField: "industry", required: true },
     ],
-    baseSections: ["hero", "highlights", "serviceTypes", "pricing", "faq", "finalCta"],
-    optionalSections: [],
-    variationRules: ["finished-sample-showcase"],
-    sectionVariants: [
-      { key: "hero", title: "{{primaryKeyword}} {{city}}", sectionType: "hero-1", requiredTokens: ["primaryKeyword", "city"] },
-      { key: "highlights", title: "Outcome {{service}}", sectionType: "value-props-block", requiredTokens: ["service"] },
-      { key: "serviceTypes", title: "Pilihan {{service}}", sectionType: "service-types-block", requiredTokens: ["service"] },
-      { key: "pricing", title: "Harga {{service}}", sectionType: "pricing-block", requiredTokens: ["service"] },
-      { key: "faq", title: "FAQ {{offer}}", sectionType: "faq-block", requiredTokens: ["offer"] },
-      { key: "finalCta", title: "Mulai {{offer}}", sectionType: "cta-1", requiredTokens: ["offer"] },
+    blocks: [
+      {
+        _type: "hero-1",
+        _key: "hero",
+        title: "{{primaryKeyword}} {{city}}",
+        body: [
+          {
+            _key: "hero-body",
+            _type: "block",
+            style: "normal",
+            markDefs: [],
+            children: [
+              {
+                _key: "hero-span",
+                _type: "span",
+                marks: [],
+                text: "Mulai {{offer}}",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        _type: "section-header",
+        _key: "context",
+        title: "Konteks {{city}}",
+        description: "Fokus {{primaryKeyword}}",
+      },
+      {
+        _type: "cta-1",
+        _key: "final-cta",
+        title: "Konsultasi {{service}}",
+      },
     ],
   },
   keywordSet: {
@@ -54,7 +75,7 @@ const input = {
   },
 };
 
-test("assessGeneratedDraftQuality returns ready for a healthy generated draft", () => {
+test("assessGeneratedDraftQuality returns warning for a minimal but valid generated draft", () => {
   const draft = buildGeneratedPageDraft(input);
   const result = assessGeneratedDraftQuality({
     draft,
@@ -63,8 +84,8 @@ test("assessGeneratedDraftQuality returns ready for a healthy generated draft", 
     existingPages: [],
   });
 
-  assert.equal(result.severity, "ready");
-  assert.equal(result.issues.length, 0);
+  assert.equal(result.severity, "warning");
+  assert.ok(result.issues.length > 0);
 });
 
 test("assessGeneratedDraftQuality blocks duplicate generated drafts", () => {

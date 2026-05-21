@@ -96,10 +96,7 @@ const TEMPLATE_QUERY = `*[_type == "generatorTemplate" && _id == $id][0]{
   motionPreset,
   styleNotes,
   tokenDefinitions[]{_key, name, label, sourceField, fallbackValue, required},
-  baseSections,
-  optionalSections,
-  variationRules,
-  sectionVariants[]{_key, key, title, sectionType, copy, colorVariant, requiredTokens, optional}
+  blocks
 }`;
 
 const DATASET_QUERY = `*[_type == "generatorDataset" && _id == $id][0]{
@@ -271,6 +268,7 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
     return {
       _id: program._id || documentId,
       routeBase: program.routeBase || "",
+      slugPattern: program.slugPattern || undefined,
       slug: program.slug,
       title: program.title,
       ref: program._id
@@ -964,6 +962,7 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
               <Text size={1}>Title: {valueOrFallback(program.title)}</Text>
               <Text size={1}>Slug: {valueOrFallback(program.slug?.current)}</Text>
               <Text size={1}>Route base: {valueOrFallback(program.routeBase)}</Text>
+              <Text size={1}>Slug pattern: {valueOrFallback(program.slugPattern)}</Text>
               <Text size={1}>Template ref: {valueOrFallback(program.template?._ref)}</Text>
               <Text size={1}>Dataset ref: {valueOrFallback(program.dataset?._ref)}</Text>
             </Stack>

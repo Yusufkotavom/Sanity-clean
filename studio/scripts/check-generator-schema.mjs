@@ -9,7 +9,6 @@ const required = [
   ["generatorTokenDefinition", "../schemas/objects/generator-token-definition.ts"],
   ["generatorKeywordSet", "../schemas/objects/generator-keyword-set.ts"],
   ["generatorRow", "../schemas/objects/generator-row.ts"],
-  ["generatorSectionVariant", "../schemas/objects/generator-section-variant.ts"],
   ["generatorPageMeta", "../schemas/objects/generator-page-meta.ts"],
 ];
 

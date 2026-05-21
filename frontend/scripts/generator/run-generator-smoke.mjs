@@ -39,6 +39,7 @@ const PROGRAM_QUERY = `*[_type == "generatorProgram"] | order(_updatedAt desc)[0
   title,
   slug,
   routeBase,
+  slugPattern,
   template,
   dataset,
   defaultSeoPattern
@@ -52,10 +53,7 @@ const TEMPLATE_QUERY = `*[_type == "generatorTemplate" && _id == $id][0]{
   motionPreset,
   styleNotes,
   tokenDefinitions[]{_key, name, label, sourceField, fallbackValue, required},
-  baseSections,
-  optionalSections,
-  variationRules,
-  sectionVariants[]{_key, key, title, sectionType, copy, colorVariant, requiredTokens, optional}
+  blocks
 }`;
 
 const DATASET_QUERY = `*[_type == "generatorDataset" && _id == $id][0]{
@@ -98,6 +96,7 @@ function buildFallbackContext() {
       title: "Generator Smoke Program",
       slug: { _type: "slug", current: "generator-smoke" },
       routeBase: "/percetakan",
+      slugPattern: "{{routeBase}}/{{city}}/{{service}}",
       defaultSeoPattern: {
         title: "Kotacom Printing",
         description: "Solusi cetak bisnis deterministik",
@@ -116,39 +115,58 @@ function buildFallbackContext() {
         { name: "industry", sourceField: "industry", fallbackValue: "bisnis lokal" },
         { name: "angle", sourceField: "angle", fallbackValue: "default", required: true },
       ],
-      baseSections: ["hero", "benefits"],
-      optionalSections: ["problems", "faq"],
-      variationRules: ["angle-selects-optional-sections"],
-      sectionVariants: [
+      blocks: [
         {
-          key: "hero",
-          title: "{{primaryKeyword}} untuk {{city}}",
-          sectionType: "hero-1",
-          copy: "{{offer}} untuk {{location}}",
-          requiredTokens: ["primaryKeyword", "location"],
+          _type: "hero-1",
+          _key: "hero",
+          tagLine: "{{primaryKeyword}}",
+          title: "{{service}} di {{city}}",
+          body: [
+            {
+              _key: "hero-body",
+              _type: "block",
+              style: "normal",
+              markDefs: [],
+              children: [
+                {
+                  _key: "hero-span",
+                  _type: "span",
+                  marks: [],
+                  text: "{{offer}} untuk {{location}}",
+                },
+              ],
+            },
+          ],
+          links: [
+            {
+              _key: "hero-link",
+              _type: "link",
+              isExternal: true,
+              title: "Mulai",
+              href: "{{pagePath}}",
+            },
+          ],
         },
         {
-          key: "benefits",
-          title: "Keunggulan {{service}}",
-          sectionType: "value-props-block",
-          copy: "Benefit untuk {{industry}}",
-          requiredTokens: ["service", "industry"],
-        },
-        {
-          key: "problems",
-          title: "Masalah {{city}}",
-          sectionType: "problem-solution-block",
-          copy: "Butuh proses {{offer}}",
-          requiredTokens: ["city", "offer"],
-          optional: true,
-        },
-        {
-          key: "faq",
-          title: "FAQ {{service}}",
-          sectionType: "faq-block",
-          copy: "Pertanyaan umum {{primaryKeyword}}",
-          requiredTokens: ["primaryKeyword"],
-          optional: true,
+          _type: "cta-1",
+          _key: "cta",
+          title: "Konsultasi {{service}}",
+          body: [
+            {
+              _key: "cta-body",
+              _type: "block",
+              style: "normal",
+              markDefs: [],
+              children: [
+                {
+                  _key: "cta-span",
+                  _type: "span",
+                  marks: [],
+                  text: "Keyword: {{primaryKeyword}}",
+                },
+              ],
+            },
+          ],
         },
       ],
     },
@@ -209,6 +227,7 @@ const buildProgramInput = () => ({
   title: context.program.title,
   slug: context.program.slug,
   routeBase: context.program.routeBase,
+  slugPattern: context.program.slugPattern,
   ref: { _type: "reference", _ref: context.program._id },
   dataset: {
     _id: context.dataset._id,
@@ -303,6 +322,8 @@ console.log(
         id: context.program._id,
         title: context.program.title || null,
         routeBase: context.program.routeBase,
+        slugPattern: context.program.slugPattern || null,
+  slugPattern: context.program.slugPattern,
       },
       preview: {
         keywordSet: keywordSet.label || keywordSet.key || keywordSet.primaryKeyword,

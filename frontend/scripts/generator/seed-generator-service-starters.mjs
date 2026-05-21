@@ -774,6 +774,14 @@ const LEGACY_STARTER_IDS = [
 ];
 
 function buildDocs() {
+  const sectionVariantToBlock = (variant) => ({
+    _type: "section-header",
+    _key: variant.key,
+    title: variant.title,
+    description: variant.copy,
+    colorVariant: variant.colorVariant || "background",
+  });
+
   const templateDocs = VISUAL_TEMPLATE_LIBRARY.flatMap((template) => [
     {
       _id: template.templateId,
@@ -787,10 +795,10 @@ function buildDocs() {
       styleNotes: template.styleNotes,
       outputType: "page",
       tokenDefinitions: TOKEN_DEFINITIONS,
-      baseSections: template.baseSections,
-      optionalSections: template.optionalSections,
-      variationRules: ["visual-template-library"],
-      sectionVariants: template.sectionVariants,
+      blocks: [...template.baseSections, ...template.optionalSections]
+        .map((key) => template.sectionVariants.find((variant) => variant.key === key))
+        .filter(Boolean)
+        .map(sectionVariantToBlock),
       status: "ready",
       devOnly: true,
     },
@@ -804,6 +812,7 @@ function buildDocs() {
       programType: "service-pages",
       generationMode: "batch",
       routeBase: ROUTE_BASE,
+      slugPattern: "{{routeBase}}/{{service}}-{{city}}",
       defaultSeoPattern: {
         title: template.title,
         description: `${template.title} untuk banyak jasa dengan struktur visual reusable di dataset development.`,
@@ -865,6 +874,8 @@ async function main() {
         templateLibrary: VISUAL_TEMPLATE_LIBRARY.map((item) => item.key),
         sharedDatasetId: SHARED_DATASET_ID,
         routeBase: ROUTE_BASE,
+        slugPattern: "{{routeBase}}/{{service}}-{{city}}",
+      slugPattern: "{{routeBase}}/{{service}}-{{city}}",
         cleanupIds,
         upsertedIds: docs.map((doc) => doc._id),
       },

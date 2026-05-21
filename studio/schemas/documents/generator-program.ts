@@ -25,6 +25,32 @@ const validateRouteBase = (value: unknown) => {
   return true;
 };
 
+
+const validateSlugPattern = (value: unknown) => {
+  if (typeof value !== "string") {
+    return "Slug pattern is required.";
+  }
+
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return "Slug pattern is required.";
+  }
+
+  const allowedTokens = ["routeBase", "city", "service", "primaryKeyword"];
+  const tokens = Array.from(trimmed.matchAll(/\{\{\s*([a-zA-Z0-9_:-]+)\s*\}\}/g)).map((m) => m[1]);
+
+  for (const token of tokens) {
+    if (!allowedTokens.includes(token)) {
+      return `Unsupported token: {{${token}}}. Allowed tokens: ${allowedTokens.join(", ")}.`;
+    }
+  }
+
+  if (!tokens.includes("routeBase")) {
+    return "Slug pattern must include {{routeBase}}.";
+  }
+
+  return true;
+};
 export default defineType({
   name: "generatorProgram",
   title: "Generator Program",
@@ -91,6 +117,27 @@ export default defineType({
       title: "Route Base",
       type: "string",
       validation: (Rule) => Rule.required().custom(validateRouteBase),
+    }),
+    defineField({
+      name: "slugTokenReference",
+      title: "Slug Token Quick Copy",
+      type: "text",
+      rows: 4,
+      readOnly: true,
+      initialValue:
+        "{{routeBase}}\n{{city}}\n{{service}}\n{{primaryKeyword}}",
+      description:
+        "Copy token dari sini lalu tempel ke Slug Pattern.",
+    }),
+
+    defineField({
+      name: "slugPattern",
+      title: "Slug Pattern",
+      type: "string",
+      description:
+        "Custom pattern for generated slug. Supported tokens: {{routeBase}}, {{city}}, {{service}}, {{primaryKeyword}}.",
+      initialValue: "{{routeBase}}-{{service}}-{{city}}-{{primaryKeyword}}",
+      validation: (Rule) => Rule.required().custom(validateSlugPattern),
     }),
     defineField({
       name: "defaultSeoPattern",

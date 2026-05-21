@@ -21,4 +21,9 @@ export default defineCliConfig({
     studioHost,
     ...(appId ? { appId } : {}),
   },
+  vite: {
+    server: {
+      allowedHosts: true,
+    },
+  },
 });

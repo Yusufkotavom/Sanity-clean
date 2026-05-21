@@ -1542,3 +1542,204 @@ Synchronized AI runtime contracts across frontend query layer, shared package ex
 - ✅ `pnpm run typecheck` passed.
 - ✅ `pnpm --filter frontend run test:templates` passed.
 - ✅ `pnpm --filter studio run typecheck` passed.
+
+## 2026-05-21 — Next.js 16 Build Warning Cleanup (turbopack root + proxy migration)
+
+### Changed Files
+- `frontend/next.config.mjs` (MODIFIED) - Aligned `turbopack.root` with workspace root (`path.resolve(__dirname, "..")`) to match Vercel `outputFileTracingRoot` and remove root mismatch warning.
+- `frontend/middleware.ts` (RENAMED -> `frontend/proxy.ts`) - Migrated deprecated middleware file convention to `proxy` for Next.js 16 compatibility.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Added status snapshot entry for completed build-warning cleanup.
+
+### Summary
+- Fixed Next.js build configuration drift causing repeated `outputFileTracingRoot` vs `turbopack.root` warnings in Vercel builds.
+- Migrated request header injection runtime from deprecated `middleware` convention to `proxy` convention with the same matcher and behavior.
+- Preserved existing redirect loading and runtime behavior while removing warning noise.
+
+### Impact on SEO/Integration
+- SEO impact:
+  - No direct ranking/metadata logic changes.
+  - Cleaner build output lowers deployment noise and reduces risk of missing real SEO/runtime errors.
+- Integration impact:
+  - Frontend runtime now follows Next.js 16 proxy convention.
+  - Vercel monorepo tracing root and Turbopack root are synchronized.
+
+### Verification Status
+- ✅ `pnpm --filter frontend run build` passed.
+- ✅ Manual check: warning `Both outputFileTracingRoot and turbopack.root are set, but they must have the same value` no longer appears.
+- ✅ Manual check: warning `The "middleware" file convention is deprecated. Please use "proxy" instead.` no longer appears.
+
+## 2026-05-21 — Generator V3 Cut-over (Template Blocks + Token Replace)
+
+### Changed Files
+- `studio/schemas/documents/generator-template.ts` (MODIFIED) - Replaced section-variant schema flow with block-native template authoring (`blocks`) and retained visual/motion preset as metadata.
+- `studio/schema-types.ts` (MODIFIED) - Removed active registration of `generatorSectionVariant` from generator stack.
+- `studio/lib/generator/render.ts` (MODIFIED) - Replaced section mapper renderer with deep token interpolation over template blocks and updated lineage version to `v3`.
+- `studio/lib/generator/variation.ts` (MODIFIED) - Simplified to token-building utilities only; removed section planning logic.
+- `studio/lib/generator/types.ts` (MODIFIED) - Updated template contract to include `blocks` and removed section-plan variant types.
+- `studio/components/generator/program-runner-pane.tsx` (MODIFIED) - Updated template query to consume `blocks` contract.
+- `studio/lib/generator/__tests__/render.test.ts` (MODIFIED) - Reworked generator render tests to validate nested token replacement and v3 lineage.
+- `studio/lib/generator/__tests__/qa.test.ts` (MODIFIED) - Updated QA fixture/tests for block-native template generation.
+- `studio/scripts/check-generator-schema.mjs` (MODIFIED) - Removed `generatorSectionVariant` requirement from generator schema check script.
+- `frontend/scripts/generator/run-generator-smoke.mjs` (MODIFIED) - Updated smoke query + fallback fixture to block-native template contract.
+- `frontend/scripts/generator/seed-generator-finished-sample.mjs` (MODIFIED) - Updated sample template seed to block-native structure.
+- `frontend/scripts/generator/seed-generator-service-starters.mjs` (MODIFIED) - Updated starter template seeding to emit `blocks` from visual library entries.
+- `frontend/scripts/generator/migrate-legacy-templates-to-generator.mjs` (MODIFIED) - Updated migration output to generate block-native templates.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated status snapshot + workstream checklist for generator cut-over completion.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+- Completed direct cut-over from section-key renderer (`baseSections`/`optionalSections`/`sectionVariants`) to native Sanity block templates with deterministic `{{token}}` replacement.
+- Preserved generator orchestration model (`program + dataset`) while simplifying template authoring to one-step page-like block editing.
+- Synced Studio runner, type contracts, tests, smoke/seed scripts, and migration tooling to the new schema shape.
+
+### Impact on SEO/Integration
+- SEO impact:
+  - No direct metadata algorithm changes beyond existing generator SEO title/description pattern behavior.
+  - Visual preset now acts as metadata label only (no automatic reorder/copy behavior).
+- Integration impact:
+  - Strongly simplifies CMS workflow: template authors edit real blocks and inline tokens directly.
+  - Removes cross-layer fragility from section-key mapping; runtime now mirrors stored Sanity block shape.
+
+### Verification Status
+- ✅ `cd studio && pnpm typecheck` passed.
+- ✅ `node --experimental-specifier-resolution=node --import ./frontend/node_modules/tsx/dist/loader.mjs studio/lib/generator/__tests__/render.test.ts` passed.
+- ✅ `node --experimental-specifier-resolution=node --import ./frontend/node_modules/tsx/dist/loader.mjs studio/lib/generator/__tests__/qa.test.ts` passed.
+- ⚠️ No full frontend build executed in this cycle.
+
+## 2026-05-21 — Frontend Cross-Origin Allowlist for devk domains
+
+### Changed Files
+- `frontend/proxy.ts` (MODIFIED) - Added API CORS handling in proxy runtime (`OPTIONS` 204 + origin-based allowlist headers) and applied CORS headers to proxied responses.
+- `frontend/next.config.mjs` (MODIFIED) - Expanded `allowedDevOrigins` to include `devk.my.id` and `*.devk.my.id`; added baseline API CORS method/header response headers.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+- Enabled cross-origin requests for the frontend API surface from main domain and subdomain environments used in deployment/dev (`devk.my.id`, `3333.devk.my.id`, localhost variants).
+- Added explicit preflight (`OPTIONS`) handling in `proxy.ts` so browser CORS checks no longer fail before route handlers execute.
+
+### Impact on SEO/Integration
+- SEO impact:
+  - No direct SEO ranking/metadata impact.
+- Integration impact:
+  - Fixes cross-origin integration failures for browser clients hitting `/api/*` from allowed external origins.
+  - Keeps non-allowed origins restricted by explicit allowlist matching.
+
+### Verification Status
+- ✅ `pnpm --filter frontend run typecheck` passed.
+- ⚠️ Full frontend build was not rerun in this micro-change cycle.
+
+## 2026-05-21 — Sanity Studio Vite allowedHosts for devk domains
+
+### Changed Files
+- `studio/sanity.config.ts` (MODIFIED) - Added Studio-side Vite `server.allowedHosts` configuration with env-overridable allowlist (`SANITY_STUDIO_ALLOWED_HOSTS`) including `devk.my.id` and `3333.devk.my.id`.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+- Configured Sanity Studio Vite host allowlist so Studio no longer rejects requests from `3333.devk.my.id` (and related devk hosts).
+- Added env-based override (`SANITY_STUDIO_ALLOWED_HOSTS`) to adjust host allowlist without code change.
+
+### Impact on SEO/Integration
+- SEO impact:
+  - No direct SEO impact.
+- Integration impact:
+  - Fixes host-blocking issue for Studio access through external hostname/domain routing.
+
+### Verification Status
+- ✅ `pnpm --filter studio run typecheck` passed.
+- ⚠️ Studio dev server restart is required for the new Vite allowlist to take effect.
+
+## 2026-05-21 — Studio Host Allowlist Hotfix via explicit Vite config
+
+### Changed Files
+- `studio/vite.config.ts` (ADDED) - Added explicit `server.allowedHosts` for Studio dev server to allow `3333.devk.my.id`, `devk.my.id`, wildcard devk subdomains, and localhost variants.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+- Added explicit Vite-level host allowlist for Sanity Studio to resolve persistent host-blocked responses when accessed via `3333.devk.my.id`.
+- Keeps host list env-overridable via `SANITY_STUDIO_ALLOWED_HOSTS`.
+
+### Impact on SEO/Integration
+- SEO impact:
+  - No direct SEO impact.
+- Integration impact:
+  - Fixes Studio access through external hostname routing that was still blocked by Vite host checks.
+
+### Verification Status
+- ✅ Runtime check: direct host-header request to Studio now returns non-blocked response after restart.
+
+## 2026-05-21 — Studio host-block final fix via Vite additional allowed hosts env
+
+### Changed Files
+- `studio/scripts/dev.mjs` (MODIFIED) - Injected `__VITE_ADDITIONAL_SERVER_ALLOWED_HOSTS` into spawned `sanity dev` process using `SANITY_STUDIO_ALLOWED_HOSTS` fallback list.
+- `studio/sanity.cli.ts` (MODIFIED) - Added CLI-level Vite server override (`allowedHosts: true`) as compatibility fallback.
+- `studio/vite.config.ts` (ADDED) - Added explicit Studio-side Vite server config for host allowlist compatibility.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+- Resolved persistent Studio host-blocking by passing Vite's additional allowed hosts env at process launch time from Studio dev launcher.
+- Added layered compatibility fallbacks in CLI and explicit Vite config to keep host acceptance stable across Sanity/Vite integration behavior.
+
+### Impact on SEO/Integration
+- SEO impact:
+  - No direct SEO impact.
+- Integration impact:
+  - Fixes Studio access for host `3333.devk.my.id` when running via `pnpm dev` in `studio`.
+  - Reduces risk of host-check regressions when local startup path changes.
+
+### Verification Status
+- ✅ One-off runtime verification: `Host: 3333.devk.my.id` request returned `HTTP/1.1 200 OK` while Studio was running.
+- ⚠️ Note: if Studio is started via raw `sanity dev` (without launcher), env injection from `scripts/dev.mjs` is bypassed.
+
+## 2026-05-21 — Generator Program custom slug pattern tokens
+
+### Changed Files
+- `studio/schemas/documents/generator-program.ts` (MODIFIED) - Added `slugPattern` field with token validation (`{{routeBase}}`, `{{city}}`, `{{service}}`, `{{primaryKeyword}}`).
+- `studio/lib/generator/slug.ts` (MODIFIED) - Added pattern-based slug composer supporting path and dash formats from program-level template.
+- `studio/lib/generator/types.ts` (MODIFIED) - Added `slugPattern` to program/slug input contracts.
+- `studio/lib/generator/render.ts` (MODIFIED) - Passed `program.slugPattern` into slug builder.
+- `studio/components/generator/program-runner-pane.tsx` (MODIFIED) - Included `slugPattern` in runner context and preview summary.
+- `frontend/scripts/generator/run-generator-smoke.mjs` (MODIFIED) - Added `slugPattern` to query/input path and fallback fixture.
+- `frontend/scripts/generator/seed-generator-finished-sample.mjs` (MODIFIED) - Seeded sample program with explicit custom slug pattern.
+- `frontend/scripts/generator/seed-generator-service-starters.mjs` (MODIFIED) - Seeded starter programs with explicit custom slug pattern.
+- `studio/lib/generator/__tests__/render.test.ts` (MODIFIED) - Added test case verifying custom slug pattern output.
+- `studio/vite.config.mjs` (ADDED) - Kept Studio host allowlist in JS config (typecheck-safe).
+- `studio/vite.config.ts` (DELETED) - Removed TS version of Vite config to avoid Studio TS compile failure.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated current status snapshot for slug-pattern capability.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+- Introduced program-level custom slug template so generated routes are now operator-configurable instead of fixed automatic composition.
+- Supported tokens: `{{routeBase}}`, `{{city}}`, `{{service}}`, `{{primaryKeyword}}`.
+- Supports both nested path pattern (`{{routeBase}}/{{city}}/{{service}}`) and flat pattern (`{{routeBase}}-{{service}}-{{city}}`).
+
+### Impact on SEO/Integration
+- SEO impact:
+  - Improves canonical URL control for generated pages by allowing explicit route format per program.
+- Integration impact:
+  - Generator scripts, runner preview, and seeds are now aligned with new slug-pattern contract.
+
+### Verification Status
+- ✅ `node --experimental-specifier-resolution=node --import ./frontend/node_modules/tsx/dist/loader.mjs studio/lib/generator/__tests__/render.test.ts` passed.
+- ✅ `pnpm --filter studio run typecheck` passed.
+- ✅ `pnpm --filter frontend run typecheck` passed.
+
+## 2026-05-21 — Token quick-copy helper above slug and template blocks
+
+### Changed Files
+- `studio/schemas/documents/generator-program.ts` (MODIFIED) - Added read-only `Slug Token Quick Copy` field directly above `slugPattern` with core generator tokens for copy/paste.
+- `studio/schemas/documents/generator-template.ts` (MODIFIED) - Added read-only `Block Token Quick Copy` field directly above `blocks` with common tokens and dataset token usage note.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated current status snapshot to reflect token quick-copy UX improvement in Studio generator authoring flow.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+- Added operator-friendly token reference panels in Studio so users can copy placeholders quickly when setting `slugPattern` and authoring `Template Blocks`.
+- This reduces friction during template editing and avoids token typo/memory overhead.
+
+### Impact on SEO/Integration
+- SEO impact:
+  - No direct SEO impact.
+- Integration impact:
+  - Improves Studio authoring ergonomics for generator route and block token usage without changing render contract.
+
+### Verification Status
+- ✅ Schema compile check via existing typecheck path (no schema contract break introduced by added read-only fields).

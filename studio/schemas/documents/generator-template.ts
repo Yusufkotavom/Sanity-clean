@@ -1,77 +1,6 @@
 import { orderRankField } from "@sanity/orderable-document-list";
 import { defineField, defineType } from "sanity";
 
-const validateUniqueKeys = (value: unknown, label: string) => {
-  if (!Array.isArray(value)) {
-    return true;
-  }
-
-  const seen = new Set<string>();
-  for (const entry of value) {
-    const key = typeof entry === "object" && entry !== null ? (entry as { key?: unknown }).key : undefined;
-    if (typeof key !== "string" || key.length === 0) {
-      continue;
-    }
-    if (seen.has(key)) {
-      return `${label} keys must be unique.`;
-    }
-    seen.add(key);
-  }
-
-  return true;
-};
-
-const validateSectionKeys = (value: unknown, context: { parent?: unknown }) => {
-  if (!Array.isArray(value) || value.length === 0) {
-    return true;
-  }
-
-  const parent = (context.parent ?? {}) as { sectionVariants?: Array<{ key?: string }> };
-  const variantKeys = new Set(
-    (parent.sectionVariants ?? []).map((variant) => variant?.key).filter((key): key is string => Boolean(key)),
-  );
-
-  const seen = new Set<string>();
-  for (const entry of value) {
-    if (typeof entry !== "string" || !variantKeys.has(entry)) {
-      return "Each section key must match a key defined in Section Variants.";
-    }
-
-    if (seen.has(entry)) {
-      return "Section keys must be unique within each section list.";
-    }
-
-    seen.add(entry);
-  }
-
-  return true;
-};
-
-const validateNoSectionOverlap = (
-  currentFieldName: "baseSections" | "optionalSections",
-  value: unknown,
-  context: { parent?: unknown },
-) => {
-  if (!Array.isArray(value) || value.length === 0) {
-    return true;
-  }
-
-  const parent = (context.parent ?? {}) as {
-    baseSections?: unknown[];
-    optionalSections?: unknown[];
-  };
-  const siblingFieldName = currentFieldName === "baseSections" ? "optionalSections" : "baseSections";
-  const siblingValues = parent[siblingFieldName];
-
-  if (!Array.isArray(siblingValues) || siblingValues.length === 0) {
-    return true;
-  }
-
-  const siblingKeys = new Set(siblingValues.filter((entry): entry is string => typeof entry === "string"));
-  const overlap = value.find((entry) => typeof entry === "string" && siblingKeys.has(entry));
-  return overlap === undefined ? true : "Base Sections and Optional Sections cannot share the same section key.";
-};
-
 const validateUniqueTokenNames = (value: unknown) => {
   if (!Array.isArray(value)) {
     return true;
@@ -94,37 +23,33 @@ const validateUniqueTokenNames = (value: unknown) => {
   return true;
 };
 
-const validateSectionVariantTokens = (value: unknown, context: { parent?: unknown }) => {
-  if (!Array.isArray(value) || value.length === 0) {
-    return true;
-  }
-
-  const parent = (context.parent ?? {}) as {
-    tokenDefinitions?: Array<{ name?: string }>;
-  };
-  const tokenNames = new Set(
-    (parent.tokenDefinitions ?? [])
-      .map((token) => token?.name)
-      .filter((name): name is string => typeof name === "string" && name.length > 0),
-  );
-
-  for (const entry of value) {
-    if (typeof entry !== "object" || entry === null) {
-      continue;
-    }
-
-    const variant = entry as { key?: unknown; requiredTokens?: unknown };
-    const requiredTokens = Array.isArray(variant.requiredTokens) ? variant.requiredTokens : [];
-
-    for (const tokenName of requiredTokens) {
-      if (typeof tokenName !== "string" || !tokenNames.has(tokenName)) {
-        return `Section variant ${typeof variant.key === "string" ? `"${variant.key}"` : ""} references an unknown required token.`;
-      }
-    }
-  }
-
-  return true;
-};
+const TEMPLATE_BLOCK_TYPES = [
+  "hero-1",
+  "hero-2",
+  "stats-hero-block",
+  "section-header",
+  "split-row",
+  "grid-row",
+  "carousel-1",
+  "carousel-2",
+  "timeline-row",
+  "cta-1",
+  "whatsapp-cta",
+  "logo-cloud-1",
+  "faqs",
+  "form-newsletter",
+  "all-posts",
+  "legacy-rich-content",
+  "company-info",
+  "testimonials-block",
+  "pricing-block",
+  "faq-block",
+  "benefits-block",
+  "features-package-block",
+  "service-types-block",
+  "problem-solution-block",
+  "value-props-block",
+] as const;
 
 export default defineType({
   name: "generatorTemplate",
@@ -155,7 +80,7 @@ export default defineType({
       name: "visualPreset",
       title: "Visual Preset",
       type: "string",
-      description: "Reusable visual direction for many service categories.",
+      description: "Reusable visual direction label for many service categories.",
       options: {
         list: [
           { title: "Editorial Grid", value: "editorial-grid" },
@@ -177,7 +102,7 @@ export default defineType({
       name: "motionPreset",
       title: "Motion Preset",
       type: "string",
-      description: "Planned motion rhythm used by the visual generator templates.",
+      description: "Metadata-only motion rhythm note used for team alignment.",
       options: {
         list: [
           { title: "Calm Reveal", value: "calm-reveal" },
@@ -195,7 +120,7 @@ export default defineType({
       title: "Style Notes",
       type: "text",
       rows: 3,
-      description: "Short operator note about when this visual template works best.",
+      description: "Short operator note about when this template works best.",
     }),
     defineField({
       name: "outputType",
@@ -209,33 +134,22 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: "baseSections",
-      title: "Base Sections",
-      type: "array",
-      description: "Ordered section keys that must always render.",
-      of: [{ type: "string" }],
-      validation: (Rule) =>
-        Rule.required()
-          .min(1)
-          .custom(validateSectionKeys)
-          .custom((value, context) => validateNoSectionOverlap("baseSections", value, context)),
+      name: "blockTokenReference",
+      title: "Block Token Quick Copy",
+      type: "text",
+      rows: 8,
+      readOnly: true,
+      initialValue:
+        "{{routeBase}}\n{{city}}\n{{service}}\n{{primaryKeyword}}\n{{title}}\n{{metaTitle}}\n{{metaDescription}}\n{{ctaLabel}}\n{{ctaHref}}",
+      description:
+        "Copy token dari sini lalu tempel ke field teks di Template Blocks. Token dataset lain juga tetap bisa dipakai dengan format {{namaKolom}}.",
     }),
     defineField({
-      name: "optionalSections",
-      title: "Optional Sections",
+      name: "blocks",
+      title: "Template Blocks",
       type: "array",
-      description: "Ordered optional section keys that may render when selected.",
-      of: [{ type: "string" }],
-      validation: (Rule) =>
-        Rule.required()
-          .custom(validateSectionKeys)
-          .custom((value, context) => validateNoSectionOverlap("optionalSections", value, context)),
-    }),
-    defineField({
-      name: "variationRules",
-      title: "Variation Rules",
-      type: "array",
-      of: [{ type: "string" }],
+      description: "Build the full page here using native Sanity blocks. Use {{token}} placeholders in string fields.",
+      of: TEMPLATE_BLOCK_TYPES.map((blockType) => ({ type: blockType })),
       validation: (Rule) => Rule.required().min(1),
     }),
     defineField({
@@ -263,20 +177,9 @@ export default defineType({
       name: "tokenDefinitions",
       title: "Token Definitions",
       type: "array",
+      description: "Optional token map. Leave empty to use dataset fields directly.",
       of: [{ type: "generatorTokenDefinition" }],
-      validation: (Rule) => Rule.required().min(1).custom(validateUniqueTokenNames),
-    }),
-    defineField({
-      name: "sectionVariants",
-      title: "Section Variants",
-      type: "array",
-      description: "Authoritative section definitions keyed by the section key field.",
-      of: [{ type: "generatorSectionVariant" }],
-      validation: (Rule) =>
-        Rule.required()
-          .min(1)
-          .custom((value) => validateUniqueKeys(value, "Section variant"))
-          .custom(validateSectionVariantTokens),
+      validation: (Rule) => Rule.custom(validateUniqueTokenNames),
     }),
     defineField({
       name: "devOnly",

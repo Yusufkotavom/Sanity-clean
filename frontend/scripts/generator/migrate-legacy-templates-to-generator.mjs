@@ -48,102 +48,76 @@ function buildId(source) {
   return `generator-template-legacy-${stable || "template"}`;
 }
 
-function buildSections(seed) {
-  switch (seed.designFamily) {
-    case "website":
-      return {
-        baseSections: ["hero", "benefits", "proof"],
-        optionalSections: ["services", "faq", "cta"],
-      };
-    case "software":
-      return {
-        baseSections: ["hero", "benefits", "process"],
-        optionalSections: ["proof", "faq", "cta"],
-      };
-    case "printing":
-      return {
-        baseSections: ["hero", "benefits", "pricing"],
-        optionalSections: ["proof", "faq", "cta"],
-      };
-    default:
-      return {
-        baseSections: ["hero", "benefits"],
-        optionalSections: ["proof", "faq", "cta"],
-      };
-  }
-}
-
-function buildSectionVariants(seed) {
+function buildBlocks(seed) {
   return [
     {
-      _key: "section-hero",
-      key: "hero",
-      title: "{{primaryKeyword}} untuk {{location}}",
-      sectionType: "hero-1",
-      copy: "{{offer}} untuk kebutuhan {{service}} yang tetap selaras dengan intent {{primaryKeyword}}.",
-      requiredTokens: ["primaryKeyword", "location", "offer"],
+      _type: "hero-1",
+      _key: "hero",
+      tagLine: "{{primaryKeyword}}",
+      title: "{{service}} untuk {{location}}",
+      body: [
+        {
+          _key: "hero-body",
+          _type: "block",
+          style: "normal",
+          markDefs: [],
+          children: [
+            {
+              _key: "hero-span",
+              _type: "span",
+              marks: [],
+              text: "{{offer}} untuk {{industry}}.",
+            },
+          ],
+        },
+      ],
+      links: [
+        {
+          _key: "hero-link",
+          _type: "link",
+          title: "Mulai",
+          isExternal: true,
+          href: "{{pagePath}}",
+        },
+      ],
     },
     {
-      _key: "section-benefits",
-      key: "benefits",
-      title: `Keunggulan ${seed.title}`,
-      sectionType: "value-props-block",
-      copy: "Fokus pada manfaat inti untuk {{industry}} dengan angle {{angle}}.",
-      requiredTokens: ["industry", "angle"],
+      _type: "section-header",
+      _key: "details",
+      title: `${seed.title} untuk {{location}}`,
+      description: "Template migrasi otomatis dari pageTemplate lama. Sesuaikan block ini sebelum produksi.",
+      colorVariant: "background",
     },
     {
-      _key: "section-pricing",
-      key: "pricing",
-      title: "Porsi solusi untuk {{service}}",
-      sectionType: "pricing-block",
-      copy: "Gunakan struktur penawaran yang relevan untuk {{location}}.",
-      requiredTokens: ["service", "location"],
-      optional: seed.designFamily !== "printing",
-    },
-    {
-      _key: "section-process",
-      key: "process",
-      title: "Alur kerja {{service}}",
-      sectionType: "process-block",
-      copy: "Jelaskan tahapan yang paling penting agar {{offer}} terasa konkret.",
-      requiredTokens: ["service", "offer"],
-      optional: seed.designFamily !== "software",
-    },
-    {
-      _key: "section-proof",
-      key: "proof",
-      title: "Bukti kerja untuk {{location}}",
-      sectionType: "proof-block",
-      copy: "Gunakan proof yang mendukung intent {{primaryKeyword}} tanpa duplikasi copy.",
-      requiredTokens: ["location", "primaryKeyword"],
-      optional: false,
-    },
-    {
-      _key: "section-services",
-      key: "services",
-      title: "Ruang lingkup {{service}}",
-      sectionType: "services-block",
-      copy: "Pecah ruang lingkup sesuai kebutuhan {{industry}}.",
-      requiredTokens: ["service", "industry"],
-      optional: true,
-    },
-    {
-      _key: "section-faq",
-      key: "faq",
-      title: "FAQ {{primaryKeyword}}",
-      sectionType: "faq-block",
-      copy: "Jawaban harus selaras dengan route dan tidak hanya mengulang keyword.",
-      requiredTokens: ["primaryKeyword"],
-      optional: true,
-    },
-    {
-      _key: "section-cta",
-      key: "cta",
-      title: "Langkah berikutnya untuk {{location}}",
-      sectionType: "cta-1",
-      copy: "Arahkan ke {{offer}} yang paling masuk akal untuk {{service}}.",
-      requiredTokens: ["location", "offer", "service"],
-      optional: true,
+      _type: "cta-1",
+      _key: "final-cta",
+      title: "Lanjutkan {{offer}}",
+      body: [
+        {
+          _key: "cta-body",
+          _type: "block",
+          style: "normal",
+          markDefs: [],
+          children: [
+            {
+              _key: "cta-span",
+              _type: "span",
+              marks: [],
+              text: "Gunakan hasil migrasi ini sebagai baseline lalu rapikan copy per layanan.",
+            },
+          ],
+        },
+      ],
+      links: [
+        {
+          _key: "cta-link",
+          _type: "link",
+          title: "Diskusikan",
+          isExternal: true,
+          href: "{{pagePath}}",
+          buttonVariant: "default",
+        },
+      ],
     },
   ];
 }
@@ -164,7 +138,6 @@ function mapLegacyTemplateToSeed(legacy = {}) {
 
 function buildGeneratorTemplateDoc(legacy) {
   const seed = mapLegacyTemplateToSeed(legacy);
-  const sections = buildSections(seed);
   const id = buildId(legacy);
   const slug = slugify(legacy.slug || legacy.title || id);
   const sourceParts = [
@@ -183,11 +156,8 @@ function buildGeneratorTemplateDoc(legacy) {
     description: `Migrated from legacy pageTemplate. ${sourceParts.join(" · ")}`,
     outputType: "page",
     designFamily: seed.designFamily,
-    baseSections: sections.baseSections,
-    optionalSections: sections.optionalSections,
-    variationRules: ["angle-selects-optional-sections", "legacy-template-migration"],
+    blocks: buildBlocks(seed),
     tokenDefinitions: STANDARD_TOKENS,
-    sectionVariants: buildSectionVariants(seed),
     status: "draft",
     devOnly: true,
   };

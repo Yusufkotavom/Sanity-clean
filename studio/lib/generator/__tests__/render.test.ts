@@ -27,49 +27,68 @@ const baseInput = {
       { name: "city", sourceField: "city" },
       { name: "location", sourceField: "location", required: true },
       { name: "offer", sourceField: "offer", fallbackValue: "konsultasi cepat", required: true },
-      { name: "industry", sourceField: "industry", fallbackValue: "bisnis lokal" },
-      { name: "angle", sourceField: "angle", fallbackValue: "default", required: true },
     ],
-    baseSections: ["hero", "benefits"],
-    optionalSections: ["problems", "faq"],
-    variationRules: ["angle-selects-optional-sections"],
-    sectionVariants: [
+    blocks: [
       {
-        key: "hero",
-        title: "{{primaryKeyword}} untuk {{city}}",
-        sectionType: "hero-1",
-        copy: "{{offer}} untuk {{location}}",
-        requiredTokens: ["primaryKeyword", "location"],
+        _type: "hero-1",
+        _key: "hero",
+        tagLine: "{{primaryKeyword}}",
+        title: "{{service}} di {{city}}",
+        body: [
+          {
+            _key: "hero-block",
+            _type: "block",
+            style: "normal",
+            markDefs: [],
+            children: [
+              {
+                _key: "hero-span",
+                _type: "span",
+                marks: [],
+                text: "{{offer}} untuk {{location}}",
+              },
+            ],
+          },
+        ],
+        links: [
+          {
+            _key: "hero-link",
+            _type: "link",
+            isExternal: true,
+            title: "Mulai",
+            href: "{{pagePath}}",
+          },
+        ],
       },
       {
-        key: "benefits",
-        title: "Keunggulan {{service}}",
-        sectionType: "value-props-block",
-        copy: "Benefit untuk {{industry}}",
-        requiredTokens: ["service", "industry"],
-      },
-      {
-        key: "problems",
-        title: "Masalah {{city}}",
-        sectionType: "problem-solution-block",
-        copy: "Butuh proses {{offer}}",
-        requiredTokens: ["city", "offer"],
-        optional: true,
-      },
-      {
-        key: "faq",
-        title: "FAQ {{service}}",
-        sectionType: "faq-block",
-        copy: "Pertanyaan umum {{primaryKeyword}}",
-        requiredTokens: ["primaryKeyword"],
-        optional: true,
-      },
-      {
-        key: "differentiators",
-        title: "Should never render",
-        sectionType: "value-props-block",
-        requiredTokens: ["service"],
-        optional: true,
+        _type: "cta-1",
+        _key: "final-cta",
+        title: "Konsultasi {{service}}",
+        body: [
+          {
+            _key: "cta-block",
+            _type: "block",
+            style: "normal",
+            markDefs: [],
+            children: [
+              {
+                _key: "cta-span",
+                _type: "span",
+                marks: [],
+                text: "Keyword: {{primaryKeyword}}",
+              },
+            ],
+          },
+        ],
+        links: [
+          {
+            _key: "cta-link",
+            _type: "link",
+            isExternal: true,
+            title: "Lihat",
+            href: "{{pagePath}}",
+          },
+        ],
       },
     ],
   },
@@ -82,7 +101,7 @@ const baseInput = {
   },
 };
 
-test("buildGeneratedPageDraft builds a page draft with root-slug page path and complete lineage metadata", () => {
+test("buildGeneratedPageDraft builds a page draft and keeps lineage metadata", () => {
   const result = buildGeneratedPageDraft({
     ...baseInput,
     keywordSet: { _key: "kw-1", key: "kw-printing", primaryKeyword: "jasa cetak buku" },
@@ -98,148 +117,62 @@ test("buildGeneratedPageDraft builds a page draft with root-slug page path and c
   assert.deepEqual(result.generator.dataset, { _type: "reference", _ref: "gd-1", _weak: true });
   assert.equal(result.generator.rowKey, "row-surabaya");
   assert.equal(result.generator.keywordKey, "kw-printing");
+  assert.equal(result.generator.version, "v3");
   assert.equal(result.generator.aiUsed, false);
   assert.equal(result.topBlockCount, 0);
-  assert.ok(Array.isArray(result.blocks));
-  assert.equal((result.blocks[0] as { links: Array<{ href: string }> }).links[0].href, `/${result.slug.current}`);
-  assert.equal((result.blocks[0] as { links: Array<{ href: string }> }).links[1].href, `/${result.slug.current}`);
 });
 
-test("buildGeneratedPageDraft keeps ordered sections and gates optional sections by angle", () => {
-  const fast = buildGeneratedPageDraft({
+test("buildGeneratedPageDraft replaces tokens in nested block fields", () => {
+  const result = buildGeneratedPageDraft({
     ...baseInput,
-    keywordSet: {
-      _key: "kw-fast",
-      primaryKeyword: "cetak buku cepat",
-      angle: "speed",
-    },
+    keywordSet: { _key: "kw-2", key: "kw-printing-2", primaryKeyword: "cetak buku cepat" },
   });
 
-  const price = buildGeneratedPageDraft({
-    ...baseInput,
-    keywordSet: {
-      _key: "kw-price",
-      primaryKeyword: "cetak buku murah",
-      angle: "price",
-    },
-  });
+  const hero = result.blocks[0] as {
+    tagLine: string;
+    title: string;
+    body: Array<{ children: Array<{ text: string }> }>;
+    links: Array<{ href: string }>;
+  };
 
-  assert.deepEqual(
-    fast.blocks.map((block) => block._type),
-    ["hero-1", "value-props-block", "problem-solution-block", "faq-block"],
-  );
-  assert.deepEqual(
-    price.blocks.map((block) => block._type),
-    ["hero-1", "value-props-block", "faq-block"],
-  );
-  assert.equal(price.blocks.some((block) => block._key === "differentiators"), false);
+  assert.equal(hero.tagLine, "cetak buku cepat");
+  assert.equal(hero.title, "cetak-buku di surabaya");
+  assert.equal(hero.body[0]?.children[0]?.text, "estimasi cepat untuk surabaya");
+  assert.equal(hero.links[0]?.href, `/${result.slug.current}`);
+
+  const cta = result.blocks[1] as {
+    title: string;
+    body: Array<{ children: Array<{ text: string }> }>;
+  };
+  assert.equal(cta.title, "Konsultasi cetak-buku");
+  assert.equal(cta.body[0]?.children[0]?.text, "Keyword: cetak buku cepat");
 });
 
-test("buildGeneratedPageDraft renders richer visual blocks and respects section color overrides", () => {
+test("buildGeneratedPageDraft handles missing template blocks with empty output", () => {
   const result = buildGeneratedPageDraft({
     ...baseInput,
     template: {
       ...baseInput.template,
-      visualPreset: "conversion-stack",
-      variationRules: ["visual-template-library"],
-      baseSections: ["hero", "story", "process"],
-      optionalSections: ["finalCta"],
-      sectionVariants: [
-        {
-          key: "hero",
-          title: "{{primaryKeyword}} untuk {{city}}",
-          sectionType: "hero-1",
-          requiredTokens: ["primaryKeyword", "city"],
-        },
-        {
-          key: "story",
-          title: "Kenapa {{service}} ini berbeda",
-          sectionType: "split-row",
-          colorVariant: "accent",
-          requiredTokens: ["service"],
-        },
-        {
-          key: "process",
-          title: "Alur kerja {{service}}",
-          sectionType: "timeline-row",
-          requiredTokens: ["service"],
-        },
-        {
-          key: "finalCta",
-          title: "Mulai {{offer}}",
-          sectionType: "cta-1",
-          requiredTokens: ["offer"],
-          optional: true,
-        },
-      ],
+      blocks: [],
     },
-    keywordSet: {
-      _key: "kw-visual",
-      primaryKeyword: "jasa cetak buku premium",
-      angle: "quality",
-    },
+    keywordSet: { _key: "kw-3", primaryKeyword: "cetak buku online" },
   });
 
-  assert.deepEqual(
-    result.blocks.map((block) => block._type),
-    ["hero-1", "split-row", "timeline-row", "cta-1"],
-  );
-  assert.equal((result.blocks[1] as { colorVariant: string }).colorVariant, "accent");
-  assert.equal((result.blocks[2] as { colorVariant: string }).colorVariant, "background");
-  assert.equal((result.blocks[3] as { colorVariant: string }).colorVariant, "primary");
+  assert.deepEqual(result.blocks, []);
 });
 
-test("buildGeneratedPageDraft skips sections whose required tokens cannot be resolved", () => {
+
+test("buildGeneratedPageDraft supports custom slug pattern from program", () => {
   const result = buildGeneratedPageDraft({
     ...baseInput,
-    template: {
-      ...baseInput.template,
-      tokenDefinitions: [
-        { name: "primaryKeyword", sourceField: "primaryKeyword", required: true },
-        { name: "service", sourceField: "service", required: true },
-      ],
-      baseSections: ["hero"],
-      optionalSections: ["problems", "faq"],
-      sectionVariants: [
-        {
-          key: "hero",
-          title: "{{primaryKeyword}}",
-          sectionType: "hero-1",
-          requiredTokens: ["primaryKeyword"],
-        },
-        {
-          key: "problems",
-          title: "Needs city",
-          sectionType: "problem-solution-block",
-          requiredTokens: ["city"],
-          optional: true,
-        },
-        {
-          key: "faq",
-          title: "Needs service",
-          sectionType: "faq-block",
-          requiredTokens: ["service"],
-          optional: true,
-        },
-      ],
+    program: {
+      ...baseInput.program,
+      slugPattern: "{{routeBase}}/{{city}}/{{service}}",
     },
-    row: {
-      _key: "row-2",
-      key: "row-no-city",
-      service: "cetak-buku",
-    },
-    keywordSet: {
-      _key: "kw-speed",
-      key: "kw-speed",
-      primaryKeyword: "cetak buku cepat",
-      angle: "speed",
-    },
+    keywordSet: { _key: "kw-4", primaryKeyword: "jasa cetak buku" },
   });
 
-  assert.deepEqual(
-    result.blocks.map((block) => block._key),
-    ["hero", "faq"],
-  );
+  assert.equal(result.slug.current, "percetakan/surabaya/cetak-buku");
 });
 
 test("duplicate helpers detect slug and lineage conflicts", () => {
@@ -255,10 +188,7 @@ test("duplicate helpers detect slug and lineage conflicts", () => {
     },
   ];
 
-  assert.equal(
-    detectDuplicateSlug(existing, "percetakan-cetak-buku-surabaya-jasa-cetak-buku"),
-    true,
-  );
+  assert.equal(detectDuplicateSlug(existing, "percetakan-cetak-buku-surabaya-jasa-cetak-buku"), true);
 
   const duplicate = findDuplicatePage(existing, {
     slug: "different-slug",

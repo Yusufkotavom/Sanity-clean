@@ -46,9 +46,16 @@ async function main() {
   }
 
   const sanityCmd = process.platform === 'win32' ? 'sanity.cmd' : 'sanity';
+  const additionalAllowedHosts =
+    process.env.SANITY_STUDIO_ALLOWED_HOSTS || '3333.devk.my.id,devk.my.id,.devk.my.id,localhost,127.0.0.1';
+
   const child = spawn(sanityCmd, ['dev', '--host', HOST, '--port', String(port)], {
     stdio: 'inherit',
     shell: false,
+    env: {
+      ...process.env,
+      __VITE_ADDITIONAL_SERVER_ALLOWED_HOSTS: additionalAllowedHosts,
+    },
   });
 
   child.on('exit', (code, signal) => {
