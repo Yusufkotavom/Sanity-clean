@@ -4,6 +4,49 @@ This document tracks all SEO-related changes made to the repository.
 
 ---
 
+## 2026-05-12 — Fresh Astro + Sanity Foundation (SEO/Redirect/Data Contracts Only)
+
+### Changed Files
+- `pnpm-workspace.yaml` (MODIFIED) - Added `web-astro` workspace package for isolated Astro runtime.
+- `package.json` (MODIFIED) - Added root script alias `dev:astro`.
+- `web-astro/package.json` (ADDED) - New Astro app package with Sanity client, Astro runtime, and redirect export script.
+- `web-astro/tsconfig.json` (ADDED) - Strict TypeScript baseline for Astro app.
+- `web-astro/astro.config.mjs` (ADDED) - Initial Astro config (`output: server`) for fresh app baseline.
+- `web-astro/.env.example` (ADDED) - New env contract for Astro + Sanity integration.
+- `web-astro/src/env.d.ts` (ADDED) - Astro env typing entrypoint.
+- `web-astro/src/lib/sanity/client.ts` (ADDED) - Sanity client bootstrap for Astro runtime.
+- `web-astro/src/lib/sanity/contracts.ts` (ADDED) - Zod schemas for `seoSettings`, per-doc `meta`, and `redirect` payload validation.
+- `web-astro/src/lib/sanity/queries.ts` (ADDED) - GROQ query definitions for SEO settings and redirects.
+- `web-astro/src/lib/seo/meta.ts` (ADDED) - SEO resolver with fallback order (`meta` -> `seoSettings` -> default).
+- `web-astro/src/lib/seo/jsonld.ts` (ADDED) - JSON-LD builder based on resolved metadata.
+- `web-astro/src/lib/redirects/types.ts` (ADDED) - Redirect rule type contract.
+- `web-astro/src/lib/redirects/static.ts` (ADDED) - Structural wildcard redirect definitions.
+- `web-astro/src/lib/redirects/sanity.ts` (ADDED) - Sanity redirect fetch + validation path.
+- `web-astro/src/lib/redirects/build-redirects.ts` (ADDED) - Merge/dedupe pipeline for static + Sanity redirects.
+- `web-astro/scripts/export-redirects.mjs` (ADDED) - Redirect export utility with dev-first Sanity token priority.
+- `docs/astro-fresh-foundation-plan.md` (ADDED) - New-project execution plan focused on Sanity data/SEO/redirect foundations.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated status snapshot + fresh workstream checklist.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+Created a completely new Astro workspace (`web-astro`) as a fresh project baseline and implemented only three core layers:
+1. Sanity contract-first data integration (`seoSettings`, `meta`, `redirect`) with schema validation.
+2. SEO metadata/JSON-LD resolver with explicit global fallback behavior.
+3. Redirect architecture split between Sanity-managed specific redirects and code-managed structural wildcard redirects.
+
+No page rendering migration or compatibility layer was introduced in this cycle.
+
+### Impact on SEO/Integration
+- SEO impact: positive foundational impact; metadata fallback and JSON-LD generation contracts are now centralized and reusable for the new Astro runtime.
+- Integration impact: clear separation of redirect ownership and validated Sanity payload contracts reduces data-shape drift risk.
+
+### Verification Status
+- ✅ Manual verification completed for file structure, import paths, and monorepo workspace wiring.
+- ✅ Governance docs updated as required (`docs/astro-migration-megaplan.md`, `docs/seo-updates.md`).
+- ⚠️ Runtime verification (`pnpm --filter web-astro run typecheck` / `build`) not executed in this cycle.
+
+---
+
 ## 2026-04-27 — Frontend Performance Patch (Icon Bundle + Logo Priority)
 
 ### Changed Files

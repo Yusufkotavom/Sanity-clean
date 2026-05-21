@@ -1,8 +1,0 @@
-# Cloudflare Worker Environment Variables
-# Copy this to .dev.vars for local development
-
-# URL of the ops dashboard API
-OPS_API_URL=http://localhost:3001
-
-# Secret for authenticating cron requests
-CRON_SECRET=replace-with-cron-secret-min-32-chars

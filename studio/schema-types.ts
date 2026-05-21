@@ -24,6 +24,11 @@ import legacyPage from "./schemas/documents/legacy-page";
 import generatorTemplate from "./schemas/documents/generator-template";
 import generatorProgram from "./schemas/documents/generator-program";
 import generatorDataset from "./schemas/documents/generator-dataset";
+import siteSettings from "./schemas/documents/site-settings";
+import homeContent from "./schemas/documents/home-content";
+import whyChooseReason from "./schemas/documents/why-choose-reason";
+import serviceLane from "./schemas/documents/service-lane";
+import serviceCluster from "./schemas/documents/service-cluster";
 
 // Schema UI shared objects
 import blockContent from "./schemas/blocks/shared/block-content";
@@ -120,6 +125,11 @@ export const schemaTypes = [
   generatorTemplate,
   generatorProgram,
   generatorDataset,
+  siteSettings,
+  homeContent,
+  whyChooseReason,
+  serviceLane,
+  serviceCluster,
   // shared objects
   blockContent,
   link,

@@ -30,6 +30,9 @@ Migrate legacy Astro source into current Next.js + Sanity stack with:
 
 ## Current Status Snapshot (Already Done)
 
+- [x] New-project mode activated for Astro foundation (`web-astro`) with explicit scope lock: no page-porting and no compatibility layer in this cycle.
+- [x] Fresh Sanity-first foundation for Astro has been created (`data contract`, `SEO resolver`, `redirect pipeline`) in a dedicated workspace app (`web-astro`) separated from the legacy Next runtime.
+- [x] Redirect architecture is now split clearly for the new Astro app: specific redirects from Sanity `redirect` docs + structural wildcard redirects from code-owned `STATIC_REDIRECTS`.
 - [x] Frontend performance hotfix shipped for public pages: removed wildcard `lucide-react`/`simple-icons` imports from the Sanity icon renderer path (eliminating a multi-megabyte client chunk source), and lowered non-critical header logo eager cost (`priority` default off, quality reduced) with successful production build verification.
 - [x] Sanity post-like type mapping documentation has been published (`docs/sanity-post-types-map.md`) and a repo-local automation skill for Sanity operations has been added (`skills/sanity-studio-post-ops`), including JSON-driven create/upsert scripts for `post`, `service`, `product`, `project`, and `page`.
 - [x] Env-backed smoke verification completed for post-like automation scripts: dry-run + draft write succeeded for `post/service/product/project/page`, and raw-perspective checks confirmed payload keys are persisted on QA draft documents.
@@ -258,6 +261,15 @@ Migrate legacy Astro source into current Next.js + Sanity stack with:
 - [x] Hybrid delivery pattern is now demonstrated end-to-end on `/test-page-hybrid`: code-driven route shell plus Sanity `page` blocks (`hero`, proof via `grid-row`, `cta`, `faqs`) seeded through dev-first credentials for concrete evaluation before applying the model to money pages
 - [x] Sanity page-array guardrails are now scripted: page audits detect missing `_key` and missing `link.isExternal`, while a normalizer can patch legacy `page` documents in place to keep Studio editing safe
 - [x] Hybrid demo public-read issue resolved: `/test-page-hybrid` now uses public-safe hyphenated document IDs for the `page` and referenced `faq` docs, and the FAQ renderer skips null dereference results instead of crashing if a referenced document is unavailable
+
+## Fresh Astro Workstream (2026-05-12)
+
+- [x] Create isolated Astro workspace app (`web-astro`) in monorepo.
+- [x] Implement Sanity contract-first modules for `seoSettings` and `redirect` payloads with schema validation.
+- [x] Implement SEO metadata resolver with global fallback behavior from `seoSettings`.
+- [x] Implement redirect merge pipeline (Sanity specific + static structural) with dedupe.
+- [ ] Add contract tests (`astro check` + runtime sample validation) for data and redirect payloads.
+- [ ] Restore/verify repo-local Claude SEO bundle path (`skills/claude-seo/...`) for mandatory SEO-task skill precheck; blocker: directory not present in current checkout.
 - [x] Repo-level execution guidance now codifies public Sanity guardrails in `AGENTS.md` and a reusable `skills/sanity-public-content-guardrails` skill, so future agent-driven seed/import work follows the same public-read-safe rules by default
 - [x] `/test-page-hybrid` now uses a clearer blueprint layout: code-owned intro/source diagnostics, separated Sanity hero/proof and conversion zones, explicit ownership mapping, and a fallback-oriented explanation section that is closer to the intended money-page hybrid pattern
 - [x] Hybrid demo now supports page-level split control via `topBlockCount`, allowing editors to keep one freeform `blocks[]` array while choosing how many blocks render before the code-owned middle section
