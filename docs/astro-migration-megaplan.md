@@ -313,6 +313,9 @@ Migrate legacy Astro source into current Next.js + Sanity stack with:
 - [x] Generator Program now supports customizable slug pattern tokens (`{{routeBase}}`, `{{city}}`, `{{service}}`, `{{primaryKeyword}}`) so route format is no longer fixed to one automatic composition.
 - [x] Studio generator now shows quick-copy token references above `Slug Pattern` and above `Template Blocks` for faster manual token authoring.
 - [x] `all-posts` block is now extended as a generic listing block: supports `default` grid + `carousel` mode, multi-source filters (`post/service/product/project`), and configurable item limit.
+- [x] Post OG workflow now supports generate-once-save: Studio action can generate/regenerate OG image, upload to Sanity asset, and patch `meta.image`, while `/api/og` fallback stays available and theme is configurable via SEO Settings.
+- [x] Post OG generation now also backfills featured image (`post.image`) when empty, so one generation can cover both SEO OG and listing hero needs without overwriting manual featured images.
+- [x] Frontend metadata and legacy route hygiene pass completed: `metadataBase` now has robust env fallbacks, legacy `/posts` routes redirect to `/blog`, and image-quality config includes `100` to remove runtime warnings.
 ## Workstream A - Platform & Data Foundation
 
 ### A1. CMS Contract Freeze

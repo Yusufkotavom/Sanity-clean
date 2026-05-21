@@ -117,6 +117,8 @@ export default defineType({
     }),
     meta,
   ],
+  description:
+    "Tip: use document action 'Generate OG Image' to auto-create and save meta image from title.",
 
   preview: {
     select: {

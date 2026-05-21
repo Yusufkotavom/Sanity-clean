@@ -178,6 +178,74 @@ export default defineType({
       ],
     }),
     defineField({
+      name: "ogTheme",
+      title: "OG Image Theme",
+      type: "object",
+      description: "Global visual settings for /api/og fallback generator.",
+      fields: [
+        defineField({
+          name: "eyebrow",
+          title: "Eyebrow Label",
+          type: "string",
+          initialValue: "KotaCom",
+        }),
+        defineField({
+          name: "defaultBadge",
+          title: "Default Badge",
+          type: "string",
+          initialValue: "Insights",
+        }),
+        defineField({
+          name: "gradientFrom",
+          title: "Gradient From",
+          type: "string",
+          description: "Hex color. Example: #0B1220",
+          initialValue: "#0B1220",
+          validation: (Rule) =>
+            Rule.regex(/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/, {
+              name: "hex color",
+              invert: false,
+            }).warning("Use hex color format, e.g. #0B1220"),
+        }),
+        defineField({
+          name: "gradientTo",
+          title: "Gradient To",
+          type: "string",
+          description: "Hex color. Example: #1E293B",
+          initialValue: "#1E293B",
+          validation: (Rule) =>
+            Rule.regex(/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/, {
+              name: "hex color",
+              invert: false,
+            }).warning("Use hex color format, e.g. #1E293B"),
+        }),
+        defineField({
+          name: "accentColor",
+          title: "Accent Color",
+          type: "string",
+          description: "Hex color. Example: #22D3EE",
+          initialValue: "#22D3EE",
+          validation: (Rule) =>
+            Rule.regex(/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/, {
+              name: "hex color",
+              invert: false,
+            }).warning("Use hex color format, e.g. #22D3EE"),
+        }),
+        defineField({
+          name: "textColor",
+          title: "Text Color",
+          type: "string",
+          description: "Hex color. Example: #FFFFFF",
+          initialValue: "#FFFFFF",
+          validation: (Rule) =>
+            Rule.regex(/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/, {
+              name: "hex color",
+              invert: false,
+            }).warning("Use hex color format, e.g. #FFFFFF"),
+        }),
+      ],
+    }),
+    defineField({
       name: "defaultAggregateRating",
       title: "Default Aggregate Rating (Global Fallback)",
       type: "aggregateRating",

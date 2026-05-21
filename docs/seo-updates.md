@@ -86,6 +86,49 @@ Implemented one dedicated page (`/sanity-blocks`) that aggregates Sanity content
 
 ### Verification Status
 - ✅ `pnpm --filter frontend run typecheck` passed.
+
+## 2026-05-21 — Fix OG action patch target for documents without existing drafts
+
+### Changed Files
+- `studio/document-actions/generate-post-og-action.ts` (MODIFIED) - Patch target now resolves to published document ID when draft does not exist, instead of forcing `drafts.*`.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+- Fixed mutation failures like `document with ID drafts.* was not found` by correcting target document patch behavior.
+- Action now patches the proper document ID based on actual draft presence.
+
+### Impact on SEO/Integration
+- SEO impact:
+  - No direct SEO output change.
+- Integration impact:
+  - OG generate/regenerate action now works for published-only documents that do not yet have a draft counterpart.
+
+### Verification Status
+- ✅ `pnpm --filter studio run typecheck` passed.
+
+## 2026-05-21 — Metadata base fallback + /posts redirects + image quality warning cleanup
+
+### Changed Files
+- `frontend/sanity/lib/metadata.ts` (MODIFIED) - Added resilient `metadataBase` resolver with fallback order: `seo.siteUrl` -> `NEXT_PUBLIC_SITE_URL` -> `VERCEL_PROJECT_PRODUCTION_URL` -> local dev URL.
+- `frontend/next.config.mjs` (MODIFIED) - Added structural redirects for legacy `/posts` paths to `/blog` and expanded allowed image qualities to include `100`.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated status snapshot for metadata/redirect warning cleanup.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+- Resolved `metadataBase` warning by ensuring root metadata always has a valid URL.
+- Added redirects for `/posts`, `/posts/blog`, and `/posts/:slug` to canonical `/blog` paths to avoid 404 drift.
+- Removed Next image quality warning by allowing quality `100` in config.
+
+### Impact on SEO/Integration
+- SEO impact:
+  - Better canonical/OG URL stability due to consistent metadata base resolution.
+  - Legacy `/posts` traffic now resolves to canonical `/blog` routes.
+- Integration impact:
+  - Cleaner dev/prod logs and fewer metadata/image config warnings during rendering.
+
+### Verification Status
+- ✅ `pnpm --filter frontend run typecheck` passed.
+- ✅ `pnpm --filter studio run typecheck` passed.
 - ✅ Manual code review completed for query/fetch/route wiring.
 
 ---
@@ -1646,6 +1689,25 @@ Synchronized AI runtime contracts across frontend query layer, shared package ex
 
 ### Verification Status
 - ✅ `pnpm --filter studio run typecheck` passed.
+
+## 2026-05-21 — Remove invalid API CORS credentials header for OG fetch compatibility
+
+### Changed Files
+- `frontend/next.config.mjs` (MODIFIED) - Removed `Access-Control-Allow-Credentials: true` from global `/api/:path*` headers.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+- Removed a conflicting CORS header that could create invalid combinations for public OG endpoints (`Allow-Origin: *` with credentials).
+- This improves browser-side fetch compatibility from Studio action flows.
+
+### Impact on SEO/Integration
+- SEO impact:
+  - No direct SEO content change.
+- Integration impact:
+  - Reduces cross-origin fetch failures for OG generation endpoint consumed by Studio action.
+
+### Verification Status
+- ✅ `pnpm --filter frontend run typecheck` passed.
 - ⚠️ Studio dev server restart is required for the new Vite allowlist to take effect.
 
 ## 2026-05-21 — Studio Host Allowlist Hotfix via explicit Vite config
@@ -1766,6 +1828,123 @@ Synchronized AI runtime contracts across frontend query layer, shared package ex
 - Integration impact:
   - CMS editors can reuse one listing block across post/service/product/project surfaces with configurable presentation mode.
   - Frontend query contract now matches Studio schema extensions for the block.
+
+### Verification Status
+- ✅ `pnpm --filter frontend run typecheck` passed.
+- ✅ `pnpm --filter studio run typecheck` passed.
+
+## 2026-05-21 — OG generator now also backfills Post featured image
+
+### Changed Files
+- `studio/document-actions/generate-post-og-action.ts` (MODIFIED) - Generate OG action now also sets top-level `image` (featured image) when it is empty, while always updating `meta.image`.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated status snapshot to note featured-image backfill behavior.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+- Extended the Post OG generation workflow so one generation can populate both:
+  - `meta.image` (SEO OG image), and
+  - `image` (featured image), but only when featured image is currently empty.
+- Manual featured images remain untouched when already present.
+
+### Impact on SEO/Integration
+- SEO impact:
+  - Stronger image consistency between social sharing image and article card/featured image for posts missing manual visuals.
+- Integration impact:
+  - Reduces duplicate editor work by reusing generated OG asset for featured image on first generation.
+
+### Verification Status
+- ✅ `pnpm --filter studio run typecheck` passed.
+- ✅ `pnpm --filter frontend run typecheck` passed.
+
+## 2026-05-21 — OG action base URL fallback updated for 3002 and api.devk.my.id
+
+### Changed Files
+- `studio/document-actions/generate-post-og-action.ts` (MODIFIED) - Added static fallback OG base URLs (`http://localhost:3002`, `https://api.devk.my.id`) to reduce `Failed to fetch` when Studio env points to wrong local port.
+- `studio/.env` (MODIFIED) - Updated Studio preview URL to `http://localhost:3002` and set `SANITY_STUDIO_FRONTEND_URL=https://api.devk.my.id`.
+- `studio/.env.example` (MODIFIED) - Added `SANITY_STUDIO_FRONTEND_URL` example variable.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+- Fixed recurring OG generation fetch failures caused by stale `localhost:3000` base URL.
+- Action now has robust multi-base fallback and env defaults aligned with current runtime (`3002` / `api.devk.my.id`).
+
+### Impact on SEO/Integration
+- SEO impact:
+  - No direct metadata contract change.
+- Integration impact:
+  - Higher reliability for Studio-based OG generate/regenerate flow in mixed local/remote environments.
+
+### Verification Status
+- ✅ `pnpm --filter studio run typecheck` passed.
+- ✅ Runtime check: `https://api.devk.my.id/api/og?title=Test+OG&badge=Blog` returned `HTTP 200` with `content-type: image/png`.
+
+## 2026-05-21 — Prevent remote Studio from using localhost OG endpoints
+
+### Changed Files
+- `studio/document-actions/generate-post-og-action.ts` (MODIFIED) - Added runtime host check so `localhost:*` OG candidates are skipped when Studio is opened from non-localhost domain.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+- Fixed a remote Studio scenario where action still attempted `http://localhost:3002`, which points to the editor’s local machine and fails from remote browser sessions.
+- Action now keeps localhost candidates only for truly local Studio sessions.
+
+### Impact on SEO/Integration
+- SEO impact:
+  - No direct SEO output changes.
+- Integration impact:
+  - OG generation action is now consistent between local and remote Studio access patterns.
+
+### Verification Status
+- ✅ `pnpm --filter studio run typecheck` passed.
+
+## 2026-05-21 — Fix OG action fetch failure with multi-base URL fallback
+
+### Changed Files
+- `studio/document-actions/generate-post-og-action.ts` (MODIFIED) - Added base URL fallback chain (`SANITY_STUDIO_FRONTEND_URL`, `SANITY_STUDIO_PREVIEW_URL`, `seoSettings.siteUrl`), image content-type validation, and clearer URL-specific error messages.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+- Resolved common `Failed to fetch` failures in Studio OG action by trying multiple configured frontend base URLs instead of one static URL.
+- Added strict response validation so HTML/non-image responses are rejected before asset upload.
+
+### Impact on SEO/Integration
+- SEO impact:
+  - No direct SEO output change.
+- Integration impact:
+  - Studio OG generation is now more robust across local/dev/prod URL mismatches and gives actionable diagnostics when endpoint config is wrong.
+
+### Verification Status
+- ✅ `pnpm --filter studio run typecheck` passed.
+- ✅ `pnpm --filter frontend run typecheck` passed.
+
+## 2026-05-21 — Post OG generate-once-save workflow + Sanity theme controls
+
+### Changed Files
+- `frontend/app/api/og/route.tsx` (ADDED) - Added OG image generator endpoint (1200x630) with edge runtime, CORS, and CDN-friendly cache headers.
+- `frontend/sanity/lib/metadata.ts` (MODIFIED) - Added dynamic OG fallback URL (`/api/og`) when no image exists, with article badge handling.
+- `frontend/sanity/queries/seo-settings.ts` (MODIFIED) - Extended query with `ogTheme` fields used by OG generator.
+- `studio/document-actions/generate-post-og-action.ts` (ADDED) - Added Studio document action for Post: Generate/Regenerate OG image and save into `meta.image`.
+- `studio/sanity.config.ts` (MODIFIED) - Registered custom Post document action.
+- `studio/schemas/blocks/shared/meta.ts` (MODIFIED) - Added OG generation metadata fields (`ogGeneratedAt`, `ogGenerationSource`) and image usage guidance.
+- `studio/schemas/documents/seo-settings.ts` (MODIFIED) - Added global OG theme settings (eyebrow, badge, gradient, accent, text color).
+- `studio/schemas/documents/post.ts` (MODIFIED) - Added operator guidance for using Generate OG action.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated status snapshot for OG generation workflow completion.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+- Implemented "generate once, save to Sanity" workflow for Post OG images:
+  - Editors can run `Generate OG Image` / `Regenerate OG Image` from Post document actions.
+  - Generated image is uploaded as Sanity asset and patched into `meta.image`.
+  - Subsequent metadata reads use stored `meta.image` instead of repeated dynamic generation.
+- Added global OG visual controls in SEO Settings, used by `/api/og` generator.
+- Kept dynamic fallback path for documents without image as safe fallback.
+
+### Impact on SEO/Integration
+- SEO impact:
+  - OG image consistency improves because generated images are persisted per document.
+  - Fallback path remains available for documents that still lack a stored image.
+- Integration impact:
+  - Cross-layer sync completed: Studio schema/settings/action, frontend OG endpoint, SEO settings query, and metadata resolver fallback contract.
 
 ### Verification Status
 - ✅ `pnpm --filter frontend run typecheck` passed.

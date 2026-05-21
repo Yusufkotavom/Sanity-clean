@@ -9,7 +9,7 @@ function normalizeRouteKey(pathname: string): string {
 
 const allowedCorsOrigins = (
   process.env.NEXT_PUBLIC_ALLOWED_CORS_ORIGINS ||
-  "https://devk.my.id,https://3333.devk.my.id,http://localhost:3000,http://127.0.0.1:3000"
+  "https://devk.my.id,https://3333.devk.my.id,https://api.devk.my.id,https://sanity-clean-studio.vercel.app,https://clean-kotacom.sanity.studio,https://cms.kotacom.id,http://localhost:3000,http://127.0.0.1:3000,http://localhost:3333"
 )
   .split(",")
   .map((entry) => entry.trim())
@@ -39,6 +39,13 @@ const withCorsHeaders = (request: NextRequest, response: NextResponse) => {
 };
 
 export function proxy(request: NextRequest) {
+  if (request.nextUrl.pathname === "/api/og") {
+    if (request.method === "OPTIONS") {
+      return new NextResponse(null, { status: 204 });
+    }
+    return NextResponse.next();
+  }
+
   if (request.nextUrl.pathname.startsWith("/api/")) {
     if (request.method === "OPTIONS") {
       return withCorsHeaders(request, new NextResponse(null, { status: 204 }));

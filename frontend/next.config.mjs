@@ -62,6 +62,21 @@ const STATIC_REDIRECTS = [
     permanent: true,
   },
   {
+    source: "/posts",
+    destination: "/blog",
+    permanent: true,
+  },
+  {
+    source: "/posts/blog",
+    destination: "/blog",
+    permanent: true,
+  },
+  {
+    source: "/posts/:slug",
+    destination: "/blog/:slug",
+    permanent: true,
+  },
+  {
     source: "/tag/:slug*",
     destination: "/blog",
     permanent: true,
@@ -188,7 +203,7 @@ const nextConfig = {
     return [...STATIC_REDIRECTS, ...sanityRedirects];
   },
   images: {
-    qualities: [60, 75, 85],
+    qualities: [60, 75, 85, 100],
     formats: ["image/avif", "image/webp"],
     remotePatterns: [
       {
@@ -212,10 +227,6 @@ const nextConfig = {
           {
             key: "Access-Control-Allow-Headers",
             value: "Content-Type, Authorization, X-Requested-With",
-          },
-          {
-            key: "Access-Control-Allow-Credentials",
-            value: "true",
           },
           {
             key: "Vary",

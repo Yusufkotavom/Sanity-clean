@@ -11,6 +11,7 @@ import { defaultDocumentNode } from "./defaultDocumentNode";
 import { codeInput } from "@sanity/code-input";
 import { applyHybridPresetAction } from "./document-actions/apply-hybrid-preset-action";
 import { convertPageToPostAction } from "./document-actions/convert-page-to-post-action";
+import { generatePostOgAction } from "./document-actions/generate-post-og-action";
 
 // Define the actions that should be available for singleton documents
 const singletonActions = new Set([
@@ -69,6 +70,10 @@ export default defineConfig({
 
       if (context.schemaType === "page") {
         return [applyHybridPresetAction, convertPageToPostAction, ...input];
+      }
+
+      if (context.schemaType === "post") {
+        return [generatePostOgAction, ...input];
       }
 
       return input;

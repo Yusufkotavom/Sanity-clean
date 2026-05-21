@@ -58,6 +58,24 @@ const getSiteName = cache(async (): Promise<string> => {
 const getSiteUrl = (seo?: SeoSettings | null) =>
   seo?.siteUrl?.trim()?.replace(/\/+$/, "") || "";
 
+const getMetadataBaseUrl = (seo?: SeoSettings | null) => {
+  const primary =
+    getSiteUrl(seo) ||
+    process.env.NEXT_PUBLIC_SITE_URL?.trim()?.replace(/\/+$/, "") ||
+    process.env.VERCEL_PROJECT_PRODUCTION_URL?.trim()?.replace(/\/+$/, "");
+  if (primary) {
+    const withProtocol = primary.startsWith("http") ? primary : `https://${primary}`;
+    try {
+      return new URL(withProtocol);
+    } catch {
+      // fall through
+    }
+  }
+
+  const devPort = process.env.PORT || "3000";
+  return new URL(`http://localhost:${devPort}`);
+};
+
 const getCanonicalUrl = (slug?: string, seo?: SeoSettings | null) => {
   const baseUrl = getSiteUrl(seo);
   if (!baseUrl) return slug && slug !== "index" ? `/${slug.replace(/^\/+/, "")}` : "/";
@@ -68,6 +86,10 @@ const getCanonicalUrl = (slug?: string, seo?: SeoSettings | null) => {
 const resolveImage = (
   page?: MetaCompatiblePage | null,
   seo?: SeoSettings | null,
+  options?: {
+    dynamicTitle?: string;
+    dynamicBadge?: string;
+  },
 ) => {
   if (page?.meta?.image) {
     return {
@@ -93,10 +115,23 @@ const resolveImage = (
     };
   }
 
+  const siteUrl = getSiteUrl(seo);
+  if (siteUrl && options?.dynamicTitle) {
+    const params = new URLSearchParams({
+      title: options.dynamicTitle,
+    });
+    if (options.dynamicBadge) {
+      params.set("badge", options.dynamicBadge);
+    }
+    return {
+      url: `${siteUrl}/api/og?${params.toString()}`,
+      width: 1200,
+      height: 630,
+    };
+  }
+
   return {
-    url: getSiteUrl(seo)
-      ? `${getSiteUrl(seo)}${KOTACOM_SPLIT_DEFAULT_SEO_IMAGE}`
-      : KOTACOM_SPLIT_DEFAULT_SEO_IMAGE,
+    url: siteUrl ? `${siteUrl}${KOTACOM_SPLIT_DEFAULT_SEO_IMAGE}` : KOTACOM_SPLIT_DEFAULT_SEO_IMAGE,
     width: 1200,
     height: 630,
   };
@@ -123,8 +158,11 @@ const buildMetadata = ({
   seo?: SeoSettings | null;
   siteName: string;
 }): Metadata => {
-  const image = resolveImage(page, seo);
   const resolvedTitle = normalizeSeoTitle(title || seo?.defaultTitle || siteName);
+  const image = resolveImage(page, seo, {
+    dynamicTitle: resolvedTitle,
+    dynamicBadge: openGraphType === "article" ? "Blog" : undefined,
+  });
   const normalizedDescription = normalizeSeoDescription(
     description || seo?.defaultDescription || "",
   );
@@ -171,10 +209,9 @@ export async function generateRootMetadata(): Promise<Metadata> {
   const seo = await getSeoSettings();
   const siteName = await getSiteName();
   const suffix = seo?.titleSuffix || siteName;
-  const siteUrl = getSiteUrl(seo);
 
   return {
-    metadataBase: siteUrl ? new URL(siteUrl) : undefined,
+    metadataBase: getMetadataBaseUrl(seo),
     title: {
       template: `%s | ${suffix}`,
       default: seo?.defaultTitle || siteName,

@@ -28,6 +28,14 @@ export const SEO_SETTINGS_QUERY = groq`*[_type == "seoSettings"][0]{
     },
     alt
   },
+  ogTheme{
+    eyebrow,
+    defaultBadge,
+    gradientFrom,
+    gradientTo,
+    accentColor,
+    textColor
+  },
   defaultAggregateRating,
   companyInfo{
     name,

@@ -56,6 +56,8 @@ export default defineField({
       name: "image",
       type: "image",
       title: "Image",
+      description:
+        "Primary OG image. You can upload manually or use Studio action 'Generate OG Image' in Post document.",
       options: {
         hotspot: true,
       },
@@ -66,6 +68,18 @@ export default defineField({
           title: "Alternative Text",
         }),
       ],
+    }),
+    defineField({
+      name: "ogGeneratedAt",
+      type: "datetime",
+      title: "OG Generated At",
+      readOnly: true,
+    }),
+    defineField({
+      name: "ogGenerationSource",
+      type: "string",
+      title: "OG Generation Source",
+      readOnly: true,
     }),
   ],
 });
