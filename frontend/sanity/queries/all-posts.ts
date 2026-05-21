@@ -7,5 +7,8 @@ export const allPostsQuery = groq`
     _key,
     padding,
     colorVariant,
+    displayMode,
+    contentTypes,
+    limit,
   }
 `;

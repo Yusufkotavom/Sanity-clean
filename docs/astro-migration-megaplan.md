@@ -312,6 +312,7 @@ Migrate legacy Astro source into current Next.js + Sanity stack with:
 - [x] Frontend cross-origin guardrail updated for `devk.my.id` origins: proxy now handles API CORS preflight (`OPTIONS`) and origin allowlist response headers for `/api/*` requests.
 - [x] Generator Program now supports customizable slug pattern tokens (`{{routeBase}}`, `{{city}}`, `{{service}}`, `{{primaryKeyword}}`) so route format is no longer fixed to one automatic composition.
 - [x] Studio generator now shows quick-copy token references above `Slug Pattern` and above `Template Blocks` for faster manual token authoring.
+- [x] `all-posts` block is now extended as a generic listing block: supports `default` grid + `carousel` mode, multi-source filters (`post/service/product/project`), and configurable item limit.
 ## Workstream A - Platform & Data Foundation
 
 ### A1. CMS Contract Freeze

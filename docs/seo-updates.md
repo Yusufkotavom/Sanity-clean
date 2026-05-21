@@ -1743,3 +1743,30 @@ Synchronized AI runtime contracts across frontend query layer, shared package ex
 
 ### Verification Status
 - ✅ Schema compile check via existing typecheck path (no schema contract break introduced by added read-only fields).
+
+## 2026-05-21 — Extend all-posts block with mode and multi-type filter
+
+### Changed Files
+- `studio/schemas/blocks/all-posts.ts` (MODIFIED) - Added `displayMode` (`default` or `carousel`), `contentTypes` (post/service/product/project), and `limit` fields with sane defaults and validation.
+- `frontend/sanity/queries/all-posts.ts` (MODIFIED) - Extended block query to include new listing config fields.
+- `frontend/components/blocks/all-posts.tsx` (MODIFIED) - Listing renderer now supports default grid and carousel mode, supports mixed content sources (post/service/product/project), item limit, and typed route mapping.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated current status snapshot with all-posts extension completion.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+- Upgraded `all-posts` into a generalized content-listing block:
+  - Display mode: `default` grid or `carousel`
+  - Source filter: `post`, `service`, `product`, `project` (single or mixed)
+  - Configurable max items via `limit`
+- Rendering now resolves destination path by document type (`/blog`, `/services`, `/products`, `/projects`).
+
+### Impact on SEO/Integration
+- SEO impact:
+  - No direct SEO schema change for metadata fields.
+- Integration impact:
+  - CMS editors can reuse one listing block across post/service/product/project surfaces with configurable presentation mode.
+  - Frontend query contract now matches Studio schema extensions for the block.
+
+### Verification Status
+- ✅ `pnpm --filter frontend run typecheck` passed.
+- ✅ `pnpm --filter studio run typecheck` passed.
