@@ -316,6 +316,7 @@ Migrate legacy Astro source into current Next.js + Sanity stack with:
 - [x] Post OG workflow now supports generate-once-save: Studio action can generate/regenerate OG image, upload to Sanity asset, and patch `meta.image`, while `/api/og` fallback stays available and theme is configurable via SEO Settings.
 - [x] Post OG generation now also backfills featured image (`post.image`) when empty, so one generation can cover both SEO OG and listing hero needs without overwriting manual featured images.
 - [x] Frontend metadata and legacy route hygiene pass completed: `metadataBase` now has robust env fallbacks, legacy `/posts` routes redirect to `/blog`, and image-quality config includes `100` to remove runtime warnings.
+- [x] Studio desk information architecture has been simplified: related content is now grouped into `Core Content`, `Shared Docs`, and `Routing & Templates` with shared references (category/author/faq/testimonial) colocated.
 ## Workstream A - Platform & Data Foundation
 
 ### A1. CMS Contract Freeze

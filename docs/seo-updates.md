@@ -129,6 +129,32 @@ Implemented one dedicated page (`/sanity-blocks`) that aggregates Sanity content
 ### Verification Status
 - ✅ `pnpm --filter frontend run typecheck` passed.
 - ✅ `pnpm --filter studio run typecheck` passed.
+
+## 2026-05-21 — Simplified Studio desk structure with nested groups and shared docs hub
+
+### Changed Files
+- `studio/structure.ts` (MODIFIED) - Reorganized desk menu into minimal grouped navigation:
+  - `Core Content` (page/post/product/service/project)
+  - `Shared Docs` (category/author/faq/testimonial/reusable sections)
+  - `Routing & Templates` (location/service type/legacy templating/redirects)
+  - preserved `Bulk Actions`, `Generator` (dev only), and global singleton settings.
+- `docs/astro-migration-megaplan.md` (MODIFIED) - Updated status snapshot for Studio information architecture cleanup.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+- Reduced top-level menu noise by nesting related document types under clearer parent groups.
+- Merged shared-reference content (`author`, `category`, `faq`, `testimonial`) into a single `Shared Docs` section as requested.
+- Moved location/service type/legacy route content into one unified `Routing & Templates` section.
+
+### Impact on SEO/Integration
+- SEO impact:
+  - No direct SEO output/schema logic change.
+- Integration impact:
+  - Editor workflow is cleaner and faster to navigate; related entities are now co-located.
+
+### Verification Status
+- ✅ `pnpm --filter studio run typecheck` passed.
+- ✅ `pnpm --filter studio run build` passed.
 - ✅ Manual code review completed for query/fetch/route wiring.
 
 ---
