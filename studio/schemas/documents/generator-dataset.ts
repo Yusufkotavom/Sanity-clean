@@ -117,7 +117,7 @@ export default defineType({
       rows: 8,
       hidden: ({ document }) => document?.importMode !== "csv-ready",
       description:
-        "Paste CSV with header: key,label,service,city,industry,offer. Run the sync script to convert pasted CSV into Rows.",
+        "Paste CSV with header: key,label,service,city,industry,offer,localCondition. Run the sync script to convert pasted CSV into Rows.",
     }),
     defineField({
       name: "dedupePolicy",

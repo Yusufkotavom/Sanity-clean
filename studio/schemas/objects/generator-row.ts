@@ -36,6 +36,12 @@ export default defineType({
       title: "Offer",
       type: "string",
     }),
+    defineField({
+      name: "localCondition",
+      title: "Local Condition",
+      type: "string",
+      description: "Konteks lokal unik kota ini (ekonomi, kebutuhan, karakteristik) untuk diferensiasi konten.",
+    }),
   ],
   preview: {
     select: {
