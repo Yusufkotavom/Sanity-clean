@@ -1,6 +1,6 @@
 import { buildLlmsText } from "@/lib/llms-text";
 
-export const revalidate = 604800;
+export const revalidate = 2592000;
 
 export async function GET() {
   const body = await buildLlmsText();

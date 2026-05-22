@@ -128,12 +128,12 @@ const fetchPublished = async <T>({
 };
 
 // Cached fetch for rarely-changing global data (settings, navigation, theme)
-// Revalidates every 604800s (1 week) and uses tags for on-demand revalidation
+// Revalidates every 2592000s (1 month) and uses tags for on-demand revalidation
 const fetchPublishedCached = async <T>({
   query,
   params,
   tags,
-  revalidate = 604800,
+  revalidate = 2592000,
 }: {
   query: string;
   params?: Record<string, unknown>;
@@ -156,7 +156,7 @@ export const fetchSanityPageBySlug = async ({
     query: PAGE_QUERY,
     params: { slug },
     tags: ["pages", `page:${slug}`],
-    revalidate: 604800,
+    revalidate: 2592000,
   });
 
   return data;
@@ -224,7 +224,7 @@ export const fetchTemplatePageByRoute = async ({
         query: TEMPLATE_PAGE_BY_ROUTE_QUERY,
         params: { route },
         tags: ["template-pages", `template-page:${route}`],
-        revalidate: 604800,
+        revalidate: 2592000,
       });
 
   if (data) return data;
@@ -274,7 +274,7 @@ export const fetchTemplatePageByRoute = async ({
             "template-pages",
             `template-page:${pattern}:${service || ""}:${city}`,
           ],
-          revalidate: 604800,
+          revalidate: 2592000,
         });
 
     if (fallback) return fallback;
@@ -365,7 +365,7 @@ export const fetchSanityPostBySlug = async ({
     query: POST_QUERY,
     params: { slug },
     tags: ["posts", `post:${slug}`],
-    revalidate: 604800,
+    revalidate: 2592000,
   });
 
   return data;
@@ -649,7 +649,7 @@ export const fetchSanityProductBySlug = async ({
     query: PRODUCT_QUERY,
     params: { slug },
     tags: ["products", `product:${slug}`],
-    revalidate: 604800,
+    revalidate: 2592000,
   });
 
   return data;
@@ -720,7 +720,7 @@ export const fetchSanityServiceBySlug = async ({
     query: SERVICE_QUERY,
     params: { slug },
     tags: ["services", `service:${slug}`],
-    revalidate: 604800,
+    revalidate: 2592000,
   });
 
   return data;
@@ -763,7 +763,7 @@ export const fetchSanityProjectBySlug = async ({
     query: PROJECT_QUERY,
     params: { slug },
     tags: ["projects", `project:${slug}`],
-    revalidate: 604800,
+    revalidate: 2592000,
   });
 
   return data;

@@ -6,7 +6,7 @@ import DraftModeTools from "@/components/draft-mode-tools";
 import ReusableSlotClient from "@/components/reusable-slot-client";
 import { fetchSanityReusableSections } from "@/sanity/lib/fetch";
 
-export const revalidate = 604800;
+export const revalidate = 2592000;
 
 export default async function MainLayout({
   children,
