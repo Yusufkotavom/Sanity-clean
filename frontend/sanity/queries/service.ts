@@ -68,6 +68,9 @@ export const SERVICES_QUERY = groq`*[_type == "service" && defined(slug)] | orde
     _id,
     title,
     slug
+  },
+  cta{
+    ${linkQuery}
   }
 }`;
 
@@ -86,6 +89,9 @@ export const SERVICES_HOME_QUERY = groq`*[_type == "service" && defined(slug)] |
     _id,
     title,
     slug
+  },
+  cta{
+    ${linkQuery}
   }
 }`;
 
@@ -104,6 +110,9 @@ export const SERVICES_BY_CATEGORY_QUERY = groq`*[_type == "service" && defined(s
     _id,
     title,
     slug
+  },
+  cta{
+    ${linkQuery}
   }
 }`;
 
@@ -129,5 +138,8 @@ export const RELATED_SERVICES_QUERY = groq`*[
     _id,
     title,
     slug
+  },
+  cta{
+    ${linkQuery}
   }
 }`;

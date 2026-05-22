@@ -11,6 +11,8 @@ import {
   Clock3,
   Layers2,
   ShieldCheck,
+  ArrowRight,
+  MessageCircle,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -115,6 +117,7 @@ export default async function HomePeparMiddleSection() {
               <div className="mt-8 flex flex-wrap gap-3">
                 <Button asChild variant="default">
                   <Link href={homeContent?.heroPrimaryCta?.href || "/services"}>
+                    <ArrowRight className="h-4 w-4" />
                     {homeContent?.heroPrimaryCta?.label || "Lihat Solusi untuk Bisnis Anda"}
                   </Link>
                 </Button>
@@ -291,7 +294,10 @@ export default async function HomePeparMiddleSection() {
                 size="sm"
               />
               <Button asChild variant="ghost" size="sm">
-                <Link href="/services">Lihat semua layanan</Link>
+                <Link href="/services">
+                  <MessageCircle className="h-4 w-4" />
+                  Lihat semua layanan
+                </Link>
               </Button>
             </div>
           </div>

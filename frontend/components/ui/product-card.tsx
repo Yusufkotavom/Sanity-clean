@@ -7,6 +7,7 @@ import {
   ArchiveCardTitle,
 } from "@/components/ui/archive-card";
 import TaxonomyBadgeList from "@/components/ui/taxonomy-badge-list";
+import SanityIcon, { type SanityIconValue } from "@/components/icons/sanity-icon";
 
 export default function ProductCard({
   title,
@@ -17,6 +18,7 @@ export default function ProductCard({
   currency,
   availability,
   categories,
+  cta,
   priority,
 }: {
   title?: string;
@@ -27,6 +29,11 @@ export default function ProductCard({
   currency?: string;
   availability?: string;
   categories?: Array<{ _id?: string; title?: string }>;
+  cta?: {
+    title?: string;
+    icon?: SanityIconValue;
+    uiIcon?: SanityIconValue;
+  };
   priority?: boolean;
 }) {
   return (
@@ -48,7 +55,13 @@ export default function ProductCard({
         />
         <ArchiveCardExcerpt density="compact">{excerpt}</ArchiveCardExcerpt>
       </div>
-      <ArchiveCardArrow density="compact" />
+      <div className="mt-4 flex items-center justify-between">
+        <span className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground/85">
+          <SanityIcon icon={cta?.uiIcon || cta?.icon} className="size-4" />
+          {cta?.title || "View details"}
+        </span>
+        <ArchiveCardArrow density="compact" className="mt-0" />
+      </div>
     </ArchiveCardShell>
   );
 }

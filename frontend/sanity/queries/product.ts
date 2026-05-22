@@ -70,6 +70,9 @@ export const PRODUCTS_QUERY = groq`*[_type == "product" && defined(slug)] | orde
     _id,
     title,
     slug
+  },
+  cta{
+    ${linkQuery}
   }
 }`;
 
@@ -88,6 +91,9 @@ export const PRODUCTS_HOME_QUERY = groq`*[_type == "product" && defined(slug)] |
     _id,
     title,
     slug
+  },
+  cta{
+    ${linkQuery}
   }
 }`;
 
@@ -106,6 +112,9 @@ export const PRODUCTS_BY_CATEGORY_QUERY = groq`*[_type == "product" && defined(s
     _id,
     title,
     slug
+  },
+  cta{
+    ${linkQuery}
   }
 }`;
 
@@ -131,5 +140,8 @@ export const RELATED_PRODUCTS_QUERY = groq`*[
     _id,
     title,
     slug
+  },
+  cta{
+    ${linkQuery}
   }
 }`;

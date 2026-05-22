@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/archive-card";
 import { Badge } from "@/components/ui/badge";
 import { Code, ExternalLink, Link as LinkIcon } from "lucide-react";
+import SanityIcon, { type SanityIconValue } from "@/components/icons/sanity-icon";
 
 export default function ProjectCard({
   title,
@@ -21,6 +22,7 @@ export default function ProjectCard({
   completionYear,
   projectType,
   categories,
+  cta,
   previewUrl,
   repositoryUrl,
   projectUrl,
@@ -34,6 +36,11 @@ export default function ProjectCard({
   completionYear?: number;
   projectType?: string;
   categories?: any[];
+  cta?: {
+    title?: string;
+    icon?: SanityIconValue;
+    uiIcon?: SanityIconValue;
+  };
   previewUrl?: string;
   repositoryUrl?: string;
   projectUrl?: string;
@@ -111,8 +118,9 @@ export default function ProjectCard({
         <ArchiveCardExcerpt density="compact">{excerpt}</ArchiveCardExcerpt>
         
           <div className="mt-4 flex items-center justify-between border-t border-border/30 pt-3">
-            <span className="text-sm font-semibold capitalize text-foreground/80 group-hover:text-primary transition-colors">
-              {previewUrl ? "Live Preview" : "View Details"}
+            <span className="inline-flex items-center gap-1.5 text-sm font-semibold capitalize text-foreground/80 transition-colors group-hover:text-primary">
+              <SanityIcon icon={cta?.uiIcon || cta?.icon} className="size-4" />
+              {cta?.title || (previewUrl ? "Live Preview" : "View Details")}
             </span>
             <ArchiveCardArrow density="compact" className="mt-0 group-hover:bg-primary group-hover:text-primary-foreground" />
           </div>

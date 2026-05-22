@@ -56,6 +56,9 @@ export const PROJECTS_QUERY = groq`*[_type == "project" && defined(slug)] | orde
     _id,
     title,
     slug
+  },
+  cta{
+    ${linkQuery}
   }
 }`;
 
@@ -78,6 +81,9 @@ export const PROJECTS_HOME_QUERY = groq`*[_type == "project" && defined(slug)] |
     _id,
     title,
     slug
+  },
+  cta{
+    ${linkQuery}
   }
 }`;
 
