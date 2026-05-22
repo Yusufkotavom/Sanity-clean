@@ -3,6 +3,7 @@ import { PAGE_QUERY_RESULT } from "@/sanity.types";
 
 const Hero1 = dynamic(() => import("@/components/blocks/hero/hero-1"));
 const Hero2 = dynamic(() => import("@/components/blocks/hero/hero-2"));
+const HeroVercel = dynamic(() => import("@/components/blocks/hero/hero-vercel"));
 const SectionHeader = dynamic(() => import("@/components/blocks/section-header"));
 const SplitRow = dynamic(() => import("@/components/blocks/split/split-row"));
 const GridRow = dynamic(() => import("@/components/blocks/grid/grid-row"));
@@ -32,6 +33,7 @@ type Block = NonNullable<NonNullable<PAGE_QUERY_RESULT>["blocks"]>[number];
 const componentMap: Record<string, React.ComponentType<any>> = {
   "hero-1": Hero1,
   "hero-2": Hero2,
+  "hero-vercel": HeroVercel,
   "section-header": SectionHeader,
   "split-row": SplitRow,
   "grid-row": GridRow,
@@ -57,6 +59,8 @@ const componentMap: Record<string, React.ComponentType<any>> = {
   "value-props-block": ValuePropsBlock,
   "stats-hero-block": StatsHeroBlock,
 };
+
+export const BLOCK_COMPONENT_TYPES = Object.keys(componentMap);
 
 export default function Blocks({
   blocks,

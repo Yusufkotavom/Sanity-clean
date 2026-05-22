@@ -1,5 +1,6 @@
 import { hero1Query } from "../hero/hero-1";
 import { hero2Query } from "../hero/hero-2";
+import { heroVercelQuery } from "../hero/hero-vercel";
 import { sectionHeaderQuery } from "../section-header";
 import { splitRowQuery } from "../split/split-row";
 import { gridRowQuery } from "../grid/grid-row";
@@ -34,6 +35,7 @@ export const blocksQuery = `
     _key,
     ${hero1Query},
     ${hero2Query},
+    ${heroVercelQuery},
     ${sectionHeaderQuery},
     ${splitRowQuery},
     ${gridRowQuery},

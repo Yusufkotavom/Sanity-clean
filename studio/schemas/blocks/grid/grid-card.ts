@@ -6,6 +6,7 @@ export default defineType({
   type: "object",
   icon: LayoutGrid,
   initialValue: {
+    cardStyle: "vercel",
     title: "Website Development",
     excerpt:
       "Pembuatan website profesional, cepat, dan responsif untuk company profile, landing page, hingga portal bisnis.",
@@ -22,7 +23,20 @@ export default defineType({
       name: "uiIcon",
       title: "UI Icon",
       type: "ui-icon",
-      description: "Optional icon shown in the card heading.",
+      description: "Optional icon shown on top of the card heading.",
+    }),
+    defineField({
+      name: "cardStyle",
+      title: "Card Style",
+      type: "string",
+      initialValue: "vercel",
+      options: {
+        list: [
+          { title: "Vercel (Icon Top + CTA Bottom)", value: "vercel" },
+          { title: "Classic", value: "classic" },
+        ],
+        layout: "radio",
+      },
     }),
     defineField({
       name: "title",

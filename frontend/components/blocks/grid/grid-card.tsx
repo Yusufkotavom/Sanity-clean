@@ -14,22 +14,23 @@ type GridCard = Extract<GridColumn, { _type: "grid-card" }>;
 
 interface GridCardProps extends Omit<GridCard, "_type" | "_key"> {
   color?: ColorVariant;
+  cardStyle?: "vercel" | "classic" | null;
 }
 
 export default function GridCard({
   color,
+  cardStyle,
   uiIcon,
   title,
   excerpt,
   image,
   link,
 }: GridCardProps) {
+  const isVercelStyle = cardStyle !== "classic";
+
   return (
-    <Link
-      key={title}
+    <div
       className="group flex w-full rounded-[1.4rem] ring-offset-background focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-      href={link?.href ?? "#"}
-      target={link?.target ? "_blank" : undefined}
     >
       <SectionPanel
         tone={color === "primary" ? "sky" : "neutral"}
@@ -38,6 +39,9 @@ export default function GridCard({
           color === "primary"
             ? "group-hover:border-primary-foreground/50 group-hover:bg-sky-100/75 dark:group-hover:bg-sky-950/28"
             : "group-hover:border-primary/35 group-hover:bg-white/85 dark:group-hover:bg-white/8",
+          isVercelStyle
+            ? "border-white/70 bg-white/75 shadow-[0_12px_30px_rgba(15,23,42,0.08)] dark:border-white/15 dark:bg-white/5"
+            : "",
         )}
       >
         <div>
@@ -57,13 +61,16 @@ export default function GridCard({
           )}
           <div className={cn(color === "primary" ? "text-background" : undefined)}>
             {title && (
-              <div className="mb-3 flex items-center justify-between gap-3">
-                <div className="inline-flex items-center gap-2">
-                  <SanityIcon icon={uiIcon} className="size-5" />
-                <h3 className="text-xl font-semibold leading-tight md:text-2xl">
-                  {title}
-                </h3>
+              <div className="mb-3">
+                <div
+                  className={cn(
+                    "inline-flex items-center gap-2",
+                    isVercelStyle && "mb-3 size-10 justify-center rounded-lg border border-foreground/15 bg-background/80",
+                  )}
+                >
+                  <SanityIcon icon={uiIcon} className={cn("size-5", isVercelStyle && "size-4")} />
                 </div>
+                <h3 className="text-xl font-semibold leading-tight md:text-2xl">{title}</h3>
               </div>
             )}
             {excerpt ? (
@@ -73,18 +80,24 @@ export default function GridCard({
             ) : null}
           </div>
         </div>
-        <Button
-          className="mt-6 self-start rounded-full"
-          size="lg"
-          variant={link?.buttonVariant}
-          asChild
-        >
-          <div className="inline-flex items-center gap-2">
-            <SanityIcon icon={link?.uiIcon || link?.icon} className="size-4" />
-            <span>{link?.title ?? "Learn More"}</span>
-          </div>
-        </Button>
+        {link?.title ? (
+          <Button
+            className={cn("mt-6 self-start rounded-full", isVercelStyle && "px-5")}
+            size="lg"
+            variant={link?.buttonVariant}
+            asChild
+          >
+            <Link
+              href={link?.href ?? "#"}
+              target={link?.target ? "_blank" : undefined}
+              rel={link?.target ? "noopener" : undefined}
+            >
+              <SanityIcon icon={link?.uiIcon || link?.icon} className="size-4" />
+              <span>{link?.title ?? "Learn More"}</span>
+            </Link>
+          </Button>
+        ) : null}
       </SectionPanel>
-    </Link>
+    </div>
   );
 }

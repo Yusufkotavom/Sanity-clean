@@ -64,6 +64,8 @@ import generatorPageMeta from "./schemas/objects/generator-page-meta";
 // Schema UI objects
 import hero1 from "./schemas/blocks/hero/hero-1";
 import hero2 from "./schemas/blocks/hero/hero-2";
+import heroVercel from "./schemas/blocks/hero/hero-vercel";
+import heroFeatureCard from "./schemas/blocks/hero/hero-feature-card";
 import sectionHeader from "./schemas/blocks/section-header";
 import splitRow from "./schemas/blocks/split/split-row";
 import splitContent from "./schemas/blocks/split/split-content";
@@ -164,6 +166,8 @@ export const schemaTypes = [
   // blocks
   hero1,
   hero2,
+  heroVercel,
+  heroFeatureCard,
   sectionHeader,
   splitRow,
   splitContent,

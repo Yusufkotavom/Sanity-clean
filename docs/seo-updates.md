@@ -2367,3 +2367,125 @@ Synchronized AI runtime contracts across frontend query layer, shared package ex
 
 ### Verification Status
 - ✅ `pnpm --filter studio run typecheck` passed.
+## 2026-05-22 — Add Vercel-style Hero block for Sanity page builder (hero-first replication)
+
+### Changed Files
+- `studio/schemas/blocks/hero/hero-vercel.ts` (NEW) - New hero block schema with eyebrow, title, description, two CTAs, and icon cards.
+- `studio/schemas/blocks/hero/hero-feature-card.ts` (NEW) - Reusable icon card object for hero side cards.
+- `studio/schemas/blocks/shared/page-blocks.ts` (MODIFIED) - Registered `hero-vercel` in shared block list and Hero insert group.
+- `studio/schema-types.ts` (MODIFIED) - Registered new hero schema types.
+- `frontend/sanity/queries/hero/hero-vercel.ts` (NEW) - GROQ projection for new hero block.
+- `frontend/sanity/queries/shared/blocks.ts` (MODIFIED) - Included `hero-vercel` query fragment in shared blocks projection.
+- `frontend/components/blocks/hero/hero-vercel.tsx` (NEW) - Frontend renderer for Vercel-style hero with icon cards and CTA stack.
+- `frontend/components/blocks/index.tsx` (MODIFIED) - Added block map entry for `hero-vercel`.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+- Implemented a dedicated `hero-vercel` block so editors can compose a hero section that matches the Vercel Next.js page style direction:
+  - concise eyebrow + big value proposition title
+  - primary/secondary CTA row
+  - supporting feature cards with icons
+- This adds missing structure that starter template blocks did not provide out of the box.
+
+### Impact on SEO/Integration
+- SEO impact:
+  - No direct metadata output changes.
+- Integration impact:
+  - Studio schema, shared GROQ blocks projection, and frontend block renderer are synchronized for the new hero type.
+
+### Verification Status
+- ✅ `pnpm --filter studio run typecheck` passed.
+- ✅ `pnpm --filter frontend run build` passed.
+
+## 2026-05-22 — Extend Sanity blocks showcase page and add `/sanity-block` alias route
+
+### Changed Files
+- `frontend/app/(main)/sanity-blocks/page.tsx` (MODIFIED) - Added coverage dashboard for all renderer-supported block types (available vs missing in public Sanity data).
+- `frontend/components/blocks/index.tsx` (MODIFIED) - Exported supported block type list via `BLOCK_COMPONENT_TYPES`.
+- `frontend/app/(main)/sanity-block/page.tsx` (NEW) - Added singular alias route that reuses `/sanity-blocks` page.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+- Extended showcase page to function as a single operational page for checking all supported Sanity blocks.
+- Added per-type status chips so editors can quickly see which block types already have sample data and which still need content.
+- Added route alias `/sanity-block` so requested URL path variant resolves correctly.
+
+### Impact on SEO/Integration
+- SEO impact:
+  - No direct metadata contract changes.
+- Integration impact:
+  - Better visibility between frontend block renderer registry and actual Sanity public content coverage.
+
+### Verification Status
+- ✅ `pnpm --filter frontend run build` passed.
+## 2026-05-22 — Extend grid card for Vercel-style icon-top/CTA-bottom and add public showcase seed script
+
+### Changed Files
+- `studio/schemas/blocks/grid/grid-card.ts` (MODIFIED) - Added `cardStyle` option (`vercel` / `classic`) with default `vercel`.
+- `frontend/sanity/queries/grid/grid-card.ts` (MODIFIED) - Added `cardStyle` to grid card query projection.
+- `frontend/components/blocks/grid/grid-card.tsx` (MODIFIED) - Updated card renderer to Vercel-style hierarchy (icon top, title/body, CTA button bottom) and removed nested-link card wrapper.
+- `frontend/scripts/seed-sanity-blocks-showcase-page.mjs` (NEW) - Added seed script for a public sample page using `hero-vercel` + `grid-row` card composition.
+- `frontend/package.json` (MODIFIED) - Added script alias `sanity:seed:block-showcase`.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+- Extended existing grid card system so cards can follow the same visual grammar as the new Vercel-style hero:
+  - icon above heading
+  - concise description body
+  - explicit CTA action at the bottom
+- Added a dedicated seed script to generate a public sample page for component review and theme alignment.
+
+### Impact on SEO/Integration
+- SEO impact:
+  - No direct metadata key changes.
+- Integration impact:
+  - Studio schema, GROQ projection, and frontend renderer are synchronized for `cardStyle`.
+  - Public sample data can be created via script when write permission is available.
+
+### Verification Status
+- ✅ `pnpm --filter studio run typecheck` passed.
+- ✅ `pnpm --filter frontend run build` passed.
+- ⚠️ `node scripts/seed-sanity-blocks-showcase-page.mjs --write` currently fails with `403 insufficient permissions (create)` on dataset `development`.
+## 2026-05-22 — Seed public showcase page for Sanity component review
+
+### Changed Files
+- `frontend/.env.local` (MODIFIED, local env) - Added write token references for Sanity script execution (`SANITY_DEV` and `SANITY_AUTH_TOKEN`).
+- Sanity dataset `development` (CONTENT WRITE) - Upserted public page document `showcase-sanity-components`.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+- Saved working write token in local env and executed showcase seed script.
+- Public page document for component review is now available with slug:
+  - `/showcase-sanity-components`
+- Seeded page contains:
+  - `hero-vercel` sample block
+  - `grid-row` sample with Vercel-style icon-top + CTA-bottom cards
+
+### Impact on SEO/Integration
+- SEO impact:
+  - Adds one public page route that can be indexed unless later set `noindex`.
+- Integration impact:
+  - Enables direct visual QA to align Sanity-driven components under one theme.
+
+### Verification Status
+- ✅ `node scripts/seed-sanity-blocks-showcase-page.mjs --write` succeeded.
+- ✅ Sanity CLI query confirms doc exists with `blockCount: 2`.
+
+## 2026-05-22 — Add campaign planning artifact for koperasi software landing + 10 posts
+
+### Changed Files
+- `plan/koperasi-software-campaign-plan.md` (NEW) - Added execution plan document for landing page + 10 promotion posts campaign.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+- Created a dedicated planning document under `/plan` as requested before execution.
+- Plan includes implementation options, content scope, topic list for 10 posts, execution stages, and verification checklist.
+
+### Impact on SEO/Integration
+- SEO impact:
+  - No direct runtime/content change yet.
+- Integration impact:
+  - Establishes a structured execution baseline before content creation and publishing.
+
+### Verification Status
+- ✅ Planning file created and saved in repository.

@@ -17,6 +17,7 @@
     "sanity:pages:audit": "node scripts/audit-sanity-page-arrays.mjs",
     "sanity:pages:normalize": "node scripts/normalize-sanity-page-arrays.mjs --write",
     "sanity:seed:example": "node scripts/seed-example-db.mjs --write",
+    "sanity:seed:block-showcase": "node scripts/seed-sanity-blocks-showcase-page.mjs --write",
     "hybrid:create": "node scripts/create-hybrid-page.mjs",
     "hybrid:route:create": "node scripts/create-hybrid-route.mjs",
     "sanity:bulk:delete": "node scripts/bulk-delete-by-query.mjs",

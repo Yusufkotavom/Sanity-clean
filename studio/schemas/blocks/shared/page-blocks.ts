@@ -13,6 +13,7 @@ const pageBlocks = defineField({
   of: [
     { type: "hero-1" },
     { type: "hero-2" },
+    { type: "hero-vercel" },
     { type: "stats-hero-block" },
     { type: "section-header" },
     { type: "split-row" },
@@ -43,7 +44,7 @@ const pageBlocks = defineField({
         {
           name: "hero",
           title: "Hero",
-          of: ["hero-1", "hero-2", "stats-hero-block"],
+          of: ["hero-1", "hero-2", "hero-vercel", "stats-hero-block"],
         },
         {
           name: "logo-cloud",

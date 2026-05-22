@@ -83,6 +83,10 @@ Migrate legacy Astro source into current Next.js + Sanity stack with:
 - [x] OG settings UX + renderer sync improved: title icon rendering moved from emoji to SVG icon set and `titleAlign` (`left|center`) is now configurable in Studio with frontend query/render support.
 - [x] OG settings control surface expanded for production tuning: reliable title centering, corner text overrides, case transform (`none/uppercase/lowercase`), morphglass preset styling, and one-click `Reset OG Defaults` Studio action are now integrated across schema/query/renderer.
 - [x] OG settings editor guidance has been hardened: constrained fields now display explicit value ranges and format hints in Studio to reduce invalid input/save failures.
+- [x] Hero block baseline is now extended beyond starter templates: a new `hero-vercel` block (with two CTA actions and icon-support feature cards) is integrated across Studio schema, shared block query, and frontend renderer to support Vercel-style hero composition directly in Sanity.
+- [x] Sanity block showcase route is now operationally unified for editor QA: `/sanity-block` alias is live, and `/sanity-blocks` now shows full renderer type coverage status (available vs missing sample data) in one page.
+- [x] Grid card architecture is now extended for Vercel-style hierarchy (`icon top + CTA bottom`) via `cardStyle` contract, with seed automation prepared for a public showcase page (`showcase-sanity-components`) pending write-token permission.
+- [x] Public showcase seed is now executed in development dataset: `showcase-sanity-components` exists with hero+grid blocks, enabling immediate component-theme review from Sanity-rendered content.
 - [x] Internal cron worker now also handles Upstash Redis quota exhaustion with explicit `429` responses, and AI prompt-template resolver now includes `topic` alias/fallback handling to reduce scheduled generation failures from variable-name mismatch.
 - [x] Schedule edit contract is now hardened across UI/API/manager: normalized `scheduleType` handling on create, nested payload merge safety on update, and edit-save payload preservation to prevent configuration loss after edits.
 - [x] Schedule create/edit contract now keeps ideation context end-to-end (`ideationInput`, `ideationKeywords`) and exposes previously hidden AI schedule options (`autoPublish`, `generateOgImage`, `promptTemplateId`, `tags`) in edit UI to avoid perceived data disappearance.
@@ -611,3 +615,4 @@ Migrate legacy Astro source into current Next.js + Sanity stack with:
   - SEO keyword clustering (4-5 location-aware variations per template)
   - Auto WA CTA buttons distributed in Pricing, Features, and Proof sections
   - Editors can use templates immediately without filling from scratch
+- [x] Campaign planning baseline for koperasi software content was added under `/plan`, covering landing page + 10 promotion posts with explicit execution and verification steps prior to seeding/publishing.
