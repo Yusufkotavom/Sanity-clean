@@ -142,6 +142,46 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: "routeBase",
+      title: "Route Base",
+      type: "string",
+      description: "Base path for generated pages, e.g. /jasa-cetak-buku or /pembuatan-website",
+      validation: (Rule) =>
+        Rule.required().custom((value) => {
+          if (typeof value !== "string") return "Route base is required.";
+          if (!/^\/[a-z0-9/-]*$/.test(value)) return "Must start with / and use lowercase path-safe characters.";
+          if (value.includes("//")) return "Cannot contain double slashes.";
+          if (value.length > 1 && value.endsWith("/")) return "Cannot end with trailing slash.";
+          return true;
+        }),
+    }),
+    defineField({
+      name: "slugPattern",
+      title: "Slug Pattern",
+      type: "string",
+      description: "Pattern for generated page slug. Tokens: {{routeBase}}, {{city}}, {{service}}, {{primaryKeyword}}.",
+      initialValue: "{{routeBase}}-{{city}}",
+      validation: (Rule) =>
+        Rule.required().custom((value) => {
+          if (typeof value !== "string" || !value.includes("{{routeBase}}"))
+            return "Slug pattern must include {{routeBase}}.";
+          return true;
+        }),
+    }),
+    defineField({
+      name: "programType",
+      title: "Program Type",
+      type: "string",
+      options: {
+        list: [
+          { title: "Landing Pages", value: "landing-pages" },
+          { title: "Location Pages", value: "location-pages" },
+        ],
+        layout: "radio",
+      },
+      initialValue: "location-pages",
+    }),
+    defineField({
       name: "blockTokenReference",
       title: "Block Token Quick Copy",
       type: "text",
