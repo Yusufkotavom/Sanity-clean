@@ -138,13 +138,22 @@ export async function POST(request: NextRequest) {
 
   const paths = collectPaths(payload);
 
+  // Theme/settings affect the root layout across all routes
+  const layoutTypes = ["themeSettings", "settings", "siteSettings", "navigation"];
+  const needsLayoutRevalidation = layoutTypes.includes(payload?._type || "");
+
   for (const path of paths) {
     revalidatePath(path);
+  }
+
+  if (needsLayoutRevalidation) {
+    revalidatePath("/", "layout");
   }
 
   return NextResponse.json({
     ok: true,
     revalidated: Array.from(paths),
+    layoutRevalidated: needsLayoutRevalidation,
     type: payload?._type || null,
     slug: payload?.slug?.current || null,
   });
