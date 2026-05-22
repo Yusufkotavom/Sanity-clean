@@ -232,6 +232,11 @@ export default async function ProductSlugPage(props: {
               product.availability,
             ]}
           />
+          {(product as any).affiliateLinks?.length > 0 && (
+            <div className="mb-6">
+              <AffiliateLinks links={(product as any).affiliateLinks} />
+            </div>
+          )}
           <TaxonomyBadgeList
             items={product.categories}
             baseHref="/products"
@@ -254,12 +259,6 @@ export default async function ProductSlugPage(props: {
             predefinedText={`Halo, saya tertarik dengan produk *${product.title}*. Boleh minta info detail dan harganya?`}
             sourceUrl={productPath}
           />
-          {(product as any).affiliateLinks?.length > 0 && (
-            <div className="mt-6">
-              <h3 className="mb-3 text-sm font-semibold text-foreground/70">Beli Online:</h3>
-              <AffiliateLinks links={(product as any).affiliateLinks} />
-            </div>
-          )}
           {product.cta?.href ? (
             <div className="mt-4">
               <GlobalWhatsAppButton
