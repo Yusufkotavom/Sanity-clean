@@ -8,14 +8,62 @@ type AffiliateLink = {
   url?: string;
 };
 
-const PLATFORM_ICONS: Record<string, { icon: string; color: string }> = {
-  shopee: { icon: "🛒", color: "bg-orange-500/10 text-orange-600 border-orange-500/20 hover:bg-orange-500/20" },
-  tokopedia: { icon: "🟢", color: "bg-green-500/10 text-green-700 border-green-500/20 hover:bg-green-500/20" },
-  tiktokshop: { icon: "🎵", color: "bg-black/5 text-black border-black/15 hover:bg-black/10 dark:bg-white/10 dark:text-white dark:border-white/20" },
-  lazada: { icon: "🔵", color: "bg-blue-500/10 text-blue-700 border-blue-500/20 hover:bg-blue-500/20" },
-  bukalapak: { icon: "🟣", color: "bg-pink-500/10 text-pink-700 border-pink-500/20 hover:bg-pink-500/20" },
-  blibli: { icon: "💙", color: "bg-sky-500/10 text-sky-700 border-sky-500/20 hover:bg-sky-500/20" },
-  other: { icon: "🔗", color: "bg-muted text-foreground border-border hover:bg-accent" },
+function PlatformIcon({ platform, className }: { platform: string; className?: string }) {
+  const cls = cn("size-5 shrink-0", className);
+  switch (platform) {
+    case "shopee":
+      return (
+        <svg viewBox="0 0 24 24" fill="currentColor" className={cls}>
+          <path d="M15.9414 17.9633c.229-1.879-.981-3.077-4.1758-4.0969-1.548-.528-2.277-1.22-2.26-2.1719.065-1.056 1.048-1.825 2.352-1.85a5.2898 5.2898 0 0 1 2.8838.89c.116.072.197.06.263-.039.09-.145.315-.494.39-.62.051-.081.061-.187-.068-.281-.185-.1369-.704-.4149-.983-.5319a6.4697 6.4697 0 0 0-2.5118-.514c-1.909.008-3.4129 1.215-3.5389 2.826-.082 1.1629.494 2.1078 1.73 2.8278.262.152 1.6799.716 2.2438.892 1.774.552 2.695 1.5419 2.478 2.6969-.197 1.047-1.299 1.7239-2.818 1.7439-1.2039-.046-2.2878-.537-3.1278-1.19l-.141-.11c-.104-.08-.218-.075-.287.03-.05.077-.376.547-.458.67-.077.108-.035.168.045.234.35.293.817.613 1.134.775a6.7097 6.7097 0 0 0 2.8289.727 4.9048 4.9048 0 0 0 2.0759-.354c1.095-.465 1.8029-1.394 1.9449-2.554zM11.9986 1.4009c-2.068 0-3.7539 1.95-3.8329 4.3899h7.6657c-.08-2.44-1.765-4.3899-3.8328-4.3899zm7.8516 22.5981-.08.001-15.7843-.002c-1.074-.04-1.863-.91-1.971-1.991l-.01-.195L1.298 6.2858a.459.459 0 0 1 .45-.494h4.9748C6.8448 2.568 9.1607 0 11.9996 0c2.8388 0 5.1537 2.5689 5.2757 5.7898h4.9678a.459.459 0 0 1 .458.483l-.773 15.5883-.007.131c-.094 1.094-.979 1.9769-2.0709 2.0059z" />
+        </svg>
+      );
+    case "tokopedia":
+      return (
+        <svg viewBox="0 0 24 24" fill="currentColor" className={cls}>
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm5 13H7v-1c0-2.33 4.67-3.5 5-3.5s5 1.17 5 3.5v1z" />
+        </svg>
+      );
+    case "tiktokshop":
+      return (
+        <svg viewBox="0 0 24 24" fill="currentColor" className={cls}>
+          <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z" />
+        </svg>
+      );
+    case "lazada":
+      return (
+        <svg viewBox="0 0 24 24" fill="currentColor" className={cls}>
+          <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm-1.5 17.5h-3v-11h3v11zm7 0h-7v-2.5h4.5V7h-4.5V4.5h7v13z" />
+        </svg>
+      );
+    case "bukalapak":
+      return (
+        <svg viewBox="0 0 24 24" fill="currentColor" className={cls}>
+          <path d="M3.5 5.5l8.5-4 8.5 4v9l-8.5 4-8.5-4v-9zm8.5 11.5l6-2.8V8.8l-6 2.8v5.4zm-7-5.4l6 2.8V8.8l-6-2.8v5.6zM12 3.3L6.5 6 12 8.7 17.5 6 12 3.3z" />
+        </svg>
+      );
+    case "blibli":
+      return (
+        <svg viewBox="0 0 24 24" fill="currentColor" className={cls}>
+          <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm-2 14H7V8h3c1.66 0 3 1.34 3 3s-1.34 3-3 3zm6 0h-3V8h3c1.66 0 3 1.34 3 3s-1.34 3-3 3zm-6-2c.55 0 1-.45 1-1s-.45-1-1-1H9v2h1zm6 0c.55 0 1-.45 1-1s-.45-1-1-1h-1v2h1z" />
+        </svg>
+      );
+    default:
+      return (
+        <svg viewBox="0 0 24 24" fill="currentColor" className={cls}>
+          <path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+        </svg>
+      );
+  }
+}
+
+const PLATFORM_STYLES: Record<string, string> = {
+  shopee: "bg-orange-500/10 text-orange-600 border-orange-500/25 hover:bg-orange-500/20",
+  tokopedia: "bg-green-500/10 text-green-700 border-green-500/25 hover:bg-green-500/20",
+  tiktokshop: "bg-black/5 text-black border-black/15 hover:bg-black/10 dark:bg-white/10 dark:text-white dark:border-white/20",
+  lazada: "bg-blue-600/10 text-blue-700 border-blue-600/25 hover:bg-blue-600/20",
+  bukalapak: "bg-rose-500/10 text-rose-700 border-rose-500/25 hover:bg-rose-500/20",
+  blibli: "bg-sky-500/10 text-sky-700 border-sky-500/25 hover:bg-sky-500/20",
+  other: "bg-muted text-foreground border-border hover:bg-accent",
 };
 
 export default function AffiliateLinks({ links }: { links?: AffiliateLink[] | null }) {
@@ -25,7 +73,7 @@ export default function AffiliateLinks({ links }: { links?: AffiliateLink[] | nu
     <div className="flex flex-wrap gap-2">
       {links.map((link, i) => {
         if (!link.url) return null;
-        const platform = PLATFORM_ICONS[link.platform || "other"] || PLATFORM_ICONS.other;
+        const style = PLATFORM_STYLES[link.platform || "other"] || PLATFORM_STYLES.other;
         return (
           <Link
             key={link._key || i}
@@ -34,10 +82,10 @@ export default function AffiliateLinks({ links }: { links?: AffiliateLink[] | nu
             rel="noopener noreferrer sponsored"
             className={cn(
               "inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-colors",
-              platform.color,
+              style,
             )}
           >
-            <span>{platform.icon}</span>
+            <PlatformIcon platform={link.platform || "other"} />
             <span>{link.label || `Beli di ${link.platform}`}</span>
           </Link>
         );
