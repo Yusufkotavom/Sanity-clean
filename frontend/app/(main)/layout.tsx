@@ -5,6 +5,7 @@ import FloatingWhatsApp from "@/components/floating-whatsapp";
 import DraftModeTools from "@/components/draft-mode-tools";
 import ReusableSlotClient from "@/components/reusable-slot-client";
 import RevealOnScroll from "@/components/reveal-on-scroll";
+import AutoBreadcrumb from "@/components/auto-breadcrumb";
 import { fetchSanityReusableSections } from "@/sanity/lib/fetch";
 
 export const revalidate = 2592000;
@@ -20,6 +21,7 @@ export default async function MainLayout({
     <>
       <ReusableSlotClient sections={reusableSections} slot="beforeHeader" />
       <Header />
+      <AutoBreadcrumb />
       <ReusableSlotClient sections={reusableSections} slot="afterHeader" />
       <main className="ui-shell bg-grid-vercel min-h-[calc(100vh-64px)]">
         <ReusableSlotClient sections={reusableSections} slot="beforeMainContent" />
