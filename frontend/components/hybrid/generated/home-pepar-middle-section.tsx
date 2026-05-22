@@ -3,8 +3,6 @@ import Image from "next/image";
 import {
   Blocks,
   LaptopMinimal,
-  Network,
-  Printer,
   Sparkles,
   Workflow,
   CheckCircle2,
@@ -25,7 +23,6 @@ import {
 import { cn } from "@/lib/utils";
 import {
   fetchSanityHomePosts,
-  fetchSanityHomeProducts,
   fetchSanityHomeProjects,
   fetchSanityHomeServices,
 } from "@/sanity/lib/fetch";
@@ -36,7 +33,6 @@ import {
   fetchServiceClusters,
 } from "@/sanity/lib/content";
 import ProjectCard from "@/components/ui/project-card";
-import ProductCard from "@/components/ui/product-card";
 import PostCard from "@/components/ui/post-card";
 import ServiceCard from "@/components/ui/service-card";
 import HomeWhyChoose from "@/components/home-why-choose";
@@ -45,27 +41,25 @@ import HomeFAQ from "@/components/home-faq";
 const laneIconMap = {
   website: LaptopMinimal,
   software: Blocks,
-  support: Network,
-  printing: Printer,
 } as const;
 
 const proofPoints = [
   {
-    title: "Scope Lebih Jelas di Awal",
+    title: "Scope dan Prioritas Lebih Jelas",
     description:
-      "Kebutuhan dipetakan menjadi prioritas kerja supaya tim bisnis tidak menebak langkah berikutnya.",
+      "Kebutuhan bisnis diterjemahkan ke backlog yang terukur agar eksekusi website atau software tidak melebar.",
     icon: Layers2,
   },
   {
-    title: "Eksekusi Lebih Cepat",
+    title: "Delivery Bertahap yang Cepat",
     description:
-      "Website, software, support, dan percetakan dikelola dalam satu ritme delivery tanpa handoff berulang.",
+      "Implementasi dibagi ke milestone sehingga tim bisa melihat hasil lebih cepat dan memberi feedback lebih awal.",
     icon: Clock3,
   },
   {
-    title: "Support Setelah Rilis",
+    title: "Stabil Setelah Go-Live",
     description:
-      "Pendampingan pasca-go-live membantu perbaikan kecil dan penyesuaian berjalan tanpa mengganggu operasional.",
+      "Pendampingan pasca-rilis memastikan perbaikan, optimasi, dan penyesuaian berjalan tanpa mengganggu operasional.",
     icon: ShieldCheck,
   },
 ] as const;
@@ -73,7 +67,6 @@ const proofPoints = [
 export default async function HomePeparMiddleSection() {
   const [
     recentProjects,
-    recentProducts,
     recentServices,
     recentPosts,
     homeContent,
@@ -82,7 +75,6 @@ export default async function HomePeparMiddleSection() {
     serviceClusters,
   ] = await Promise.all([
     fetchSanityHomeProjects(),
-    fetchSanityHomeProducts(),
     fetchSanityHomeServices(),
     fetchSanityHomePosts(),
     fetchHomeContent(),
@@ -92,8 +84,8 @@ export default async function HomePeparMiddleSection() {
   ]);
 
   // Fallback to hardcoded values if Sanity data is not available
-  const heroTitle = homeContent?.heroTitle || "Website, software, IT support, dan percetakan dalam satu jalur kerja.";
-  const heroDescription = homeContent?.heroDescription || "Kami membantu bisnis bergerak dari brief ke implementasi dengan scope yang jelas, timeline realistis, dan pendampingan sampai sistem benar-benar dipakai.";
+  const heroTitle = homeContent?.heroTitle || "Jasa Pembuatan Software dan Website untuk Bisnis yang Ingin Tumbuh Lebih Cepat.";
+  const heroDescription = homeContent?.heroDescription || "DEVK STUDIO membantu bisnis membangun website dan software custom dari tahap perencanaan, desain alur, development, sampai siap dipakai tim operasional.";
   const foundedYear = homeContent?.foundedYear || siteSettings?.foundedYear || 2008;
   const projectsCompleted = homeContent?.projectsCompleted || siteSettings?.projectsCompleted || 150;
   const location = homeContent?.location || siteSettings?.location || "Surabaya";
@@ -136,7 +128,7 @@ export default async function HomePeparMiddleSection() {
               <div className="relative aspect-square overflow-hidden rounded-[1.5rem] border border-white/45 bg-white/70 shadow-[0_18px_48px_rgba(15,23,42,0.1)] dark:border-white/12 dark:bg-white/5">
                 <Image
                   src={homeContent?.heroImage?.asset?.url || "/images/kotacom-split-production-ready/hero/hero-cetak-buku-shark-v2.png"}
-                  alt={homeContent?.heroImage?.alt || "Ilustrasi layanan website, software, support, dan percetakan Kotacom"}
+                  alt={homeContent?.heroImage?.alt || "Ilustrasi jasa pembuatan software dan website DEVK STUDIO"}
                   fill
                   className="object-contain p-4"
                   priority
@@ -187,9 +179,9 @@ export default async function HomePeparMiddleSection() {
         >
           <div className="space-y-6">
             <SectionIntro
-              eyebrow={homeContent?.servicesEyebrow || "Layanan Utama Kotacom"}
+              eyebrow={homeContent?.servicesEyebrow || "Layanan Utama DEVK STUDIO"}
               title={homeContent?.servicesTitle || "Empat layanan utama yang saling melengkapi untuk membantu bisnis bergerak lebih rapi."}
-              description={homeContent?.servicesDescription || "Mulai dari website, software, support, hingga percetakan, setiap layanan dirancang agar bisa berdiri sendiri atau digabung menjadi sistem kerja yang lebih utuh."}
+              description={homeContent?.servicesDescription || "Fokus utama kami adalah website dan software custom yang bisa berdiri sendiri atau diintegrasikan menjadi satu alur kerja bisnis yang utuh."}
               className="mb-0 max-w-4xl"
             />
 
@@ -221,10 +213,8 @@ export default async function HomePeparMiddleSection() {
               }) : (
                 // Fallback to hardcoded lanes if Sanity data is not available
                 [
-                  { key: "website", eyebrow: "Website Development", title: "Website profesional", href: "/pembuatan-website" },
-                  { key: "software", eyebrow: "Software Development", title: "Software custom", href: "/software" },
-                  { key: "support", eyebrow: "IT Support & Infra", title: "Support teknis", href: "/services" },
-                  { key: "printing", eyebrow: "Printing & Design", title: "Percetakan", href: "/percetakan" },
+                  { key: "website", eyebrow: "Website Development", title: "Website bisnis siap konversi", href: "/pembuatan-website" },
+                  { key: "software", eyebrow: "Software Development", title: "Software custom sesuai proses kerja", href: "/software" },
                 ].map((lane) => {
                   const Icon = laneIconMap[lane.key as keyof typeof laneIconMap];
                   return (
@@ -276,9 +266,9 @@ export default async function HomePeparMiddleSection() {
               )) : (
                 // Fallback workflow steps
                 [
-                  { title: "Pahami kebutuhan bisnis", description: "Kami mulai dari tujuan, hambatan operasional, dan target yang ingin dicapai agar solusi yang dibuat benar-benar relevan." },
-                  { title: "Susun solusi yang realistis", description: "Setelah arahnya jelas, kami bantu memetakan prioritas, scope kerja, timeline, dan bentuk implementasi yang paling masuk akal." },
-                  { title: "Eksekusi dan pendampingan", description: "Pekerjaan tidak berhenti saat rilis. Kami lanjutkan dengan support, evaluasi, dan penyesuaian agar hasilnya tetap berguna di lapangan." },
+                  { title: "Discovery & audit kebutuhan", description: "Kami petakan proses bisnis yang berjalan, hambatan utama, dan target hasil agar solusi yang dibangun benar-benar relevan." },
+                  { title: "Perancangan solusi dan prioritas", description: "Scope, timeline, dan prioritas fitur disusun jelas supaya eksekusi website atau software tetap terarah." },
+                  { title: "Development, testing, dan rollout", description: "Setiap milestone diuji dan dirilis bertahap agar tim dapat adopsi sistem baru dengan risiko minimal." },
                 ].map((item, index) => (
                   <div className="border-l border-border/70 pl-4" key={item.title}>
                     <div className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
@@ -354,33 +344,6 @@ export default async function HomePeparMiddleSection() {
         </SectionShell>
       )}
 
-      {/* PRODUCTS PREVIEW */}
-      {recentProducts.length > 0 && (
-        <SectionShell>
-          <div className="mb-8 flex items-end justify-between gap-4">
-            <SectionIntro
-              eyebrow="Katalog Produk"
-              title="Perangkat Kasir & IT"
-              description="Pilihan produk dengan kualitas terbaik untuk mendukung kegiatan bisnis Anda."
-              className="mb-0"
-            />
-            <Button asChild variant="outline" className="hidden sm:flex">
-              <Link href="/products">Semua Produk</Link>
-            </Button>
-          </div>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {recentProducts.map((product: any) => (
-              <ProductCard key={product._id || (product.slug && product.slug.current)} {...product} />
-            ))}
-          </div>
-          <div className="mt-8 flex justify-center sm:hidden">
-            <Button asChild variant="outline" className="w-full">
-              <Link href="/products">Semua Produk</Link>
-            </Button>
-          </div>
-        </SectionShell>
-      )}
-
       {/* SERVICES PREVIEW */}
       {recentServices.length > 0 && (
         <SectionShell>
@@ -388,7 +351,7 @@ export default async function HomePeparMiddleSection() {
             <SectionIntro
               eyebrow="Layanan Tersedia"
               title="Solusi Teknis Khusus"
-              description="Dari instalasi jaringan hingga percetakan dalam skala besar."
+              description="Eksplor layanan turunan yang mendukung implementasi website dan software di bisnis Anda."
               className="mb-0"
             />
             <Button asChild variant="outline" className="hidden sm:flex">
@@ -490,33 +453,17 @@ export default async function HomePeparMiddleSection() {
                 key: "website",
                 eyebrow: "Website Development",
                 title: "Website profesional",
-                description: "Untuk company profile, landing page, sekolah, toko online, dan kebutuhan promosi yang perlu struktur informasi rapi serta alur konversi yang kuat.",
+                description: "Untuk company profile, landing page, katalog produk, dan website kampanye yang butuh struktur konten rapi serta alur konversi yang jelas.",
                 href: "/pembuatan-website",
-                bullets: ["Company profile", "Landing page", "Toko online"],
+                bullets: ["Company profile", "Landing page", "Portal konten bisnis"],
               },
               {
                 key: "software",
                 eyebrow: "Software Development",
                 title: "Software custom",
-                description: "Cocok untuk dashboard bisnis, POS, CRM, otomasi operasional, dan integrasi proses yang membutuhkan sistem kerja sendiri.",
+                description: "Cocok untuk dashboard bisnis, CRM, workflow approval, otomasi operasional, dan integrasi proses internal yang spesifik.",
                 href: "/software",
-                bullets: ["POS & dashboard", "CRM & operasional", "Integrasi proses"],
-              },
-              {
-                key: "support",
-                eyebrow: "IT Support & Infra",
-                title: "Support teknis",
-                description: "Layanan support, network setup, administrasi server, dan konsultasi teknis untuk menjaga ritme kerja tim tetap lancar.",
-                href: "/services",
-                bullets: ["IT support", "Network setup", "System administration"],
-              },
-              {
-                key: "printing",
-                eyebrow: "Printing & Design",
-                title: "Percetakan",
-                description: "Buku, brosur, kalender, seminar kit, dan materi promosi lain yang dirancang untuk kebutuhan bisnis, event, dan branding.",
-                href: "/percetakan",
-                bullets: ["Cetak buku", "Brosur & kalender", "Materi promosi"],
+                bullets: ["Dashboard & pelaporan", "CRM & operasional", "Integrasi proses kerja"],
               },
             ].map((lane) => {
               const Icon = laneIconMap[lane.key as keyof typeof laneIconMap];
@@ -570,7 +517,7 @@ export default async function HomePeparMiddleSection() {
         >
           <div>
             <SectionIntro
-              eyebrow="Kenapa Banyak Bisnis Memilih Kotacom"
+              eyebrow="Kenapa Banyak Bisnis Memilih DEVK STUDIO"
               title="Bukan hanya karena layanan yang lengkap, tetapi karena eksekusinya bisa dibuat lebih terarah."
               description="Kami membantu bisnis menyusun prioritas, memperjelas kebutuhan, dan menyiapkan implementasi yang bisa benar-benar dipakai."
               className="mb-0 max-w-3xl"
@@ -580,15 +527,15 @@ export default async function HomePeparMiddleSection() {
             {[
               {
                 title: "Satu partner, lebih sedikit handoff",
-                description: "Website, software, support, dan printing bisa berjalan sendiri-sendiri, tetapi akan jauh lebih efektif ketika dirancang sebagai satu alur kerja yang saling mendukung.",
+                description: "Website publik dan software internal bisa berjalan sendiri-sendiri, tetapi akan jauh lebih efektif ketika dirancang sebagai satu alur kerja yang saling mendukung.",
               },
               {
                 title: "Dari build sampai pendampingan",
-                description: "Nilai Kotacom bukan hanya di build awal, tetapi di kemampuan menjaga ritme setelah launch lewat support, iterasi, maintenance, dan penyesuaian yang dibutuhkan bisnis.",
+                description: "Nilai DEVK STUDIO bukan hanya di build awal, tetapi di kemampuan menjaga ritme setelah launch lewat iterasi, maintenance, dan evaluasi berkala.",
               },
               {
                 title: "Pesan layanan lebih mudah dipahami",
-                description: "Pengunjung perlu cepat mengerti apa yang dikerjakan Kotacom, siapa yang dibantu, dan langkah berikutnya tanpa harus membaca terlalu banyak penjelasan teknis.",
+                description: "Pengunjung perlu cepat mengerti apa yang dikerjakan DEVK STUDIO, siapa yang dibantu, dan langkah berikutnya tanpa harus membaca terlalu banyak penjelasan teknis.",
               },
             ].map((item) => (
               <div
@@ -610,7 +557,7 @@ export default async function HomePeparMiddleSection() {
       {/* OPERATIONAL PROOF SECTION */}
       <SectionShell>
         <SectionIntro
-          eyebrow="Kenapa Tim Bisnis Memilih Kotacom"
+          eyebrow="Kenapa Tim Bisnis Memilih DEVK STUDIO"
           title="Fokus pada hasil kerja yang bisa langsung dipakai."
           description="Pendekatan ini kami pakai agar bisnis bisa mengambil keputusan lebih cepat dan menjalankan delivery tanpa kebingungan antar vendor."
         />
@@ -633,7 +580,7 @@ export default async function HomePeparMiddleSection() {
       <SectionShell>
         <SectionIntro
           eyebrow="Layanan Unggulan"
-          title="Tiga penawaran yang paling sering dicari bisnis saat ingin mulai bekerja bersama Kotacom."
+          title="Tiga penawaran yang paling sering dicari bisnis saat ingin mulai bekerja bersama DEVK STUDIO."
           description="Blok ini membantu pengunjung memahami jalur layanan yang paling relevan tanpa harus menelusuri terlalu banyak halaman di awal."
         />
         <div className="grid gap-5 lg:grid-cols-3">
@@ -670,25 +617,25 @@ export default async function HomePeparMiddleSection() {
             // Fallback service clusters
             [
               {
-                title: "Dukungan IT Profesional",
-                description: "Layanan support yang membantu bisnis menjaga perangkat, jaringan, server, dan kebutuhan teknis tetap siap dipakai tanpa mengganggu ritme kerja.",
-                href: "/services",
-                priceHint: "Mulai dari support insidental hingga maintenance rutin",
-                bullets: ["Macbook & Windows service", "Server maintenance", "Pengadaan alat IT"],
+                title: "Website Bisnis End-to-End",
+                description: "Pembuatan website dari strategi konten, struktur halaman, sampai implementasi teknis yang siap dipakai untuk marketing dan sales.",
+                href: "/pembuatan-website",
+                priceHint: "Cocok untuk company profile, landing campaign, dan situs layanan",
+                bullets: ["Discovery kebutuhan", "Design + development", "SEO-ready structure"],
               },
               {
                 title: "Jasa Pembuatan Website & Software",
-                description: "Website dan software kami susun sebagai lane utama untuk bisnis yang ingin memperbaiki cara presentasi, cara kerja, dan alur penjualan sekaligus.",
-                href: "/pembuatan-website",
-                priceHint: "Mulai dari website bisnis hingga aplikasi custom",
-                bullets: ["Website sekolah & perusahaan", "Custom web apps", "CRM, CMS, aplikasi bisnis"],
+                description: "Paket implementasi gabungan ketika bisnis membutuhkan website publik sekaligus software internal yang saling terhubung.",
+                href: "/services",
+                priceHint: "Untuk bisnis yang ingin transformasi digital menyeluruh",
+                bullets: ["Website + software alignment", "Roadmap implementasi", "Pendampingan rollout"],
               },
               {
-                title: "Layanan Percetakan",
-                description: "Percetakan kami posisikan sebagai pelengkap trust dan distribusi materi bisnis, mulai dari buku, seminar kit, sampai kebutuhan promosi offline.",
-                href: "/percetakan",
-                priceHint: "Untuk buku, kalender, seminar kit, dan materi promosi",
-                bullets: ["Jasa cetak buku", "Kalender & seminar kit", "Map, brosur, dan lainnya"],
+                title: "Software Custom untuk Operasional",
+                description: "Pengembangan software sesuai proses kerja tim, termasuk dashboard, approval flow, hingga otomasi tugas berulang.",
+                href: "/software",
+                priceHint: "Mulai dari MVP hingga sistem operasional skala penuh",
+                bullets: ["Analisis proses kerja", "Build bertahap", "Stabilisasi pasca go-live"],
               },
             ].map((cluster, index) => (
               <SectionPanel
@@ -736,7 +683,7 @@ export default async function HomePeparMiddleSection() {
                 {homeContent?.closingTitle || "Bangun solusi yang lebih rapi, lebih stabil, dan lebih siap dipakai untuk tumbuh."}
               </h2>
               <p className="mt-4 max-w-3xl text-sm leading-7 text-muted-foreground md:text-base">
-                {homeContent?.closingDescription || "Jika bisnis Anda butuh partner untuk website, software, support, atau percetakan, Kotacom siap membantu memetakan kebutuhan dan menyiapkan langkah yang paling relevan."}
+                {homeContent?.closingDescription || "Jika bisnis Anda butuh partner untuk pembuatan website atau software custom, DEVK STUDIO siap membantu memetakan kebutuhan dan menyiapkan langkah implementasi yang paling relevan."}
               </p>
             </div>
             <div className="space-y-3">
@@ -756,7 +703,7 @@ export default async function HomePeparMiddleSection() {
                 // Fallback assurance points
                 [
                   { label: "Pendekatan terarah", value: "Kami bantu dari pemetaan kebutuhan sampai implementasi yang realistis." },
-                  { label: "Eksekusi lintas layanan", value: "Website, software, support, dan percetakan bisa disusun sebagai satu alur kerja yang utuh." },
+                  { label: "Eksekusi lintas tim", value: "Website publik dan software internal dapat disusun sebagai satu alur kerja yang saling mendukung." },
                   { label: "Siap ditindaklanjuti", value: "Konsultasi awal, penawaran, dan langkah mulai dirancang agar prospek bisa bergerak tanpa kebingungan." },
                 ].map((item) => (
                   <div
@@ -786,7 +733,7 @@ export default async function HomePeparMiddleSection() {
         </SectionPanel>
       </SectionShell>
 
-      {/* Why Choose Kotacom Section */}
+      {/* Why Choose DEVK STUDIO Section */}
       <HomeWhyChoose />
 
       {/* FAQ Section */}

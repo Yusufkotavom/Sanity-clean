@@ -2,7 +2,9 @@ import { stegaClean } from "next-sanity";
 import type { PAGE_QUERY_RESULT } from "@/sanity.types";
 import SectionContainer from "@/components/ui/section-container";
 import { Button } from "@/components/ui/button";
+import GlassCard from "@/components/ui/glass-card";
 import Link from "next/link";
+import { CheckCircle2 } from "lucide-react";
 
 type Block = NonNullable<NonNullable<PAGE_QUERY_RESULT>["blocks"]>[number];
 type ServiceTypesBlock = Extract<Block, { _type: "service-types-block" }>;
@@ -33,12 +35,9 @@ export default function ServiceTypesBlock({
         {services && services.length > 0 && (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {services.map((service) => (
-              <div
-                key={service._key}
-                className="relative rounded-lg border bg-card p-6 shadow-sm transition-shadow hover:shadow-md"
-              >
+              <GlassCard key={service._key} hover className="relative">
                 {service.badge && (
-                  <div className="absolute right-4 top-4 rounded-full bg-primary px-3 py-1 text-xs font-bold text-primary-foreground">
+                  <div className="absolute right-4 top-4 rounded-full border border-primary/20 bg-primary/90 px-3 py-1 text-xs font-bold text-primary-foreground">
                     {service.badge}
                   </div>
                 )}
@@ -54,7 +53,7 @@ export default function ServiceTypesBlock({
                         key={idx}
                         className="flex items-start gap-2 text-sm"
                       >
-                        <span className="mt-0.5 text-primary">✓</span>
+                        <CheckCircle2 className="mt-0.5 h-4 w-4 text-primary" />
                         <span>{feature}</span>
                       </li>
                     ))}
@@ -95,7 +94,7 @@ export default function ServiceTypesBlock({
                     </Button>
                   </div>
                 )}
-              </div>
+              </GlassCard>
             ))}
           </div>
         )}

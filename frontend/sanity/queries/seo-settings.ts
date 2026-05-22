@@ -1,6 +1,9 @@
 import { groq } from "next-sanity";
 
-export const SEO_SETTINGS_QUERY = groq`*[_type == "seoSettings"][0]{
+export const SEO_SETTINGS_QUERY = groq`coalesce(
+  *[_type == "seoSettings" && _id == "seoSettings"][0],
+  *[_type == "seoSettings"][0]
+){
   _id,
   _type,
   titleSuffix,

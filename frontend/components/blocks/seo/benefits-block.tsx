@@ -1,6 +1,7 @@
 import { stegaClean } from "next-sanity";
 import type { PAGE_QUERY_RESULT } from "@/sanity.types";
 import SectionContainer from "@/components/ui/section-container";
+import GlassCard from "@/components/ui/glass-card";
 
 type Block = NonNullable<NonNullable<PAGE_QUERY_RESULT>["blocks"]>[number];
 type BenefitsBlock = Extract<Block, { _type: "benefits-block" }>;
@@ -37,10 +38,7 @@ export default function BenefitsBlock({
         {benefits && benefits.length > 0 && (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {benefits.map((benefit) => (
-              <div
-                key={benefit._key}
-                className="rounded-lg border bg-card p-6 shadow-sm transition-shadow hover:shadow-md"
-              >
+              <GlassCard key={benefit._key} hover>
                 {benefit.icon && (
                   <div className="mb-3 text-4xl">{benefit.icon}</div>
                 )}
@@ -56,7 +54,7 @@ export default function BenefitsBlock({
                     <span>{benefit.badge}</span>
                   </div>
                 )}
-              </div>
+              </GlassCard>
             ))}
           </div>
         )}

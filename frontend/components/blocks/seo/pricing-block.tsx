@@ -4,6 +4,7 @@ import { fetchSeoSettings } from "@/sanity/lib/fetch";
 import { Check, X, Clock, CreditCard } from "lucide-react";
 import WhatsAppLink from "@/components/whatsapp-link";
 import { ColorVariant, SectionPadding } from "@/sanity.types";
+import GlassCard from "@/components/ui/glass-card";
 
 type PricingBlock = {
   _type: "pricing-block";
@@ -52,10 +53,7 @@ export default async function PricingBlock({
         {/* Pricing Cards */}
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
           {packages.map((pkg: any) => (
-            <div
-              key={pkg._key}
-              className="rounded-lg border bg-card p-6 shadow-sm hover:shadow-lg transition-shadow flex flex-col"
-            >
+            <GlassCard key={pkg._key} hover className="flex flex-col">
               {/* Package Header */}
               <div className="mb-6">
                 <h3 className="text-2xl font-bold">{pkg.name}</h3>
@@ -65,7 +63,7 @@ export default async function PricingBlock({
                   </span>
                 </div>
                 {pkg.bestFor && (
-                  <div className="mt-2 inline-block rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+                  <div className="mt-2 inline-block rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
                     {pkg.bestFor}
                   </div>
                 )}
@@ -127,7 +125,7 @@ export default async function PricingBlock({
                   Konsultasi Gratis
                 </WhatsAppLink>
               </div>
-            </div>
+            </GlassCard>
           ))}
         </div>
       </div>

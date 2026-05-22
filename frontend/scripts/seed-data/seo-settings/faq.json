@@ -1,0 +1,39 @@
+{
+  "faq": {
+    "website": [
+      {
+        "question": "Berapa lama pembuatan website bisnis?",
+        "answer": "Umumnya 2-8 minggu tergantung kompleksitas halaman, jumlah konten, dan integrasi yang dibutuhkan."
+      },
+      {
+        "question": "Apakah website sudah SEO-ready?",
+        "answer": "Ya. Struktur heading, metadata, internal linking, dan performa dasar kami siapkan sebagai fondasi SEO."
+      },
+      {
+        "question": "Apakah bisa lanjut maintenance setelah launch?",
+        "answer": "Bisa. Kami sediakan pendampingan untuk perbaikan minor, update konten, dan optimasi berkala."
+      }
+    ],
+    "software": [
+      {
+        "question": "Apakah harus langsung buat sistem penuh?",
+        "answer": "Tidak. Kami biasanya mulai dari MVP atau modul prioritas supaya biaya dan risiko lebih terkendali."
+      },
+      {
+        "question": "Apakah software bisa mengikuti proses kerja internal kami?",
+        "answer": "Ya. Pendekatan kami adalah menyesuaikan software dengan proses bisnis Anda, bukan memaksa tim mengikuti tool generik."
+      },
+      {
+        "question": "Bagaimana proses implementasi ke tim setelah go-live?",
+        "answer": "Kami bantu transisi penggunaan melalui training ringkas, dokumentasi, dan iterasi awal berdasarkan feedback pengguna."
+      }
+    ],
+    "printing": [
+      {
+        "question": "Apakah DEVK STUDIO tetap melayani kebutuhan cetak?",
+        "answer": "Ya, untuk kebutuhan materi bisnis tertentu. Fokus utama kami tetap software dan website."
+      }
+    ]
+  }
+}
+

@@ -1,7 +1,8 @@
 import { stegaClean } from "next-sanity";
 import SectionContainer from "@/components/ui/section-container";
+import GlassCard from "@/components/ui/glass-card";
 import { fetchSeoSettings } from "@/sanity/lib/fetch";
-import { Building2, Award, Users, Briefcase, MapPin, Phone, Mail, Clock } from "lucide-react";
+import { Building2, Award, Trophy, Users, Briefcase, MapPin, Phone, Mail, Clock, CheckCircle2 } from "lucide-react";
 import { ColorVariant, SectionPadding } from "@/sanity.types";
 
 type CompanyInfoBlock = {
@@ -41,48 +42,48 @@ export default async function CompanyInfo({
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-12">
-          <div className="rounded-lg border bg-card p-6 text-center">
+          <GlassCard className="text-center">
             <Building2 className="mx-auto h-8 w-8 text-primary mb-3" />
             <div className="text-3xl font-bold">{companyInfo.foundedYear}</div>
             <div className="text-sm text-muted-foreground mt-1">Tahun Berdiri</div>
-          </div>
-          <div className="rounded-lg border bg-card p-6 text-center">
+          </GlassCard>
+          <GlassCard className="text-center">
             <Users className="mx-auto h-8 w-8 text-primary mb-3" />
             <div className="text-3xl font-bold">{companyInfo.totalClients}+</div>
             <div className="text-sm text-muted-foreground mt-1">Klien Puas</div>
-          </div>
-          <div className="rounded-lg border bg-card p-6 text-center">
+          </GlassCard>
+          <GlassCard className="text-center">
             <Briefcase className="mx-auto h-8 w-8 text-primary mb-3" />
             <div className="text-3xl font-bold">{companyInfo.totalProjects}+</div>
             <div className="text-sm text-muted-foreground mt-1">Proyek Selesai</div>
-          </div>
-          <div className="rounded-lg border bg-card p-6 text-center">
+          </GlassCard>
+          <GlassCard className="text-center">
             <MapPin className="mx-auto h-8 w-8 text-primary mb-3" />
             <div className="text-3xl font-bold">{companyInfo.serviceAreas?.length || 6}</div>
             <div className="text-sm text-muted-foreground mt-1">Area Layanan</div>
-          </div>
+          </GlassCard>
         </div>
 
         {/* Contact Info */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-          <div className="rounded-lg border bg-card p-6">
+          <GlassCard>
             <h3 className="font-semibold mb-4 flex items-center gap-2">
               <MapPin className="h-5 w-5 text-primary" />
               Kantor Sidoarjo
             </h3>
             <p className="text-sm text-muted-foreground">{companyInfo.addressSidoarjo}</p>
-          </div>
-          <div className="rounded-lg border bg-card p-6">
+          </GlassCard>
+          <GlassCard>
             <h3 className="font-semibold mb-4 flex items-center gap-2">
               <MapPin className="h-5 w-5 text-primary" />
               Kantor Surabaya
             </h3>
             <p className="text-sm text-muted-foreground">{companyInfo.addressSurabaya}</p>
-          </div>
+          </GlassCard>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          <div className="rounded-lg border bg-card p-6">
+          <GlassCard>
             <div className="flex items-center gap-3">
               <Phone className="h-5 w-5 text-primary" />
               <div>
@@ -90,8 +91,8 @@ export default async function CompanyInfo({
                 <div className="font-medium">{companyInfo.phone}</div>
               </div>
             </div>
-          </div>
-          <div className="rounded-lg border bg-card p-6">
+          </GlassCard>
+          <GlassCard>
             <div className="flex items-center gap-3">
               <Mail className="h-5 w-5 text-primary" />
               <div>
@@ -99,8 +100,8 @@ export default async function CompanyInfo({
                 <div className="font-medium">{companyInfo.email}</div>
               </div>
             </div>
-          </div>
-          <div className="rounded-lg border bg-card p-6">
+          </GlassCard>
+          <GlassCard>
             <div className="flex items-center gap-3">
               <Clock className="h-5 w-5 text-primary" />
               <div>
@@ -108,13 +109,13 @@ export default async function CompanyInfo({
                 <div className="font-medium text-sm">{companyInfo.operatingHours}</div>
               </div>
             </div>
-          </div>
+          </GlassCard>
         </div>
 
         {/* Certifications & Awards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {companyInfo.certifications && companyInfo.certifications.length > 0 && (
-            <div className="rounded-lg border bg-card p-6">
+            <GlassCard>
               <h3 className="font-semibold mb-4 flex items-center gap-2">
                 <Award className="h-5 w-5 text-primary" />
                 Sertifikasi
@@ -122,15 +123,15 @@ export default async function CompanyInfo({
               <ul className="space-y-2">
                 {companyInfo.certifications.map((cert: string, idx: number) => (
                   <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2">
-                    <span className="text-primary mt-1">✓</span>
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 text-primary" />
                     <span>{cert}</span>
                   </li>
                 ))}
               </ul>
-            </div>
+            </GlassCard>
           )}
           {companyInfo.awards && companyInfo.awards.length > 0 && (
-            <div className="rounded-lg border bg-card p-6">
+            <GlassCard>
               <h3 className="font-semibold mb-4 flex items-center gap-2">
                 <Award className="h-5 w-5 text-primary" />
                 Penghargaan
@@ -138,12 +139,12 @@ export default async function CompanyInfo({
               <ul className="space-y-2">
                 {companyInfo.awards.map((award: string, idx: number) => (
                   <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2">
-                    <span className="text-primary mt-1">🏆</span>
+                    <Trophy className="mt-0.5 h-4 w-4 text-primary" />
                     <span>{award}</span>
                   </li>
                 ))}
               </ul>
-            </div>
+            </GlassCard>
           )}
         </div>
 

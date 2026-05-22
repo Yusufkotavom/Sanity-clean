@@ -3,6 +3,7 @@ import SectionContainer from "@/components/ui/section-container";
 import { fetchSeoSettings } from "@/sanity/lib/fetch";
 import { Star, TrendingUp, CheckCircle } from "lucide-react";
 import { ColorVariant, SectionPadding } from "@/sanity.types";
+import GlassCard from "@/components/ui/glass-card";
 
 type TestimonialsBlock = {
   _type: "testimonials-block";
@@ -51,10 +52,7 @@ export default async function TestimonialsBlock({
         {/* Testimonials Grid */}
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
           {testimonials.map((testimonial: any) => (
-            <div
-              key={testimonial._key}
-              className="rounded-lg border bg-card p-6 shadow-sm hover:shadow-md transition-shadow"
-            >
+            <GlassCard key={testimonial._key} hover>
               {/* Rating */}
               <div className="flex items-center gap-1 mb-4">
                 {[...Array(testimonial.rating || 5)].map((_, i) => (
@@ -89,7 +87,7 @@ export default async function TestimonialsBlock({
               )}
 
               {/* Author */}
-              <div className="border-t pt-4">
+              <div className="border-t border-border/60 pt-4">
                 <div className="font-semibold">{testimonial.name}</div>
                 <div className="text-sm text-muted-foreground">
                   {testimonial.position} - {testimonial.company}
@@ -98,7 +96,7 @@ export default async function TestimonialsBlock({
                   {testimonial.industry}
                 </div>
               </div>
-            </div>
+            </GlassCard>
           ))}
         </div>
       </div>

@@ -52,7 +52,7 @@ const getSiteName = cache(async (): Promise<string> => {
     brandName?: string | null;
   } | null;
 
-  return settings?.siteName || settings?.brandName || "Schema UI";
+  return settings?.siteName || settings?.brandName || "DEVK STUDIO";
 });
 
 const getSiteUrl = (seo?: SeoSettings | null) =>
@@ -180,7 +180,7 @@ const buildMetadata = ({
       description: resolvedDescription || undefined,
       siteName: siteName || undefined,
       images: [image],
-      locale: "en_US",
+      locale: "id_ID",
       type: openGraphType,
       url: resolvedCanonical,
     },

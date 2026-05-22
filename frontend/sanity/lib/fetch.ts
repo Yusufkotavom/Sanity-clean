@@ -416,10 +416,15 @@ export const fetchSanitySettings = async (): Promise<SETTINGS_QUERY_RESULT> => {
 };
 
 export const fetchSanitySeoSettings = async (): Promise<any | null> => {
-  const data = await fetchPublishedCached<any | null>({
-    query: SEO_SETTINGS_QUERY,
-    tags: ["seo-settings"],
-  });
+  const isDev = process.env.NODE_ENV === "development";
+  const data = isDev
+    ? await fetchPublished<any | null>({
+        query: SEO_SETTINGS_QUERY,
+      })
+    : await fetchPublishedCached<any | null>({
+        query: SEO_SETTINGS_QUERY,
+        tags: ["seo-settings"],
+      });
 
   return data;
 };

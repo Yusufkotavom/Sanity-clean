@@ -1,6 +1,8 @@
 import { stegaClean } from "next-sanity";
 import type { PAGE_QUERY_RESULT } from "@/sanity.types";
 import SectionContainer from "@/components/ui/section-container";
+import GlassCard from "@/components/ui/glass-card";
+import { AlertTriangle, CheckCircle2 } from "lucide-react";
 
 type Block = NonNullable<NonNullable<PAGE_QUERY_RESULT>["blocks"]>[number];
 type ProblemSolutionBlock = Extract<Block, { _type: "problem-solution-block" }>;
@@ -29,9 +31,9 @@ export default function ProblemSolutionBlock({
             {problems.map((problem, idx) => (
               <li
                 key={idx}
-                className="flex items-start gap-3 rounded-lg border border-destructive/20 bg-destructive/5 p-4"
+                className="flex items-start gap-3 rounded-2xl border border-destructive/25 bg-destructive/5 p-4 backdrop-blur-sm"
               >
-                <span className="mt-0.5 text-destructive">✗</span>
+                <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-destructive" />
                 <span className="text-sm">{problem}</span>
               </li>
             ))}
@@ -39,14 +41,15 @@ export default function ProblemSolutionBlock({
         )}
 
         {solution && (
-          <div className="rounded-lg border-2 border-primary/20 bg-primary/5 p-6">
+          <GlassCard className="border-primary/25 bg-primary/5">
             {solutionTitle && (
-              <h3 className="mb-3 text-lg font-bold text-primary">
-                {solutionTitle}
+              <h3 className="mb-3 flex items-center gap-2 text-lg font-bold text-primary">
+                <CheckCircle2 className="h-5 w-5" />
+                <span>{solutionTitle}</span>
               </h3>
             )}
             <p className="text-sm leading-relaxed">{solution}</p>
-          </div>
+          </GlassCard>
         )}
       </div>
     </SectionContainer>

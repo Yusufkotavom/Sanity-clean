@@ -1,0 +1,102 @@
+{
+  "pricingPackages": {
+    "website": [
+      {
+        "name": "Website Starter",
+        "price": 8500000,
+        "currency": "IDR",
+        "priceUnit": "/project",
+        "duration": "2-4 minggu",
+        "features": [
+          "Strategi konten halaman utama",
+          "Desain UI responsif",
+          "SEO on-page dasar",
+          "Integrasi WhatsApp CTA"
+        ],
+        "excluded": [
+          "Integrasi ERP kompleks",
+          "Multilingual enterprise setup"
+        ],
+        "paymentTerms": "50% DP, 50% sebelum go-live",
+        "bestFor": "UMKM & bisnis jasa"
+      },
+      {
+        "name": "Website Growth",
+        "price": 18500000,
+        "currency": "IDR",
+        "priceUnit": "/project",
+        "duration": "4-8 minggu",
+        "features": [
+          "Semua fitur Website Starter",
+          "Landing page campaign tambahan",
+          "Struktur blog dan kategori",
+          "Schema markup dasar"
+        ],
+        "excluded": [
+          "Custom backend ERP"
+        ],
+        "paymentTerms": "40% DP, 40% midpoint, 20% handover",
+        "bestFor": "Bisnis dengan target lead rutin"
+      }
+    ],
+    "software": [
+      {
+        "name": "Software MVP",
+        "price": 35000000,
+        "currency": "IDR",
+        "priceUnit": "/project",
+        "duration": "6-10 minggu",
+        "features": [
+          "Workshop kebutuhan bisnis",
+          "Dashboard utama + role access",
+          "Workflow inti operasional",
+          "Deployment dan basic documentation"
+        ],
+        "excluded": [
+          "High availability cluster",
+          "Data warehouse enterprise"
+        ],
+        "paymentTerms": "40% DP, 40% development, 20% go-live",
+        "bestFor": "Tim yang mulai digitalisasi proses"
+      },
+      {
+        "name": "Software Scale",
+        "price": 85000000,
+        "currency": "IDR",
+        "priceUnit": "/project",
+        "duration": "3-6 bulan",
+        "features": [
+          "Architecture planning",
+          "Modul multi-departemen",
+          "Integrasi API pihak ketiga",
+          "QA dan stabilisasi pasca launch"
+        ],
+        "excluded": [
+          "Managed SOC 24/7"
+        ],
+        "paymentTerms": "30% DP, termin bulanan, 20% acceptance",
+        "bestFor": "Perusahaan growth-stage"
+      }
+    ],
+    "printing": [
+      {
+        "name": "Print Business Kit",
+        "price": 3000000,
+        "currency": "IDR",
+        "priceUnit": "/batch",
+        "duration": "5-10 hari kerja",
+        "features": [
+          "Desain adaptasi file",
+          "Cetak brosur/flyer",
+          "Quality control finishing"
+        ],
+        "excluded": [
+          "Pengiriman luar negeri"
+        ],
+        "paymentTerms": "50% DP, 50% sebelum kirim",
+        "bestFor": "Kebutuhan promosi offline"
+      }
+    ]
+  }
+}
+

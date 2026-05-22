@@ -1,0 +1,50 @@
+{
+  "testimonials": [
+    {
+      "name": "Rizky Pratama",
+      "position": "COO",
+      "company": "Nusa Retail Group",
+      "industry": "software",
+      "rating": 5,
+      "quote": "Tim DEVK STUDIO membantu kami memetakan proses operasional menjadi dashboard yang benar-benar dipakai harian.",
+      "results": {
+        "metric": "Waktu approval",
+        "value": "-42%",
+        "timeframe": "3 bulan"
+      },
+      "date": "2026-02-15",
+      "verified": true
+    },
+    {
+      "name": "Anita Sari",
+      "position": "Marketing Lead",
+      "company": "Klinik Sentra Medika",
+      "industry": "website",
+      "rating": 5,
+      "quote": "Setelah redesign website bersama DEVK STUDIO, inquiry form meningkat dan tim marketing lebih mudah menjalankan campaign.",
+      "results": {
+        "metric": "Lead masuk",
+        "value": "+68%",
+        "timeframe": "2 bulan"
+      },
+      "date": "2026-01-20",
+      "verified": true
+    },
+    {
+      "name": "Fajar Hidayat",
+      "position": "Founder",
+      "company": "Distribusi Prima",
+      "industry": "software",
+      "rating": 5,
+      "quote": "Roadmap dan milestone-nya jelas. Kami tidak bingung memprioritaskan fitur karena semuanya terstruktur.",
+      "results": {
+        "metric": "Efisiensi input data",
+        "value": "+55%",
+        "timeframe": "4 bulan"
+      },
+      "date": "2026-03-01",
+      "verified": true
+    }
+  ]
+}
+

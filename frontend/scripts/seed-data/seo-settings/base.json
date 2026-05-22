@@ -1,0 +1,69 @@
+{
+  "titleSuffix": "DEVK STUDIO",
+  "defaultTitle": "DEVK STUDIO",
+  "defaultDescription": "DEVK STUDIO menyediakan jasa pembuatan software custom dan website bisnis dengan proses terstruktur, delivery terukur, dan pendampingan implementasi.",
+  "defaultNoIndex": false,
+  "siteUrl": "https://devk.my.id",
+  "siteSearchPath": "/search",
+  "noIndexBlogCategories": false,
+  "noIndexProductCategories": false,
+  "noIndexServiceCategories": false,
+  "robotsDisallowPaths": [
+    "/api",
+    "/dashboard"
+  ],
+  "aiCrawlerAllowlist": [
+    "GPTBot",
+    "ChatGPT-User",
+    "ClaudeBot",
+    "PerplexityBot",
+    "Google-Extended",
+    "Applebot-Extended"
+  ],
+  "sitemapStaticRoutes": [
+    "/",
+    "/home-sanity",
+    "/about",
+    "/contact",
+    "/services",
+    "/projects",
+    "/software",
+    "/pembuatan-website",
+    "/blog",
+    "/privacy"
+  ],
+  "includeTemplateRoutesInSitemap": true,
+  "twitterHandle": "@devkstudio",
+  "companyInfo": {
+    "name": "DEVK STUDIO",
+    "foundedYear": 2019,
+    "address": "Indonesia",
+    "phone": "+62 857-9952-0350",
+    "whatsapp": "6285799520350",
+    "email": "hello@devk.my.id",
+    "operatingHours": "Senin-Jumat 09:00-18:00",
+    "totalClients": 120,
+    "totalProjects": 180,
+    "serviceAreas": [
+      "Surabaya",
+      "Sidoarjo",
+      "Jakarta",
+      "Bandung",
+      "Seluruh Indonesia"
+    ],
+    "certifications": [
+      "Software Development Best Practice",
+      "Web Performance Optimization"
+    ],
+    "awards": [
+      "Top Rated Development Partner 2025"
+    ]
+  },
+  "defaultAggregateRating": {
+    "ratingValue": 4.9,
+    "reviewCount": 86,
+    "bestRating": 5,
+    "worstRating": 1
+  }
+}
+

@@ -7,9 +7,9 @@ import { buildBreadcrumbJsonLd, buildCollectionPageJsonLd } from "@/lib/seo-json
 
 export async function generateMetadata() {
   return await generateBasicMetadata({
-    title: "Portfolio Proyek IT & Percetakan Kotacom",
+    title: "Portfolio Proyek DEVK STUDIO",
     description:
-      "Lihat portofolio proyek website, software, dan percetakan yang telah diselesaikan oleh Kotacom untuk berbagai klien di Indonesia.",
+      "Lihat portofolio proyek website, software, dan percetakan yang telah diselesaikan DEVK STUDIO untuk berbagai klien di Indonesia.",
     slug: "projects",
   });
 }
@@ -27,9 +27,9 @@ export default async function ProjectsPage() {
   ], { siteUrl });
 
   const collectionJsonLd = buildCollectionPageJsonLd({
-    name: "Portfolio Proyek – Kotacom",
+    name: "Portfolio Proyek – DEVK STUDIO",
     description:
-      "Portofolio website, software, dan percetakan oleh Kotacom Surabaya.",
+      "Portofolio website, software, dan percetakan oleh DEVK STUDIO.",
     url: "/projects",
     siteUrl,
     items: (projects as any[])

@@ -24,13 +24,16 @@ export default function SectionContainer({
   children,
   className,
 }: SectionContainerProps) {
+  const hasTopPadding = padding?.top ?? true;
+  const hasBottomPadding = padding?.bottom ?? true;
+
   return (
     <div
       className={cn(
         "relative section-divider",
         COLOR_VARIANT_CLASSNAMES[color || "background"],
-        padding?.top ? "pt-16 xl:pt-20" : undefined,
-        padding?.bottom ? "pb-16 xl:pb-20" : undefined,
+        hasTopPadding ? "pt-16 xl:pt-20" : undefined,
+        hasBottomPadding ? "pb-16 xl:pb-20" : undefined,
         className
       )}
     >

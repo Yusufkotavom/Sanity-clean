@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/accordion";
 import PortableTextRenderer from "@/components/portable-text-renderer";
 import { PAGE_QUERY_RESULT } from "@/sanity.types";
+import GlassCard from "@/components/ui/glass-card";
 
 type FAQProps = Extract<
   NonNullable<NonNullable<PAGE_QUERY_RESULT>["blocks"]>[number],
@@ -23,15 +24,14 @@ export default function FAQs({ padding, colorVariant, faqs }: FAQProps) {
       {validFaqs.length > 0 && (
         <Accordion className="space-y-4" type="multiple">
           {validFaqs.map((faq, index) => (
-            <AccordionItem
-              key={faq._id || faq.title || `faq-${index}`}
-              value={`item-${faq._id || faq.title || index}`}
-            >
-              <AccordionTrigger>{faq.title}</AccordionTrigger>
-              <AccordionContent>
-                <PortableTextRenderer value={faq.body || []} />
-              </AccordionContent>
-            </AccordionItem>
+            <GlassCard key={faq._id || faq.title || `faq-${index}`} className="p-0">
+              <AccordionItem value={`item-${faq._id || faq.title || index}`}>
+                <AccordionTrigger className="px-6">{faq.title}</AccordionTrigger>
+                <AccordionContent className="px-6 pb-6">
+                  <PortableTextRenderer value={faq.body || []} />
+                </AccordionContent>
+              </AccordionItem>
+            </GlassCard>
           ))}
         </Accordion>
       )}

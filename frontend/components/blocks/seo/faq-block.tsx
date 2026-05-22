@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/accordion";
 import WhatsAppLink from "@/components/whatsapp-link";
 import { ColorVariant, SectionPadding } from "@/sanity.types";
+import GlassCard from "@/components/ui/glass-card";
 
 type FaqBlock = {
   _type: "faq-block";
@@ -48,7 +49,8 @@ export default async function FaqBlock({
         </div>
 
         {/* FAQ Accordion */}
-        <Accordion type="single" collapsible className="w-full">
+        <GlassCard className="p-2 md:p-3">
+          <Accordion type="single" collapsible className="w-full">
           {faqs.map((faq: any, index: number) => (
             <AccordionItem key={faq._key || index} value={`item-${index}`}>
               <AccordionTrigger className="text-left">
@@ -59,7 +61,8 @@ export default async function FaqBlock({
               </AccordionContent>
             </AccordionItem>
           ))}
-        </Accordion>
+          </Accordion>
+        </GlassCard>
 
         {/* CTA */}
         <div className="mt-12 text-center">

@@ -1,6 +1,7 @@
 "use client";
 import PortableTextRenderer from "@/components/portable-text-renderer";
 import SanityIcon from "@/components/icons/sanity-icon";
+import GlassCard from "@/components/ui/glass-card";
 import { cn } from "@/lib/utils";
 import { motion, useInView } from "motion/react";
 import { useRef } from "react";
@@ -33,12 +34,14 @@ export default function SplitCardsItem({
   return (
     <motion.div
       ref={ref}
-      className={cn(
-        "flex flex-col items-start border border-primary rounded-3xl px-6 lg:px-8 py-6 lg:py-8 transition-colors duration-1000 ease-in-out",
-        isInView ? "bg-foreground/85" : "bg-background",
-        color === "primary" ? "text-background" : undefined,
-      )}
+      className={cn(color === "primary" ? "text-background" : undefined)}
     >
+      <GlassCard
+        className={cn(
+          "w-full rounded-3xl px-6 py-6 transition-colors duration-1000 ease-in-out lg:px-8 lg:py-8",
+          isInView ? "border-primary/35 bg-foreground/85" : undefined,
+        )}
+      >
       {tagLine && (
         <div
           className={cn(
@@ -72,6 +75,7 @@ export default function SplitCardsItem({
           <PortableTextRenderer value={body} />
         </div>
       )}
+      </GlassCard>
     </motion.div>
   );
 }

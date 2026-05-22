@@ -26,8 +26,8 @@ export async function generateMetadata() {
   }
 
   return await generateBasicMetadata({
-    title: "Layanan IT & Percetakan Kotacom",
-    description: "Jelajahi layanan IT, website, software, dan percetakan profesional dari Kotacom Surabaya.",
+    title: "Layanan Digital DEVK STUDIO",
+    description: "Jelajahi layanan pembuatan website, software custom, IT support, dan percetakan profesional dari DEVK STUDIO.",
     slug: SLUG,
   });
 }
@@ -53,8 +53,8 @@ export default async function ServicesPage() {
   ];
 
   const collectionJsonLd = buildCollectionPageJsonLd({
-    name: "Layanan IT & Percetakan – Kotacom",
-    description: "Katalog lengkap layanan website, software, IT service, dan percetakan dari Kotacom Surabaya.",
+    name: "Layanan Digital – DEVK STUDIO",
+    description: "Katalog layanan website, software, IT support, dan percetakan dari DEVK STUDIO.",
     url: "/services",
     siteUrl,
     items: allServiceItems,
