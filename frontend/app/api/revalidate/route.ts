@@ -15,7 +15,7 @@ function getSecret(request: NextRequest) {
 }
 
 function collectPaths(payload: WebhookPayload | null) {
-  const paths = new Set<string>(["/", "/blog", "/products", "/services"]);
+  const paths = new Set<string>();
 
   const contentType = payload?._type;
   const slug = payload?.slug?.current;
@@ -25,56 +25,89 @@ function collectPaths(payload: WebhookPayload | null) {
     paths.add(explicitPath);
   }
 
+  // No type info = unknown change, revalidate homepage only
   if (!contentType) {
+    paths.add("/");
     return paths;
   }
 
-  if (contentType === "post") {
-    paths.add("/blog");
-    paths.add("/blog/category");
-    if (slug) paths.add(`/blog/${slug}`);
-  }
+  switch (contentType) {
+    case "post":
+      paths.add("/blog");
+      paths.add("/blog/category");
+      if (slug) paths.add(`/blog/${slug}`);
+      break;
 
-  if (contentType === "product") {
-    paths.add("/products");
-    if (slug) paths.add(`/products/${slug}`);
-  }
+    case "product":
+      paths.add("/products");
+      if (slug) paths.add(`/products/${slug}`);
+      break;
 
-  if (contentType === "service") {
-    paths.add("/services");
-    if (slug) paths.add(`/services/${slug}`);
-  }
+    case "service":
+      paths.add("/services");
+      if (slug) paths.add(`/services/${slug}`);
+      break;
 
-  if (contentType === "category") {
-    paths.add("/blog/category");
-    if (slug) {
-      paths.add(`/blog/category/${slug}`);
-      paths.add(`/products/${slug}`);
-      paths.add(`/services/${slug}`);
-    }
-  }
+    case "project":
+      paths.add("/projects");
+      if (slug) paths.add(`/projects/${slug}`);
+      break;
 
-  if (contentType === "page") {
-    if (slug && slug !== "index") {
-      paths.add(`/${slug}`);
-    } else {
+    case "category":
+      paths.add("/blog/category");
+      paths.add("/products");
+      paths.add("/services");
+      if (slug) {
+        paths.add(`/blog/category/${slug}`);
+        paths.add(`/products/${slug}`);
+        paths.add(`/services/${slug}`);
+      }
+      break;
+
+    case "page":
+      if (slug && slug !== "index") {
+        paths.add(`/${slug}`);
+      } else {
+        paths.add("/");
+      }
+      break;
+
+    case "faq":
+    case "testimonial":
+    case "reusableSection":
+      // These appear embedded in pages — revalidate homepage only
       paths.add("/");
-    }
-  }
+      break;
 
-  if (
-    contentType === "settings" ||
-    contentType === "navigation" ||
-    contentType === "seoSettings" ||
-    contentType === "ogSettings"
-  ) {
-    paths.add("/");
-    paths.add("/blog");
-    paths.add("/blog/category");
-    paths.add("/products");
-    paths.add("/services");
-    paths.add("/docs");
-    paths.add("/style-guide");
+    case "navigation":
+    case "settings":
+    case "siteSettings":
+      // Global layout data — revalidate key pages
+      paths.add("/");
+      paths.add("/blog");
+      paths.add("/products");
+      paths.add("/services");
+      break;
+
+    case "seoSettings":
+    case "ogSettings":
+    case "themeSettings":
+      // Metadata/theme — revalidate homepage (layout picks up on next visit)
+      paths.add("/");
+      break;
+
+    case "redirect":
+    case "generatorProgram":
+    case "generatorTemplate":
+    case "generatorDataset":
+    case "seoOpsSettings":
+      // Config docs — no frontend pages to revalidate
+      break;
+
+    default:
+      // Unknown type — revalidate homepage as safe fallback
+      paths.add("/");
+      break;
   }
 
   return paths;
