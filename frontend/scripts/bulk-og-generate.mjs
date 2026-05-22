@@ -16,7 +16,7 @@ import { createClient } from "@sanity/client";
 
 const PROJECT_ID = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "ww3aejg2";
 const DATASET = process.env.NEXT_PUBLIC_SANITY_DATASET || "development";
-const TOKEN = process.env.SANITY_AUTH_TOKEN || process.env.SANITY_DEV;
+const TOKEN = process.env.SANITY_EDITOR_TOKEN || process.env.SANITY_AUTH_TOKEN || process.env.SANITY_DEV;
 const SITE_URL = process.env.SITE_URL || "https://sanity-nextjs-kotacom.vercel.app";
 
 if (!TOKEN) {
