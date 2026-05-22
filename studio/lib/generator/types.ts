@@ -65,7 +65,7 @@ export type GeneratorProgramLite = {
 export type GeneratorTemplateLite = {
   _id: string;
   title: string;
-  designFamily: string;
+  designFamily?: string;
   visualPreset?: string;
   motionPreset?: string;
   styleNotes?: string;

@@ -66,7 +66,7 @@ const API_VERSION = "2026-03-23";
 const sectionCardProps = { border: true, padding: 4, radius: 3, tone: "transparent" as const };
 
 const TEMPLATE_QUERY = `*[_type == "generatorTemplate" && _id == $id][0]{
-  _id, title, designFamily, visualPreset, motionPreset, styleNotes,
+  _id, title,
   routeBase, slugPattern, seoMeta, aggregateRatingDefaults,
   tokenDefinitions[]{_key, name, label, sourceField, fallbackValue, required},
   blocks

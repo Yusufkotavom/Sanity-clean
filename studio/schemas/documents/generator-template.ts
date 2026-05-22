@@ -85,52 +85,6 @@ export default defineType({
       rows: 3,
     }),
     defineField({
-      name: "visualPreset",
-      title: "Visual Preset",
-      type: "string",
-      description: "Reusable visual direction label for many service categories.",
-      options: {
-        list: [
-          { title: "Editorial Grid", value: "editorial-grid" },
-          { title: "Proof Showcase", value: "proof-showcase" },
-          { title: "Pricing Spotlight", value: "pricing-spotlight" },
-          { title: "Conversion Stack", value: "conversion-stack" },
-          { title: "Immersive Story", value: "immersive-story" },
-          { title: "Trust Matrix", value: "trust-matrix" },
-          { title: "Authority Canvas", value: "authority-canvas" },
-          { title: "Offer Funnel", value: "offer-funnel" },
-          { title: "Process Mosaic", value: "process-mosaic" },
-        ],
-        layout: "radio",
-      },
-      initialValue: "editorial-grid",
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: "motionPreset",
-      title: "Motion Preset",
-      type: "string",
-      description: "Metadata-only motion rhythm note used for team alignment.",
-      options: {
-        list: [
-          { title: "Calm Reveal", value: "calm-reveal" },
-          { title: "Stagger Rise", value: "stagger-rise" },
-          { title: "Spotlight Flow", value: "spotlight-flow" },
-          { title: "Crisp Snap", value: "crisp-snap" },
-        ],
-        layout: "radio",
-      },
-      initialValue: "calm-reveal",
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: "styleNotes",
-      title: "Style Notes",
-      type: "text",
-      rows: 3,
-      description: "Short operator note about when this template works best.",
-    }),
-    defineField({
       name: "outputType",
       title: "Output Type",
       type: "string",
@@ -204,7 +158,7 @@ export default defineType({
       name: "designFamily",
       title: "Design Family",
       type: "string",
-      validation: (Rule) => Rule.required(),
+      description: "Optional label for grouping templates.",
     }),
     defineField({
       name: "seoMeta",
@@ -316,13 +270,12 @@ export default defineType({
   preview: {
     select: {
       title: "title",
-      subtitle: "visualPreset",
-      slug: "slug.current",
+      subtitle: "routeBase",
     },
-    prepare({ title, subtitle, slug }) {
+    prepare({ title, subtitle }) {
       return {
         title: title || "Generator Template",
-        subtitle: [subtitle, slug].filter(Boolean).join(" · "),
+        subtitle: subtitle || "",
       };
     },
   },
