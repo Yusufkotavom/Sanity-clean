@@ -49,6 +49,14 @@ const TEMPLATE_BLOCK_TYPES = [
   "service-types-block",
   "problem-solution-block",
   "value-props-block",
+  "eeat-block",
+  "metrics-rail-block",
+  "highlights-block",
+  "reviews-block",
+  "quote-spotlight-block",
+  "micro-badges-block",
+  "related-links-block",
+  "process-faq-block",
 ] as const;
 
 export default defineType({
