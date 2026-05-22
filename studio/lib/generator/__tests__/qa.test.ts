@@ -11,67 +11,52 @@ const input = {
     dataset: { _id: "gd-1" },
     defaultSeoPattern: {
       title: "Harga & Portofolio",
-      description:
-        "Jasa pembuatan website dengan landing page fokus conversion, CTA jelas, dan alur konten yang mudah disunting untuk bisnis lokal.",
+      description: "Jasa pembuatan website dengan landing page fokus conversion.",
     },
   },
   template: {
     _id: "gt-1",
     title: "Sample Template",
     designFamily: "multi-service",
+    routeBase: "/sample-generator",
+    slugPattern: "{{routeBase}}-{{city}}",
+    seoMeta: {
+      titlePattern: "{{primaryKeyword}} | Kotacom",
+      descriptionPattern: "{{offer}} di {{city}}. {{localCondition}}",
+    },
     tokenDefinitions: [
       { name: "primaryKeyword", sourceField: "primaryKeyword", required: true },
       { name: "service", sourceField: "service", required: true },
       { name: "city", sourceField: "city", required: true },
       { name: "offer", sourceField: "offer", required: true },
+      { name: "localCondition", sourceField: "localCondition" },
     ],
     blocks: [
       {
-        _type: "hero-1",
-        _key: "hero",
+        _type: "hero-1", _key: "hero",
         title: "{{primaryKeyword}} {{city}}",
-        body: [
-          {
-            _key: "hero-body",
-            _type: "block",
-            style: "normal",
-            markDefs: [],
-            children: [
-              {
-                _key: "hero-span",
-                _type: "span",
-                marks: [],
-                text: "Mulai {{offer}}",
-              },
-            ],
-          },
-        ],
+        body: [{ _key: "hero-body", _type: "block", style: "normal", markDefs: [], children: [{ _key: "hero-span", _type: "span", marks: [], text: "Mulai {{offer}}" }] }],
       },
       {
-        _type: "section-header",
-        _key: "context",
-        title: "Konteks {{city}}",
-        description: "Fokus {{primaryKeyword}}",
+        _type: "section-header", _key: "context",
+        title: "Konteks {{city}}", description: "Fokus {{primaryKeyword}}",
       },
       {
-        _type: "cta-1",
-        _key: "final-cta",
+        _type: "cta-1", _key: "final-cta",
         title: "Konsultasi {{service}}",
       },
     ],
-  },
-  keywordSet: {
-    _key: "kw-web",
-    key: "kw-web",
-    primaryKeyword: "jasa pembuatan website conversion",
   },
   row: {
     _key: "row-jakarta",
     key: "row-jakarta",
     service: "pembuatan website",
     city: "jakarta",
+    primaryKeyword: "jasa pembuatan website conversion",
+    secondaryKeywords: ["web developer jakarta", "bikin website jakarta"],
     industry: "bisnis jasa",
     offer: "audit struktur halaman",
+    localCondition: "Pasar paling kompetitif di Indonesia",
   },
 };
 
@@ -79,7 +64,7 @@ test("assessGeneratedDraftQuality returns warning for a minimal but valid genera
   const draft = buildGeneratedPageDraft(input);
   const result = assessGeneratedDraftQuality({
     draft,
-    keywordSet: input.keywordSet,
+    keywordSet: { primaryKeyword: input.row.primaryKeyword, secondaryKeywords: input.row.secondaryKeywords },
     row: input.row,
     existingPages: [],
   });
@@ -92,7 +77,7 @@ test("assessGeneratedDraftQuality blocks duplicate generated drafts", () => {
   const draft = buildGeneratedPageDraft(input);
   const result = assessGeneratedDraftQuality({
     draft,
-    keywordSet: input.keywordSet,
+    keywordSet: { primaryKeyword: input.row.primaryKeyword },
     row: input.row,
     existingPages: [
       {

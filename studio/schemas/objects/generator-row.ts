@@ -27,6 +27,20 @@ export default defineType({
       type: "string",
     }),
     defineField({
+      name: "primaryKeyword",
+      title: "Primary Keyword",
+      type: "string",
+      description: "Main keyword for this page. Used in title, H1, meta.",
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: "secondaryKeywords",
+      title: "Secondary Keywords",
+      type: "array",
+      of: [{ type: "string" }],
+      description: "Supporting keywords. Engine rotates these across page sections.",
+    }),
+    defineField({
       name: "industry",
       title: "Industry",
       type: "string",
@@ -40,13 +54,13 @@ export default defineType({
       name: "localCondition",
       title: "Local Condition",
       type: "string",
-      description: "Konteks lokal unik kota ini (ekonomi, kebutuhan, karakteristik) untuk diferensiasi konten.",
+      description: "Konteks lokal unik kota ini untuk diferensiasi konten.",
     }),
     defineField({
       name: "tokens",
       title: "Custom Tokens",
       type: "array",
-      description: "Dynamic token data. Each token can be a single value or multiple values (rotate). Use {{tokenName}} in template.",
+      description: "Dynamic token data. Use {{tokenName}} in template. Multiple values = rotate.",
       of: [
         {
           type: "object",
@@ -56,7 +70,6 @@ export default defineType({
               name: "name",
               title: "Token Name",
               type: "string",
-              description: "Used as {{name}} in template blocks",
               validation: (Rule) => Rule.required().regex(/^[a-zA-Z][a-zA-Z0-9_]*$/, { name: "token name", invert: false }),
             }),
             defineField({
@@ -64,7 +77,6 @@ export default defineType({
               title: "Values",
               type: "array",
               of: [{ type: "string" }],
-              description: "Single value = static. Multiple values = engine picks/rotates.",
               validation: (Rule) => Rule.required().min(1),
             }),
           ],
@@ -87,10 +99,11 @@ export default defineType({
       title: "label",
       key: "key",
       city: "city",
+      primaryKeyword: "primaryKeyword",
     },
-    prepare({ title, key, city }) {
+    prepare({ title, key, city, primaryKeyword }) {
       return {
-        title: title || key || "Generator Row",
+        title: title || primaryKeyword || key || "Generator Row",
         subtitle: city || key || "Row",
       };
     },

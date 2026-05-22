@@ -35,6 +35,10 @@ export type GeneratorRow = {
   city?: string;
   industry?: string;
   offer?: string;
+  localCondition?: string;
+  primaryKeyword: string;
+  secondaryKeywords?: string[];
+  tokens?: Array<{ name: string; values: string[] }>;
 };
 
 export type GeneratorDatasetLite = {
@@ -65,6 +69,20 @@ export type GeneratorTemplateLite = {
   visualPreset?: string;
   motionPreset?: string;
   styleNotes?: string;
+  routeBase?: string;
+  slugPattern?: string;
+  seoMeta?: {
+    titlePattern?: string;
+    descriptionPattern?: string;
+    focusKeywordToken?: string;
+    secondaryKeywordsSource?: string;
+  };
+  aggregateRatingDefaults?: {
+    ratingValue?: number;
+    reviewCount?: number;
+    bestRating?: number;
+    ratingSource?: string;
+  };
   ref?: ReferenceValue;
   tokenDefinitions?: GeneratorTokenDefinitionLite[];
   blocks?: Array<Record<string, unknown>>;
@@ -114,7 +132,6 @@ export type GeneratedPageDraft = {
 export type BuildGeneratedPageDraftInput = {
   program: GeneratorProgramLite;
   template: GeneratorTemplateLite;
-  keywordSet: GeneratorKeywordSet;
   row: GeneratorRow;
   generatedAt?: string;
 };
