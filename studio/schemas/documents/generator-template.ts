@@ -159,6 +159,82 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: "seoMeta",
+      title: "SEO Meta Pattern",
+      type: "object",
+      description: "Token-based SEO metadata. Supports {{token}} placeholders.",
+      fields: [
+        defineField({
+          name: "titlePattern",
+          title: "Meta Title Pattern",
+          type: "string",
+          description: "e.g. {{primaryKeyword}} | Kotacom",
+          validation: (Rule) => Rule.required().max(70).warning("Keep under 70 chars after token replacement."),
+        }),
+        defineField({
+          name: "descriptionPattern",
+          title: "Meta Description Pattern",
+          type: "text",
+          rows: 3,
+          description: "e.g. {{offer}}. {{localCondition}}. Hubungi kami sekarang.",
+          validation: (Rule) => Rule.required().max(200).warning("Keep under 160 chars after token replacement."),
+        }),
+        defineField({
+          name: "focusKeywordToken",
+          title: "Focus Keyword Token",
+          type: "string",
+          description: "Token for focus keyword, e.g. {{primaryKeyword}}",
+          initialValue: "{{primaryKeyword}}",
+        }),
+        defineField({
+          name: "secondaryKeywordsSource",
+          title: "Secondary Keywords Source",
+          type: "string",
+          description: "Dataset field name that contains the secondary keywords array.",
+          initialValue: "secondaryKeywords",
+        }),
+      ],
+    }),
+    defineField({
+      name: "aggregateRatingDefaults",
+      title: "Aggregate Rating Defaults",
+      type: "object",
+      description: "Default rating applied to all generated pages from this template.",
+      fields: [
+        defineField({
+          name: "ratingValue",
+          title: "Rating Value",
+          type: "number",
+          validation: (Rule) => Rule.min(1).max(5).precision(1),
+        }),
+        defineField({
+          name: "reviewCount",
+          title: "Review Count",
+          type: "number",
+          validation: (Rule) => Rule.min(1).integer(),
+        }),
+        defineField({
+          name: "bestRating",
+          title: "Best Rating",
+          type: "number",
+          initialValue: 5,
+        }),
+        defineField({
+          name: "ratingSource",
+          title: "Rating Source",
+          type: "string",
+          options: {
+            list: [
+              { title: "Google Maps", value: "google-maps" },
+              { title: "Internal Reviews", value: "internal" },
+              { title: "Tokopedia", value: "tokopedia" },
+              { title: "Calculated", value: "calculated" },
+            ],
+          },
+        }),
+      ],
+    }),
+    defineField({
       name: "status",
       title: "Status",
       type: "string",
