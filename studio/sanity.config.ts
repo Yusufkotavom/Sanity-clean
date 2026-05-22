@@ -4,6 +4,7 @@ import { structureTool } from "sanity/structure";
 import { presentationTool } from "sanity/presentation";
 import { media } from "sanity-plugin-media";
 import { iconPicker } from "sanity-plugin-icon-picker-v2";
+import { colorInput } from "@sanity/color-input";
 import { schemaTypes } from "./schema-types";
 import { resolve } from "./presentation/resolve";
 import { structure } from "./structure";
@@ -12,6 +13,7 @@ import { codeInput } from "@sanity/code-input";
 import { applyHybridPresetAction } from "./document-actions/apply-hybrid-preset-action";
 import { convertPageToPostAction } from "./document-actions/convert-page-to-post-action";
 import { generatePostOgAction } from "./document-actions/generate-post-og-action";
+import { resetOgSettingsAction } from "./document-actions/reset-og-settings-action";
 
 // Define the actions that should be available for singleton documents
 const singletonActions = new Set([
@@ -65,6 +67,13 @@ export default defineConfig({
     // For singleton types, filter out actions that are not explicitly included
     // in the `singletonActions` list defined above
     actions: (input, context) => {
+      if (context.schemaType === "ogSettings") {
+        return [
+          resetOgSettingsAction,
+          ...input.filter(({ action }) => action && singletonActions.has(action)),
+        ];
+      }
+
       if (singletonTypes.has(context.schemaType)) {
         return input.filter(({ action }) => action && singletonActions.has(action));
       }
@@ -96,6 +105,7 @@ export default defineConfig({
     visionTool({ defaultApiVersion: apiVersion }),
     codeInput(),
     media(),
+    colorInput(),
     iconPicker(),
   ],
   vite: (prevConfig: any) => ({

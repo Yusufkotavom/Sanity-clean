@@ -247,11 +247,11 @@ const demoStrategicLinks: StrategicLink[] = [
 function ComponentMeta({
   title,
   file,
-  role,
+  purpose,
 }: {
   title: string;
   file: string;
-  role: string;
+  purpose: string;
 }) {
   return (
     <div className="container py-6">
@@ -262,7 +262,7 @@ function ComponentMeta({
           <span className="font-medium text-foreground/78">File:</span> {file}
         </p>
         <p className="mt-1 text-sm leading-7 text-muted-foreground">
-          <span className="font-medium text-foreground/78">Fungsi:</span> {role}
+          <span className="font-medium text-foreground/78">Fungsi:</span> {purpose}
         </p>
       </div>
     </div>
@@ -348,7 +348,7 @@ export default function ComponentUiPage() {
         <ComponentMeta
           title="RewriteHero"
           file="frontend/components/ui/rewrite/hero.tsx"
-          role="Komponen pembuka untuk headline, intro, CTA primer, CTA sekunder, dan visual hero."
+          purpose="Komponen pembuka untuk headline, intro, CTA primer, CTA sekunder, dan visual hero."
         />
         <RewriteHero
           page={demoPage}
@@ -366,7 +366,7 @@ export default function ComponentUiPage() {
         <ComponentMeta
           title="MetricsRail"
           file="frontend/components/ui/rewrite/metrics-rail.tsx"
-          role="Komponen proof strip untuk angka cepat, value, dan short trust statements setelah hero."
+          purpose="Komponen proof strip untuk angka cepat, value, dan short trust statements setelah hero."
         />
         <MetricsRail items={metrics} />
       </div>
@@ -375,7 +375,7 @@ export default function ComponentUiPage() {
         <ComponentMeta
           title="InlinePhraseStrip"
           file="frontend/components/ui/rewrite/inline-phrase-strip.tsx"
-          role="Komponen heading phrase-strip untuk transisi besar antar area, terinspirasi dari treatment headline Vercel."
+          purpose="Komponen heading phrase-strip untuk transisi besar antar area, terinspirasi dari treatment headline Vercel."
         />
         <InlinePhraseStrip
           phrases={[
@@ -389,7 +389,7 @@ export default function ComponentUiPage() {
       <ComponentMeta
         title="SectionShell / SectionPanel / SplitVisualPanel"
         file="frontend/components/ui/section-shell.tsx"
-        role="Primitive dasar untuk separator, panel tipis bertint, dan pasangan text + visual dalam satu scene."
+        purpose="Primitive dasar untuk separator, panel tipis bertint, dan pasangan text + visual dalam satu scene."
       />
       <SectionShell>
         <SectionIntro
@@ -450,7 +450,7 @@ export default function ComponentUiPage() {
         <ComponentMeta
           title="ProductStage"
           file="frontend/components/ui/rewrite/product-stage.tsx"
-          role="Komponen scene bertahap untuk product narrative atau workflow yang perlu beberapa stage visual."
+          purpose="Komponen scene bertahap untuk product narrative atau workflow yang perlu beberapa stage visual."
         />
       </div>
       <ProductStage
@@ -463,7 +463,7 @@ export default function ComponentUiPage() {
         <ComponentMeta
           title="RewriteLandingSections"
           file="frontend/components/ui/rewrite/landing-sections.tsx"
-          role="Komponen section utama yang sekarang dipadatkan menjadi lane grids dan utility strip yang lebih rapat untuk layanan, pricing, proof, testimonial, dan CTA closeout."
+          purpose="Komponen section utama yang sekarang dipadatkan menjadi lane grids dan utility strip yang lebih rapat untuk layanan, pricing, proof, testimonial, dan CTA closeout."
         />
         <RewriteLandingSections page={demoPage} copy={demoCopy} />
       </div>
@@ -472,7 +472,7 @@ export default function ComponentUiPage() {
         <ComponentMeta
           title="MicroBadges"
           file="frontend/components/micro-badges.tsx"
-          role="Komponen badge visual kecil untuk trust/support layer yang lebih ringan dari proof section besar."
+          purpose="Komponen badge visual kecil untuk trust/support layer yang lebih ringan dari proof section besar."
         />
         <MicroBadges />
       </div>
@@ -481,7 +481,7 @@ export default function ComponentUiPage() {
         <ComponentMeta
           title="QuoteSpotlight"
           file="frontend/components/ui/rewrite/quote-spotlight.tsx"
-          role="Komponen spotlight quote untuk customer story atau testimoni utama yang perlu tampil dominan."
+          purpose="Komponen spotlight quote untuk customer story atau testimoni utama yang perlu tampil dominan."
         />
       </div>
       <QuoteSpotlight
@@ -494,7 +494,7 @@ export default function ComponentUiPage() {
         <ComponentMeta
           title="LogoWall"
           file="frontend/components/ui/rewrite/logo-wall.tsx"
-          role="Komponen trust wall untuk stack, partner labels, capability tags, atau kategori trusted lanes."
+          purpose="Komponen trust wall untuk stack, partner labels, capability tags, atau kategori trusted lanes."
         />
       </div>
       <LogoWall
@@ -518,7 +518,7 @@ export default function ComponentUiPage() {
         <ComponentMeta
           title="RewriteHighlights"
           file="frontend/components/ui/rewrite/highlights.tsx"
-          role="Komponen highlight grid untuk menegaskan value utama layanan dengan CTA pendukung di bawahnya."
+          purpose="Komponen highlight grid untuk menegaskan value utama layanan dengan CTA pendukung di bawahnya."
         />
         <RewriteHighlights copy={demoCopy} />
       </div>
@@ -527,7 +527,7 @@ export default function ComponentUiPage() {
         <ComponentMeta
           title="RewriteProcessFaq"
           file="frontend/components/ui/rewrite/process-faq.tsx"
-          role="Komponen gabungan proses eksekusi dan FAQ dalam satu panel dua kolom."
+          purpose="Komponen gabungan proses eksekusi dan FAQ dalam satu panel dua kolom."
         />
         <RewriteProcessFaq copy={demoCopy} />
       </div>
@@ -536,7 +536,7 @@ export default function ComponentUiPage() {
         <ComponentMeta
           title="RewriteRelatedLinks"
           file="frontend/components/ui/rewrite/related-links.tsx"
-          role="Komponen tautan strategis dan related links untuk menjaga eksplorasi internal setelah konten utama selesai."
+          purpose="Komponen tautan strategis dan related links untuk menjaga eksplorasi internal setelah konten utama selesai."
         />
         <RewriteRelatedLinks
           page={demoPage}

@@ -16,7 +16,7 @@ const densityStyles: Record<Density, string> = {
 };
 
 const mediaHeightStyles: Record<HeightVariant, string> = {
-  compact: "aspect-square lg:h-48",
+  compact: "aspect-[16/9]",
   regular: "h-44 sm:h-48 lg:h-56",
   tall: "h-[15rem] sm:h-[20rem] md:h-[25rem] lg:h-[9.5rem] xl:h-[12rem]",
   auto: "h-auto w-full",
@@ -70,7 +70,8 @@ export function ArchiveCardMedia({
 
   const isCompact = heightVariant === "compact";
   const isAuto = heightVariant === "auto";
-  const targetWidth = isCompact ? 480 : heightVariant === "tall" ? 960 : 800;
+  const targetWidth = isCompact ? 720 : heightVariant === "tall" ? 960 : 800;
+  const targetHeight = Math.round((targetWidth * 9) / 16);
 
   return (
     <div
@@ -85,8 +86,8 @@ export function ArchiveCardMedia({
         alt={image?.alt || altFallback}
         fill={!isCompact && !isAuto}
         width={isCompact || isAuto ? targetWidth : undefined}
-        height={isCompact || isAuto ? targetWidth * 1.5 : undefined} // approximate or let h-auto scale it
-        style={{ objectFit: isAuto ? "contain" : "cover", height: isAuto ? "auto" : "100%", width: "100%" }}
+        height={isCompact || isAuto ? targetHeight : undefined}
+        style={{ objectFit: isCompact || isAuto ? "contain" : "cover", height: isAuto ? "auto" : "100%", width: "100%" }}
         placeholder={image?.asset?.metadata?.lqip ? "blur" : undefined}
         blurDataURL={image?.asset?.metadata?.lqip || ""}
         sizes={sizes}

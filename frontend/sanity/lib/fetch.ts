@@ -425,10 +425,15 @@ export const fetchSanitySeoSettings = async (): Promise<any | null> => {
 };
 
 export const fetchSanityOgSettings = async (): Promise<any | null> => {
-  const data = await fetchPublishedCached<any | null>({
-    query: OG_SETTINGS_QUERY,
-    tags: ["og-settings"],
-  });
+  const isDev = process.env.NODE_ENV === "development";
+  const data = isDev
+    ? await fetchPublished<any | null>({
+        query: OG_SETTINGS_QUERY,
+      })
+    : await fetchPublishedCached<any | null>({
+        query: OG_SETTINGS_QUERY,
+        tags: ["og-settings"],
+      });
 
   return data;
 };

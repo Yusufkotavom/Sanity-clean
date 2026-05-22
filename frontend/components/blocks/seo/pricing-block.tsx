@@ -91,8 +91,8 @@ export default async function PricingBlock({
               <div className="mb-6 flex-grow">
                 <h4 className="font-semibold mb-3 text-sm">Yang Anda Dapatkan:</h4>
                 <ul className="space-y-2">
-                  {pkg.features?.map((feature: string, idx: number) => (
-                    <li key={idx} className="flex items-start gap-2 text-sm">
+                  {pkg.features?.map((feature: string) => (
+                    <li key={feature} className="flex items-start gap-2 text-sm">
                       <Check className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
                       <span>{feature}</span>
                     </li>
@@ -105,8 +105,8 @@ export default async function PricingBlock({
                 <div className="mb-6">
                   <h4 className="font-semibold mb-3 text-sm">Tidak Termasuk:</h4>
                   <ul className="space-y-2">
-                    {pkg.excluded.map((item: string, idx: number) => (
-                      <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
+                    {pkg.excluded.map((item: string) => (
+                      <li key={item} className="flex items-start gap-2 text-sm text-muted-foreground">
                         <X className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
                         <span>{item}</span>
                       </li>

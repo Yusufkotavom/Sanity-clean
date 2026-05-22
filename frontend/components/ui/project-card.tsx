@@ -42,7 +42,7 @@ export default function ProjectCard({
     <ArchiveCardShell href={`/projects/${slug?.current || ""}`} density="compact" className="group p-0 overflow-hidden">
       <div className="flex h-full flex-col">
         <div className="relative flex-grow">
-          <ArchiveCardMedia image={image} heightVariant="auto" className="mb-0 rounded-none w-full border-b border-border/50" />
+          <ArchiveCardMedia image={image} heightVariant="compact" className="mb-0 rounded-none w-full border-b border-border/50" />
           <div className="absolute right-3 top-3 flex gap-1.5 opacity-100 md:opacity-0 transition-opacity md:group-hover:opacity-100 z-10">
             {repositoryUrl && (
               <button

@@ -2083,3 +2083,287 @@ Synchronized AI runtime contracts across frontend query layer, shared package ex
 - ✅ `pnpm --filter studio run build` passed.
 - ✅ `pnpm --filter frontend run build` passed.
 
+
+## 2026-05-21 — React Doctor priority fixes (auth warning, caching, a11y/lang, key stability)
+
+### Changed Files
+- `frontend/components/disable-draft-mode.tsx` (MODIFIED) - Removed server action usage; now disables draft mode via `/api/draft-mode/disable` fetch and reloads client state.
+- `frontend/app/actions/disable-draft-mode.ts` (DELETED) - Removed unauthenticated server action path flagged by React Doctor.
+- `frontend/app/api/og/route.tsx` (MODIFIED) - Added explicit `fetch` cache policy (`next.revalidate`) for remote font loading.
+- `frontend/app/global-error.tsx` (MODIFIED) - Added `lang="id"` on root `<html>` for accessibility.
+- `frontend/components/blocks/seo/pricing-block.tsx` (MODIFIED) - Replaced array-index keys with content-based keys for feature/excluded list items.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+- Closed highest-priority issues reported by React Doctor that directly affect security posture, server behavior, and accessibility baseline.
+- Simplified draft-mode disable flow by relying on existing API route, removing risky/flagged server action entry point.
+
+### Impact on SEO/Integration
+- SEO impact:
+  - No direct metadata/schema output change.
+- Integration impact:
+  - Draft mode disable UX still works from frontend and now avoids server-action lint finding.
+  - OG font fetch behavior is now explicit in caching policy.
+
+### Verification Status
+- ✅ `pnpm --filter frontend run typecheck` passed.
+- ✅ `pnpm --filter frontend run build` passed.
+- ✅ `npx react-doctor@latest frontend` re-run completed; primary targeted warnings addressed.
+
+
+## 2026-05-21 — Standardize listing thumbnails to 16:9 contain
+
+### Changed Files
+- `frontend/components/ui/archive-card.tsx` (MODIFIED) - Updated compact media frame to `16:9`, switched compact rendering to `object-contain`, and adjusted compact thumbnail request size to `720x405`.
+- `frontend/components/ui/project-card.tsx` (MODIFIED) - Project listing media now uses compact shared media variant so post/service/product/project are visually consistent.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+- Unified listing thumbnail behavior across archive cards to 16:9 with contain fit.
+- 1:1 and mixed-ratio assets now remain fully visible (letterbox allowed) while card layout height stays consistent.
+
+### Impact on SEO/Integration
+- SEO impact:
+  - No metadata/schema/query contract changes.
+- Integration impact:
+  - Visual consistency improved across post/service/product/project listings using the same shared card media behavior.
+
+### Verification Status
+- ✅ `pnpm --filter frontend run build` passed.
+- ✅ `pnpm --filter frontend run typecheck` passed.
+
+
+## 2026-05-21 — Fix OG font loading failure + stronger default OG settings
+
+### Changed Files
+- `frontend/app/api/og/route.tsx` (MODIFIED) - Added guaranteed fallback font loading from local static asset (`/fonts/Geist-Regular.ttf`) so OG generation no longer fails when custom font URL is empty/unreachable.
+- `frontend/public/fonts/Geist-Regular.ttf` (ADDED) - Local fallback font used by OG renderer.
+- `studio/schemas/documents/og-settings.ts` (MODIFIED) - Added full document `initialValue` defaults and clearer font URL fallback description.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+- Fixed `No fonts are loaded` error in `/api/og` by ensuring at least one font is always loaded.
+- Reduced editor friction by providing complete starter defaults in `OG Settings`.
+- Removed z-index style noise in OG render layer usage to avoid style parser warnings.
+
+### Impact on SEO/Integration
+- SEO impact:
+  - No metadata key contract changes.
+  - OG generation reliability improved (fewer 500 errors on image endpoint).
+- Integration impact:
+  - Studio `OG Settings` is easier to use out-of-the-box with sensible defaults.
+
+### Verification Status
+- ✅ `pnpm --filter frontend run build` passed.
+- ✅ `pnpm --filter studio run typecheck` passed.
+
+
+## 2026-05-21 — OG endpoint hardening: node runtime + local filesystem font fallback
+
+### Changed Files
+- `frontend/app/api/og/route.tsx` (MODIFIED) - Switched OG route runtime to `nodejs`, added local filesystem font fallback loading from `public/fonts/Geist-Regular.ttf`, and explicit 500 JSON when font loading still fails.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+- Resolved recurring dev/runtime `No fonts are loaded` 500 errors by loading fallback font directly from local disk instead of relying only on remote URL fetch.
+
+### Impact on SEO/Integration
+- SEO impact:
+  - No metadata contract changes.
+- Integration impact:
+  - `/api/og` is now more reliable across local dev and production when custom font URL is not configured.
+
+### Verification Status
+- ✅ `curl http://127.0.0.1:3002/api/og?...` repeated 5x returned `200 image/png` (1200x630).
+- ✅ `pnpm --filter frontend run build` passed.
+
+
+## 2026-05-21 — OG settings UX upgrade: icon picker + color fields + icon card controls
+
+### Changed Files
+- `studio/schemas/documents/og-settings.ts` (MODIFIED) - Added icon picker-based title icon controls (`titleIcon`), random icon toggle, icon card size/border controls, and color-based fields for OG palette and icon card appearance.
+- `frontend/sanity/queries/og-settings.ts` (MODIFIED) - Extended OG settings query with new icon and styling fields.
+- `frontend/app/api/og/route.tsx` (MODIFIED) - Added support for Sanity color object values, icon selection logic (random or from picker name mapping), and rendered icon card above title.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+- OG settings is now easier to configure visually in Studio:
+  - icon source via icon picker
+  - color fields for main OG tones and icon card
+  - direct controls for icon size, card size, radius, and border
+- OG image now shows a configurable icon card above title for more visual variation.
+
+### Impact on SEO/Integration
+- SEO impact:
+  - No metadata key contract changes.
+- Integration impact:
+  - OG endpoint now handles both legacy hex string values and new Sanity color object values.
+
+### Verification Status
+- ✅ `pnpm --filter studio run typecheck` passed.
+- ✅ `pnpm --filter frontend run build` passed.
+- ✅ `curl /api/og?...` returned `200 image/png` after changes.
+
+
+## 2026-05-21 — Install and enable Sanity color input plugin for OG settings
+
+### Changed Files
+- `studio/package.json` (MODIFIED) - Added `@sanity/color-input` dependency.
+- `studio/sanity.config.ts` (MODIFIED) - Registered `colorInput()` plugin in Studio config.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+- Installed and activated Sanity Color Input plugin so `type: "color"` fields in `ogSettings` compile and work in Studio.
+
+### Impact on SEO/Integration
+- SEO impact:
+  - No metadata contract changes.
+- Integration impact:
+  - OG settings color fields now use real color picker UI without schema compile errors.
+
+### Verification Status
+- ✅ `pnpm --filter studio run typecheck` passed.
+- ✅ `pnpm --filter studio run build` passed.
+
+
+## 2026-05-21 — Stabilize Studio plugin stack for React hook runtime error
+
+### Changed Files
+- `studio/package.json` (MODIFIED) - Added `@sanity/color-input`; upgraded `sanity-plugin-media` to latest compatible release.
+- `studio/sanity.config.ts` (MODIFIED) - Registered `colorInput()` plugin.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+- Installed the requested color input plugin and upgraded media plugin to reduce runtime hook conflicts (`Cannot read properties of null (reading 'useMemo')`) observed in Studio.
+
+### Impact on SEO/Integration
+- SEO impact:
+  - No direct SEO output changes.
+- Integration impact:
+  - Studio schema now supports `type: "color"` and plugin compatibility is aligned with React 19 + Sanity 5.
+
+### Verification Status
+- ✅ `pnpm --filter studio run typecheck` passed.
+- ✅ `pnpm --filter studio run build` passed.
+
+
+## 2026-05-21 — Make OG settings live-update in development (disable cache)
+
+### Changed Files
+- `frontend/sanity/lib/fetch.ts` (MODIFIED) - `fetchSanityOgSettings()` now bypasses cached fetch in development mode and reads fresh published data each request.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+- Fixed stale OG preview behavior in local development where changing OG settings (size/color/icon controls) appeared unchanged due to long-lived cached fetch.
+
+### Impact on SEO/Integration
+- SEO impact:
+  - No metadata contract changes.
+- Integration impact:
+  - Local dev OG endpoint reflects newest OG settings without waiting for revalidate cache expiry.
+
+### Verification Status
+- ✅ `pnpm --filter frontend run build` passed.
+## 2026-05-21 — OG icon renderer switched to SVG set + title alignment option
+
+### Changed Files
+- `studio/schemas/documents/og-settings.ts` (MODIFIED) - Added `titleAlign` field (`left|center`) and default value.
+- `frontend/sanity/queries/og-settings.ts` (MODIFIED) - Added `titleAlign` to OG settings query contract.
+- `frontend/app/api/og/route.tsx` (MODIFIED) - Replaced emoji icon output with SVG icon set, mapped icon-picker names to SVG icons, and applied title alignment rendering.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+- OG title icon output now uses inline SVG icons (Lucide-like line icons) instead of emoji glyphs, making visual style consistent across platforms.
+- Added `Title Alignment` control in Studio OG settings so title block can be left-aligned or centered.
+- Icon card controls (size/radius/border/colors) continue to apply, now with SVG icon rendering.
+
+### Impact on SEO/Integration
+- SEO impact:
+  - No metadata key changes.
+- Integration impact:
+  - Studio `ogSettings` schema, GROQ query, and `/api/og` renderer are synchronized for new `titleAlign` and SVG icon behavior.
+
+### Verification Status
+- ✅ `pnpm --filter studio run typecheck` passed.
+- ✅ `pnpm --filter studio run build` passed.
+- ✅ `pnpm --filter frontend run build` passed.
+- ✅ `curl /api/og?...` returned `200 image/png`.
+## 2026-05-21 — OG controls expanded: real center align, corner text overrides, case transform, morphglass preset, reset action
+
+### Changed Files
+- `frontend/app/api/og/route.tsx` (MODIFIED) - Title alignment centering behavior fixed with centered layout container; added corner text overrides, text case transforms, and morphglass visual preset rendering.
+- `frontend/sanity/queries/og-settings.ts` (MODIFIED) - Added new OG settings fields to fetch contract (`headerRightText`, `footerLeftText`, `footerRightText`, `titleCaseMode`, `cornerCaseMode`, `stylePreset`).
+- `studio/schemas/documents/og-settings.ts` (MODIFIED) - Added fields for corner text overrides, case mode options, and style preset options.
+- `studio/document-actions/reset-og-settings-action.ts` (NEW) - Added Studio action button to reset OG settings to default morphglass values.
+- `studio/sanity.config.ts` (MODIFIED) - Registered `Reset OG Defaults` document action for `ogSettings`.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+- Fixed title center behavior by centering the title block container, not only text style.
+- Made corner texts fully configurable from OG settings:
+  - top-right (header badge text override)
+  - bottom-left footer text override
+  - bottom-right footer text override
+- Added uppercase/lowercase controls:
+  - `titleCaseMode`
+  - `cornerCaseMode`
+- Added `stylePreset` with default `morphglass` so OG visual direction aligns with morphglass style.
+- Added one-click Studio action `Reset OG Defaults` to restore default OG configuration quickly.
+
+### Impact on SEO/Integration
+- SEO impact:
+  - No metadata key changes.
+- Integration impact:
+  - Studio schema, GROQ query, and OG API renderer are synced for new OG control surface.
+
+### Verification Status
+- ✅ `pnpm --filter studio run typecheck` passed.
+- ✅ `pnpm --filter studio run build` passed.
+- ✅ `pnpm --filter frontend run build` passed.
+- ✅ `curl -I http://127.0.0.1:3002/api/og?...` returned `200 image/png`.
+## 2026-05-22 — Add subtitle line under OG title with WhatsApp icon and alignment sync
+
+### Changed Files
+- `studio/schemas/documents/og-settings.ts` (MODIFIED) - Added `subtitleText` field for optional text under title.
+- `frontend/sanity/queries/og-settings.ts` (MODIFIED) - Added `subtitleText` to OG settings query contract.
+- `frontend/app/api/og/route.tsx` (MODIFIED) - Added subtitle renderer with WhatsApp icon below title; subtitle alignment now follows `titleAlign` (`center` follows center, `left` follows left).
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+- Added optional subtitle area below OG title with WhatsApp icon.
+- Subtitle respects the same alignment rule as title:
+  - `titleAlign=center` => subtitle block centered
+  - `titleAlign=left` => subtitle block left aligned
+
+### Impact on SEO/Integration
+- SEO impact:
+  - No metadata key changes.
+- Integration impact:
+  - Studio schema, GROQ query, and OG API renderer are synced for subtitle support.
+
+### Verification Status
+- ✅ `pnpm --filter studio run typecheck` passed.
+- ✅ `pnpm --filter frontend run build` passed.
+- ✅ `curl -I http://127.0.0.1:3002/api/og?...` returned `200 image/png`.
+
+
+## 2026-05-22 — Add explicit OG settings input guidance (value ranges and format hints)
+
+### Changed Files
+- `studio/schemas/documents/og-settings.ts` (MODIFIED) - Added inline descriptions for valid ranges and accepted formats across OG settings fields.
+- `docs/seo-updates.md` (MODIFIED) - Added this update log entry.
+
+### Summary
+- Added editor guidance directly in Studio so invalid values are easier to avoid before validation fails.
+- Numeric fields now show explicit ranges (for example `20-120 px`, `0-1`, `-0.2 to 0.2 em`).
+- Color fields now show accepted format hints (`hex color`, alpha disabled).
+- Selection fields (align/case/style preset) now include short behavior notes.
+
+### Impact on SEO/Integration
+- SEO impact:
+  - No direct metadata output changes.
+- Integration impact:
+  - Improves Studio authoring reliability and reduces failed value submissions for OG configuration.
+
+### Verification Status
+- ✅ `pnpm --filter studio run typecheck` passed.
