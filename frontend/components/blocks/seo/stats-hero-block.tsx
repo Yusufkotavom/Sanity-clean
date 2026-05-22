@@ -19,6 +19,7 @@ export default function StatsHeroBlock({
   links,
 }: StatsHeroBlock) {
   const color = stegaClean(colorVariant);
+  const hasImageAsset = Boolean(image?.asset?._id);
 
   return (
     <SectionContainer color={color} padding={padding}>
@@ -65,7 +66,7 @@ export default function StatsHeroBlock({
             )}
           </div>
 
-          {image && (
+          {hasImageAsset && image && (
             <div className="relative aspect-video overflow-hidden rounded-lg">
               <Image
                 src={urlFor(image).width(800).url()}
