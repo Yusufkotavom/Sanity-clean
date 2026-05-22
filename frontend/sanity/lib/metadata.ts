@@ -91,7 +91,7 @@ const resolveImage = (
     dynamicBadge?: string;
   },
 ) => {
-  if (page?.meta?.image) {
+  if (page?.meta?.image?.asset) {
     return {
       url: urlFor(page.meta.image).quality(85).url(),
       width: page.meta.image.asset?.metadata?.dimensions?.width || 1200,
@@ -99,7 +99,7 @@ const resolveImage = (
     };
   }
 
-  if (page?.image) {
+  if (page?.image?.asset) {
     return {
       url: urlFor(page.image).quality(85).url(),
       width: page.image.asset?.metadata?.dimensions?.width || 1200,
@@ -107,7 +107,7 @@ const resolveImage = (
     };
   }
 
-  if (seo?.defaultImage) {
+  if (seo?.defaultImage?.asset) {
     return {
       url: urlFor(seo.defaultImage).quality(85).url(),
       width: seo.defaultImage.asset?.metadata?.dimensions?.width || 1200,

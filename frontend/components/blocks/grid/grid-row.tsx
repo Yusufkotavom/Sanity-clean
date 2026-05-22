@@ -23,6 +23,8 @@ export default function GridRow({
   padding,
   colorVariant,
   gridColumns,
+  textAlign,
+  cardLayout,
   columns,
 }: GridRow) {
   return (
@@ -32,7 +34,6 @@ export default function GridRow({
           {columns.map((column) => {
             const Component = componentMap[column._type];
             if (!Component) {
-              // Fallback for development/debugging of new component types
               console.warn(
                 `No component implemented for grid column type: ${column._type}`,
               );
@@ -42,6 +43,8 @@ export default function GridRow({
               <Component
                 {...(column as any)}
                 color={colorVariant}
+                textAlign={textAlign}
+                cardLayout={cardLayout}
                 key={column._key}
               />
             );

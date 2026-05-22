@@ -15,11 +15,15 @@ type GridCard = Extract<GridColumn, { _type: "grid-card" }>;
 interface GridCardProps extends Omit<GridCard, "_type" | "_key"> {
   color?: ColorVariant;
   cardStyle?: "vercel" | "classic" | null;
+  textAlign?: "left" | "center" | null;
+  cardLayout?: "vertical" | "horizontal" | null;
 }
 
 export default function GridCard({
   color,
   cardStyle,
+  textAlign,
+  cardLayout,
   uiIcon,
   title,
   excerpt,
@@ -27,6 +31,8 @@ export default function GridCard({
   link,
 }: GridCardProps) {
   const isVercelStyle = cardStyle !== "classic";
+  const isCenter = textAlign === "center";
+  const isHorizontal = cardLayout === "horizontal";
 
   return (
     <div
@@ -44,8 +50,8 @@ export default function GridCard({
             : "",
         )}
       >
-        <div>
-          {image && image.asset?._id && (
+        <div className={cn(isHorizontal && "flex items-start gap-4")}>
+          {image && image.asset?._id && !isHorizontal && (
             <div className="relative mb-4 h-[15rem] overflow-hidden rounded-[1.15rem] border border-white/40 bg-white/60 sm:h-[20rem] md:h-[25rem] lg:h-[9.5rem] xl:h-[12rem] dark:border-white/10 dark:bg-white/5">
               <Image
                 src={urlFor(image).width(900).quality(75).url()}
@@ -59,17 +65,34 @@ export default function GridCard({
               />
             </div>
           )}
-          <div className={cn(color === "primary" ? "text-background" : undefined)}>
+          {isHorizontal && (
+            <div className="shrink-0 pt-1">
+              <div
+                className={cn(
+                  "inline-flex size-10 items-center justify-center rounded-lg border border-foreground/15 bg-background/80",
+                )}
+              >
+                <SanityIcon icon={uiIcon} className="size-4" />
+              </div>
+            </div>
+          )}
+          <div className={cn(
+            color === "primary" ? "text-background" : undefined,
+            isCenter && "text-center",
+          )}>
             {title && (
               <div className="mb-3">
-                <div
-                  className={cn(
-                    "inline-flex items-center gap-2",
-                    isVercelStyle && "mb-3 size-10 justify-center rounded-lg border border-foreground/15 bg-background/80",
-                  )}
-                >
-                  <SanityIcon icon={uiIcon} className={cn("size-5", isVercelStyle && "size-4")} />
-                </div>
+                {!isHorizontal && (
+                  <div
+                    className={cn(
+                      "inline-flex items-center gap-2",
+                      isVercelStyle && "mb-3 size-10 justify-center rounded-lg border border-foreground/15 bg-background/80",
+                      isCenter && "mx-auto",
+                    )}
+                  >
+                    <SanityIcon icon={uiIcon} className={cn("size-5", isVercelStyle && "size-4")} />
+                  </div>
+                )}
                 <h3 className="text-xl font-semibold leading-tight md:text-2xl">{title}</h3>
               </div>
             )}
@@ -82,7 +105,7 @@ export default function GridCard({
         </div>
         {link?.title ? (
           <Button
-            className={cn("mt-6 self-start rounded-full", isVercelStyle && "px-5")}
+            className={cn("mt-6 self-start rounded-full", isVercelStyle && "px-5", isCenter && "self-center")}
             size="lg"
             variant={link?.buttonVariant}
             asChild

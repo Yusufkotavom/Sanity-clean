@@ -11,8 +11,9 @@ const createPortableTextComponents = (
 ): PortableTextProps["components"] => ({
   types: {
     image: ({ value }) => {
+      if (!value?.asset) return null;
       const { url, metadata } = value.asset;
-      const { lqip, dimensions } = metadata;
+      const { lqip, dimensions } = metadata || {};
       return (
         <Image
           src={url}

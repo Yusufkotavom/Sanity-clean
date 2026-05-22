@@ -1,12 +1,9 @@
+import { Suspense } from "react";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import FloatingWhatsApp from "@/components/floating-whatsapp";
-import { DisableDraftMode } from "@/components/disable-draft-mode";
-import { VisualEditing } from "next-sanity/visual-editing";
-import { draftMode } from "next/headers";
-import { headers } from "next/headers";
-import { SanityLive } from "@/sanity/lib/live";
-import ReusableSlotSections from "@/components/reusable-slot-sections";
+import DraftModeTools from "@/components/draft-mode-tools";
+import ReusableSlotClient from "@/components/reusable-slot-client";
 import { fetchSanityReusableSections } from "@/sanity/lib/fetch";
 
 export const revalidate = 604800;
@@ -17,54 +14,24 @@ export default async function MainLayout({
   children: React.ReactNode;
 }) {
   const reusableSections = await fetchSanityReusableSections();
-  const isDraftMode = (await draftMode()).isEnabled;
-  const routeKey = (await headers()).get("x-route-key") || undefined;
 
   return (
     <>
-      <ReusableSlotSections
-        sections={reusableSections}
-        slot="beforeHeader"
-        currentRouteKey={routeKey}
-      />
+      <ReusableSlotClient sections={reusableSections} slot="beforeHeader" />
       <Header />
-      <ReusableSlotSections
-        sections={reusableSections}
-        slot="afterHeader"
-        currentRouteKey={routeKey}
-      />
+      <ReusableSlotClient sections={reusableSections} slot="afterHeader" />
       <main className="ui-shell bg-grid-vercel min-h-[calc(100vh-64px)]">
-        <ReusableSlotSections
-          sections={reusableSections}
-          slot="beforeMainContent"
-          currentRouteKey={routeKey}
-        />
+        <ReusableSlotClient sections={reusableSections} slot="beforeMainContent" />
         {children}
-        <ReusableSlotSections
-          sections={reusableSections}
-          slot="afterMainContent"
-          currentRouteKey={routeKey}
-        />
+        <ReusableSlotClient sections={reusableSections} slot="afterMainContent" />
       </main>
-      <ReusableSlotSections
-        sections={reusableSections}
-        slot="beforeFooter"
-        currentRouteKey={routeKey}
-      />
+      <ReusableSlotClient sections={reusableSections} slot="beforeFooter" />
       <Footer />
-      <ReusableSlotSections
-        sections={reusableSections}
-        slot="afterFooter"
-        currentRouteKey={routeKey}
-      />
+      <ReusableSlotClient sections={reusableSections} slot="afterFooter" />
       <FloatingWhatsApp />
-      {isDraftMode && <SanityLive />}
-      {isDraftMode && (
-        <>
-          <DisableDraftMode />
-          <VisualEditing />
-        </>
-      )}
+      <Suspense fallback={null}>
+        <DraftModeTools />
+      </Suspense>
     </>
   );
 }

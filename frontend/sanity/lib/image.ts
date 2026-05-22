@@ -7,12 +7,26 @@ import { dataset, projectId } from "./env";
 // https://www.sanity.io/docs/image-url
 const builder = createImageUrlBuilder({ projectId, dataset });
 
-export const urlFor = (source: SanityImageSource) => {
-  const imageBuilder = builder.image(source);
+// Dummy builder that returns empty string for .url() calls
+const EMPTY_IMAGE_BUILDER = {
+  url: () => "",
+  width: () => EMPTY_IMAGE_BUILDER,
+  height: () => EMPTY_IMAGE_BUILDER,
+  quality: () => EMPTY_IMAGE_BUILDER,
+  format: () => EMPTY_IMAGE_BUILDER,
+  fit: () => EMPTY_IMAGE_BUILDER,
+  crop: () => EMPTY_IMAGE_BUILDER,
+} as any;
 
-  // Check if it's an object with asset property that has mimeType
-  const sourceObj = source as { asset?: { mimeType?: string } };
-  const isSvg = sourceObj?.asset?.mimeType === "image/svg+xml";
+export const urlFor = (source: SanityImageSource) => {
+  // Guard against null/undefined asset
+  const sourceObj = source as { asset?: { _id?: string; mimeType?: string } | null };
+  if (!sourceObj?.asset) {
+    return EMPTY_IMAGE_BUILDER;
+  }
+
+  const imageBuilder = builder.image(source);
+  const isSvg = sourceObj.asset.mimeType === "image/svg+xml";
 
   if (isSvg) {
     return imageBuilder;

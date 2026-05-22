@@ -67,6 +67,33 @@ export default defineType({
       description: "Select a background color variant",
     }),
     defineField({
+      name: "textAlign",
+      type: "string",
+      title: "Text Align",
+      options: {
+        list: [
+          { title: "Left", value: "left" },
+          { title: "Center", value: "center" },
+        ],
+        layout: "radio",
+      },
+      initialValue: "left",
+    }),
+    defineField({
+      name: "cardLayout",
+      type: "string",
+      title: "Card Layout",
+      description: "Choose card content arrangement",
+      options: {
+        list: [
+          { title: "Vertical (Icon Top)", value: "vertical" },
+          { title: "Horizontal (Icon Left, Text Right)", value: "horizontal" },
+        ],
+        layout: "radio",
+      },
+      initialValue: "vertical",
+    }),
+    defineField({
       name: "gridColumns",
       type: "string",
       title: "Grid Columns",

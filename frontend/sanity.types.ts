@@ -327,6 +327,8 @@ export type GridRow = {
   _type: "grid-row";
   padding?: SectionPadding;
   colorVariant?: ColorVariant;
+  textAlign?: "left" | "center";
+  cardLayout?: "vertical" | "horizontal";
   gridColumns?: "grid-cols-2" | "grid-cols-3" | "grid-cols-4";
   columns?: Array<
     | ({
@@ -3443,6 +3445,8 @@ export type LEGACY_PAGE_OVERRIDE_QUERY_RESULT = {
         _key: string;
         padding: SectionPadding | null;
         colorVariant: ColorVariant | null;
+        textAlign: "left" | "center" | null;
+        cardLayout: "vertical" | "horizontal" | null;
         gridColumns: "grid-cols-2" | "grid-cols-3" | "grid-cols-4" | null;
         columns: Array<
           | {
@@ -5009,6 +5013,8 @@ export type PAGE_QUERY_RESULT = {
         _key: string;
         padding: SectionPadding | null;
         colorVariant: ColorVariant | null;
+        textAlign: "left" | "center" | null;
+        cardLayout: "vertical" | "horizontal" | null;
         gridColumns: "grid-cols-2" | "grid-cols-3" | "grid-cols-4" | null;
         columns: Array<
           | {
@@ -6812,6 +6818,8 @@ export type POST_QUERY_RESULT = {
         _key: string;
         padding: SectionPadding | null;
         colorVariant: ColorVariant | null;
+        textAlign: "left" | "center" | null;
+        cardLayout: "vertical" | "horizontal" | null;
         gridColumns: "grid-cols-2" | "grid-cols-3" | "grid-cols-4" | null;
         columns: Array<
           | {
@@ -8758,6 +8766,8 @@ export type PRODUCT_QUERY_RESULT = {
         _key: string;
         padding: SectionPadding | null;
         colorVariant: ColorVariant | null;
+        textAlign: "left" | "center" | null;
+        cardLayout: "vertical" | "horizontal" | null;
         gridColumns: "grid-cols-2" | "grid-cols-3" | "grid-cols-4" | null;
         columns: Array<
           | {
@@ -10654,6 +10664,8 @@ export type PROJECT_QUERY_RESULT = {
         _key: string;
         padding: SectionPadding | null;
         colorVariant: ColorVariant | null;
+        textAlign: "left" | "center" | null;
+        cardLayout: "vertical" | "horizontal" | null;
         gridColumns: "grid-cols-2" | "grid-cols-3" | "grid-cols-4" | null;
         columns: Array<
           | {
@@ -12299,6 +12311,8 @@ export type REUSABLE_SECTIONS_QUERY_RESULT = Array<{
         _key: string;
         padding: SectionPadding | null;
         colorVariant: ColorVariant | null;
+        textAlign: "left" | "center" | null;
+        cardLayout: "vertical" | "horizontal" | null;
         gridColumns: "grid-cols-2" | "grid-cols-3" | "grid-cols-4" | null;
         columns: Array<
           | {
@@ -14059,6 +14073,8 @@ export type SERVICE_QUERY_RESULT = {
         _key: string;
         padding: SectionPadding | null;
         colorVariant: ColorVariant | null;
+        textAlign: "left" | "center" | null;
+        cardLayout: "vertical" | "horizontal" | null;
         gridColumns: "grid-cols-2" | "grid-cols-3" | "grid-cols-4" | null;
         columns: Array<
           | {
