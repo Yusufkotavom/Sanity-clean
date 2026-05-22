@@ -33,6 +33,8 @@
     "test:templates": "node --import tsx tests/template-resolver.contract.test.ts",
     "typegen": "npx sanity schema extract && npx sanity typegen generate",
     "typecheck": "tsc --noEmit",
+    "og:bulk": "node scripts/bulk-og-generate.mjs",
+    "og:bulk:write": "node scripts/bulk-og-generate.mjs --write",
     "psi:batch": "node scripts/pagespeed-insights-batch.mjs",
     "sanity:content:create": "node scripts/create-content-from-json.mjs"
   },
