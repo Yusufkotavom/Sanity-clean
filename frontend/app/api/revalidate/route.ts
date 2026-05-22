@@ -75,25 +75,16 @@ function collectPaths(payload: WebhookPayload | null) {
     case "faq":
     case "testimonial":
     case "reusableSection":
-      // These appear embedded in pages — revalidate homepage only
-      paths.add("/");
+      // Embedded in layout/pages — layout revalidation handles it
       break;
 
     case "navigation":
     case "settings":
     case "siteSettings":
-      // Global layout data — revalidate key pages
-      paths.add("/");
-      paths.add("/blog");
-      paths.add("/products");
-      paths.add("/services");
-      break;
-
     case "seoSettings":
     case "ogSettings":
     case "themeSettings":
-      // Metadata/theme — revalidate homepage (layout picks up on next visit)
-      paths.add("/");
+      // Global layout/metadata — layout revalidation handles it
       break;
 
     case "redirect":
@@ -138,8 +129,11 @@ export async function POST(request: NextRequest) {
 
   const paths = collectPaths(payload);
 
-  // Theme/settings affect the root layout across all routes
-  const layoutTypes = ["themeSettings", "settings", "siteSettings", "navigation"];
+  // Global docs affect the root layout across all routes
+  const layoutTypes = [
+    "themeSettings", "settings", "siteSettings", "navigation",
+    "seoSettings", "ogSettings", "faq", "testimonial", "reusableSection",
+  ];
   const needsLayoutRevalidation = layoutTypes.includes(payload?._type || "");
 
   for (const path of paths) {
