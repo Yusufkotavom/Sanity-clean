@@ -30,6 +30,12 @@ export const PRODUCT_QUERY = groq`*[_type == "product" && slug.current == $slug]
   cta{
     ${linkQuery}
   },
+  affiliateLinks[]{
+    _key,
+    platform,
+    label,
+    url,
+  },
   reviews[]{
     _key,
     reviewerName,

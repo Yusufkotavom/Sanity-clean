@@ -130,6 +130,55 @@ export default defineType({
       group: "settings",
     }),
     defineField({
+      name: "affiliateLinks",
+      title: "Affiliate Links",
+      type: "array",
+      group: "settings",
+      description: "Link pembelian di marketplace (Shopee, Tokopedia, TikTok Shop, dll)",
+      of: [
+        {
+          type: "object",
+          name: "affiliateLink",
+          fields: [
+            defineField({
+              name: "platform",
+              type: "string",
+              title: "Platform",
+              options: {
+                list: [
+                  { title: "Shopee", value: "shopee" },
+                  { title: "Tokopedia", value: "tokopedia" },
+                  { title: "TikTok Shop", value: "tiktokshop" },
+                  { title: "Lazada", value: "lazada" },
+                  { title: "Bukalapak", value: "bukalapak" },
+                  { title: "Blibli", value: "blibli" },
+                  { title: "Lainnya", value: "other" },
+                ],
+                layout: "radio",
+              },
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: "label",
+              type: "string",
+              title: "Label",
+              description: "Misal: Beli di Shopee",
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: "url",
+              type: "url",
+              title: "Affiliate URL",
+              validation: (rule) => rule.required().uri({ allowRelative: false, scheme: ["http", "https"] }),
+            }),
+          ],
+          preview: {
+            select: { title: "label", subtitle: "platform" },
+          },
+        },
+      ],
+    }),
+    defineField({
       name: "reviews",
       title: "Reviews",
       type: "array",
