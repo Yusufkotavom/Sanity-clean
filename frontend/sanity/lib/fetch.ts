@@ -140,6 +140,24 @@ const fetchPublishedCached = async <T>({
   tags?: string[];
   revalidate?: number;
 }): Promise<T> => {
+  let isDraft = false;
+  try {
+    const { draftMode } = await import("next/headers");
+    isDraft = (await draftMode()).isEnabled;
+  } catch {
+    // Not in a server component context (e.g. build time generateStaticParams)
+  }
+
+  if (isDraft) {
+    return client.fetch(query, params || {}, {
+      perspective: "drafts",
+      useCdn: false,
+      stega: true,
+      token: process.env.SANITY_API_READ_TOKEN,
+      next: { revalidate: 0 },
+    });
+  }
+
   return client.fetch(query, params || {}, {
     perspective: "published",
     stega: false,
