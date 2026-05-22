@@ -2,7 +2,6 @@ import { notFound } from "next/navigation";
 import Blocks from "@/components/blocks";
 import Image from "next/image";
 import Link from "next/link";
-import Breadcrumbs from "@/components/ui/breadcrumbs";
 import PortableTextRenderer from "@/components/portable-text-renderer";
 import { Button } from "@/components/ui/button";
 import { urlFor } from "@/sanity/lib/image";
@@ -203,7 +202,6 @@ export default async function ProductSlugPage(props: {
       <JsonLd data={breadcrumbJsonLd} />
       <div className="container py-16 xl:py-20">
         <article className="mx-auto max-w-4xl">
-          <Breadcrumbs links={links} />
           <h1 className="mb-4 text-3xl lg:text-5xl">{product.title}</h1>
           {product.excerpt && (
             <p className="mb-6 text-lg text-foreground/75">{product.excerpt}</p>

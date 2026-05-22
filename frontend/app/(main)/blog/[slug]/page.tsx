@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 import Blocks from "@/components/blocks";
-import Breadcrumbs from "@/components/ui/breadcrumbs";
 import PostHero from "@/components/blocks/post-hero";
 import PortableTextRenderer from "@/components/portable-text-renderer";
 import BlogTableOfContents from "@/components/ui/blog-table-of-contents";
@@ -123,7 +122,6 @@ export default async function PostPage(props: {
       <div className="container py-16 xl:py-20">
         <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[minmax(0,1fr)_280px]">
           <article className="max-w-3xl">
-            <Breadcrumbs links={links} />
             <PostHero {...post} siteUrl={siteUrl} />
             <TaxonomyBadgeList
               items={(post as any)?.categories}

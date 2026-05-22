@@ -2,7 +2,6 @@ import { notFound } from "next/navigation";
 import Blocks from "@/components/blocks";
 import Image from "next/image";
 import Link from "next/link";
-import Breadcrumbs from "@/components/ui/breadcrumbs";
 import PortableTextRenderer from "@/components/portable-text-renderer";
 import { Button } from "@/components/ui/button";
 import { urlFor } from "@/sanity/lib/image";
@@ -99,7 +98,6 @@ export default async function ProjectPage(props: {
 
           {/* Right: Title, Meta, and Actions */}
           <div className="mt-2 text-left">
-            <Breadcrumbs links={links} />
             <h1 className="mt-4 mb-4 text-4xl font-bold lg:text-5xl">{project.title}</h1>
             {project.excerpt && (
               <p className="mb-6 text-lg text-foreground/80">{project.excerpt}</p>
