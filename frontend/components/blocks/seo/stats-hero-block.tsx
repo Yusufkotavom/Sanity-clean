@@ -1,4 +1,4 @@
-import { cleanString as stegaClean } from "@/lib/clean";
+import { stegaClean } from "@/lib/clean";
 import type { PAGE_QUERY_RESULT } from "@/sanity.types";
 import SectionContainer from "@/components/ui/section-container";
 import { Button } from "@/components/ui/button";

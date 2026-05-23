@@ -15,7 +15,7 @@ import * as z from "zod";
 import { toast } from "sonner";
 import { useCallback } from "react";
 import { Loader2 } from "lucide-react";
-import { cleanString as stegaClean } from "@/lib/clean";
+import { stegaClean } from "@/lib/clean";
 import { PAGE_QUERY_RESULT } from "@/sanity.types";
 
 type FormNewsletterProps = Extract<

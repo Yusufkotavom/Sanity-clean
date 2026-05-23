@@ -1,4 +1,4 @@
-import { cleanString as stegaClean } from "@/lib/clean";
+import { stegaClean } from "@/lib/clean";
 import SectionContainer from "@/components/ui/section-container";
 import { fetchSeoSettings } from "@/sanity/lib/fetch";
 import {
