@@ -6,8 +6,9 @@ import PricingCard from "./pricing-card";
 import GridPost from "./grid-post";
 
 type Block = NonNullable<NonNullable<PAGE_QUERY_RESULT>["blocks"]>[number];
-type GridRow = Extract<Block, { _type: "grid-row" }>;
-type GridColumn = NonNullable<NonNullable<GridRow["columns"]>[number]>;
+type GridRowBase = Extract<Block, { _type: "grid-row" }>;
+type GridRow = Omit<GridRowBase, "cardLayout"> & { cardStyle?: "vertical" | "horizontal" | "classic" | null };
+type GridColumn = NonNullable<NonNullable<GridRowBase["columns"]>[number]>;
 
 const componentMap: {
   [K in GridColumn["_type"]]: React.ComponentType<
@@ -24,7 +25,7 @@ export default function GridRow({
   colorVariant,
   gridColumns,
   textAlign,
-  cardLayout,
+  cardStyle,
   columns,
 }: GridRow) {
   return (
@@ -44,7 +45,7 @@ export default function GridRow({
                 {...(column as any)}
                 color={colorVariant}
                 textAlign={textAlign}
-                cardLayout={cardLayout}
+                cardStyle={cardStyle}
                 key={column._key}
               />
             );

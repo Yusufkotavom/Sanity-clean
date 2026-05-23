@@ -26,19 +26,6 @@ export default defineType({
       description: "Optional icon shown on top of the card heading.",
     }),
     defineField({
-      name: "cardStyle",
-      title: "Card Style",
-      type: "string",
-      initialValue: "vercel",
-      options: {
-        list: [
-          { title: "Vercel (Icon Top + CTA Bottom)", value: "vercel" },
-          { title: "Classic", value: "classic" },
-        ],
-        layout: "radio",
-      },
-    }),
-    defineField({
       name: "title",
       type: "string",
     }),

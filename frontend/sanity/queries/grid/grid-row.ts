@@ -11,7 +11,7 @@ export const gridRowQuery = groq`
     padding,
     colorVariant,
     textAlign,
-    cardLayout,
+    cardStyle,
     gridColumns,
     columns[0..11]{
       _key,

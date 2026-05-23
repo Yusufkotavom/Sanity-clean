@@ -14,25 +14,23 @@ type GridCard = Extract<GridColumn, { _type: "grid-card" }>;
 
 interface GridCardProps extends Omit<GridCard, "_type" | "_key"> {
   color?: ColorVariant;
-  cardStyle?: "vercel" | "classic" | null;
+  cardStyle?: "vertical" | "horizontal" | "classic" | null;
   textAlign?: "left" | "center" | null;
-  cardLayout?: "vertical" | "horizontal" | null;
 }
 
 export default function GridCard({
   color,
   cardStyle,
   textAlign,
-  cardLayout,
   uiIcon,
   title,
   excerpt,
   image,
   link,
 }: GridCardProps) {
-  const isVercelStyle = cardStyle !== "classic";
+  const isClassic = cardStyle === "classic";
   const isCenter = textAlign === "center";
-  const isHorizontal = cardLayout === "horizontal";
+  const isHorizontal = cardStyle === "horizontal";
 
   return (
     <div
@@ -45,7 +43,7 @@ export default function GridCard({
           color === "primary"
             ? "group-hover:border-primary-foreground/50 group-hover:bg-sky-100/75 dark:group-hover:bg-sky-950/28"
             : "group-hover:border-primary/35 group-hover:bg-white/85 dark:group-hover:bg-white/8",
-          isVercelStyle
+          !isClassic
             ? "border-white/70 bg-white/75 shadow-[0_12px_30px_rgba(15,23,42,0.08)] dark:border-white/15 dark:bg-white/5"
             : "",
         )}
@@ -86,11 +84,11 @@ export default function GridCard({
                   <div
                     className={cn(
                       "inline-flex items-center gap-2",
-                      isVercelStyle && "mb-3 size-10 justify-center rounded-lg border border-foreground/15 bg-background/80",
+                      !isClassic && "mb-3 size-10 justify-center rounded-lg border border-foreground/15 bg-background/80",
                       isCenter && "mx-auto",
                     )}
                   >
-                    <SanityIcon icon={uiIcon} className={cn("size-5", isVercelStyle && "size-4")} />
+                    <SanityIcon icon={uiIcon} className={cn("size-5", !isClassic && "size-4")} />
                   </div>
                 )}
                 <h3 className="text-xl font-semibold leading-tight md:text-2xl">{title}</h3>
@@ -105,7 +103,7 @@ export default function GridCard({
         </div>
         {link?.title ? (
           <Button
-            className={cn("mt-6 self-start rounded-full", isVercelStyle && "px-5", isCenter && "self-center")}
+            className={cn("mt-6 self-start rounded-full", !isClassic && "px-5", isCenter && "self-center")}
             size="lg"
             variant={link?.buttonVariant}
             asChild

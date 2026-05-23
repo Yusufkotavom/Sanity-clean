@@ -80,14 +80,15 @@ export default defineType({
       initialValue: "left",
     }),
     defineField({
-      name: "cardLayout",
+      name: "cardStyle",
       type: "string",
-      title: "Card Layout",
-      description: "Choose card content arrangement",
+      title: "Card Style",
+      description: "Visual style and layout for all cards in this row",
       options: {
         list: [
-          { title: "Vertical (Icon Top)", value: "vertical" },
+          { title: "Vertical (Icon Top, Text Below)", value: "vertical" },
           { title: "Horizontal (Icon Left, Text Right)", value: "horizontal" },
+          { title: "Classic (Image Top, Text Below)", value: "classic" },
         ],
         layout: "radio",
       },
