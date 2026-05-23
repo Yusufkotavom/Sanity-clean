@@ -44,7 +44,6 @@ const TEMPLATE_BLOCK_TYPES = [
   "testimonials-block",
   "pricing-block",
   "faq-block",
-  "benefits-block",
   "features-package-block",
   "service-types-block",
   "problem-solution-block",

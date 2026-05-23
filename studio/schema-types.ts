@@ -93,7 +93,6 @@ import companyInfo from "./schemas/blocks/seo/company-info";
 import faqBlock from "./schemas/blocks/seo/faq-block";
 import testimonialsBlock from "./schemas/blocks/seo/testimonials-block";
 import pricingBlock from "./schemas/blocks/seo/pricing-block";
-import benefitsBlock from "./schemas/blocks/seo/benefits-block";
 import eeatBlock from "./schemas/blocks/seo/eeat-block";
 import metricsRailBlock from "./schemas/blocks/seo/metrics-rail-block";
 import highlightsBlock from "./schemas/blocks/seo/highlights-block";
@@ -203,7 +202,6 @@ export const schemaTypes = [
   faqBlock,
   testimonialsBlock,
   pricingBlock,
-  benefitsBlock,
   featuresPackageBlock,
   serviceTypesBlock,
   problemSolutionBlock,

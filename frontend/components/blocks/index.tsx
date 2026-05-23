@@ -21,7 +21,6 @@ const CompanyInfo = dynamic(() => import("@/components/blocks/seo/company-info")
 const TestimonialsBlock = dynamic(() => import("@/components/blocks/seo/testimonials-block"));
 const PricingBlock = dynamic(() => import("@/components/blocks/seo/pricing-block"));
 const FaqBlock = dynamic(() => import("@/components/blocks/seo/faq-block"));
-const BenefitsBlock = dynamic(() => import("@/components/blocks/seo/benefits-block"));
 const FeaturesPackageBlock = dynamic(() => import("@/components/blocks/seo/features-package-block"));
 const ServiceTypesBlock = dynamic(() => import("@/components/blocks/seo/service-types-block"));
 const ProblemSolutionBlock = dynamic(() => import("@/components/blocks/seo/problem-solution-block"));
@@ -52,7 +51,6 @@ const componentMap: Record<string, React.ComponentType<any>> = {
   "testimonials-block": TestimonialsBlock,
   "pricing-block": PricingBlock,
   "faq-block": FaqBlock,
-  "benefits-block": BenefitsBlock,
   "features-package-block": FeaturesPackageBlock,
   "service-types-block": ServiceTypesBlock,
   "problem-solution-block": ProblemSolutionBlock,
