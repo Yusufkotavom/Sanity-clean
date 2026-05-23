@@ -1,7 +1,9 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import Image from "next/image";
 import PortableTextRenderer from "@/components/portable-text-renderer";
 import SanityIcon from "@/components/icons/sanity-icon";
+import { urlFor } from "@/sanity/lib/image";
 import { PAGE_QUERY_RESULT } from "@/sanity.types";
 import {
   SectionIntro,
@@ -22,9 +24,11 @@ export default function Hero2({
   title,
   body,
   links,
+  image,
   pageTitle,
 }: Hero2Props) {
   const resolvedTitle = title?.trim() || pageTitle?.trim() || undefined;
+  const imageUrl = image?.asset ? urlFor(image).width(1200).quality(80).auto("format").url() : null;
 
   return (
     <SectionShell className="pt-16 lg:pt-24">
@@ -65,6 +69,18 @@ export default function Hero2({
           </div>
         ) : null}
       </SectionPanel>
+      {imageUrl ? (
+        <div className="mx-auto mt-8 max-w-5xl overflow-hidden rounded-2xl border border-border/40 shadow-lg">
+          <Image
+            src={imageUrl}
+            alt={image?.alt || resolvedTitle || ""}
+            width={1200}
+            height={630}
+            className="h-auto w-full"
+            priority
+          />
+        </div>
+      ) : null}
     </SectionShell>
   );
 }

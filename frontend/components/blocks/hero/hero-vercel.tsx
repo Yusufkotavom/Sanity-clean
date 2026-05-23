@@ -1,7 +1,9 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SanityIcon from "@/components/icons/sanity-icon";
+import { urlFor } from "@/sanity/lib/image";
 import type { SanityIconValue } from "@/components/icons/sanity-icon";
 import { SectionPanel, SectionShell } from "@/components/ui/section-shell";
 
@@ -23,6 +25,7 @@ type HeroVercelProps = {
   ctaPrimary?: HeroLink | null;
   ctaSecondary?: HeroLink | null;
   cards?: HeroCard[] | null;
+  image?: { asset?: { _ref?: string } | null; alt?: string | null } | null;
 };
 
 export default function HeroVercel({
@@ -32,7 +35,9 @@ export default function HeroVercel({
   ctaPrimary,
   ctaSecondary,
   cards,
+  image,
 }: HeroVercelProps) {
+  const imageUrl = image?.asset ? urlFor(image).width(1200).quality(80).auto("format").url() : null;
   return (
     <SectionShell className="pt-16 lg:pt-24">
       <SectionPanel
@@ -105,6 +110,18 @@ export default function HeroVercel({
           </div>
         </div>
       </SectionPanel>
+      {imageUrl ? (
+        <div className="mt-8 overflow-hidden rounded-2xl border border-border/40 shadow-lg">
+          <Image
+            src={imageUrl}
+            alt={image?.alt || title || ""}
+            width={1200}
+            height={630}
+            className="h-auto w-full"
+            priority
+          />
+        </div>
+      ) : null}
     </SectionShell>
   );
 }

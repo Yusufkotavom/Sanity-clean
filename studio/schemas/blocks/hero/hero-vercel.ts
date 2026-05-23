@@ -83,6 +83,16 @@ export default defineType({
       validation: (Rule) => Rule.min(1).max(4),
       description: "Recommended 3 cards to match Vercel-style hero rhythm.",
     }),
+    defineField({
+      name: "image",
+      title: "Hero Image",
+      type: "image",
+      options: { hotspot: true },
+      fields: [
+        { name: "alt", type: "string", title: "Alt Text" },
+      ],
+      description: "Optional image displayed below the hero content.",
+    }),
   ],
   preview: {
     select: {
