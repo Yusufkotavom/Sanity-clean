@@ -299,7 +299,7 @@ export async function GET(request: NextRequest) {
                 alt=""
                 width={520}
                 height={520}
-                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center" }}
               />
               <div
                 style={{
