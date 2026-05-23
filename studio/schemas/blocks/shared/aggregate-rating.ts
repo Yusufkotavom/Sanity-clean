@@ -11,14 +11,14 @@ export default defineField({
       name: "ratingValue",
       title: "Rating Value",
       type: "number",
-      validation: (Rule) => Rule.required().min(1).max(5).precision(1),
+      validation: (Rule) => Rule.min(1).max(5).precision(1),
       description: "Average rating (1.0 - 5.0)",
     }),
     defineField({
       name: "reviewCount",
       title: "Review Count",
       type: "number",
-      validation: (Rule) => Rule.required().min(1).integer(),
+      validation: (Rule) => Rule.min(1).integer(),
       description: "Total number of reviews",
     }),
     defineField({
