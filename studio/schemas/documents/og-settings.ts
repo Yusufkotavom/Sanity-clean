@@ -6,6 +6,13 @@ export default defineType({
   title: "OG Settings",
   type: "document",
   icon: ImageIcon,
+  fieldsets: [
+    { name: "corners", title: "Corner Texts", options: { columns: 2 } },
+    { name: "colors", title: "Colors", options: { columns: 2 } },
+    { name: "typography", title: "Typography", options: { columns: 3 } },
+    { name: "icon", title: "Icon", options: { columns: 2 } },
+    { name: "spacing", title: "Spacing & Sizing", options: { columns: 3 } },
+  ],
   initialValue: {
     eyebrow: "KotaCom",
     defaultBadge: "Blog",
@@ -51,12 +58,14 @@ export default defineType({
       title: "Eyebrow Label",
       type: "string",
       initialValue: "KotaCom",
+    fieldset: "corners",
     }),
     defineField({
       name: "showEyebrow",
       title: "Show Eyebrow (Top Left)",
       type: "boolean",
       initialValue: true,
+    fieldset: "corners",
     }),
     defineField({
       name: "defaultBadge",
@@ -69,36 +78,42 @@ export default defineType({
       title: "Header Right Text Override",
       type: "string",
       description: "Optional text override for top-right badge content.",
+    fieldset: "corners",
     }),
     defineField({
       name: "showHeaderRight",
       title: "Show Header Right (Top Right)",
       type: "boolean",
       initialValue: true,
+    fieldset: "corners",
     }),
     defineField({
       name: "footerLeftText",
       title: "Footer Left Text Override",
       type: "string",
       description: "Optional text override for bottom-left footer content.",
+    fieldset: "corners",
     }),
     defineField({
       name: "showFooterLeft",
       title: "Show Footer Left (Bottom Left)",
       type: "boolean",
       initialValue: true,
+    fieldset: "corners",
     }),
     defineField({
       name: "footerRightText",
       title: "Footer Right Text Override",
       type: "string",
       description: "Optional text override for bottom-right footer content.",
+    fieldset: "corners",
     }),
     defineField({
       name: "showFooterRight",
       title: "Show Footer Right (Bottom Right)",
       type: "boolean",
       initialValue: true,
+    fieldset: "corners",
     }),
     defineField({
       name: "gradientFrom",
@@ -106,6 +121,7 @@ export default defineType({
       type: "color",
       description: "Hex color only (alpha disabled). Example: #0B1220",
       options: { disableAlpha: true },
+    fieldset: "colors",
     }),
     defineField({
       name: "gradientTo",
@@ -113,6 +129,7 @@ export default defineType({
       type: "color",
       description: "Hex color only (alpha disabled). Example: #1E293B",
       options: { disableAlpha: true },
+    fieldset: "colors",
     }),
     defineField({
       name: "accentColor",
@@ -120,6 +137,7 @@ export default defineType({
       type: "color",
       description: "Hex color only (alpha disabled). Used for accents and borders.",
       options: { disableAlpha: true },
+    fieldset: "colors",
     }),
     defineField({
       name: "textColor",
@@ -127,12 +145,14 @@ export default defineType({
       type: "color",
       description: "Hex color only (alpha disabled). Main text color.",
       options: { disableAlpha: true },
+    fieldset: "colors",
     }),
     defineField({
       name: "showTitleIcon",
       title: "Show Icon Above Title",
       type: "boolean",
       initialValue: true,
+    fieldset: "icon",
     }),
     defineField({
       name: "randomizeTitleIcon",
@@ -140,6 +160,7 @@ export default defineType({
       type: "boolean",
       description: "If enabled, icon changes by title hash. If disabled, selected icon is used.",
       initialValue: true,
+    fieldset: "icon",
     }),
     defineField({
       name: "titleIcon",
@@ -220,6 +241,7 @@ export default defineType({
       initialValue: 48,
       description: "Range: 20-120 px",
       validation: (Rule) => Rule.min(20).max(120),
+    fieldset: "icon",
     }),
     defineField({
       name: "iconCardSize",
@@ -228,6 +250,7 @@ export default defineType({
       initialValue: 92,
       description: "Range: 48-180 px",
       validation: (Rule) => Rule.min(48).max(180),
+    fieldset: "icon",
     }),
     defineField({
       name: "iconCardRadius",
@@ -292,6 +315,7 @@ export default defineType({
       initialValue: 82,
       description: "Range: 32-120 px",
       validation: (Rule) => Rule.min(32).max(120),
+    fieldset: "typography",
     }),
     defineField({
       name: "titleLineHeight",
@@ -300,6 +324,7 @@ export default defineType({
       initialValue: 1.08,
       description: "Range: 0.9-1.6",
       validation: (Rule) => Rule.min(0.9).max(1.6),
+    fieldset: "typography",
     }),
     defineField({
       name: "titleLetterSpacingEm",
@@ -308,6 +333,7 @@ export default defineType({
       initialValue: -0.03,
       description: "Range: -0.2 to 0.2 em",
       validation: (Rule) => Rule.min(-0.2).max(0.2),
+    fieldset: "typography",
     }),
     defineField({
       name: "titleClampLines",
@@ -316,6 +342,7 @@ export default defineType({
       initialValue: 3,
       description: "Range: 1-5 lines",
       validation: (Rule) => Rule.min(1).max(5),
+    fieldset: "typography",
     }),
     defineField({
       name: "canvasPaddingX",
@@ -324,6 +351,7 @@ export default defineType({
       initialValue: 76,
       description: "Range: 24-180 px",
       validation: (Rule) => Rule.min(24).max(180),
+    fieldset: "spacing",
     }),
     defineField({
       name: "canvasPaddingY",
@@ -332,6 +360,7 @@ export default defineType({
       initialValue: 68,
       description: "Range: 24-180 px",
       validation: (Rule) => Rule.min(24).max(180),
+    fieldset: "spacing",
     }),
     defineField({
       name: "headerDotSize",
@@ -340,6 +369,7 @@ export default defineType({
       initialValue: 10,
       description: "Range: 4-24 px",
       validation: (Rule) => Rule.min(4).max(24),
+    fieldset: "spacing",
     }),
     defineField({
       name: "badgeBorderWidth",
