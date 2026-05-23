@@ -136,6 +136,13 @@ export const structure = (S: any, context: any) =>
                 S,
                 context,
               }),
+              orderableDocumentListDeskItem({
+                type: "blockPreset",
+                title: "Block Presets",
+                icon: Blocks,
+                S,
+                context,
+              }),
             ])
         ),
       S.listItem()
