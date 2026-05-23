@@ -4,7 +4,7 @@ import { Box, Card, Flex, Stack, Text, TextInput } from "@sanity/ui";
 const FRONTEND_URL = (
   process.env.SANITY_STUDIO_FRONTEND_URL ||
   process.env.SANITY_STUDIO_PREVIEW_URL ||
-  "https://api.devk.my.id"
+  "http://localhost:3000"
 )
   .trim()
   .replace(/\/+$/, "");

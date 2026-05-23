@@ -22,7 +22,7 @@ const buildOgUrl = (baseUrl: string, title: string, badge: string) => {
   return `${baseUrl.replace(/\/+$/, "")}/api/og?${params.toString()}`;
 };
 
-const STATIC_OG_BASE_FALLBACKS = ["https://api.devk.my.id", "http://localhost:3002"];
+const STATIC_OG_BASE_FALLBACKS = [process.env.SANITY_STUDIO_PREVIEW_URL || "", "http://localhost:3002"].filter(Boolean);
 
 export const generatePostOgAction: DocumentActionComponent = (props) => {
   const { id, draft, published, onComplete } = props;
