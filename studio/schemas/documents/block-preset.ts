@@ -43,6 +43,7 @@ export default defineType({
       ...pageBlocks,
       name: "blocks",
       title: "Preset Blocks",
+      group: undefined,
       description: "The blocks that will be inserted when this preset is referenced.",
       validation: (Rule: any) => Rule.required().min(1),
     },
