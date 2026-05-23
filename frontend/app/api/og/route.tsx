@@ -387,36 +387,58 @@ export async function GET(request: NextRequest) {
                     : "none",
               }}
             >
-              {useCustomSvg ? (
-                <img
-                  src={`data:image/svg+xml,${encodeURIComponent(
-                    configuredIconSvg
-                      .replace(/width="[^"]*"/, `width="${iconSize}"`)
-                      .replace(/height="[^"]*"/, `height="${iconSize}"`)
-                      .replace(/style="[^"]*"/, "")
-                      .replace(/currentColor/g, textColor)
-                  )}`}
-                  width={iconSize}
-                  height={iconSize}
-                />
-              ) : (
-                <svg
-                  width={iconSize}
-                  height={iconSize}
-                  viewBox={selectedIcon.viewBox}
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  style={{ display: "block" }}
-                >
-                  <path
-                    d={selectedIcon.path}
-                    stroke={textColor}
-                    strokeWidth="1.8"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              )}
+              <svg
+                width={iconSize}
+                height={iconSize}
+                viewBox={useCustomSvg ? (configuredIconSvg.match(/viewBox="([^"]+)"/)?.[1] || "0 0 24 24") : selectedIcon.viewBox}
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                style={{ display: "block" }}
+                stroke={textColor}
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                {useCustomSvg ? (
+                  // Extract all d= paths, points= polylines, and rect attributes from SVG
+                  (() => {
+                    const elements: any[] = [];
+                    // Match <path d="...">
+                    const paths = [...configuredIconSvg.matchAll(/<path[^>]*d="([^"]+)"[^>]*>/g)];
+                    for (const [, d] of paths) {
+                      elements.push(<path key={`p-${elements.length}`} d={d} fill="none" />);
+                    }
+                    // Match <polyline points="...">
+                    const polylines = [...configuredIconSvg.matchAll(/<polyline[^>]*points="([^"]+)"[^>]*>/g)];
+                    for (const [, points] of polylines) {
+                      elements.push(<polyline key={`pl-${elements.length}`} points={points} fill="none" />);
+                    }
+                    // Match <line x1="..." y1="..." x2="..." y2="...">
+                    const lines = [...configuredIconSvg.matchAll(/<line[^>]*x1="([^"]+)"[^>]*y1="([^"]+)"[^>]*x2="([^"]+)"[^>]*y2="([^"]+)"[^>]*>/g)];
+                    for (const [, x1, y1, x2, y2] of lines) {
+                      elements.push(<line key={`l-${elements.length}`} x1={x1} y1={y1} x2={x2} y2={y2} />);
+                    }
+                    // Match <circle cx="..." cy="..." r="...">
+                    const circles = [...configuredIconSvg.matchAll(/<circle[^>]*cx="([^"]+)"[^>]*cy="([^"]+)"[^>]*r="([^"]+)"[^>]*>/g)];
+                    for (const [, cx, cy, r] of circles) {
+                      elements.push(<circle key={`c-${elements.length}`} cx={cx} cy={cy} r={r} fill="none" />);
+                    }
+                    // Match <rect ...>
+                    const rects = [...configuredIconSvg.matchAll(/<rect[^>]*>/g)];
+                    for (const [match] of rects) {
+                      const w = match.match(/width="([^"]+)"/)?.[1];
+                      const h = match.match(/height="([^"]+)"/)?.[1];
+                      const x = match.match(/\bx="([^"]+)"/)?.[1] || "0";
+                      const y = match.match(/\by="([^"]+)"/)?.[1] || "0";
+                      const rx = match.match(/rx="([^"]+)"/)?.[1];
+                      elements.push(<rect key={`r-${elements.length}`} width={w} height={h} x={x} y={y} rx={rx} fill="none" />);
+                    }
+                    return elements.length > 0 ? elements : <path d={selectedIcon.path} />;
+                  })()
+                ) : (
+                  <path d={selectedIcon.path} />
+                )}
+              </svg>
             </div>
           ) : null}
           <div style={{ width: "100%", display: "flex", justifyContent: titleAlign === "center" ? "center" : "flex-start" }}>
