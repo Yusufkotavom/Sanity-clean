@@ -23,7 +23,7 @@ export default defineType({
     defineField({
       name: "reviews",
       type: "array",
-      of: [{ type: "review-item" }],
+      of: [{ type: "reviewItem" }],
       validation: (Rule) => Rule.min(1),
     }),
   ],
