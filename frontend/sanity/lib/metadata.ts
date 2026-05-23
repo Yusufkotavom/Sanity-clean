@@ -56,6 +56,7 @@ const getSiteName = cache(async (): Promise<string> => {
 });
 
 const getSiteUrl = (seo?: SeoSettings | null) =>
+  process.env.NEXT_PUBLIC_SITE_URL?.trim()?.replace(/\/+$/, "") ||
   seo?.siteUrl?.trim()?.replace(/\/+$/, "") || "";
 
 const getMetadataBaseUrl = (seo?: SeoSettings | null) => {
