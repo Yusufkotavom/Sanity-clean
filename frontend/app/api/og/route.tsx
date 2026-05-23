@@ -92,15 +92,27 @@ type OgIconDef = {
 };
 
 const ICONS: Record<string, OgIconDef> = {
-  rocket: { viewBox: "0 0 24 24", path: "M4.5 16.5c-1.2 1.2-1.6 2.9-1.7 4.7 1.8-.1 3.5-.5 4.7-1.7l2.1-2.1-3-3-2.1 2.1Zm6.1-3.3 4.1-4.1a8.8 8.8 0 0 0 2.4-6.3 8.8 8.8 0 0 0-6.3 2.4l-4.1 4.1m3.9 3.9 3 3m-5.9-9.8 5.9 5.9M14.5 9.5h.01" },
-  sparkles: { viewBox: "0 0 24 24", path: "m12 3 1.3 3.2L16.5 7.5 13.3 8.8 12 12l-1.3-3.2L7.5 7.5l3.2-1.3L12 3Zm6 7 .8 1.9 1.9.8-1.9.8-.8 1.9-.8-1.9-1.9-.8 1.9-.8.8-1.9ZM5 14l1.1 2.7L8.8 18l-2.7 1.1L5 21.8l-1.1-2.7L1.2 18l2.7-1.3L5 14Z" },
+  rocket: { viewBox: "0 0 24 24", path: "M4.5 16.5c-1.5 1.5-2 3.5-2 5.5 2 0 4-.5 5.5-2l1-1-3-3-1.5 .5ZM12 13l3-3M6 12l4-4 6.5-3.5L13 11l4 4-3.5 6.5L10 18l-4 4" },
   zap: { viewBox: "0 0 24 24", path: "M13 2 4 14h6l-1 8 9-12h-6l1-8Z" },
-  target: { viewBox: "0 0 24 24", path: "M12 3a9 9 0 1 0 9 9m-9-4a4 4 0 1 0 4 4m-4-1 .01 0M21 3l-6 6" },
-  wrench: { viewBox: "0 0 24 24", path: "M14.7 6.3a4.5 4.5 0 0 0-5.9 5.9L3 18l3 3 5.8-5.8a4.5 4.5 0 0 0 5.9-5.9l-3 3-2.4-.6-.6-2.4 3-3Z" },
-  trendingUp: { viewBox: "0 0 24 24", path: "m22 7-7.5 7.5-4-4L2 19m13-12h7v7" },
-  lightbulb: { viewBox: "0 0 24 24", path: "M9 18h6m-5 3h4m-6.5-6.5A6.5 6.5 0 1 1 16.5 14.5c-.7.8-1.3 1.6-1.7 2.5h-5.6c-.4-.9-1-1.7-1.7-2.5Z" },
-  trophy: { viewBox: "0 0 24 24", path: "M8 21h8M12 17v4M7 4h10v3a5 5 0 0 1-10 0V4Zm10 1h3a3 3 0 0 1-3 3m-10-3H4a3 3 0 0 0 3 3" },
-  globe: { viewBox: "0 0 24 24", path: "M12 2a10 10 0 1 0 0 20m0-20c3 2.5 5 6.2 5 10s-2 7.5-5 10m0-20c-3 2.5-5 6.2-5 10s2 7.5 5 10M2 12h20" },
+  star: { viewBox: "0 0 24 24", path: "m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2Z" },
+  heart: { viewBox: "0 0 24 24", path: "M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" },
+  code: { viewBox: "0 0 24 24", path: "m16 18 6-6-6-6M8 6l-6 6 6 6" },
+  layers: { viewBox: "0 0 24 24", path: "m12 2 10 6.5v7L12 22 2 15.5v-7L12 2ZM12 22v-6.5M22 8.5l-10 7-10-7" },
+  shield: { viewBox: "0 0 24 24", path: "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z" },
+  cpu: { viewBox: "0 0 24 24", path: "M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3M6 5h12a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1ZM9 9h6v6H9V9Z" },
+  globe: { viewBox: "0 0 24 24", path: "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20ZM2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z" },
+  trendingUp: { viewBox: "0 0 24 24", path: "m22 7-8.5 8.5-5-5L2 17M16 7h6v6" },
+  award: { viewBox: "0 0 24 24", path: "m12 15 3.4 5.9 1.2-6.7 6.4-2.2-5.8-3.6.6-6.8L12 5.7 6.2 1.6l.6 6.8-5.8 3.6 6.4 2.2 1.2 6.7Z" },
+  briefcase: { viewBox: "0 0 24 24", path: "M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16M2 7h20a1 1 0 0 1 1 1v11a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a1 1 0 0 1 1-1Z" },
+  barChart: { viewBox: "0 0 24 24", path: "M12 20V10M18 20V4M6 20v-4" },
+  users: { viewBox: "0 0 24 24", path: "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8ZM22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" },
+  mail: { viewBox: "0 0 24 24", path: "M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2Zm16 2-10 7L2 6" },
+  search: { viewBox: "0 0 24 24", path: "M11 3a8 8 0 1 0 0 16 8 8 0 0 0 0-16ZM21 21l-4.35-4.35" },
+  settings: { viewBox: "0 0 24 24", path: "M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8ZM12.22 2h-.44l-2.12.88-.57.24-.51-.34-1.78-1.18-1.19 1.19 1.18 1.78.34.51-.24.57L5.78 7.78v.44l.88 2.12.24.57-.34.51-1.18 1.78 1.19 1.19 1.78-1.18.51-.34.57.24 2.12.88h.44l2.12-.88.57-.24.51.34 1.78 1.18 1.19-1.19-1.18-1.78-.34-.51.24-.57.88-2.12v-.44l-.88-2.12-.24-.57.34-.51 1.18-1.78-1.19-1.19-1.78 1.18-.51.34-.57-.24L12.22 2Z" },
+  printer: { viewBox: "0 0 24 24", path: "M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v8H6v-8Z" },
+  book: { viewBox: "0 0 24 24", path: "M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15Z" },
+  monitor: { viewBox: "0 0 24 24", path: "M8 21h8M12 17v4M2 3h20a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z" },
+  sparkles: { viewBox: "0 0 24 24", path: "m12 3 1.5 3.7 3.7 1.5-3.7 1.5L12 13.4l-1.5-3.7L6.8 8.2l3.7-1.5L12 3Zm6.5 7 .8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8.8-2ZM7 14l1 2.5 2.5 1-2.5 1L7 21l-1-2.5L3.5 17.5 6 16.5 7 14Z" },
 };
 const RANDOM_ICON_KEYS = Object.keys(ICONS);
 
@@ -191,21 +203,14 @@ export async function GET(request: NextRequest) {
   const iconCardRadius = normalizeNumber((ogSettings as any)?.iconCardRadius, 24, 0, 999);
   const iconCardBorderWidth = normalizeNumber((ogSettings as any)?.iconCardBorderWidth, 1, 0, 8);
   const configuredIconName =
-    (typeof (ogSettings as any)?.titleIcon?.name === "string" &&
-      (ogSettings as any).titleIcon.name.trim()) ||
-    "";
-  const configuredIconSvg =
-    (typeof (ogSettings as any)?.titleIcon?.svg === "string" &&
-      (ogSettings as any).titleIcon.svg.trim()) ||
+    (typeof (ogSettings as any)?.titleIcon === "string" &&
+      (ogSettings as any).titleIcon.trim()) ||
     "";
   const randomIconKey =
     RANDOM_ICON_KEYS[hashText(`${title}|${badge}`) % RANDOM_ICON_KEYS.length] || "globe";
-  const useCustomSvg = !randomizeTitleIcon && configuredIconSvg;
   const selectedIconKey = randomizeTitleIcon
     ? randomIconKey
-    : configuredIconName
-      ? pickIconFromName(configuredIconName)
-      : randomIconKey;
+    : (configuredIconName && ICONS[configuredIconName] ? configuredIconName : randomIconKey);
   const selectedIcon = ICONS[selectedIconKey] || ICONS.globe;
 
   const computedFontSize =
@@ -390,54 +395,18 @@ export async function GET(request: NextRequest) {
               <svg
                 width={iconSize}
                 height={iconSize}
-                viewBox={useCustomSvg ? (configuredIconSvg.match(/viewBox="([^"]+)"/)?.[1] || "0 0 24 24") : selectedIcon.viewBox}
+                viewBox={selectedIcon.viewBox}
                 fill="none"
-                xmlns="http://www.w3.org/2000/svg"
                 style={{ display: "block" }}
-                stroke={textColor}
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
               >
-                {useCustomSvg ? (
-                  // Extract all d= paths, points= polylines, and rect attributes from SVG
-                  (() => {
-                    const elements: any[] = [];
-                    // Match <path d="...">
-                    const paths = [...configuredIconSvg.matchAll(/<path[^>]*d="([^"]+)"[^>]*>/g)];
-                    for (const [, d] of paths) {
-                      elements.push(<path key={`p-${elements.length}`} d={d} fill="none" />);
-                    }
-                    // Match <polyline points="...">
-                    const polylines = [...configuredIconSvg.matchAll(/<polyline[^>]*points="([^"]+)"[^>]*>/g)];
-                    for (const [, points] of polylines) {
-                      elements.push(<polyline key={`pl-${elements.length}`} points={points} fill="none" />);
-                    }
-                    // Match <line x1="..." y1="..." x2="..." y2="...">
-                    const lines = [...configuredIconSvg.matchAll(/<line[^>]*x1="([^"]+)"[^>]*y1="([^"]+)"[^>]*x2="([^"]+)"[^>]*y2="([^"]+)"[^>]*>/g)];
-                    for (const [, x1, y1, x2, y2] of lines) {
-                      elements.push(<line key={`l-${elements.length}`} x1={x1} y1={y1} x2={x2} y2={y2} />);
-                    }
-                    // Match <circle cx="..." cy="..." r="...">
-                    const circles = [...configuredIconSvg.matchAll(/<circle[^>]*cx="([^"]+)"[^>]*cy="([^"]+)"[^>]*r="([^"]+)"[^>]*>/g)];
-                    for (const [, cx, cy, r] of circles) {
-                      elements.push(<circle key={`c-${elements.length}`} cx={cx} cy={cy} r={r} fill="none" />);
-                    }
-                    // Match <rect ...>
-                    const rects = [...configuredIconSvg.matchAll(/<rect[^>]*>/g)];
-                    for (const [match] of rects) {
-                      const w = match.match(/width="([^"]+)"/)?.[1];
-                      const h = match.match(/height="([^"]+)"/)?.[1];
-                      const x = match.match(/\bx="([^"]+)"/)?.[1] || "0";
-                      const y = match.match(/\by="([^"]+)"/)?.[1] || "0";
-                      const rx = match.match(/rx="([^"]+)"/)?.[1];
-                      elements.push(<rect key={`r-${elements.length}`} width={w} height={h} x={x} y={y} rx={rx} fill="none" />);
-                    }
-                    return elements.length > 0 ? elements : <path d={selectedIcon.path} />;
-                  })()
-                ) : (
-                  <path d={selectedIcon.path} />
-                )}
+                <path
+                  d={selectedIcon.path}
+                  stroke={textColor}
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  fill="none"
+                />
               </svg>
             </div>
           ) : null}
