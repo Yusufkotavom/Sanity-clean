@@ -89,6 +89,7 @@ const resolveImage = (
   options?: {
     dynamicTitle?: string;
     dynamicBadge?: string;
+    dynamicDescription?: string;
   },
 ) => {
   if (page?.meta?.image?.asset) {
@@ -122,6 +123,9 @@ const resolveImage = (
     });
     if (options.dynamicBadge) {
       params.set("badge", options.dynamicBadge);
+    }
+    if (options.dynamicDescription) {
+      params.set("description", options.dynamicDescription);
     }
     return {
       url: `${siteUrl}/api/og?${params.toString()}`,
@@ -159,14 +163,15 @@ const buildMetadata = ({
   siteName: string;
 }): Metadata => {
   const resolvedTitle = normalizeSeoTitle(title || seo?.defaultTitle || siteName);
-  const image = resolveImage(page, seo, {
-    dynamicTitle: resolvedTitle,
-    dynamicBadge: openGraphType === "article" ? "Blog" : undefined,
-  });
   const normalizedDescription = normalizeSeoDescription(
     description || seo?.defaultDescription || "",
   );
   const resolvedDescription = normalizedDescription || undefined;
+  const image = resolveImage(page, seo, {
+    dynamicTitle: resolvedTitle,
+    dynamicBadge: openGraphType === "article" ? "Blog" : undefined,
+    dynamicDescription: normalizedDescription || undefined,
+  });
   const resolvedCanonical = canonicalUrl || getCanonicalUrl(slug, seo);
   const siteUrl = getSiteUrl(seo);
   const robotsValue =
