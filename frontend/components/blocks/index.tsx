@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
 import { PAGE_QUERY_RESULT } from "@/sanity.types";
 
-const Hero1 = dynamic(() => import("@/components/blocks/hero/hero-1"));
+import Hero1 from "@/components/blocks/hero/hero-1";
 const Hero2 = dynamic(() => import("@/components/blocks/hero/hero-2"));
 const HeroVercel = dynamic(() => import("@/components/blocks/hero/hero-vercel"));
 const SectionHeader = dynamic(() => import("@/components/blocks/section-header"));
