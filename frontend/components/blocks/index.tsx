@@ -26,6 +26,14 @@ const ServiceTypesBlock = dynamic(() => import("@/components/blocks/seo/service-
 const ProblemSolutionBlock = dynamic(() => import("@/components/blocks/seo/problem-solution-block"));
 const ValuePropsBlock = dynamic(() => import("@/components/blocks/seo/value-props-block"));
 const StatsHeroBlock = dynamic(() => import("@/components/blocks/seo/stats-hero-block"));
+const EeatBlock = dynamic(() => import("@/components/blocks/seo/eeat-block"));
+const MetricsRailBlock = dynamic(() => import("@/components/blocks/seo/metrics-rail-block"));
+const HighlightsBlock = dynamic(() => import("@/components/blocks/seo/highlights-block"));
+const ReviewsBlock = dynamic(() => import("@/components/blocks/seo/reviews-block"));
+const QuoteSpotlightBlock = dynamic(() => import("@/components/blocks/seo/quote-spotlight-block"));
+const MicroBadgesBlock = dynamic(() => import("@/components/blocks/seo/micro-badges-block"));
+const RelatedLinksBlock = dynamic(() => import("@/components/blocks/seo/related-links-block"));
+const ProcessFaqBlock = dynamic(() => import("@/components/blocks/seo/process-faq-block"));
 
 type Block = NonNullable<NonNullable<PAGE_QUERY_RESULT>["blocks"]>[number];
 
@@ -56,6 +64,14 @@ const componentMap: Record<string, React.ComponentType<any>> = {
   "problem-solution-block": ProblemSolutionBlock,
   "value-props-block": ValuePropsBlock,
   "stats-hero-block": StatsHeroBlock,
+  "eeat-block": EeatBlock,
+  "metrics-rail-block": MetricsRailBlock,
+  "highlights-block": HighlightsBlock,
+  "reviews-block": ReviewsBlock,
+  "quote-spotlight-block": QuoteSpotlightBlock,
+  "micro-badges-block": MicroBadgesBlock,
+  "related-links-block": RelatedLinksBlock,
+  "process-faq-block": ProcessFaqBlock,
 };
 
 export const BLOCK_COMPONENT_TYPES = Object.keys(componentMap);
