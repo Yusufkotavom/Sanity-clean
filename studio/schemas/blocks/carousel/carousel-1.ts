@@ -58,6 +58,22 @@ export default defineType({
       description: "Choose how to indicate carousel progress and position",
     }),
     defineField({
+      name: "aspectRatio",
+      type: "string",
+      title: "Image Aspect Ratio",
+      options: {
+        list: [
+          { title: "1:1 (Square)", value: "1/1" },
+          { title: "4:3", value: "4/3" },
+          { title: "16:9 (Widescreen)", value: "16/9" },
+          { title: "3:2", value: "3/2" },
+          { title: "Auto (Original)", value: "auto" },
+        ],
+        layout: "radio",
+      },
+      initialValue: "auto",
+    }),
+    defineField({
       name: "images",
       type: "array",
       of: [

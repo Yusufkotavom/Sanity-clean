@@ -19,11 +19,13 @@ const CAROUSEL_SIZES = {
   three: "basis-full md:basis-1/2 lg:basis-1/3",
 } as const;
 
-const IMAGE_SIZES = {
-  one: "h-[30rem] sm:h-[40rem] lg:h-[31.25rem] xl:h-[35rem]",
-  two: "h-[30rem] md:h-[22rem] lg:h-[30rem] xl:h-[35rem]",
-  three: "h-[30rem] md:h-[20rem] xl:h-[25rem]",
-} as const;
+const ASPECT_RATIO_CLASSES: Record<string, string> = {
+  "1/1": "aspect-square",
+  "4/3": "aspect-[4/3]",
+  "16/9": "aspect-video",
+  "3/2": "aspect-[3/2]",
+  "auto": "",
+};
 
 type CarouselSize = keyof typeof CAROUSEL_SIZES;
 
@@ -38,6 +40,7 @@ interface Carousel1Props extends Omit<
 > {
   size: CarouselSize | null;
   indicators: "none" | "dots" | "count" | null;
+  aspectRatio?: string | null;
 }
 
 export default function Carousel1({
@@ -45,8 +48,11 @@ export default function Carousel1({
   colorVariant,
   size = "one",
   indicators = "none",
+  aspectRatio = "auto",
   images,
 }: Carousel1Props) {
+  const ratioClass = ASPECT_RATIO_CLASSES[aspectRatio || "auto"] || "";
+
   return (
     <SectionContainer color={colorVariant} padding={padding}>
       {images && images.length > 0 && (
@@ -61,7 +67,7 @@ export default function Carousel1({
                   <div
                     className={cn(
                       "relative mx-auto overflow-hidden rounded-2xl",
-                      IMAGE_SIZES[size as CarouselSize],
+                      ratioClass || "h-[30rem] md:h-[25rem] xl:h-[30rem]",
                       size === "one" ? "max-w-[35rem]" : undefined,
                     )}
                   >
