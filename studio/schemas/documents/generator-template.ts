@@ -56,6 +56,7 @@ const TEMPLATE_BLOCK_TYPES = [
   "micro-badges-block",
   "related-links-block",
   "process-faq-block",
+  "block-preset-ref",
 ] as const;
 
 export default defineType({

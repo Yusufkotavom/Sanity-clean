@@ -44,6 +44,7 @@ const pageBlocks = defineField({
     { type: "micro-badges-block" },
     { type: "related-links-block" },
     { type: "process-faq-block" },
+    { type: "block-preset-ref" },
   ],
   options: {
     insertMenu: {
@@ -107,6 +108,11 @@ const pageBlocks = defineField({
           name: "legacy",
           title: "Legacy",
           of: ["legacy-rich-content"],
+        },
+        {
+          name: "presets",
+          title: "Presets",
+          of: ["block-preset-ref"],
         },
         {
           name: "seo",

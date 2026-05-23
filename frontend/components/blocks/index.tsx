@@ -86,9 +86,19 @@ export default function Blocks({
   return (
     <>
       {blocks?.map((block) => {
+        // Handle block preset references — flatten nested blocks
+        if ((block as any)._type === "block-preset-ref") {
+          const presetBlocks = (block as any).presetBlocks as Block[] | null;
+          if (!presetBlocks?.length) return null;
+          return presetBlocks.map((nested) => {
+            const Component = componentMap[nested._type];
+            if (!Component) return <div data-type={nested._type} key={nested._key} />;
+            return <Component {...(nested as any)} key={nested._key} pageTitle={pageTitle} />;
+          });
+        }
+
         const Component = componentMap[block._type];
         if (!Component) {
-          // Fallback for development/debugging of new component types
           console.warn(
             `No component implemented for block type: ${block._type}`,
           );

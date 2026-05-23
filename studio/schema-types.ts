@@ -20,6 +20,7 @@ import serviceLocation from "./schemas/documents/service-location";
 import location from "./schemas/documents/location";
 import redirect from "./schemas/documents/redirect";
 import reusableSection from "./schemas/documents/reusable-section";
+import blockPreset from "./schemas/documents/block-preset";
 import seoOpsSettings from "./schemas/documents/seo-ops-settings";
 import legacyPage from "./schemas/documents/legacy-page";
 import generatorTemplate from "./schemas/documents/generator-template";
@@ -106,6 +107,7 @@ import serviceTypesBlock from "./schemas/blocks/seo/service-types-block";
 import problemSolutionBlock from "./schemas/blocks/seo/problem-solution-block";
 import valuePropsBlock from "./schemas/blocks/seo/value-props-block";
 import statsHeroBlock from "./schemas/blocks/seo/stats-hero-block";
+import blockPresetRef from "./schemas/blocks/shared/block-preset-ref";
 
 export const schemaTypes = [
   // documents
@@ -215,4 +217,6 @@ export const schemaTypes = [
   microBadgesBlock,
   relatedLinksBlock,
   processFaqBlock,
+  blockPresetRef,
+  blockPreset,
 ];

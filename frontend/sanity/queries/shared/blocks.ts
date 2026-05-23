@@ -59,5 +59,14 @@ export const blocksQuery = `
     ${problemSolutionBlockQuery},
     ${valuePropsBlockQuery},
     ${statsHeroBlockQuery},
+    _type == "block-preset-ref" => {
+      _type,
+      _key,
+      "presetBlocks": preset->.blocks[]{
+        _type,
+        _key,
+        ...
+      },
+    },
   }
 `;
