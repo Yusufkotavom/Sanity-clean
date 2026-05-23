@@ -53,6 +53,12 @@ export default defineType({
       initialValue: "KotaCom",
     }),
     defineField({
+      name: "showEyebrow",
+      title: "Show Eyebrow (Top Left)",
+      type: "boolean",
+      initialValue: true,
+    }),
+    defineField({
       name: "defaultBadge",
       title: "Default Badge",
       type: "string",
@@ -65,16 +71,34 @@ export default defineType({
       description: "Optional text override for top-right badge content.",
     }),
     defineField({
+      name: "showHeaderRight",
+      title: "Show Header Right (Top Right)",
+      type: "boolean",
+      initialValue: true,
+    }),
+    defineField({
       name: "footerLeftText",
       title: "Footer Left Text Override",
       type: "string",
       description: "Optional text override for bottom-left footer content.",
     }),
     defineField({
+      name: "showFooterLeft",
+      title: "Show Footer Left (Bottom Left)",
+      type: "boolean",
+      initialValue: true,
+    }),
+    defineField({
       name: "footerRightText",
       title: "Footer Right Text Override",
       type: "string",
       description: "Optional text override for bottom-right footer content.",
+    }),
+    defineField({
+      name: "showFooterRight",
+      title: "Show Footer Right (Bottom Right)",
+      type: "boolean",
+      initialValue: true,
     }),
     defineField({
       name: "gradientFrom",

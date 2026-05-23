@@ -181,6 +181,10 @@ export async function GET(request: NextRequest) {
   const overlayOpacity = normalizeNumber((ogSettings as any)?.overlayOpacity, 0.12, 0, 1);
   const showTitleIcon = Boolean((ogSettings as any)?.showTitleIcon ?? true);
   const randomizeTitleIcon = Boolean((ogSettings as any)?.randomizeTitleIcon ?? true);
+  const showEyebrow = Boolean((ogSettings as any)?.showEyebrow ?? true);
+  const showHeaderRight = Boolean((ogSettings as any)?.showHeaderRight ?? true);
+  const showFooterLeft = Boolean((ogSettings as any)?.showFooterLeft ?? true);
+  const showFooterRight = Boolean((ogSettings as any)?.showFooterRight ?? true);
   const titleAlign = (ogSettings as any)?.titleAlign === "center" ? "center" : "left";
   const iconSize = normalizeNumber((ogSettings as any)?.iconSize, 48, 20, 120);
   const iconCardSize = normalizeNumber((ogSettings as any)?.iconCardSize, 92, 48, 180);
@@ -223,10 +227,10 @@ export async function GET(request: NextRequest) {
       (ogSettings as any).subtitleText.trim()) ||
     "";
   const displayTitle = applyTextCase(title, titleCaseMode);
-  const displayEyebrow = applyTextCase(eyebrow, cornerCaseMode);
-  const displayHeaderRight = applyTextCase(headerRightText, cornerCaseMode);
-  const displayFooterLeft = applyTextCase(footerLeftText, cornerCaseMode);
-  const displayFooterRight = applyTextCase(footerRightText, cornerCaseMode);
+  const displayEyebrow = showEyebrow ? applyTextCase(eyebrow, cornerCaseMode) : "";
+  const displayHeaderRight = showHeaderRight ? applyTextCase(headerRightText, cornerCaseMode) : "";
+  const displayFooterLeft = showFooterLeft ? applyTextCase(footerLeftText, cornerCaseMode) : "";
+  const displayFooterRight = showFooterRight ? applyTextCase(footerRightText, cornerCaseMode) : "";
 
   const fonts: Array<{
     name: string;
