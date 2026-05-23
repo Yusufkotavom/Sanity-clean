@@ -285,8 +285,8 @@ export async function GET(request: NextRequest) {
             <div
               style={{
                 display: "flex",
-                width: "100%",
-                height: "100%",
+                width: "420px",
+                height: "420px",
                 borderRadius: "18px",
                 overflow: "hidden",
                 border: "1px solid rgba(255,255,255,0.3)",
