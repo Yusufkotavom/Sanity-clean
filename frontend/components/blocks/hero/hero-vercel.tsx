@@ -109,19 +109,19 @@ export default function HeroVercel({
             ))}
           </div>
         </div>
+        {imageUrl ? (
+          <div className="mt-8 overflow-hidden rounded-xl lg:col-span-2">
+            <Image
+              src={imageUrl}
+              alt={image?.alt || title || ""}
+              width={1200}
+              height={630}
+              className="h-auto w-full"
+              priority
+            />
+          </div>
+        ) : null}
       </SectionPanel>
-      {imageUrl ? (
-        <div className="mt-8 overflow-hidden rounded-2xl border border-border/40 shadow-lg">
-          <Image
-            src={imageUrl}
-            alt={image?.alt || title || ""}
-            width={1200}
-            height={630}
-            className="h-auto w-full"
-            priority
-          />
-        </div>
-      ) : null}
     </SectionShell>
   );
 }

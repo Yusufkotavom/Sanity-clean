@@ -68,19 +68,19 @@ export default function Hero2({
             ))}
           </div>
         ) : null}
+        {imageUrl ? (
+          <div className="mt-8 overflow-hidden rounded-xl">
+            <Image
+              src={imageUrl}
+              alt={image?.alt || resolvedTitle || ""}
+              width={1200}
+              height={630}
+              className="h-auto w-full"
+              priority
+            />
+          </div>
+        ) : null}
       </SectionPanel>
-      {imageUrl ? (
-        <div className="mx-auto mt-8 max-w-5xl overflow-hidden rounded-2xl border border-border/40 shadow-lg">
-          <Image
-            src={imageUrl}
-            alt={image?.alt || resolvedTitle || ""}
-            width={1200}
-            height={630}
-            className="h-auto w-full"
-            priority
-          />
-        </div>
-      ) : null}
     </SectionShell>
   );
 }

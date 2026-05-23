@@ -26,5 +26,9 @@ export const heroVercelQuery = groq`
       title,
       description,
     },
+    image{
+      asset->{_id, url, metadata{lqip, dimensions{width, height}}},
+      alt
+    },
   }
 `;
