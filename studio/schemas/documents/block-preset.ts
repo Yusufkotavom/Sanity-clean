@@ -1,5 +1,6 @@
 import { defineField, defineType } from "sanity";
 import { Blocks } from "lucide-react";
+import { orderRankField } from "@sanity/orderable-document-list";
 import pageBlocks from "../blocks/shared/page-blocks";
 
 export default defineType({
@@ -19,6 +20,7 @@ export default defineType({
       options: { source: "title", maxLength: 96 },
       validation: (Rule) => Rule.required(),
     }),
+    orderRankField({ type: "blockPreset" }),
     defineField({
       name: "description",
       type: "string",
