@@ -1,8 +1,7 @@
 import { stegaClean } from "next-sanity";
 import SectionContainer from "@/components/ui/section-container";
-import GlassCard from "@/components/ui/glass-card";
 import { fetchSeoSettings } from "@/sanity/lib/fetch";
-import { Building2, Award, Trophy, Users, Briefcase, MapPin, Phone, Mail, Clock, CheckCircle2 } from "lucide-react";
+import { Building2, MapPin, Phone, Mail } from "lucide-react";
 import { ColorVariant, SectionPadding } from "@/sanity.types";
 
 type CompanyInfoBlock = {
@@ -23,145 +22,69 @@ export default async function CompanyInfo({
   const color = stegaClean(colorVariant) as ColorVariant | null;
   const pad = padding as unknown as SectionPadding | null;
   const seoSettings = await fetchSeoSettings();
-  const companyInfo = seoSettings?.companyInfo;
+  const c = seoSettings?.companyInfo;
 
-  if (!companyInfo) return null;
+  if (!c) return null;
 
   return (
     <SectionContainer color={color} padding={pad}>
-      <div className="mx-auto max-w-7xl">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+      <div className="mx-auto max-w-4xl">
+        <div className="mb-8 text-center">
+          <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
             {title || "Tentang Kotacom"}
           </h2>
-          <p className="mt-4 text-lg text-muted-foreground">
-            {description || "Partner terpercaya untuk solusi IT dan percetakan di Surabaya sejak 2015"}
-          </p>
-        </div>
-
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-12">
-          <GlassCard className="text-center">
-            <Building2 className="mx-auto h-8 w-8 text-primary mb-3" />
-            <div className="text-3xl font-bold">{companyInfo.foundedYear}</div>
-            <div className="text-sm text-muted-foreground mt-1">Tahun Berdiri</div>
-          </GlassCard>
-          <GlassCard className="text-center">
-            <Users className="mx-auto h-8 w-8 text-primary mb-3" />
-            <div className="text-3xl font-bold">{companyInfo.totalClients}+</div>
-            <div className="text-sm text-muted-foreground mt-1">Klien Puas</div>
-          </GlassCard>
-          <GlassCard className="text-center">
-            <Briefcase className="mx-auto h-8 w-8 text-primary mb-3" />
-            <div className="text-3xl font-bold">{companyInfo.totalProjects}+</div>
-            <div className="text-sm text-muted-foreground mt-1">Proyek Selesai</div>
-          </GlassCard>
-          <GlassCard className="text-center">
-            <MapPin className="mx-auto h-8 w-8 text-primary mb-3" />
-            <div className="text-3xl font-bold">{companyInfo.serviceAreas?.length || 6}</div>
-            <div className="text-sm text-muted-foreground mt-1">Area Layanan</div>
-          </GlassCard>
-        </div>
-
-        {/* Contact Info */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-          <GlassCard>
-            <h3 className="font-semibold mb-4 flex items-center gap-2">
-              <MapPin className="h-5 w-5 text-primary" />
-              Kantor Sidoarjo
-            </h3>
-            <p className="text-sm text-muted-foreground">{companyInfo.addressSidoarjo}</p>
-          </GlassCard>
-          <GlassCard>
-            <h3 className="font-semibold mb-4 flex items-center gap-2">
-              <MapPin className="h-5 w-5 text-primary" />
-              Kantor Surabaya
-            </h3>
-            <p className="text-sm text-muted-foreground">{companyInfo.addressSurabaya}</p>
-          </GlassCard>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          <GlassCard>
-            <div className="flex items-center gap-3">
-              <Phone className="h-5 w-5 text-primary" />
-              <div>
-                <div className="text-sm text-muted-foreground">Telepon / WhatsApp</div>
-                <div className="font-medium">{companyInfo.phone}</div>
-              </div>
-            </div>
-          </GlassCard>
-          <GlassCard>
-            <div className="flex items-center gap-3">
-              <Mail className="h-5 w-5 text-primary" />
-              <div>
-                <div className="text-sm text-muted-foreground">Email</div>
-                <div className="font-medium">{companyInfo.email}</div>
-              </div>
-            </div>
-          </GlassCard>
-          <GlassCard>
-            <div className="flex items-center gap-3">
-              <Clock className="h-5 w-5 text-primary" />
-              <div>
-                <div className="text-sm text-muted-foreground">Jam Operasional</div>
-                <div className="font-medium text-sm">{companyInfo.operatingHours}</div>
-              </div>
-            </div>
-          </GlassCard>
-        </div>
-
-        {/* Certifications & Awards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {companyInfo.certifications && companyInfo.certifications.length > 0 && (
-            <GlassCard>
-              <h3 className="font-semibold mb-4 flex items-center gap-2">
-                <Award className="h-5 w-5 text-primary" />
-                Sertifikasi
-              </h3>
-              <ul className="space-y-2">
-                {companyInfo.certifications.map((cert: string, idx: number) => (
-                  <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2">
-                    <CheckCircle2 className="mt-0.5 h-4 w-4 text-primary" />
-                    <span>{cert}</span>
-                  </li>
-                ))}
-              </ul>
-            </GlassCard>
-          )}
-          {companyInfo.awards && companyInfo.awards.length > 0 && (
-            <GlassCard>
-              <h3 className="font-semibold mb-4 flex items-center gap-2">
-                <Award className="h-5 w-5 text-primary" />
-                Penghargaan
-              </h3>
-              <ul className="space-y-2">
-                {companyInfo.awards.map((award: string, idx: number) => (
-                  <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2">
-                    <Trophy className="mt-0.5 h-4 w-4 text-primary" />
-                    <span>{award}</span>
-                  </li>
-                ))}
-              </ul>
-            </GlassCard>
+          {description && (
+            <p className="mt-2 text-muted-foreground">{description}</p>
           )}
         </div>
 
-        {/* Service Areas */}
-        {companyInfo.serviceAreas && companyInfo.serviceAreas.length > 0 && (
-          <div className="mt-8 text-center">
-            <p className="text-sm text-muted-foreground mb-3">Area Layanan Kami:</p>
-            <div className="flex flex-wrap justify-center gap-2">
-              {companyInfo.serviceAreas.map((area: string, idx: number) => (
-                <span
-                  key={idx}
-                  className="inline-flex items-center rounded-full border px-3 py-1 text-sm"
-                >
-                  {area}
-                </span>
-              ))}
-            </div>
+        {/* Stats row */}
+        <div className="mb-8 flex flex-wrap justify-center gap-8 text-center">
+          <div>
+            <div className="text-3xl font-bold">{c.foundedYear}</div>
+            <div className="text-xs text-muted-foreground">Berdiri</div>
+          </div>
+          <div>
+            <div className="text-3xl font-bold">{c.totalClients}+</div>
+            <div className="text-xs text-muted-foreground">Klien</div>
+          </div>
+          <div>
+            <div className="text-3xl font-bold">{c.totalProjects}+</div>
+            <div className="text-xs text-muted-foreground">Proyek</div>
+          </div>
+        </div>
+
+        {/* Contact + Address */}
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="rounded-xl border border-border/40 p-4">
+            <h3 className="mb-2 flex items-center gap-2 text-sm font-semibold">
+              <MapPin className="size-4 text-primary" /> Lokasi
+            </h3>
+            <p className="text-sm text-muted-foreground">{c.addressSidoarjo}</p>
+            {c.addressSurabaya && (
+              <p className="mt-2 text-sm text-muted-foreground">{c.addressSurabaya}</p>
+            )}
+          </div>
+          <div className="rounded-xl border border-border/40 p-4">
+            <h3 className="mb-2 flex items-center gap-2 text-sm font-semibold">
+              <Phone className="size-4 text-primary" /> Kontak
+            </h3>
+            <p className="text-sm text-muted-foreground">{c.phone}</p>
+            {c.email && (
+              <p className="mt-1 text-sm text-muted-foreground">{c.email}</p>
+            )}
+            {c.operatingHours && (
+              <p className="mt-1 text-xs text-muted-foreground/70">{c.operatingHours}</p>
+            )}
+          </div>
+        </div>
+
+        {/* Service areas inline */}
+        {c.serviceAreas?.length > 0 && (
+          <div className="mt-6 text-center">
+            <p className="text-xs text-muted-foreground">
+              Area layanan: {c.serviceAreas.join(" · ")}
+            </p>
           </div>
         )}
       </div>
