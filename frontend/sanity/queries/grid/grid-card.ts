@@ -12,7 +12,6 @@ export const gridCardQuery = groq`
       name,
       svg
     },
-    cardStyle,
     title,
     excerpt,
     image{

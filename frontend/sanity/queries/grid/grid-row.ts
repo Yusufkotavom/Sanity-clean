@@ -11,7 +11,7 @@ export const gridRowQuery = groq`
     padding,
     colorVariant,
     textAlign,
-    cardStyle,
+    "cardStyle": coalesce(cardStyle, cardLayout, "vertical"),
     gridColumns,
     columns[0..11]{
       _key,
