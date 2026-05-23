@@ -54,9 +54,25 @@ export async function GET(request: NextRequest) {
   const logoUrl = og?.logoUrl || site?.logo?.asset?.url || FALLBACK_LOGO_URL;
   const brandName = og?.brandName || site?.siteName || "kotacom";
   const ctaText = og?.ctaText || "WA 085799520350 · kotacom.id";
-  const bgImage = (isSafeUrl(explicitImage) && explicitImage) || og?.fallbackImage || FALLBACK_OG_IMAGE_URL;
   const showDescription = og?.showDescription !== false;
   const showCta = og?.showCta !== false;
+
+  // Image selection: explicit param > category match from images[] > fallback
+  const badge = searchParams.get("badge") || "";
+  const imagesLib = Array.isArray(og?.images) ? og.images : [];
+  let bgImage = FALLBACK_OG_IMAGE_URL;
+  if (isSafeUrl(explicitImage)) {
+    bgImage = explicitImage;
+  } else if (badge && imagesLib.length > 0) {
+    const match = imagesLib.find((img: any) => img.category?.toLowerCase() === badge.toLowerCase());
+    bgImage = match?.asset?.url || og?.fallbackImage || FALLBACK_OG_IMAGE_URL;
+  } else if (imagesLib.length > 0) {
+    // Pick random from library based on title hash
+    const hash = title.split("").reduce((a: number, c: string) => a + c.charCodeAt(0), 0);
+    bgImage = imagesLib[hash % imagesLib.length]?.asset?.url || og?.fallbackImage || FALLBACK_OG_IMAGE_URL;
+  } else if (og?.fallbackImage) {
+    bgImage = og.fallbackImage;
+  }
 
   const titleSize = title.length > 64 ? 42 : title.length > 54 ? 46 : title.length > 44 ? 50 : 56;
 
