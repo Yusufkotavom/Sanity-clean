@@ -1,9 +1,16 @@
 "use client";
 
 import { useEffect, useState, useTransition } from "react";
-import { useIsPresentationTool } from "next-sanity/hooks";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+
+const useIsPresentationTool = () => {
+  const [isPresentation, setIsPresentation] = useState(false);
+  useEffect(() => {
+    setIsPresentation(window.self !== window.top);
+  }, []);
+  return isPresentation;
+};
 
 export function DisableDraftMode() {
   const [pending, startTransition] = useTransition();
