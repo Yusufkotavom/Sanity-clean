@@ -57,17 +57,36 @@ export async function GET(request: NextRequest) {
   const showDescription = og?.showDescription !== false;
   const showCta = og?.showCta !== false;
 
-  // Image selection: explicit param > category match from images[] > fallback
+  // Image selection: explicit param > category match > random from library > fallback
   const badge = searchParams.get("badge") || "";
   const imagesLib = Array.isArray(og?.images) ? og.images : [];
+  
+  // Auto-detect category from title if no badge param
+  const detectCategory = (text: string): string => {
+    const t = text.toLowerCase();
+    if (t.includes("website") || t.includes("web dev") || t.includes("landing page")) return "website";
+    if (t.includes("cetak") || t.includes("percetakan") || t.includes("printing")) return "percetakan";
+    if (t.includes("software") || t.includes("aplikasi") || t.includes("pos")) return "software";
+    if (t.includes("blog") || t.includes("artikel") || t.includes("tips")) return "blog";
+    return "";
+  };
+  
+  const category = badge || detectCategory(title);
   let bgImage = FALLBACK_OG_IMAGE_URL;
+  
   if (isSafeUrl(explicitImage)) {
     bgImage = explicitImage;
-  } else if (badge && imagesLib.length > 0) {
-    const match = imagesLib.find((img: any) => img.category?.toLowerCase() === badge.toLowerCase());
-    bgImage = match?.asset?.url || og?.fallbackImage || FALLBACK_OG_IMAGE_URL;
+  } else if (category && imagesLib.length > 0) {
+    // Find all images matching category
+    const matches = imagesLib.filter((img: any) => img.category?.toLowerCase() === category.toLowerCase());
+    if (matches.length > 0) {
+      // Pick from matches based on title hash (deterministic but varied)
+      const hash = title.split("").reduce((a: number, c: string) => a + c.charCodeAt(0), 0);
+      bgImage = matches[hash % matches.length]?.asset?.url || og?.fallbackImage || FALLBACK_OG_IMAGE_URL;
+    } else {
+      bgImage = og?.fallbackImage || FALLBACK_OG_IMAGE_URL;
+    }
   } else if (imagesLib.length > 0) {
-    // Pick random from library based on title hash
     const hash = title.split("").reduce((a: number, c: string) => a + c.charCodeAt(0), 0);
     bgImage = imagesLib[hash % imagesLib.length]?.asset?.url || og?.fallbackImage || FALLBACK_OG_IMAGE_URL;
   } else if (og?.fallbackImage) {
