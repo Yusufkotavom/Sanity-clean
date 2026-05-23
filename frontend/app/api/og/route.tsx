@@ -156,7 +156,7 @@ export async function GET(request: NextRequest) {
   const footerBorderOpacity = normalizeNumber((ogSettings as any)?.footerBorderOpacity, 0.18, 0, 1);
   const eyebrow =
     (typeof (ogSettings as any)?.eyebrow === "string" && (ogSettings as any).eyebrow.trim()) ||
-    DEFAULTS.eyebrow;
+    "";
   const fontFamily =
     (typeof (ogSettings as any)?.fontFamily === "string" &&
       (ogSettings as any).fontFamily.trim()) ||
@@ -215,15 +215,15 @@ export async function GET(request: NextRequest) {
   const headerRightText =
     (typeof (ogSettings as any)?.headerRightText === "string" &&
       (ogSettings as any).headerRightText.trim()) ||
-    badgeText;
+    "";
   const footerLeftText =
     (typeof (ogSettings as any)?.footerLeftText === "string" &&
       (ogSettings as any).footerLeftText.trim()) ||
-    siteName;
+    "";
   const footerRightText =
     (typeof (ogSettings as any)?.footerRightText === "string" &&
       (ogSettings as any).footerRightText.trim()) ||
-    domain;
+    "";
   const titleCaseMode = normalizeCaseMode((ogSettings as any)?.titleCaseMode);
   const cornerCaseMode = normalizeCaseMode((ogSettings as any)?.cornerCaseMode);
   const stylePreset = (ogSettings as any)?.stylePreset === "classic" ? "classic" : "morphglass";
