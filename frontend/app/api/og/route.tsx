@@ -194,8 +194,13 @@ export async function GET(request: NextRequest) {
     (typeof (ogSettings as any)?.titleIcon?.name === "string" &&
       (ogSettings as any).titleIcon.name.trim()) ||
     "";
+  const configuredIconSvg =
+    (typeof (ogSettings as any)?.titleIcon?.svg === "string" &&
+      (ogSettings as any).titleIcon.svg.trim()) ||
+    "";
   const randomIconKey =
     RANDOM_ICON_KEYS[hashText(`${title}|${badge}`) % RANDOM_ICON_KEYS.length] || "globe";
+  const useCustomSvg = !randomizeTitleIcon && configuredIconSvg;
   const selectedIconKey = randomizeTitleIcon
     ? randomIconKey
     : configuredIconName
@@ -382,22 +387,36 @@ export async function GET(request: NextRequest) {
                     : "none",
               }}
             >
-              <svg
-                width={iconSize}
-                height={iconSize}
-                viewBox={selectedIcon.viewBox}
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                style={{ display: "block" }}
-              >
-                <path
-                  d={selectedIcon.path}
-                  stroke={textColor}
-                  strokeWidth="1.8"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+              {useCustomSvg ? (
+                <img
+                  src={`data:image/svg+xml,${encodeURIComponent(
+                    configuredIconSvg
+                      .replace(/width="[^"]*"/, `width="${iconSize}"`)
+                      .replace(/height="[^"]*"/, `height="${iconSize}"`)
+                      .replace(/style="[^"]*"/, "")
+                      .replace(/currentColor/g, textColor)
+                  )}`}
+                  width={iconSize}
+                  height={iconSize}
                 />
-              </svg>
+              ) : (
+                <svg
+                  width={iconSize}
+                  height={iconSize}
+                  viewBox={selectedIcon.viewBox}
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  style={{ display: "block" }}
+                >
+                  <path
+                    d={selectedIcon.path}
+                    stroke={textColor}
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              )}
             </div>
           ) : null}
           <div style={{ width: "100%", display: "flex", justifyContent: titleAlign === "center" ? "center" : "flex-start" }}>
