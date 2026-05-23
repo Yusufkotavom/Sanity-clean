@@ -97,7 +97,7 @@ export default function HeroVercel({
                 className="rounded-2xl border border-white/60 bg-white/75 p-4 shadow-[0_12px_28px_rgba(15,23,42,0.08)] backdrop-blur dark:border-white/15 dark:bg-white/5"
               >
                 <div className="mb-3 inline-flex size-9 items-center justify-center rounded-lg border border-foreground/15 bg-background/80">
-                  <SanityIcon icon={card.uiIcon} className="size-4" />
+                  <SanityIcon icon={card.uiIcon} className="size-4" fallbackSeed={card.title || card._key || "card"} />
                 </div>
                 <h3 className="text-sm font-semibold tracking-tight text-foreground md:text-base">
                   {card.title}

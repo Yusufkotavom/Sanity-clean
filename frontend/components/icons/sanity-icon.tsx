@@ -15,18 +15,33 @@ export type SanityIconValue =
   | null
   | undefined;
 
+const FALLBACK_ICONS = ["◆", "●", "■", "▲", "★", "◎", "⬡", "⬢"] as const;
+
+function FallbackIcon({ className, seed }: { className?: string; seed?: string }) {
+  const index = seed ? seed.split("").reduce((a, c) => a + c.charCodeAt(0), 0) % FALLBACK_ICONS.length : 0;
+  return (
+    <span aria-hidden="true" className={cn("inline-flex items-center justify-center", className)}>
+      {FALLBACK_ICONS[index]}
+    </span>
+  );
+}
+
 export default function SanityIcon({
   icon,
   className,
+  fallbackSeed,
 }: {
   icon: SanityIconValue;
   className?: string;
+  fallbackSeed?: string;
 }) {
-  if (!icon) return null;
+  if (!icon) {
+    return fallbackSeed ? <FallbackIcon className={className} seed={fallbackSeed} /> : null;
+  }
 
   if (typeof icon === "string") {
     const LegacyIcon = NAVIGATION_ICON_MAP[icon];
-    return LegacyIcon ? <LegacyIcon className={className} /> : null;
+    return LegacyIcon ? <LegacyIcon className={className} /> : <FallbackIcon className={className} seed={icon} />;
   }
 
   if (icon.svg) {
@@ -42,9 +57,7 @@ export default function SanityIcon({
     );
   }
 
-  // Fallback for legacy icon-picker payloads that may miss `svg`.
-  // We intentionally avoid wildcard icon library imports in the client bundle.
   if ((icon.provider === "lu" || icon.provider === "si") && icon.name) return null;
 
-  return null;
+  return fallbackSeed ? <FallbackIcon className={className} seed={fallbackSeed} /> : null;
 }

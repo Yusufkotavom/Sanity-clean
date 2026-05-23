@@ -70,7 +70,7 @@ export default function GridCard({
                   "inline-flex size-10 items-center justify-center rounded-lg border border-foreground/15 bg-background/80",
                 )}
               >
-                <SanityIcon icon={uiIcon} className="size-4" />
+                <SanityIcon icon={uiIcon} className="size-4" fallbackSeed={title || "icon"} />
               </div>
             </div>
           )}
@@ -88,7 +88,7 @@ export default function GridCard({
                       isCenter && "mx-auto",
                     )}
                   >
-                    <SanityIcon icon={uiIcon} className={cn("size-5", !isClassic && "size-4")} />
+                    <SanityIcon icon={uiIcon} className={cn("size-5", !isClassic && "size-4")} fallbackSeed={title || "icon"} />
                   </div>
                 )}
                 <h3 className="text-xl font-semibold leading-tight md:text-2xl">{title}</h3>
