@@ -70,6 +70,20 @@ Replaced the legacy content system (raw textarea + 7-dependency unified pipeline
 
 **Verification:** Build test + dev server manual check.
 
+## 2026-05-24
+- Changed files:
+  - `studio/sanity.config.ts`
+  - `docs/seo-updates.md`
+  - `docs/astro-migration-megaplan.md`
+- Summary:
+  - Fixed Sanity Studio runtime crash by replacing incorrect `markdownSchemaType()` invocation with `markdownSchema()` plugin registration.
+  - Root cause: `markdownSchemaType` is a schema type object, not a callable function.
+- Impact on SEO/integration:
+  - No direct SEO impact.
+  - Integration/runtime impact: restores Studio boot so editors can manage CMS content and block configuration.
+- Verification status:
+  - Build/test: `pnpm --filter studio run build` passed.
+
 - Changed files:
   - `frontend/sanity/queries/seo/features-package-block.ts`
   - `docs/seo-updates.md`
