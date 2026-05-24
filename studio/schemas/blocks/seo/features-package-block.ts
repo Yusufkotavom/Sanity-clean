@@ -3,118 +3,70 @@ import { Package } from "lucide-react";
 
 export default defineType({
   name: "features-package-block",
-  title: "Features Package Block",
+  title: "Features / Value Props",
   type: "object",
   icon: Package,
   initialValue: {
-    padding: {
-      _type: "section-padding",
-      top: true,
-      bottom: true,
-    },
+    padding: { _type: "section-padding", top: true, bottom: true },
     colorVariant: "background",
+    cardStyle: "grid",
     title: "Paket Lengkap",
     subtitle: "Apa Yang Akan Anda Dapatkan?",
-    description: "Lebih dari sekadar website, Anda mendapatkan solusi digital lengkap untuk bisnis Anda",
-    features: [
-      {
-        _key: "feature-1",
-        icon: "🛠️",
-        title: "Setup inti siap jalan",
-        description: "Konfigurasi dasar disiapkan agar proyek bisa langsung dipakai.",
-      },
-      {
-        _key: "feature-2",
-        icon: "📊",
-        title: "Fondasi optimasi",
-        description: "Struktur awal dibangun agar mudah dikembangkan dan diukur hasilnya.",
-      },
-    ],
   },
   fields: [
+    defineField({ name: "padding", type: "section-padding" }),
+    defineField({ name: "colorVariant", type: "color-variant", title: "Color Variant" }),
     defineField({
-      name: "padding",
-      type: "section-padding",
-    }),
-    defineField({
-      name: "colorVariant",
-      type: "color-variant",
-      title: "Color Variant",
-      description: "Select a background color variant",
-    }),
-    defineField({
-      name: "title",
+      name: "cardStyle",
       type: "string",
-      initialValue: "Paket Lengkap",
+      title: "Card Style",
+      options: {
+        list: [
+          { title: "Grid (icon + title + desc)", value: "grid" },
+          { title: "List (compact, no card border)", value: "list" },
+          { title: "Numbered (step-style)", value: "numbered" },
+        ],
+        layout: "radio",
+      },
+      initialValue: "grid",
     }),
-    defineField({
-      name: "subtitle",
-      type: "string",
-      initialValue: "Apa Yang Akan Anda Dapatkan?",
-    }),
-    defineField({
-      name: "description",
-      type: "text",
-      rows: 2,
-      initialValue: "Lebih dari sekadar website, Anda mendapatkan solusi digital lengkap untuk bisnis Anda",
-    }),
+    defineField({ name: "title", type: "string" }),
+    defineField({ name: "subtitle", type: "string" }),
+    defineField({ name: "description", type: "text", rows: 2 }),
     defineField({
       name: "features",
+      title: "Items",
       type: "array",
       of: [
         defineArrayMember({
           type: "object",
           name: "feature",
           fields: [
-            defineField({
-              name: "icon",
-              type: "string",
-              title: "Icon (Emoji)",
-              description: "Emoji icon untuk feature ini",
-            }),
-            defineField({
-              name: "title",
-              type: "string",
-              validation: (Rule) => Rule.required(),
-            }),
-            defineField({
-              name: "description",
-              type: "text",
-              rows: 3,
-              validation: (Rule) => Rule.required(),
-            }),
-            defineField({
-              name: "badge",
-              type: "string",
-              title: "Badge Text",
-              description: "Text untuk badge (contoh: Meta Tags & Schema Markup)",
-            }),
+            defineField({ name: "icon", type: "string", title: "Icon (Emoji)", description: "Emoji or short text" }),
+            defineField({ name: "title", type: "string", validation: (Rule) => Rule.required() }),
+            defineField({ name: "description", type: "text", rows: 2 }),
+            defineField({ name: "badge", type: "string", title: "Badge" }),
           ],
           preview: {
-            select: {
-              title: "title",
-              icon: "icon",
-            },
+            select: { title: "title", icon: "icon" },
             prepare({ title, icon }) {
-              return {
-                title: title || "Feature",
-                subtitle: icon || "",
-              };
+              return { title: title || "Item", subtitle: icon || "" };
             },
           },
         }),
       ],
     }),
+    defineField({
+      name: "cta",
+      title: "CTA Button",
+      type: "link",
+      description: "Optional call-to-action button below the features.",
+    }),
   ],
   preview: {
-    select: {
-      title: "title",
-    },
-    prepare({ title }) {
-      return {
-        title: "Features Package",
-        subtitle: title,
-      };
+    select: { title: "title", cardStyle: "cardStyle" },
+    prepare({ title, cardStyle }) {
+      return { title: "Features / Value Props", subtitle: `${cardStyle || "grid"} · ${title || ""}` };
     },
   },
 });
