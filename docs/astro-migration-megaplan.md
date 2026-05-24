@@ -16,6 +16,8 @@
 - [x] Hardened frontend verification pipeline (`typecheck` and `test:templates`) to avoid false failures from stale/missing generated test artifacts.
 - [x] Restored Sanity Live Editor (Presentation runtime) with Draft Mode-only rendering to keep public PageSpeed path lightweight.
 - [x] Reduced global header JS by removing Radix dropdown dependency from desktop navigation and simplifying theme toggle interaction.
+- [x] Fixed Studio OG generation action URL priority to use `ogSettings.ogBaseUrl` before env/CMS fallbacks.
+- [x] Removed stale `devk.my.id` fallback defaults from SEO seed sources to prevent reintroducing wrong OG/canonical base URL.
 
 ## Workstream TODO
 - [x] Fix mismatch that forced `Features / Value Props` layout to always render as grid.
@@ -30,6 +32,8 @@
 - [x] Added deterministic template-test runner with explicit skip behavior when optional contract test file is absent.
 - [x] Added env kill-switch `NEXT_PUBLIC_SANITY_VISUAL_EDITING` and token guard for safe live editor runtime activation.
 - [x] Verified home route client manifest no longer includes `components/ui/dropdown-menu.tsx`.
+- [x] Ensure Studio "Generate OG Image" action resolves `/api/og` from `ogSettings.ogBaseUrl` as primary source.
+- [x] Replace stale `devk.my.id` hardcoded defaults in SEO seed scripts used for CMS/bootstrap flows.
 
 ## Blockers
 - None.

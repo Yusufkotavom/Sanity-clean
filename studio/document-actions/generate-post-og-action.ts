@@ -67,14 +67,18 @@ export const generatePostOgAction: DocumentActionComponent = (props) => {
           studioHost === "127.0.0.1" ||
           studioHost === "::1";
 
-        const seoSettings = await client.fetch<{ siteUrl?: string } | null>(
-          `*[_type == "seoSettings"][0]{siteUrl}`,
-        );
+        const settings = await client.fetch<
+          { seoSettings?: { siteUrl?: string | null }; ogSettings?: { ogBaseUrl?: string | null } } | null
+        >(`{
+          "seoSettings": *[_type == "seoSettings"][0]{siteUrl},
+          "ogSettings": *[_type == "ogSettings"][0]{ogBaseUrl}
+        }`);
         const baseCandidates = [
-          ...STATIC_OG_BASE_FALLBACKS,
+          settings?.ogSettings?.ogBaseUrl,
           process.env.SANITY_STUDIO_FRONTEND_URL,
           process.env.SANITY_STUDIO_PREVIEW_URL,
-          seoSettings?.siteUrl,
+          ...STATIC_OG_BASE_FALLBACKS,
+          settings?.seoSettings?.siteUrl,
         ]
           .map((value) => (typeof value === "string" ? value.trim() : ""))
           .filter((value) => Boolean(value))
@@ -87,7 +91,7 @@ export const generatePostOgAction: DocumentActionComponent = (props) => {
 
         if (uniqueBases.length === 0) {
           throw new Error(
-            "No frontend base URL configured. Set SANITY_STUDIO_FRONTEND_URL or SANITY_STUDIO_PREVIEW_URL.",
+            "No OG base URL configured. Set OG Settings > ogBaseUrl or SANITY_STUDIO_FRONTEND_URL / SANITY_STUDIO_PREVIEW_URL.",
           );
         }
 

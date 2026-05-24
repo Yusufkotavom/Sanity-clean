@@ -25,7 +25,7 @@ async function run() {
   const write = process.argv.includes("--write");
   const client = await createSanityWriteClient();
   const env = await loadSanityEnv();
-  const siteUrl = env.NEXT_PUBLIC_SITE_URL || "https://devk.my.id";
+  const siteUrl = env.NEXT_PUBLIC_SITE_URL || "https://sanity-nextjs-kotacom.vercel.app";
 
   const pageDoc = {
     _id: DOC_ID,
@@ -217,4 +217,3 @@ run().catch((error) => {
   console.error("❌ Failed to seed /home-sanity:", error);
   process.exitCode = 1;
 });
-

@@ -257,3 +257,21 @@ Replaced the legacy content system (raw textarea + 7-dependency unified pipeline
 - Verification status:
   - Build/test: `pnpm --filter frontend run build` passed.
   - Manual audit: `frontend/.next/server/app/(main)/page_client-reference-manifest.js` confirms `components/ui/dropdown-menu.tsx` is absent.
+
+## 2026-05-24
+- Changed files:
+  - `studio/document-actions/generate-post-og-action.ts`
+  - `frontend/scripts/seed-data/seo-settings/base.json`
+  - `frontend/scripts/seed-home-sanity-landing.mjs`
+  - `docs/seo-updates.md`
+  - `docs/astro-migration-megaplan.md`
+- Summary:
+  - Fixed Studio "Generate OG Image" action URL source order to prioritize `ogSettings.ogBaseUrl` first, then Studio env URLs, and only then `seoSettings.siteUrl`.
+  - Updated generator error messaging to explicitly reference OG settings (`ogBaseUrl`) as primary configuration.
+  - Removed stale hardcoded `https://devk.my.id` fallback from SEO seed configs used by local/import scripts.
+- Impact on SEO/integration:
+  - Direct integration fix: OG generation in Studio no longer depends first on stale canonical/domain values from `seoSettings.siteUrl`.
+  - Reduces risk of OG fetch failures to legacy domain (`devk.my.id`) when editors trigger image generation.
+- Verification status:
+  - Build/test: `pnpm --filter studio run build` passed.
+  - Build/test: `pnpm --filter frontend run build` passed.
