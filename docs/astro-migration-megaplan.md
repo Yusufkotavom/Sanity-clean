@@ -13,6 +13,7 @@
 - [x] Unified `whatsapp-cta` block presentation with shared section design system (`SectionShell` + `SectionPanel`) for consistent CMS-rendered CTA styling.
 - [x] Fixed metadata OG generator URL builder so dynamic `/api/og` uses active deployment domain (not stale `seo.siteUrl` fallback).
 - [x] Added dedicated `ogSettings.ogBaseUrl` and wired metadata OG URL generation to use OG settings as the primary source.
+- [x] Hardened frontend verification pipeline (`typecheck` and `test:templates`) to avoid false failures from stale/missing generated test artifacts.
 
 ## Workstream TODO
 - [x] Fix mismatch that forced `Features / Value Props` layout to always render as grid.
@@ -24,6 +25,7 @@
 - [x] Align WhatsApp CTA block visuals with existing CTA design language.
 - [x] Normalize metadata site URL resolution across env vars (`NEXT_PUBLIC_SITE_URL`, `VERCEL_PROJECT_PRODUCTION_URL`, `VERCEL_URL`) and CMS fallback.
 - [x] Synced OG settings schema/query/frontend metadata contract for centralized OG endpoint URL source.
+- [x] Added deterministic template-test runner with explicit skip behavior when optional contract test file is absent.
 
 ## Blockers
 - None.

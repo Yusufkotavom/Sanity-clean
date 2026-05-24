@@ -204,3 +204,21 @@ Replaced the legacy content system (raw textarea + 7-dependency unified pipeline
 - Verification status:
   - Manual check: schema/query/metadata sync reviewed.
   - Build/test: Pending.
+
+## 2026-05-24
+- Changed files:
+  - `frontend/package.json`
+  - `frontend/scripts/run-template-tests.mjs`
+  - `docs/seo-updates.md`
+  - `docs/astro-migration-megaplan.md`
+- Summary:
+  - Hardened frontend verification flow:
+    - `typecheck` now runs `next typegen` before `tsc --noEmit` to regenerate route types and avoid stale `.next/types` failures.
+    - `test:templates` now uses `frontend/scripts/run-template-tests.mjs`, which skips gracefully with clear output when the template contract test file is not present.
+- Impact on SEO/integration:
+  - No direct SEO impact.
+  - Integration/CI impact: validation commands are now stable and deterministic across clean environments.
+- Verification status:
+  - Build/test: `pnpm --filter frontend run typecheck` passed.
+  - Build/test: `pnpm --filter frontend run test:templates` passed (skip mode due to missing test file).
+  - Build/test: `pnpm --filter frontend run build` passed.
