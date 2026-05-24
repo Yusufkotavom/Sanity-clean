@@ -118,6 +118,9 @@ export default function HeroVercel({
               height={630}
               className="h-auto w-full"
               priority
+              loading="eager"
+              fetchPriority="high"
+              sizes="(max-width: 768px) 100vw, 1200px"
             />
           </div>
         ) : null}

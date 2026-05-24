@@ -1,11 +1,11 @@
 import Link from "next/link";
-import SectionContainer from "@/components/ui/section-container";
 import PortableTextRenderer from "@/components/portable-text-renderer";
 import GlobalWhatsAppButton from "@/components/global-whatsapp-button";
 import { Button } from "@/components/ui/button";
 import SanityIcon from "@/components/icons/sanity-icon";
 import { PAGE_QUERY_RESULT } from "@/sanity.types";
 import { cn } from "@/lib/utils";
+import { SectionPanel, SectionShell } from "@/components/ui/section-shell";
 
 type WhatsAppCtaProps = Extract<
   NonNullable<NonNullable<PAGE_QUERY_RESULT>["blocks"]>[number],
@@ -13,7 +13,6 @@ type WhatsAppCtaProps = Extract<
 >;
 
 export default async function WhatsAppCta({
-  padding,
   colorVariant,
   sectionWidth = "default",
   stackAlign = "left",
@@ -26,47 +25,61 @@ export default async function WhatsAppCta({
   const isNarrow = sectionWidth === "narrow";
 
   return (
-    <SectionContainer color={colorVariant} padding={padding}>
+    <SectionShell>
       <div
         className={cn(
-          stackAlign === "center" ? "mx-auto max-w-[48rem] text-center" : undefined,
-          isNarrow ? "mx-auto max-w-[48rem]" : undefined,
+          isNarrow ? "mx-auto max-w-[48rem]" : "mx-auto max-w-4xl",
         )}
       >
-        <div className={cn(colorVariant === "primary" ? "text-background" : undefined)}>
-          {tagLine || uiIcon ? (
-            <div className="mb-4 inline-flex items-center gap-2">
-              <SanityIcon icon={uiIcon} className="size-4" />
-              {tagLine ? <span className="text-base font-semibold">{tagLine}</span> : null}
-            </div>
-          ) : null}
-          <h2 className="mb-4">{title}</h2>
-          {body ? <PortableTextRenderer value={body} /> : null}
-        </div>
-        <div
+        <SectionPanel
+          tone={colorVariant === "primary" ? "sky" : "neutral"}
           className={cn(
-            "mt-10 flex flex-wrap gap-4",
-            stackAlign === "center" ? "justify-center" : undefined,
+            "flex flex-col rounded-[1.75rem] px-5 py-6 md:px-7 md:py-8",
+            stackAlign === "center" ? "items-center text-center" : undefined,
           )}
         >
-          <GlobalWhatsAppButton fallbackLabel="Chat via WhatsApp" />
-          {secondaryLink?.title && secondaryLink.href ? (
-            <Button variant={secondaryLink.buttonVariant || "outline"} asChild>
-              <Link
-                href={secondaryLink.href}
-                target={secondaryLink.target ? "_blank" : undefined}
-                rel={secondaryLink.target ? "noopener noreferrer" : undefined}
-              >
-                <SanityIcon
-                  icon={secondaryLink.uiIcon || secondaryLink.icon}
-                  className="size-4"
-                />
-                {secondaryLink.title}
-              </Link>
-            </Button>
+          {tagLine || uiIcon ? (
+            <div
+              className={cn(
+                "inline-flex items-center gap-2 text-ui-label text-current/70",
+                stackAlign === "center" ? "justify-center" : undefined,
+              )}
+            >
+              <SanityIcon icon={uiIcon} className="size-4" />
+              {tagLine ? <span>{tagLine}</span> : null}
+            </div>
           ) : null}
-        </div>
+          <h2 className="mt-2 text-2xl font-semibold tracking-tight md:text-3xl">{title}</h2>
+          {body ? (
+            <div className="mt-4 text-sm leading-7 text-current/80 md:text-base">
+              <PortableTextRenderer value={body} />
+            </div>
+          ) : null}
+          <div
+            className={cn(
+              "mt-6 flex flex-wrap gap-3",
+              stackAlign === "center" ? "justify-center" : undefined,
+            )}
+          >
+            <GlobalWhatsAppButton fallbackLabel="Chat via WhatsApp" />
+            {secondaryLink?.title && secondaryLink.href ? (
+              <Button variant={secondaryLink.buttonVariant || "outline"} asChild>
+                <Link
+                  href={secondaryLink.href}
+                  target={secondaryLink.target ? "_blank" : undefined}
+                  rel={secondaryLink.target ? "noopener noreferrer" : undefined}
+                >
+                  <SanityIcon
+                    icon={secondaryLink.uiIcon || secondaryLink.icon}
+                    className="size-4"
+                  />
+                  {secondaryLink.title}
+                </Link>
+              </Button>
+            ) : null}
+          </div>
+        </SectionPanel>
       </div>
-    </SectionContainer>
+    </SectionShell>
   );
 }

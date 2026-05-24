@@ -137,3 +137,70 @@ Replaced the legacy content system (raw textarea + 7-dependency unified pipeline
 - Verification status:
   - Manual check: schema + query + component map cross-layer sync completed.
   - Build/test: `pnpm --filter frontend run build` passed.
+
+## 2026-05-24
+- Changed files:
+  - `frontend/components/blocks/index.tsx`
+  - `frontend/components/blocks/hero/hero-1.tsx`
+  - `frontend/components/blocks/hero/hero-2.tsx`
+  - `frontend/components/blocks/hero/hero-vercel.tsx`
+  - `frontend/components/blocks/seo/stats-hero-block.tsx`
+  - `docs/seo-updates.md`
+  - `docs/astro-migration-megaplan.md`
+- Summary:
+  - Improved LCP image discoverability for Sanity-driven homepage (`page` slug `index`) by removing dynamic imports for hero block types (`hero-2`, `hero-vercel`) in the block registry.
+  - Added explicit hero image loading hints: `loading="eager"` + `fetchPriority="high"` (and `sizes` where missing) on hero-capable block components.
+- Impact on SEO/integration:
+  - Direct SEO/CWV impact: improves LCP candidate image prioritization and earlier request discovery from initial HTML.
+  - Integration impact: keeps existing Studio block schema/query contract intact; change is render-path only.
+- Verification status:
+  - Manual check: code-level verification completed for homepage block rendering path (`frontend/app/(main)/page.tsx` -> `Blocks` -> hero block components).
+  - Build/test: Not run in this cycle.
+
+## 2026-05-24
+- Changed files:
+  - `frontend/components/blocks/cta/whatsapp-cta.tsx`
+  - `docs/seo-updates.md`
+  - `docs/astro-migration-megaplan.md`
+- Summary:
+  - Refactored `whatsapp-cta` block visual structure to match the existing design system used by other CTA/hero blocks.
+  - Replaced `SectionContainer` wrapper with `SectionShell` + `SectionPanel` pattern, and aligned typography, spacing, alignment behavior, and button group layout with `cta-1`.
+- Impact on SEO/integration:
+  - No direct SEO impact.
+  - Integration/UI impact: CTA block now follows the same component architecture and visual rhythm as other CMS-rendered sections.
+- Verification status:
+  - Manual check: style contract reviewed against `cta-1` block.
+  - Build/test: Pending.
+
+## 2026-05-24
+- Changed files:
+  - `frontend/sanity/lib/metadata.ts`
+  - `docs/seo-updates.md`
+  - `docs/astro-migration-megaplan.md`
+- Summary:
+  - Fixed OG image URL generation to avoid stale domain usage (`devk.my.id`) by changing site URL priority order and using relative `/api/og?...` for dynamic OG image paths.
+  - Added URL normalization for `NEXT_PUBLIC_SITE_URL`, `VERCEL_PROJECT_PRODUCTION_URL`, `VERCEL_URL`, and Sanity `seo.siteUrl` fallback.
+- Impact on SEO/integration:
+  - Direct integration impact: dynamic OG image endpoint now resolves against active deployment domain instead of legacy CMS domain fallback.
+  - Potential SEO/share impact: social crawlers should fetch OG image from the current site origin reliably.
+- Verification status:
+  - Manual check: metadata URL builder logic reviewed.
+  - Build/test: Pending.
+
+## 2026-05-24
+- Changed files:
+  - `studio/schemas/documents/og-settings.ts`
+  - `frontend/sanity/queries/og-settings.ts`
+  - `frontend/sanity/lib/metadata.ts`
+  - `docs/seo-updates.md`
+  - `docs/astro-migration-megaplan.md`
+- Summary:
+  - Added `ogBaseUrl` field to Sanity `ogSettings` as the primary URL source for dynamic OG image endpoint generation.
+  - Updated OG settings query to fetch `ogBaseUrl`.
+  - Updated metadata builder to prioritize `ogSettings.ogBaseUrl` for `/api/og` image URLs, with fallback to existing site URL resolver.
+- Impact on SEO/integration:
+  - Integration improvement: OG image URL source is now centralized in OG settings, reducing mismatch risk from unrelated env/canonical settings.
+  - No schema/query drift: Studio schema + frontend query + metadata usage updated in the same cycle.
+- Verification status:
+  - Manual check: schema/query/metadata sync reviewed.
+  - Build/test: Pending.

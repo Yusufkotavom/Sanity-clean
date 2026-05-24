@@ -2,8 +2,8 @@ import dynamic from "next/dynamic";
 import { PAGE_QUERY_RESULT } from "@/sanity.types";
 
 import Hero1 from "@/components/blocks/hero/hero-1";
-const Hero2 = dynamic(() => import("@/components/blocks/hero/hero-2"));
-const HeroVercel = dynamic(() => import("@/components/blocks/hero/hero-vercel"));
+import Hero2 from "@/components/blocks/hero/hero-2";
+import HeroVercel from "@/components/blocks/hero/hero-vercel";
 const SectionHeader = dynamic(() => import("@/components/blocks/section-header"));
 const SplitRow = dynamic(() => import("@/components/blocks/split/split-row"));
 const GridRow = dynamic(() => import("@/components/blocks/grid/grid-row"));

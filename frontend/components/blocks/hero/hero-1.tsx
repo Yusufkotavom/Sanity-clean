@@ -81,6 +81,8 @@ export default function Hero1({
                 blurDataURL={image?.asset?.metadata?.lqip || ""}
                 quality={85}
                 priority
+                loading="eager"
+                fetchPriority="high"
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
             </div>

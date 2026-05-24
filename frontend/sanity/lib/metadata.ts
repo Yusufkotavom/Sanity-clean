@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import { cache } from "react";
 import { urlFor } from "@/sanity/lib/image";
-import { fetchSanitySeoSettings, fetchSanitySettings } from "@/sanity/lib/fetch";
+import {
+  fetchSanityOgSettings,
+  fetchSanitySeoSettings,
+  fetchSanitySettings,
+} from "@/sanity/lib/fetch";
 import { PAGE_QUERY_RESULT, POST_QUERY_RESULT } from "@/sanity.types";
 import { KOTACOM_SPLIT_DEFAULT_SEO_IMAGE } from "@/lib/illustrations/kotacom-split";
 import { normalizeSeoDescription, normalizeSeoTitle } from "@/lib/seo-normalize";
@@ -42,6 +46,10 @@ type SeoSettings = {
   };
 };
 
+type OgSettings = {
+  ogBaseUrl?: string;
+};
+
 const getSeoSettings = cache(async (): Promise<SeoSettings | null> => {
   return (await fetchSanitySeoSettings()) || null;
 });
@@ -55,19 +63,33 @@ const getSiteName = cache(async (): Promise<string> => {
   return settings?.siteName || settings?.brandName || "DEVK STUDIO";
 });
 
+const getOgSettings = cache(async (): Promise<OgSettings | null> => {
+  return (await fetchSanityOgSettings()) || null;
+});
+
+const normalizeBaseUrl = (value?: string | null) => {
+  const cleaned = value?.trim()?.replace(/\/+$/, "");
+  if (!cleaned) return "";
+  return cleaned.startsWith("http") ? cleaned : `https://${cleaned}`;
+};
+
 const getSiteUrl = (seo?: SeoSettings | null) =>
-  process.env.NEXT_PUBLIC_SITE_URL?.trim()?.replace(/\/+$/, "") ||
-  seo?.siteUrl?.trim()?.replace(/\/+$/, "") || "";
+  normalizeBaseUrl(seo?.siteUrl) ||
+  normalizeBaseUrl(process.env.NEXT_PUBLIC_SITE_URL) ||
+  normalizeBaseUrl(process.env.VERCEL_PROJECT_PRODUCTION_URL) ||
+  normalizeBaseUrl(process.env.VERCEL_URL) ||
+  "";
 
 const getMetadataBaseUrl = (seo?: SeoSettings | null) => {
   const primary =
-    getSiteUrl(seo) ||
-    process.env.NEXT_PUBLIC_SITE_URL?.trim()?.replace(/\/+$/, "") ||
-    process.env.VERCEL_PROJECT_PRODUCTION_URL?.trim()?.replace(/\/+$/, "");
+    normalizeBaseUrl(seo?.siteUrl) ||
+    normalizeBaseUrl(process.env.NEXT_PUBLIC_SITE_URL) ||
+    normalizeBaseUrl(process.env.VERCEL_PROJECT_PRODUCTION_URL) ||
+    normalizeBaseUrl(process.env.VERCEL_URL) ||
+    getSiteUrl(seo);
   if (primary) {
-    const withProtocol = primary.startsWith("http") ? primary : `https://${primary}`;
     try {
-      return new URL(withProtocol);
+      return new URL(primary);
     } catch {
       // fall through
     }
@@ -87,6 +109,7 @@ const getCanonicalUrl = (slug?: string, seo?: SeoSettings | null) => {
 const resolveImage = (
   page?: MetaCompatiblePage | null,
   seo?: SeoSettings | null,
+  og?: OgSettings | null,
   options?: {
     dynamicTitle?: string;
     dynamicBadge?: string;
@@ -117,8 +140,7 @@ const resolveImage = (
     };
   }
 
-  const siteUrl = getSiteUrl(seo);
-  if (siteUrl && options?.dynamicTitle) {
+  if (options?.dynamicTitle) {
     const params = new URLSearchParams({
       title: options.dynamicTitle,
     });
@@ -128,13 +150,17 @@ const resolveImage = (
     if (options.dynamicDescription) {
       params.set("description", options.dynamicDescription);
     }
+    const ogBaseUrl =
+      normalizeBaseUrl(og?.ogBaseUrl) ||
+      getSiteUrl(seo);
     return {
-      url: `${siteUrl}/api/og?${params.toString()}`,
+      url: ogBaseUrl ? `${ogBaseUrl}/api/og?${params.toString()}` : `/api/og?${params.toString()}`,
       width: 1200,
       height: 630,
     };
   }
 
+  const siteUrl = getSiteUrl(seo);
   return {
     url: siteUrl ? `${siteUrl}${KOTACOM_SPLIT_DEFAULT_SEO_IMAGE}` : KOTACOM_SPLIT_DEFAULT_SEO_IMAGE,
     width: 1200,
@@ -152,6 +178,7 @@ const buildMetadata = ({
   page,
   seo,
   siteName,
+  og,
 }: {
   title?: string;
   description?: string;
@@ -162,13 +189,14 @@ const buildMetadata = ({
   page?: MetaCompatiblePage | null;
   seo?: SeoSettings | null;
   siteName: string;
+  og?: OgSettings | null;
 }): Metadata => {
   const resolvedTitle = normalizeSeoTitle(title || seo?.defaultTitle || siteName);
   const normalizedDescription = normalizeSeoDescription(
     description || seo?.defaultDescription || "",
   );
   const resolvedDescription = normalizedDescription || undefined;
-  const image = resolveImage(page, seo, {
+  const image = resolveImage(page, seo, og, {
     dynamicTitle: resolvedTitle,
     dynamicBadge: openGraphType === "article" ? "Blog" : undefined,
     dynamicDescription: normalizedDescription || undefined,
@@ -213,6 +241,7 @@ const buildMetadata = ({
 
 export async function generateRootMetadata(): Promise<Metadata> {
   const seo = await getSeoSettings();
+  const og = await getOgSettings();
   const siteName = await getSiteName();
   const suffix = seo?.titleSuffix || siteName;
 
@@ -224,10 +253,10 @@ export async function generateRootMetadata(): Promise<Metadata> {
     },
     description: seo?.defaultDescription || undefined,
     openGraph: {
-      ...buildMetadata({ seo, siteName }).openGraph,
+      ...buildMetadata({ seo, siteName, og }).openGraph,
     },
     twitter: {
-      ...buildMetadata({ seo, siteName }).twitter,
+      ...buildMetadata({ seo, siteName, og }).twitter,
     },
     robots: !isProduction || seo?.defaultNoIndex ? "noindex, nofollow" : "index, follow",
   };
@@ -243,6 +272,7 @@ export async function generatePageMetadata({
   pageType?: "website" | "article";
 }): Promise<Metadata> {
   const seo = await getSeoSettings();
+  const og = await getOgSettings();
   const siteName = await getSiteName();
   const compatiblePage = page as MetaCompatiblePage | null;
 
@@ -256,6 +286,7 @@ export async function generatePageMetadata({
     noindex: compatiblePage?.meta?.noindex || undefined,
     openGraphType: pageType,
     seo,
+    og,
     siteName,
   });
 }
@@ -272,6 +303,7 @@ export async function generateBasicMetadata({
   noindex?: boolean;
 }): Promise<Metadata> {
   const seo = await getSeoSettings();
+  const og = await getOgSettings();
   const siteName = await getSiteName();
 
   return buildMetadata({
@@ -280,6 +312,7 @@ export async function generateBasicMetadata({
     slug,
     noindex,
     seo,
+    og,
     siteName,
   });
 }

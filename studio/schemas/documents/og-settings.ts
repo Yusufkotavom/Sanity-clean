@@ -19,6 +19,18 @@ export default defineType({
   },
   fields: [
     defineField({
+      name: "ogBaseUrl",
+      title: "OG Base URL",
+      type: "url",
+      description:
+        "Primary base URL for OG image generation endpoint. Example: https://sanity-nextjs-kotacom.vercel.app",
+      validation: (Rule) =>
+        Rule.uri({
+          scheme: ["http", "https"],
+        }),
+      fieldset: "branding",
+    }),
+    defineField({
       name: "brandName",
       title: "Brand Name",
       type: "string",

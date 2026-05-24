@@ -74,6 +74,9 @@ export default function StatsHeroBlock({
                 fill
                 className="object-cover"
                 priority
+                loading="eager"
+                fetchPriority="high"
+                sizes="(max-width: 1024px) 100vw, 50vw"
               />
             </div>
           )}

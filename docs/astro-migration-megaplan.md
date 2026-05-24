@@ -9,6 +9,10 @@
 - [x] Added missing query coverage for `eeat-block`, `metrics-rail-block`, `highlights-block`, `reviews-block`, and `micro-badges-block`.
 - [x] Unified block projections across shared, reusable-section, and legacy-page query entry-points.
 - [x] Fixed Studio runtime plugin registration for markdown schema (`markdownSchema()`), removing boot-time `is not a function` crash.
+- [x] Improved homepage LCP image discoverability for Sanity `index` page by making hero blocks (`hero-2`, `hero-vercel`) statically imported and forcing eager/high-priority image fetch hints.
+- [x] Unified `whatsapp-cta` block presentation with shared section design system (`SectionShell` + `SectionPanel`) for consistent CMS-rendered CTA styling.
+- [x] Fixed metadata OG generator URL builder so dynamic `/api/og` uses active deployment domain (not stale `seo.siteUrl` fallback).
+- [x] Added dedicated `ogSettings.ogBaseUrl` and wired metadata OG URL generation to use OG settings as the primary source.
 
 ## Workstream TODO
 - [x] Fix mismatch that forced `Features / Value Props` layout to always render as grid.
@@ -16,6 +20,10 @@
 - [x] Run full frontend build/test verification after query sync.
 - [x] Re-run frontend build after multi-query block coverage updates.
 - [x] Re-run Studio build after markdown plugin registration fix.
+- [x] Ensure homepage hero/LCP images are discoverable in initial HTML and not lazy-loaded.
+- [x] Align WhatsApp CTA block visuals with existing CTA design language.
+- [x] Normalize metadata site URL resolution across env vars (`NEXT_PUBLIC_SITE_URL`, `VERCEL_PROJECT_PRODUCTION_URL`, `VERCEL_URL`) and CMS fallback.
+- [x] Synced OG settings schema/query/frontend metadata contract for centralized OG endpoint URL source.
 
 ## Blockers
 - None.
