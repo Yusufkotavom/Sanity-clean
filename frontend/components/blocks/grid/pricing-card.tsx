@@ -14,10 +14,14 @@ type PricingCard = Extract<GridColumn, { _type: "pricing-card" }>;
 
 interface PricingCardProps extends Omit<PricingCard, "_type" | "_key"> {
   color?: ColorVariant;
+  textAlign?: "left" | "center" | null;
+  cardStyle?: "vertical" | "horizontal" | "classic" | null;
 }
 
 export default function PricingCard({
   color,
+  textAlign,
+  cardStyle,
   uiIcon,
   title,
   tagLine,
@@ -26,17 +30,18 @@ export default function PricingCard({
   list,
   link,
 }: PricingCardProps) {
+  const isCenter = textAlign === "center";
+  const isHorizontal = cardStyle === "horizontal";
+
   return (
     <SectionPanel
       tone={color === "primary" ? "sky" : "neutral"}
       className="flex w-full flex-col justify-between rounded-[1.5rem] p-6 md:p-8"
     >
-        <div
-          className={cn(color === "primary" ? "text-background" : undefined)}
-        >
+        <div className={cn(color === "primary" ? "text-background" : undefined, isCenter && "text-center")}>
           {title && (
-            <div className="flex justify-between items-center">
-              <div className="inline-flex items-center gap-2">
+            <div className={cn("flex items-center", isCenter ? "justify-center gap-3 flex-wrap" : "justify-between")}>
+              <div className={cn("inline-flex items-center gap-2", isHorizontal && "items-start")}>
                 <SanityIcon icon={uiIcon} className="size-5" />
                 <h3 className="text-xl font-semibold leading-[1.2]">{title}</h3>
               </div>
@@ -68,7 +73,7 @@ export default function PricingCard({
           ) : null}
         </div>
         <Button
-          className="mt-6 self-start rounded-full"
+          className={cn("mt-6 rounded-full", isCenter ? "self-center" : "self-start")}
           size="lg"
           variant={link?.buttonVariant}
           asChild

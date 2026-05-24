@@ -1,7 +1,6 @@
 # SEO Updates Log
 
 ## 2026-05-24
-
 ### Removed scroll-reveal animation causing invisible blocks
 
 **Changed files:**
@@ -70,3 +69,57 @@ Replaced the legacy content system (raw textarea + 7-dependency unified pipeline
 **SEO impact:** Content rendering unchanged for existing pages. Eliminates XSS risk from `dangerouslySetInnerHTML`. Studio editors get a proper Markdown editor with preview.
 
 **Verification:** Build test + dev server manual check.
+
+- Changed files:
+  - `frontend/sanity/queries/seo/features-package-block.ts`
+  - `docs/seo-updates.md`
+  - `docs/astro-migration-megaplan.md`
+- Summary:
+  - Added missing `cardStyle` and `cta` projection to `features-package-block` GROQ query.
+  - `cta` now uses shared `linkQuery` resolver to produce frontend `href` consistently.
+- Impact on SEO/integration:
+  - No direct SEO impact.
+  - Integration fix: Studio schema fields (`cardStyle`, `cta`) are now synced with frontend query contract and renderer behavior.
+- Verification status:
+  - Manual check: query contract reviewed against Studio schema and frontend component expectations.
+  - Build/test: `pnpm --filter frontend run build` passed.
+
+## 2026-05-24
+- Changed files:
+  - `frontend/components/blocks/grid/grid-row.tsx`
+  - `frontend/components/blocks/grid/pricing-card.tsx`
+  - `frontend/components/blocks/grid/grid-post.tsx`
+  - `docs/seo-updates.md`
+  - `docs/astro-migration-megaplan.md`
+- Summary:
+  - Replaced dynamic Tailwind class interpolation for grid columns with static class mapping to ensure production CSS generation.
+  - Propagated `textAlign` and `cardStyle` behavior more consistently across grid row card types (`pricing-card`, `grid-post`).
+- Impact on SEO/integration:
+  - No direct SEO impact.
+  - Integration fix: frontend rendering now matches Studio controls for Grid Row layout options more reliably.
+- Verification status:
+  - Manual check: schema/query/renderer alignment reviewed for `grid-row`.
+  - Build/test: `pnpm --filter frontend run build` passed.
+
+## 2026-05-24
+- Changed files:
+  - `frontend/sanity/queries/seo/eeat-block.ts`
+  - `frontend/sanity/queries/seo/metrics-rail-block.ts`
+  - `frontend/sanity/queries/seo/highlights-block.ts`
+  - `frontend/sanity/queries/seo/reviews-block.ts`
+  - `frontend/sanity/queries/seo/micro-badges-block.ts`
+  - `frontend/sanity/queries/shared/blocks.ts`
+  - `frontend/sanity/queries/reusable-section.ts`
+  - `frontend/sanity/queries/legacy-page.ts`
+  - `docs/seo-updates.md`
+  - `docs/astro-migration-megaplan.md`
+- Summary:
+  - Added missing GROQ projections for `eeat-block`, `metrics-rail-block`, `highlights-block`, `reviews-block`, and `micro-badges-block`.
+  - Registered those blocks in shared blocks query so page/service/product/project/post routes receive their payload.
+  - Synced reusable-section and legacy-page custom block projections to prevent route-dependent missing block rendering.
+- Impact on SEO/integration:
+  - No direct SEO ranking impact.
+  - Integration impact: block availability is now consistent between Studio content and frontend rendering across query entry-points.
+- Verification status:
+  - Manual check: schema + query + component map cross-layer sync completed.
+  - Build/test: `pnpm --filter frontend run build` passed.

@@ -24,6 +24,11 @@ import { serviceTypesBlockQuery } from "../seo/service-types-block";
 import { problemSolutionBlockQuery } from "../seo/problem-solution-block";
 import { valuePropsBlockQuery } from "../seo/value-props-block";
 import { statsHeroBlockQuery } from "../seo/stats-hero-block";
+import { eeatBlockQuery } from "../seo/eeat-block";
+import { metricsRailBlockQuery } from "../seo/metrics-rail-block";
+import { highlightsBlockQuery } from "../seo/highlights-block";
+import { reviewsBlockQuery } from "../seo/reviews-block";
+import { microBadgesBlockQuery } from "../seo/micro-badges-block";
 
 /**
  * Shared GROQ projection for blocks[].
@@ -59,6 +64,11 @@ export const blocksQuery = `
     ${problemSolutionBlockQuery},
     ${valuePropsBlockQuery},
     ${statsHeroBlockQuery},
+    ${eeatBlockQuery},
+    ${metricsRailBlockQuery},
+    ${highlightsBlockQuery},
+    ${reviewsBlockQuery},
+    ${microBadgesBlockQuery},
     _type == "block-preset-ref" => {
       _type,
       _key,

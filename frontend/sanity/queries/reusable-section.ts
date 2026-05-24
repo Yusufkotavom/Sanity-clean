@@ -24,6 +24,11 @@ import { serviceTypesBlockQuery } from "./seo/service-types-block";
 import { problemSolutionBlockQuery } from "./seo/problem-solution-block";
 import { valuePropsBlockQuery } from "./seo/value-props-block";
 import { statsHeroBlockQuery } from "./seo/stats-hero-block";
+import { eeatBlockQuery } from "./seo/eeat-block";
+import { metricsRailBlockQuery } from "./seo/metrics-rail-block";
+import { highlightsBlockQuery } from "./seo/highlights-block";
+import { reviewsBlockQuery } from "./seo/reviews-block";
+import { microBadgesBlockQuery } from "./seo/micro-badges-block";
 
 export const REUSABLE_SECTIONS_QUERY = groq`
   *[_type == "reusableSection" && isActive == true] | order(priority asc, _createdAt asc){
@@ -59,6 +64,11 @@ export const REUSABLE_SECTIONS_QUERY = groq`
       ${serviceTypesBlockQuery},
       ${problemSolutionBlockQuery},
       ${valuePropsBlockQuery},
+      ${eeatBlockQuery},
+      ${metricsRailBlockQuery},
+      ${highlightsBlockQuery},
+      ${reviewsBlockQuery},
+      ${microBadgesBlockQuery},
     }
   }
 `;

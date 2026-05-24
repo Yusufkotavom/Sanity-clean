@@ -9,6 +9,11 @@ type Block = NonNullable<NonNullable<PAGE_QUERY_RESULT>["blocks"]>[number];
 type GridRowBase = Extract<Block, { _type: "grid-row" }>;
 type GridRow = Omit<GridRowBase, "cardLayout"> & { cardStyle?: "vertical" | "horizontal" | "classic" | null };
 type GridColumn = NonNullable<NonNullable<GridRowBase["columns"]>[number]>;
+const GRID_COLUMNS_CLASS: Record<string, string> = {
+  "grid-cols-2": "lg:grid-cols-2",
+  "grid-cols-3": "lg:grid-cols-3",
+  "grid-cols-4": "lg:grid-cols-4",
+};
 
 const componentMap: {
   [K in GridColumn["_type"]]: React.ComponentType<
@@ -28,10 +33,11 @@ export default function GridRow({
   cardStyle,
   columns,
 }: GridRow) {
+  const resolvedGridColumnsClass = GRID_COLUMNS_CLASS[gridColumns || ""] || "lg:grid-cols-3";
   return (
     <SectionContainer color={colorVariant} padding={padding}>
       {columns && columns?.length > 0 && (
-        <div className={cn(`grid grid-cols-1 gap-6`, `lg:${gridColumns}`)}>
+        <div className={cn("grid grid-cols-1 gap-6", resolvedGridColumnsClass)}>
           {columns.map((column) => {
             const Component = componentMap[column._type];
             if (!Component) {

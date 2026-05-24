@@ -13,10 +13,13 @@ type GridPost = Extract<GridColumn, { _type: "grid-post" }>;
 
 interface GridPostProps extends Omit<NonNullable<GridPost>, "_type" | "_key"> {
   color?: ColorVariant;
+  textAlign?: "left" | "center" | null;
+  cardStyle?: "vertical" | "horizontal" | "classic" | null;
 }
 
-export default function GridPost({ color, post }: GridPostProps) {
+export default function GridPost({ color, textAlign, post }: GridPostProps) {
   if (!post) return null;
+  const isCenter = textAlign === "center";
 
   const { title, slug, excerpt, image, categories } = post;
 
@@ -34,7 +37,7 @@ export default function GridPost({ color, post }: GridPostProps) {
             : "group-hover:border-primary",
         )}
       >
-        <div className="flex flex-col">
+        <div className={cn("flex flex-col", isCenter && "items-center text-center")}>
           {image && image.asset?._id && (
             <div className="mb-4 relative h-[15rem] sm:h-[20rem] md:h-[25rem] lg:h-[9.5rem] xl:h-[12rem] rounded-2xl overflow-hidden">
               <Image
@@ -52,12 +55,12 @@ export default function GridPost({ color, post }: GridPostProps) {
             </div>
           )}
           {title && (
-            <div className="flex justify-between items-center mb-4">
+            <div className={cn("flex items-center mb-4", isCenter ? "justify-center" : "justify-between")}>
               <h3 className="font-bold text-[1.5rem] leading-[1.2]">{title}</h3>
             </div>
           )}
           {categories && categories.length > 0 && (
-            <div className="flex flex-wrap gap-2 mb-4">
+            <div className={cn("flex flex-wrap gap-2 mb-4", isCenter && "justify-center")}>
               {categories.map((category, index) => (
                 <Badge
                   key={`${category?._id || category?.title || "category"}-${index}`}

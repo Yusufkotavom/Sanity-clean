@@ -1,4 +1,5 @@
 import { groq } from "next-sanity";
+import { linkQuery } from "../shared/link";
 
 // @sanity-typegen-ignore
 export const featuresPackageBlockQuery = groq`
@@ -7,6 +8,7 @@ export const featuresPackageBlockQuery = groq`
     _key,
     padding,
     colorVariant,
+    cardStyle,
     title,
     subtitle,
     description,
@@ -16,6 +18,10 @@ export const featuresPackageBlockQuery = groq`
       title,
       description,
       badge,
+    },
+    cta{
+      ${linkQuery},
+      buttonVariant
     },
   }
 `;
