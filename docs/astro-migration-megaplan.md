@@ -14,6 +14,8 @@
 - [x] Fixed metadata OG generator URL builder so dynamic `/api/og` uses active deployment domain (not stale `seo.siteUrl` fallback).
 - [x] Added dedicated `ogSettings.ogBaseUrl` and wired metadata OG URL generation to use OG settings as the primary source.
 - [x] Hardened frontend verification pipeline (`typecheck` and `test:templates`) to avoid false failures from stale/missing generated test artifacts.
+- [x] Restored Sanity Live Editor (Presentation runtime) with Draft Mode-only rendering to keep public PageSpeed path lightweight.
+- [x] Reduced global header JS by removing Radix dropdown dependency from desktop navigation and simplifying theme toggle interaction.
 
 ## Workstream TODO
 - [x] Fix mismatch that forced `Features / Value Props` layout to always render as grid.
@@ -26,6 +28,8 @@
 - [x] Normalize metadata site URL resolution across env vars (`NEXT_PUBLIC_SITE_URL`, `VERCEL_PROJECT_PRODUCTION_URL`, `VERCEL_URL`) and CMS fallback.
 - [x] Synced OG settings schema/query/frontend metadata contract for centralized OG endpoint URL source.
 - [x] Added deterministic template-test runner with explicit skip behavior when optional contract test file is absent.
+- [x] Added env kill-switch `NEXT_PUBLIC_SANITY_VISUAL_EDITING` and token guard for safe live editor runtime activation.
+- [x] Verified home route client manifest no longer includes `components/ui/dropdown-menu.tsx`.
 
 ## Blockers
 - None.

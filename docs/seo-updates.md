@@ -222,3 +222,38 @@ Replaced the legacy content system (raw textarea + 7-dependency unified pipeline
   - Build/test: `pnpm --filter frontend run typecheck` passed.
   - Build/test: `pnpm --filter frontend run test:templates` passed (skip mode due to missing test file).
   - Build/test: `pnpm --filter frontend run build` passed.
+
+## 2026-05-24
+- Changed files:
+  - `frontend/components/draft-mode-tools.tsx`
+  - `frontend/.env.example`
+  - `docs/env-reference.md`
+  - `docs/seo-updates.md`
+  - `docs/astro-migration-megaplan.md`
+- Summary:
+  - Restored Sanity live editor runtime in a performance-safe way by enabling `SanityLive` + `VisualEditing` only when Next.js Draft Mode is active.
+  - Added guardrails so visual editing is skipped when `SANITY_API_READ_TOKEN` is missing or when `NEXT_PUBLIC_SANITY_VISUAL_EDITING=false`.
+  - Added environment documentation for explicit live editor toggle control.
+- Impact on SEO/integration:
+  - No direct SEO impact.
+  - Integration impact: Presentation Tool/live editing is available again for editors, while public traffic keeps clean non-live rendering path for better PageSpeed.
+- Verification status:
+  - Build/test: `pnpm --filter frontend run build` passed.
+
+## 2026-05-24
+- Changed files:
+  - `frontend/components/header/desktop-nav.tsx`
+  - `frontend/components/menu-toggle.tsx`
+  - `docs/seo-updates.md`
+  - `docs/astro-migration-megaplan.md`
+- Summary:
+  - Reduced global client-JS pressure in header path:
+    - Replaced desktop "More" menu implementation from Radix `DropdownMenu` client primitives to server-rendered hover panel markup.
+    - Simplified `ModeToggle` from dropdown menu to single-cycle toggle button (`light -> dark -> system`) without dropdown client dependencies.
+  - Verified bundle manifest no longer references `components/ui/dropdown-menu.tsx` on home route client manifest.
+- Impact on SEO/integration:
+  - Indirect SEO/CWV impact: lower front-end JS execution for navigation controls can improve responsiveness and reduce main-thread work.
+  - Integration impact: header menu interaction model is preserved with lightweight server-first markup.
+- Verification status:
+  - Build/test: `pnpm --filter frontend run build` passed.
+  - Manual audit: `frontend/.next/server/app/(main)/page_client-reference-manifest.js` confirms `components/ui/dropdown-menu.tsx` is absent.

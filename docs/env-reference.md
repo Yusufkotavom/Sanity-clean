@@ -8,6 +8,7 @@ Dokumen ini merangkum variabel yang dipakai project ini, mana yang wajib, mana o
 
 - `NEXT_PUBLIC_SITE_URL`
 - `NEXT_PUBLIC_STUDIO_URL`
+- `NEXT_PUBLIC_SANITY_VISUAL_EDITING` (opsional, default aktif; set `false` untuk mematikan overlay live editor pada Draft Mode)
 - `NEXT_PUBLIC_SANITY_API_VERSION`
 - `NEXT_PUBLIC_SANITY_PROJECT_ID`
 - `NEXT_PUBLIC_SANITY_DATASET`
@@ -128,6 +129,7 @@ Catatan operasional agent/script:
 ```env
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 NEXT_PUBLIC_STUDIO_URL=http://localhost:3333
+NEXT_PUBLIC_SANITY_VISUAL_EDITING=true
 NEXT_PUBLIC_SITE_ENV=development
 
 NEXT_PUBLIC_SANITY_API_VERSION=2026-03-23

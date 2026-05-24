@@ -2,15 +2,6 @@ import Link from "next/link";
 import { ChevronDown } from "lucide-react";
 import { NAVIGATION_QUERY_RESULT } from "@/sanity.types";
 import SanityIcon, { type SanityIconValue } from "@/components/icons/sanity-icon";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 
 type SanityLink = NonNullable<NAVIGATION_QUERY_RESULT[0]["links"]>[number];
 type NavChild = {
@@ -129,69 +120,31 @@ export default function DesktopNav({
           );
         })}
         {moreItems.length > 0 && (
-          <li className="relative">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button
-                  type="button"
-                  className="inline-flex items-center gap-1 rounded-full px-3 py-2 text-sm font-medium text-foreground/75 transition-colors hover:bg-accent/70 hover:text-foreground dark:text-white/72 dark:hover:bg-white/[0.07] dark:hover:text-white"
-                >
-                  <span>More</span>
-                  <ChevronDown className="size-3.5 text-foreground/50 dark:text-white/45" />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                align="start"
-                className="w-72 rounded-2xl border-border/70 bg-background/95 p-2 shadow-[0_24px_70px_-28px_rgba(0,0,0,0.45)] backdrop-blur-xl dark:border-white/12 dark:bg-black/96 dark:shadow-[0_28px_90px_-30px_rgba(0,0,0,0.85)]"
-              >
+          <li className="group/nav relative">
+            <button
+              type="button"
+              className="inline-flex items-center gap-1 rounded-full px-3 py-2 text-sm font-medium text-foreground/75 transition-colors hover:bg-accent/70 hover:text-foreground dark:text-white/72 dark:hover:bg-white/[0.07] dark:hover:text-white"
+            >
+              <span>More</span>
+              <ChevronDown className="size-3.5 text-foreground/50 dark:text-white/45" />
+            </button>
+            <div className="invisible absolute left-0 top-full z-50 w-[22rem] translate-y-2 rounded-2xl border border-border/70 bg-background/95 p-3 opacity-0 shadow-[0_24px_70px_-28px_rgba(0,0,0,0.45)] backdrop-blur-xl transition-all duration-150 before:absolute before:-top-6 before:left-0 before:h-6 before:w-full before:content-[''] group-hover/nav:visible group-hover/nav:translate-y-0 group-hover/nav:opacity-100 group-focus-within/nav:visible group-focus-within/nav:translate-y-0 group-focus-within/nav:opacity-100 dark:border-white/12 dark:bg-black/96 dark:shadow-[0_28px_90px_-30px_rgba(0,0,0,0.85)]">
+              <div className="space-y-2">
                 {moreItems.map((item) => {
                   const resolvedItemIcon = item.uiIcon || item.icon;
                   const children =
                     item.children?.filter((child) => child?.title && child?.href) || [];
                   const hasChildren = children.length > 0;
+                  const itemKey = item._key || item.title;
 
-                  if (hasChildren) {
+                  if (!hasChildren) {
                     return (
-                      <DropdownMenuSub key={item._key || item.title}>
-                        <DropdownMenuSubTrigger className="rounded-xl px-3 py-2 text-sm font-medium">
-                          <SanityIcon
-                            icon={resolvedItemIcon}
-                            className="size-4 text-foreground/60 dark:text-white/55"
-                          />
-                          <span>{item.title}</span>
-                        </DropdownMenuSubTrigger>
-                        <DropdownMenuSubContent className="w-72 rounded-2xl border-border/70 bg-background/95 p-2 dark:border-white/12 dark:bg-black/96">
-                          {children.map((child) => {
-                            const resolvedChildIcon = child.uiIcon || child.icon;
-                            return (
-                              <DropdownMenuItem key={child._key || child.href || child.title} asChild>
-                                <Link
-                                  href={child.href || "#"}
-                                  target={child.target ? "_blank" : undefined}
-                                  rel={child.target ? "noopener noreferrer" : undefined}
-                                  className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium text-foreground dark:text-white/90"
-                                >
-                                  <SanityIcon
-                                    icon={resolvedChildIcon}
-                                    className="size-4 text-foreground/60 dark:text-white/55"
-                                  />
-                                  <span>{child.title}</span>
-                                </Link>
-                              </DropdownMenuItem>
-                            );
-                          })}
-                        </DropdownMenuSubContent>
-                      </DropdownMenuSub>
-                    );
-                  }
-
-                  return (
-                    <DropdownMenuItem key={item._key || item.title} asChild>
                       <Link
+                        key={itemKey}
                         href={item.href || "#"}
                         target={item.target ? "_blank" : undefined}
                         rel={item.target ? "noopener noreferrer" : undefined}
-                        className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium text-foreground dark:text-white/90"
+                        className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent/70 dark:text-white/90 dark:hover:bg-white/[0.07]"
                       >
                         <SanityIcon
                           icon={resolvedItemIcon}
@@ -199,11 +152,44 @@ export default function DesktopNav({
                         />
                         <span>{item.title}</span>
                       </Link>
-                    </DropdownMenuItem>
+                    );
+                  }
+
+                  return (
+                    <div key={itemKey} className="rounded-xl border border-border/60 p-2 dark:border-white/10">
+                      <div className="mb-1 flex items-center gap-2 px-1 text-sm font-semibold text-foreground dark:text-white/92">
+                        <SanityIcon
+                          icon={resolvedItemIcon}
+                          className="size-4 text-foreground/60 dark:text-white/55"
+                        />
+                        <span>{item.title}</span>
+                      </div>
+                      <ul className="space-y-1">
+                        {children.map((child) => {
+                          const resolvedChildIcon = child.uiIcon || child.icon;
+                          return (
+                            <li key={child._key || child.href || child.title}>
+                              <Link
+                                href={child.href || "#"}
+                                target={child.target ? "_blank" : undefined}
+                                rel={child.target ? "noopener noreferrer" : undefined}
+                                className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm text-foreground/85 transition-colors hover:bg-accent/70 dark:text-white/80 dark:hover:bg-white/[0.07]"
+                              >
+                                <SanityIcon
+                                  icon={resolvedChildIcon}
+                                  className="size-3.5 text-foreground/60 dark:text-white/55"
+                                />
+                                <span>{child.title}</span>
+                              </Link>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </div>
                   );
                 })}
-              </DropdownMenuContent>
-            </DropdownMenu>
+              </div>
+            </div>
           </li>
         )}
       </ul>
