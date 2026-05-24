@@ -6,7 +6,7 @@ import dynamic from "next/dynamic";
 import { CopyButton } from "@/components/ui/copy-button";
 
 const CodeBlock = dynamic(() => import("@/components/ui/code-block"), { ssr: true });
-import { renderLegacyRichHtml } from "@/lib/legacy-content/render";
+import Markdown from "react-markdown";
 
 const createPortableTextComponents = (
   headingIdMap?: Record<string, string>,
@@ -52,10 +52,6 @@ const createPortableTextComponents = (
       );
     },
     "legacy-rich-content": ({ value }) => {
-      const html = renderLegacyRichHtml(
-        value?.contentRaw || "",
-        value?.contentFormat,
-      );
       return (
         <section className="my-6 rounded-xl border border-border/70 p-5">
           {value?.title ? (
@@ -64,10 +60,9 @@ const createPortableTextComponents = (
           {value?.excerpt ? (
             <p className="mb-4 text-sm text-muted-foreground">{value.excerpt}</p>
           ) : null}
-          <div
-            className="legacy-prose"
-            dangerouslySetInnerHTML={{ __html: html }}
-          />
+          <div className="legacy-prose">
+            <Markdown>{value?.contentRaw || ""}</Markdown>
+          </div>
         </section>
       );
     },

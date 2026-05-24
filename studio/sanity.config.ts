@@ -10,6 +10,7 @@ import { resolve } from "./presentation/resolve";
 import { structure } from "./structure";
 import { defaultDocumentNode } from "./defaultDocumentNode";
 import { codeInput } from "@sanity/code-input";
+import { markdownSchemaType } from "sanity-plugin-markdown";
 import { applyHybridPresetAction } from "./document-actions/apply-hybrid-preset-action";
 import { convertPageToPostAction } from "./document-actions/convert-page-to-post-action";
 import { generatePostOgAction } from "./document-actions/generate-post-og-action";
@@ -107,6 +108,7 @@ export default defineConfig({
     media(),
     colorInput(),
     iconPicker(),
+    markdownSchemaType(),
   ],
   vite: (prevConfig: any) => ({
     ...prevConfig,

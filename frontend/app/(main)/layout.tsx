@@ -4,7 +4,6 @@ import Footer from "@/components/footer";
 import FloatingWhatsApp from "@/components/floating-whatsapp";
 import DraftModeTools from "@/components/draft-mode-tools";
 import ReusableSlotClient from "@/components/reusable-slot-client";
-import RevealOnScroll from "@/components/reveal-on-scroll";
 import AutoBreadcrumb from "@/components/auto-breadcrumb";
 import { fetchSanityReusableSections } from "@/sanity/lib/fetch";
 
@@ -32,7 +31,6 @@ export default async function MainLayout({
       <Footer />
       <ReusableSlotClient sections={reusableSections} slot="afterFooter" />
       <FloatingWhatsApp />
-      <RevealOnScroll />
       <Suspense fallback={null}>
         <DraftModeTools />
       </Suspense>

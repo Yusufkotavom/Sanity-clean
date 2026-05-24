@@ -17,8 +17,6 @@
     "dev:frontend": "pnpm run dev --workspace=frontend",
     "dev:astro": "pnpm run dev --workspace=web-astro",
     "dev:studio": "pnpm run dev --workspace=studio",
-    "deploy:worker": "cd worker && pnpm wrangler deploy",
-    "deploy:frontend:cf": "cd frontend && npx @cloudflare/next-on-pages",
     "typegen": "cd studio && pnpm typegen",
     "typecheck": "cd frontend && pnpm typecheck",
     "export": "cd studio && sanity dataset export production sample-data.tar.gz"

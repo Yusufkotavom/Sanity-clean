@@ -29,7 +29,6 @@ export default function SectionContainer({
 
   return (
     <div
-      data-reveal
       className={cn(
         "relative section-divider",
         COLOR_VARIANT_CLASSNAMES[color || "background"],

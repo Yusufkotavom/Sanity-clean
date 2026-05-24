@@ -1,14 +1,16 @@
 import { defineField, defineType } from "sanity";
+import { FileText } from "lucide-react";
 
 export default defineType({
   name: "legacy-rich-content",
-  title: "Legacy Rich Content",
+  title: "Rich Content (Markdown)",
   type: "object",
+  icon: FileText,
   initialValue: {
-    title: "Konten Legacy",
-    excerpt: "Ringkasan singkat untuk konten legacy ini.",
+    title: "",
+    excerpt: "",
     contentFormat: "markdown",
-    contentRaw: "Tulis konten legacy di sini.",
+    contentRaw: "## Judul\n\nTulis konten Markdown di sini.",
   },
   fields: [
     defineField({
@@ -20,6 +22,7 @@ export default defineType({
       name: "excerpt",
       title: "Excerpt",
       type: "text",
+      rows: 2,
     }),
     defineField({
       name: "contentFormat",
@@ -28,32 +31,31 @@ export default defineType({
       options: {
         list: [
           { title: "Markdown", value: "markdown" },
-          { title: "HTML", value: "html" },
+          { title: "HTML (Legacy)", value: "html" },
         ],
         layout: "radio",
       },
       initialValue: "markdown",
-      validation: (Rule) => Rule.required(),
+      hidden: true,
     }),
     defineField({
       name: "contentRaw",
-      title: "Raw Content",
-      type: "text",
-      rows: 18,
-      validation: (Rule) => Rule.required(),
-      description:
-        "Isi konten mentah dalam format Markdown atau HTML sesuai pilihan di atas.",
+      title: "Content",
+      type: "markdown",
+      description: "Tulis konten dalam format Markdown.",
     }),
   ],
   preview: {
     select: {
       title: "title",
-      format: "contentFormat",
+      content: "contentRaw",
     },
-    prepare(selection) {
+    prepare({ title, content }) {
       return {
-        title: selection.title || "Legacy Rich Content",
-        subtitle: selection.format ? `Format: ${selection.format}` : undefined,
+        title: title || "Rich Content",
+        subtitle: content
+          ? content.substring(0, 60).replace(/[#*_]/g, "") + "..."
+          : "Empty",
       };
     },
   },

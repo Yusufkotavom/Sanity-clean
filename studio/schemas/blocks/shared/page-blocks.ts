@@ -105,8 +105,8 @@ const pageBlocks = defineField({
           of: ["all-posts"],
         },
         {
-          name: "legacy",
-          title: "Legacy",
+          name: "content",
+          title: "Content",
           of: ["legacy-rich-content"],
         },
         {

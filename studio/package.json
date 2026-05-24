@@ -31,6 +31,7 @@
     "sanity-plugin-bulk-actions-table": "^1.0.4",
     "sanity-plugin-icon-picker-v2": "^1.0.4",
     "sanity-plugin-iframe-pane": "^5.0.11",
+    "sanity-plugin-markdown": "^8.0.5",
     "sanity-plugin-media": "^4.3.0",
     "simple-icons": "^16.14.0",
     "styled-components": "^6.3.12",
