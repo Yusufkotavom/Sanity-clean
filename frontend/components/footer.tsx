@@ -2,7 +2,7 @@ import Logo from "@/components/logo";
 import Link from "next/link";
 import PortableTextRenderer from "@/components/portable-text-renderer";
 import SocialLinks from "@/components/header/social-links";
-import { fetchSanitySettings, fetchSanityNavigation } from "@/sanity/lib/fetch";
+import { fetchSanitySettings, fetchSanityNavigation, fetchSeoSettings } from "@/sanity/lib/fetch";
 import { NAVIGATION_QUERY_RESULT, SETTINGS_QUERY_RESULT } from "@/sanity.types";
 
 type SanityLink = NonNullable<NAVIGATION_QUERY_RESULT[0]["links"]>[number];
@@ -42,6 +42,8 @@ function groupChildren(children: NavChild[]) {
 
 export default async function Footer() {
   const settings = await fetchSanitySettings();
+  const seoSettings = await fetchSeoSettings();
+  const companyInfo = (seoSettings as any)?.companyInfo;
   const settingsWithSocial = settings as SettingsWithSocial;
   const navigation = await fetchSanityNavigation();
   const navItems = (navigation[0]?.links || [])
@@ -167,26 +169,28 @@ export default async function Footer() {
         {/* Structured Address */}
         <div className="section-divider mt-10 pt-7">
           <div className="grid gap-6 md:grid-cols-2">
-            <address className="not-italic">
-              <p className="mb-2 text-sm font-semibold text-foreground">Kantor Sidoarjo</p>
-              <p className="text-sm text-foreground/70">
-                Kotacom IT Service & Percetakan<br />
-                Graha Indraprasta G7/15<br />
-                Tulangan, Sidoarjo 61273<br />
-                Jawa Timur, Indonesia
-              </p>
-            </address>
-            <address className="not-italic">
-              <p className="mb-2 text-sm font-semibold text-foreground">Kantor Surabaya</p>
-              <p className="text-sm text-foreground/70">
-                Jl. Tenggilis Mulya 76<br />
-                Surabaya, Jawa Timur 60292<br />
-                Indonesia<br />
-                <a href="tel:+6285799520350" className="hover:text-primary transition-colors">
-                  +62 857-9952-0350
-                </a>
-              </p>
-            </address>
+            {companyInfo?.addressSidoarjo && (
+              <address className="not-italic">
+                <p className="mb-2 text-sm font-semibold text-foreground">Kantor Utama</p>
+                <p className="text-sm text-foreground/70">{companyInfo.addressSidoarjo}</p>
+              </address>
+            )}
+            {companyInfo?.addressSurabaya && (
+              <address className="not-italic">
+                <p className="mb-2 text-sm font-semibold text-foreground">Kantor Cabang</p>
+                <p className="text-sm text-foreground/70">
+                  {companyInfo.addressSurabaya}
+                  {companyInfo.phone && (
+                    <>
+                      <br />
+                      <a href={`tel:${companyInfo.phone.replace(/\s/g, "")}`} className="hover:text-primary transition-colors">
+                        {companyInfo.phone}
+                      </a>
+                    </>
+                  )}
+                </p>
+              </address>
+            )}
           </div>
         </div>
 
