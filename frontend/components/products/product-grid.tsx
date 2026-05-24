@@ -22,7 +22,7 @@ export default function ProductGrid({
       gridClassName="grid grid-cols-2 gap-4 lg:grid-cols-4"
       buttonLabel="Show more products"
       getKey={(product: any) => product.slug?.current || product.title}
-      renderItem={(product: any, index: number) => <ProductCard {...product} priority={index === 0} />}
+      renderItem={(product: any, index: number) => <ProductCard {...product} priority={index < 2} />}
     />
   );
 }
