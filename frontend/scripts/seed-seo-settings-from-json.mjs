@@ -1,6 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { createSanityWriteClient } from "./lib/sanity-page-guards.mjs";
+import { createSanityWriteClient, loadSanityEnv } from "./lib/sanity-page-guards.mjs";
 
 const DATA_DIR = path.resolve(process.cwd(), "scripts/seed-data/seo-settings");
 const FILES = [
@@ -63,6 +63,11 @@ function normalizeSeoPayload(payload) {
   return next;
 }
 
+function normalizeSiteUrl(value) {
+  if (typeof value !== "string") return "";
+  return value.trim().replace(/\/+$/, "");
+}
+
 async function loadJson(file) {
   const filePath = path.join(DATA_DIR, file);
   const raw = await fs.readFile(filePath, "utf8");
@@ -72,6 +77,7 @@ async function loadJson(file) {
 async function run() {
   const write = process.argv.includes("--write");
   const client = await createSanityWriteClient();
+  const env = await loadSanityEnv();
 
   let merged = {};
   for (const file of FILES) {
@@ -80,6 +86,18 @@ async function run() {
   }
 
   const payload = normalizeSeoPayload(merged);
+  const resolvedSiteUrl = normalizeSiteUrl(
+    env.NEXT_PUBLIC_SITE_URL || env.SANITY_STUDIO_FRONTEND_URL || env.SANITY_STUDIO_PREVIEW_URL,
+  );
+
+  if (resolvedSiteUrl) {
+    payload.siteUrl = resolvedSiteUrl;
+  } else {
+    delete payload.siteUrl;
+    console.warn(
+      "⚠️ siteUrl not set: define NEXT_PUBLIC_SITE_URL (preferred) or SANITY_STUDIO_FRONTEND_URL/SANITY_STUDIO_PREVIEW_URL.",
+    );
+  }
 
   if (!write) {
     console.log("DRY RUN: seoSettings payload prepared");
@@ -87,6 +105,7 @@ async function run() {
       JSON.stringify(
         {
           files: FILES,
+          resolvedSiteUrl: payload.siteUrl || null,
           keys: Object.keys(payload),
           testimonials: payload.testimonials?.length || 0,
           pricing: {

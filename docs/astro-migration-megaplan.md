@@ -18,6 +18,9 @@
 - [x] Reduced global header JS by removing Radix dropdown dependency from desktop navigation and simplifying theme toggle interaction.
 - [x] Fixed Studio OG generation action URL priority to use `ogSettings.ogBaseUrl` before env/CMS fallbacks.
 - [x] Removed stale `devk.my.id` fallback defaults from SEO seed sources to prevent reintroducing wrong OG/canonical base URL.
+- [x] Removed hardcoded `siteUrl` from SEO seed JSON and switched seed runtime to env-resolved site URL injection.
+- [x] Removed hardcoded `/home-sanity` canonical fallback domain; script now requires env URL source.
+- [x] Refactored `seoSettings` Studio form to a single navigation pattern with grouped tabs and non-collapsible major sections.
 
 ## Workstream TODO
 - [x] Fix mismatch that forced `Features / Value Props` layout to always render as grid.
@@ -34,6 +37,9 @@
 - [x] Verified home route client manifest no longer includes `components/ui/dropdown-menu.tsx`.
 - [x] Ensure Studio "Generate OG Image" action resolves `/api/og` from `ogSettings.ogBaseUrl` as primary source.
 - [x] Replace stale `devk.my.id` hardcoded defaults in SEO seed scripts used for CMS/bootstrap flows.
+- [x] Ensure SEO seed flow does not hardcode domain in repository JSON; inject `siteUrl` from runtime env.
+- [x] Ensure `/home-sanity` seed canonical URL fails fast when site URL env is missing.
+- [x] Ensure `/structure/seoSettings` authoring UX is consistent (no mixed top-level tab/accordion navigation).
 
 ## Blockers
 - None.

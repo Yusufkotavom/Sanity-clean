@@ -275,3 +275,37 @@ Replaced the legacy content system (raw textarea + 7-dependency unified pipeline
 - Verification status:
   - Build/test: `pnpm --filter studio run build` passed.
   - Build/test: `pnpm --filter frontend run build` passed.
+
+## 2026-05-24
+- Changed files:
+  - `frontend/scripts/seed-data/seo-settings/base.json`
+  - `frontend/scripts/seed-seo-settings-from-json.mjs`
+  - `frontend/scripts/seed-home-sanity-landing.mjs`
+  - `docs/seo-updates.md`
+  - `docs/astro-migration-megaplan.md`
+- Summary:
+  - Removed hardcoded `siteUrl` from SEO seed JSON bundle so domain is no longer frozen in repository data.
+  - Updated SEO seed runner to inject `siteUrl` at runtime from env (`NEXT_PUBLIC_SITE_URL` preferred, fallback to Studio frontend/preview env).
+  - Removed hardcoded fallback URL from `/home-sanity` seed script; script now requires env URL and normalizes canonical base.
+- Impact on SEO/integration:
+  - Direct integration hardening: seed/import flows will not silently reintroduce stale domains into `seoSettings.siteUrl` or page canonical metadata.
+  - Environment-specific deployments now produce consistent canonical/OG base URLs from env source of truth.
+- Verification status:
+  - Manual check: seed script runtime resolution and fallback order reviewed.
+  - Build/test: Not run in this cycle.
+
+## 2026-05-24
+- Changed files:
+  - `studio/schemas/documents/seo-settings.ts`
+  - `docs/seo-updates.md`
+  - `docs/astro-migration-megaplan.md`
+- Summary:
+  - Reorganized Studio `seoSettings` editing UI into a single pattern using document `groups` (tabs) for major sections: Defaults, Indexing, Crawlers & Sitemap, Trust Signals, and Pricing & FAQ.
+  - Assigned every top-level SEO settings field to one tab group to avoid mixed navigation behavior.
+  - Set large object sections (`companyInfo`, `pricingPackages`, `faq`) as non-collapsible to reduce accordion-style interactions.
+- Impact on SEO/integration:
+  - No data-model or query contract changes; this is Studio authoring UX cleanup only.
+  - Integration remains synced: frontend `seoSettings` queries and metadata logic do not require changes.
+- Verification status:
+  - Manual check: schema grouping and field assignment reviewed.
+  - Build/test: Pending in this cycle.

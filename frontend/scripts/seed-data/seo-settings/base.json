@@ -3,7 +3,6 @@
   "defaultTitle": "DEVK STUDIO",
   "defaultDescription": "DEVK STUDIO menyediakan jasa pembuatan software custom dan website bisnis dengan proses terstruktur, delivery terukur, dan pendampingan implementasi.",
   "defaultNoIndex": false,
-  "siteUrl": "https://sanity-nextjs-kotacom.vercel.app",
   "siteSearchPath": "/search",
   "noIndexBlogCategories": false,
   "noIndexProductCategories": false,

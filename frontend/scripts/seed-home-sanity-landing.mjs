@@ -25,7 +25,16 @@ async function run() {
   const write = process.argv.includes("--write");
   const client = await createSanityWriteClient();
   const env = await loadSanityEnv();
-  const siteUrl = env.NEXT_PUBLIC_SITE_URL || "https://sanity-nextjs-kotacom.vercel.app";
+  const siteUrl =
+    env.NEXT_PUBLIC_SITE_URL || env.SANITY_STUDIO_FRONTEND_URL || env.SANITY_STUDIO_PREVIEW_URL;
+
+  if (!siteUrl) {
+    throw new Error(
+      "Missing site URL. Set NEXT_PUBLIC_SITE_URL (preferred) or SANITY_STUDIO_FRONTEND_URL/SANITY_STUDIO_PREVIEW_URL before seeding /home-sanity.",
+    );
+  }
+
+  const normalizedSiteUrl = siteUrl.trim().replace(/\/+$/, "");
 
   const pageDoc = {
     _id: DOC_ID,
@@ -187,7 +196,7 @@ async function run() {
       title: "DEVK STUDIO — Jasa Pembuatan Software & Website",
       description:
         "Landing page DEVK STUDIO untuk jasa pembuatan software custom dan website bisnis dengan pendekatan strategis, eksekusi terukur, dan pendampingan pasca rilis.",
-      canonicalUrl: `${siteUrl}/home-sanity`,
+      canonicalUrl: `${normalizedSiteUrl}/home-sanity`,
       noindex: false,
     },
   };

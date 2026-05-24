@@ -6,11 +6,19 @@ export default defineType({
   title: "SEO Settings",
   type: "document",
   icon: SearchCheck,
+  groups: [
+    { name: "defaults", title: "Defaults", default: true },
+    { name: "indexing", title: "Indexing" },
+    { name: "crawlers", title: "Crawlers & Sitemap" },
+    { name: "trust", title: "Trust Signals" },
+    { name: "commercial", title: "Pricing & FAQ" },
+  ],
   fields: [
     defineField({
       name: "titleSuffix",
       title: "Title Suffix",
       type: "string",
+      group: "defaults",
       description: "Suffix used in title template. Example: Schema UI",
       initialValue: "Schema UI",
     }),
@@ -18,6 +26,7 @@ export default defineType({
       name: "defaultTitle",
       title: "Default Meta Title",
       type: "string",
+      group: "defaults",
       initialValue: "Schema UI",
       description:
         "Fallback default meta title. If empty in rendering logic, brand name from Settings is used.",
@@ -27,6 +36,7 @@ export default defineType({
       name: "defaultDescription",
       title: "Default Meta Description",
       type: "text",
+      group: "defaults",
       rows: 3,
       initialValue:
         "Modern website powered by Next.js and Sanity with scalable content management.",
@@ -36,6 +46,7 @@ export default defineType({
       name: "defaultNoIndex",
       title: "Default No Index",
       type: "boolean",
+      group: "indexing",
       initialValue: false,
       description: "Applied when a page does not define its own noindex setting.",
     }),
@@ -43,6 +54,7 @@ export default defineType({
       name: "siteUrl",
       title: "Canonical Site URL",
       type: "url",
+      group: "defaults",
       initialValue: "https://www.kotacom.id",
       description:
         "Canonical production site URL used for metadata, robots, sitemap, and structured data.",
@@ -55,6 +67,7 @@ export default defineType({
       name: "siteSearchPath",
       title: "Site Search Path",
       type: "string",
+      group: "defaults",
       initialValue: "/search",
       description:
         "Optional search route used in WebSite SearchAction structured data. Must start with '/'.",
@@ -68,6 +81,7 @@ export default defineType({
       name: "noIndexBlogCategories",
       title: "No Index Blog Category Pages",
       type: "boolean",
+      group: "indexing",
       initialValue: false,
       description:
         "When enabled, all pages under /blog/category/[slug] are marked noindex and excluded from sitemap.",
@@ -76,6 +90,7 @@ export default defineType({
       name: "noIndexProductCategories",
       title: "No Index Product Category Pages",
       type: "boolean",
+      group: "indexing",
       initialValue: false,
       description:
         "When enabled, all category listings under /products/[slug] are marked noindex and excluded from sitemap.",
@@ -84,6 +99,7 @@ export default defineType({
       name: "noIndexServiceCategories",
       title: "No Index Service Category Pages",
       type: "boolean",
+      group: "indexing",
       initialValue: false,
       description:
         "When enabled, all category listings under /services/[slug] are marked noindex and excluded from sitemap.",
@@ -92,6 +108,7 @@ export default defineType({
       name: "robotsDisallowPaths",
       title: "Robots Disallow Paths",
       type: "array",
+      group: "crawlers",
       of: [{ type: "string" }],
       description:
         "Optional list of path prefixes blocked in robots.txt, e.g. /internal or /preview.",
@@ -106,6 +123,7 @@ export default defineType({
       name: "aiCrawlerAllowlist",
       title: "AI Crawler Allowlist",
       type: "array",
+      group: "crawlers",
       of: [{ type: "string" }],
       initialValue: [
         "GPTBot",
@@ -127,6 +145,7 @@ export default defineType({
       name: "sitemapStaticRoutes",
       title: "Sitemap Static Routes",
       type: "array",
+      group: "crawlers",
       of: [{ type: "string" }],
       initialValue: [
         "/about",
@@ -154,6 +173,7 @@ export default defineType({
       name: "includeTemplateRoutesInSitemap",
       title: "Include Template Routes in Sitemap",
       type: "boolean",
+      group: "crawlers",
       initialValue: true,
       description:
         "When enabled, template-backed routes from legacy location documents are included in sitemap output.",
@@ -162,12 +182,14 @@ export default defineType({
       name: "twitterHandle",
       title: "Twitter/X Handle",
       type: "string",
+      group: "defaults",
       description: "Example: @schemaui",
     }),
     defineField({
       name: "defaultImage",
       title: "Default Open Graph Image",
       type: "image",
+      group: "defaults",
       options: { hotspot: true },
       fields: [
         defineField({
@@ -181,6 +203,7 @@ export default defineType({
       name: "defaultAggregateRating",
       title: "Default Aggregate Rating (Global Fallback)",
       type: "aggregateRating",
+      group: "trust",
       description:
         "Global default rating applied to all pages/products/services that don't have their own rating. Set this to your Google Maps or platform-verified rating.",
     }),
@@ -189,6 +212,11 @@ export default defineType({
       name: "companyInfo",
       title: "Company Information",
       type: "object",
+      group: "trust",
+      options: {
+        collapsible: false,
+        collapsed: false,
+      },
       description: "Company trust signals for E-E-A-T",
       fields: [
         defineField({ name: "name", type: "string", title: "Company Name" }),
@@ -224,6 +252,7 @@ export default defineType({
       name: "testimonials",
       title: "Testimonials",
       type: "array",
+      group: "trust",
       description: "Real testimonials with E-E-A-T signals",
       of: [
         {
@@ -261,6 +290,11 @@ export default defineType({
       name: "pricingPackages",
       title: "Pricing Packages",
       type: "object",
+      group: "commercial",
+      options: {
+        collapsible: false,
+        collapsed: false,
+      },
       description: "Transparent pricing for all services",
       fields: [
         defineField({
@@ -287,6 +321,11 @@ export default defineType({
       name: "faq",
       title: "FAQ",
       type: "object",
+      group: "commercial",
+      options: {
+        collapsible: false,
+        collapsed: false,
+      },
       description: "Frequently asked questions by category",
       fields: [
         defineField({
