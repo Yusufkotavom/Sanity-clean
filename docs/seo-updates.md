@@ -313,15 +313,19 @@ Replaced the legacy content system (raw textarea + 7-dependency unified pipeline
 ## 2026-05-26
 - Changed files:
   - `studio/document-actions/generate-post-og-action.ts`
+  - `frontend/proxy.ts`
   - `docs/seo-updates.md`
   - `docs/astro-migration-megaplan.md`
 - Summary:
   - Removed all fallback sources from Studio OG generation URL resolution.
   - Studio OG generator now uses only `ogSettings.ogBaseUrl` as the single source of truth.
   - Updated error behavior to fail fast when `ogSettings.ogBaseUrl` is missing or unreachable.
+  - Added CORS headers for `/api/og` in Next proxy so browser fetch from Sanity Studio origin is allowed.
 - Impact on SEO/integration:
   - Direct integration fix: canonical site URL in `seoSettings` no longer acts as implicit OG render endpoint.
   - Prevents cross-domain OG fetch leakage to stale domains (e.g. `devk.my.id`) when editor-triggered OG generation runs.
+  - Integration fix: Studio `Generate OG Image` fetch to frontend `/api/og` no longer fails due to missing CORS headers.
 - Verification status:
   - Manual check: strict single-source URL resolution (`ogSettings.ogBaseUrl` only) reviewed.
   - Build/test: `pnpm --filter studio run build` passed.
+  - Build/test: `pnpm --filter frontend run build` passed.

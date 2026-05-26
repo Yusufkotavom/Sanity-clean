@@ -41,9 +41,9 @@ const withCorsHeaders = (request: NextRequest, response: NextResponse) => {
 export function proxy(request: NextRequest) {
   if (request.nextUrl.pathname === "/api/og") {
     if (request.method === "OPTIONS") {
-      return new NextResponse(null, { status: 204 });
+      return withCorsHeaders(request, new NextResponse(null, { status: 204 }));
     }
-    return NextResponse.next();
+    return withCorsHeaders(request, NextResponse.next());
   }
 
   if (request.nextUrl.pathname.startsWith("/api/")) {

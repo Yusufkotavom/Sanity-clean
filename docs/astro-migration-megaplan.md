@@ -22,6 +22,7 @@
 - [x] Removed hardcoded `/home-sanity` canonical fallback domain; script now requires env URL source.
 - [x] Refactored `seoSettings` Studio form to a single navigation pattern with grouped tabs and non-collapsible major sections.
 - [x] Enforced strict Studio OG URL source: only `ogSettings.ogBaseUrl` (no fallback).
+- [x] Added CORS headers for `/api/og` proxy path so Studio-origin fetch can generate OG images.
 
 ## Workstream TODO
 - [x] Fix mismatch that forced `Features / Value Props` layout to always render as grid.
@@ -42,6 +43,7 @@
 - [x] Ensure `/home-sanity` seed canonical URL fails fast when site URL env is missing.
 - [x] Ensure `/structure/seoSettings` authoring UX is consistent (no mixed top-level tab/accordion navigation).
 - [x] Prevent Studio OG generation from using any fallback source; require `ogSettings.ogBaseUrl` only.
+- [x] Ensure `/api/og` responds with CORS headers for allowed Studio origins (including preflight).
 
 ## Blockers
 - None.
