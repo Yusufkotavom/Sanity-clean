@@ -21,6 +21,7 @@
 - [x] Removed hardcoded `siteUrl` from SEO seed JSON and switched seed runtime to env-resolved site URL injection.
 - [x] Removed hardcoded `/home-sanity` canonical fallback domain; script now requires env URL source.
 - [x] Refactored `seoSettings` Studio form to a single navigation pattern with grouped tabs and non-collapsible major sections.
+- [x] Enforced strict Studio OG URL source: only `ogSettings.ogBaseUrl` (no fallback).
 
 ## Workstream TODO
 - [x] Fix mismatch that forced `Features / Value Props` layout to always render as grid.
@@ -40,6 +41,7 @@
 - [x] Ensure SEO seed flow does not hardcode domain in repository JSON; inject `siteUrl` from runtime env.
 - [x] Ensure `/home-sanity` seed canonical URL fails fast when site URL env is missing.
 - [x] Ensure `/structure/seoSettings` authoring UX is consistent (no mixed top-level tab/accordion navigation).
+- [x] Prevent Studio OG generation from using any fallback source; require `ogSettings.ogBaseUrl` only.
 
 ## Blockers
 - None.

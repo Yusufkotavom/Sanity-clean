@@ -22,8 +22,6 @@ const buildOgUrl = (baseUrl: string, title: string, badge: string) => {
   return `${baseUrl.replace(/\/+$/, "")}/api/og?${params.toString()}`;
 };
 
-const STATIC_OG_BASE_FALLBACKS = [process.env.SANITY_STUDIO_PREVIEW_URL || "", "http://localhost:3002"].filter(Boolean);
-
 export const generatePostOgAction: DocumentActionComponent = (props) => {
   const { id, draft, published, onComplete } = props;
   const client = useClient({ apiVersion: "2026-03-23" });
@@ -60,40 +58,18 @@ export const generatePostOgAction: DocumentActionComponent = (props) => {
 
       setRunning(true);
       try {
-        const studioHost =
-          typeof window !== "undefined" ? window.location.hostname.toLowerCase() : "";
-        const studioIsLocal =
-          studioHost === "localhost" ||
-          studioHost === "127.0.0.1" ||
-          studioHost === "::1";
-
         const settings = await client.fetch<
-          { seoSettings?: { siteUrl?: string | null }; ogSettings?: { ogBaseUrl?: string | null } } | null
+          { ogSettings?: { ogBaseUrl?: string | null } } | null
         >(`{
-          "seoSettings": *[_type == "seoSettings"][0]{siteUrl},
           "ogSettings": *[_type == "ogSettings"][0]{ogBaseUrl}
         }`);
-        const baseCandidates = [
-          settings?.ogSettings?.ogBaseUrl,
-          process.env.SANITY_STUDIO_FRONTEND_URL,
-          process.env.SANITY_STUDIO_PREVIEW_URL,
-          ...STATIC_OG_BASE_FALLBACKS,
-          settings?.seoSettings?.siteUrl,
-        ]
-          .map((value) => (typeof value === "string" ? value.trim() : ""))
-          .filter((value) => Boolean(value))
-          .filter((value) => !/^https?:\/\/localhost:3000\/?$/i.test(value))
-          .filter((value) => {
-            if (studioIsLocal) return true;
-            return !/^https?:\/\/localhost(?::\d+)?\/?$/i.test(value);
-          });
-        const uniqueBases = Array.from(new Set(baseCandidates));
-
-        if (uniqueBases.length === 0) {
+        const ogBaseUrl = (settings?.ogSettings?.ogBaseUrl || "").trim();
+        if (!ogBaseUrl) {
           throw new Error(
-            "No OG base URL configured. Set OG Settings > ogBaseUrl or SANITY_STUDIO_FRONTEND_URL / SANITY_STUDIO_PREVIEW_URL.",
+            "No OG base URL configured. Set OG Settings > ogBaseUrl.",
           );
         }
+        const uniqueBases = [ogBaseUrl];
 
         let blob: Blob | null = null;
         let resolvedUrl = "";
@@ -127,7 +103,7 @@ export const generatePostOgAction: DocumentActionComponent = (props) => {
         }
 
         if (!blob || !resolvedUrl) {
-          throw new Error(lastError || "Failed to fetch OG image from all configured URLs.");
+          throw new Error(lastError || "Failed to fetch OG image from OG Settings URL.");
         }
         const fileName = `og-${documentType || "content"}-${slug}-${Date.now()}.png`;
         const asset = await client.assets.upload("image", blob, {

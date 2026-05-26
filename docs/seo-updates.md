@@ -309,3 +309,19 @@ Replaced the legacy content system (raw textarea + 7-dependency unified pipeline
 - Verification status:
   - Manual check: schema grouping and field assignment reviewed.
   - Build/test: Pending in this cycle.
+
+## 2026-05-26
+- Changed files:
+  - `studio/document-actions/generate-post-og-action.ts`
+  - `docs/seo-updates.md`
+  - `docs/astro-migration-megaplan.md`
+- Summary:
+  - Removed all fallback sources from Studio OG generation URL resolution.
+  - Studio OG generator now uses only `ogSettings.ogBaseUrl` as the single source of truth.
+  - Updated error behavior to fail fast when `ogSettings.ogBaseUrl` is missing or unreachable.
+- Impact on SEO/integration:
+  - Direct integration fix: canonical site URL in `seoSettings` no longer acts as implicit OG render endpoint.
+  - Prevents cross-domain OG fetch leakage to stale domains (e.g. `devk.my.id`) when editor-triggered OG generation runs.
+- Verification status:
+  - Manual check: strict single-source URL resolution (`ogSettings.ogBaseUrl` only) reviewed.
+  - Build/test: `pnpm --filter studio run build` passed.
