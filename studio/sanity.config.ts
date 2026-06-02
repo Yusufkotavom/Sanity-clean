@@ -51,7 +51,7 @@ const STUDIO_ALLOWED_HOSTS = (
   .filter(Boolean);
 
 export default defineConfig({
-  title: "Schema UI: Starter",
+  title: "KOTACOM STUDIO",
   projectId,
   dataset,
   // Add and edit the content schema in the './sanity/schema' folder

@@ -1,5 +1,22 @@
 # SEO Updates Log
 
+## 2026-06-02
+- Changed files:
+  - `studio/schemas/documents/theme-settings.ts`
+  - `studio/schemas/inputs/color-option-input.tsx`
+  - `docs/superpowers/specs/2026-06-02-studio-theme-settings-minimal-labels-design.md`
+  - `docs/superpowers/plans/2026-06-02-studio-theme-settings-minimal-labels.md`
+  - `docs/seo-updates.md`
+- Summary:
+  - Simplified Sanity Studio `Theme Settings` color controls by removing raw HEX codes from the option labels and from the custom color input card text.
+  - Kept the existing stored values and swatch preview behavior intact so editors still choose visually without changing frontend theme data.
+- Impact on SEO/integration:
+  - No direct SEO impact.
+  - Studio-only UX improvement; no schema shape, query contract, or frontend rendering behavior changed.
+- Verification status:
+  - Build/test: `pnpm --filter studio run typecheck` passed.
+
+
 ## 2026-05-24
 ### Removed scroll-reveal animation causing invisible blocks
 
@@ -329,3 +346,16 @@ Replaced the legacy content system (raw textarea + 7-dependency unified pipeline
   - Manual check: strict single-source URL resolution (`ogSettings.ogBaseUrl` only) reviewed.
   - Build/test: `pnpm --filter studio run build` passed.
   - Build/test: `pnpm --filter frontend run build` passed.
+## 2026-05-31
+- Changed files:
+  - `studio/sanity.config.ts`
+  - `docs/seo-updates.md`
+- Summary:
+  - Verified active Sanity Studio app title source in Studio config.
+  - Rebranded Studio title from `Schema UI: Starter` to `KOTACOM STUDIO`.
+- Impact on SEO/integration:
+  - No direct SEO impact.
+  - Integration impact: editor-facing Studio branding is now aligned to KOTACOM naming.
+- Verification status:
+  - Manual check: `studio/sanity.config.ts` `defineConfig.title` updated and reviewed.
+  - Build/test: `pnpm --filter studio run build` passed.

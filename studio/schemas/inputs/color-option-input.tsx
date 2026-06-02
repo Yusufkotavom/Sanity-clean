@@ -1,4 +1,4 @@
-import { Box, Button, Card, Flex, Grid, Stack, Text } from "@sanity/ui";
+import { Box, Button, Card, Flex, Grid, Text } from "@sanity/ui";
 import { set, unset, type StringInputProps } from "sanity";
 
 type ColorListOption = {
@@ -57,14 +57,9 @@ export default function ColorOptionInput(props: StringInputProps) {
                     flexShrink: 0,
                   }}
                 />
-                <Stack space={2}>
-                  <Text size={1} weight="medium">
-                    {option.title || "Untitled"}
-                  </Text>
-                  <Text size={0} muted>
-                    {option.value || "Use default theme value"}
-                  </Text>
-                </Stack>
+                <Text size={1} weight="medium">
+                  {option.title || "Untitled"}
+                </Text>
               </Flex>
             </Button>
           </Card>
