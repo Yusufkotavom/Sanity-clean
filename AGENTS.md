@@ -1,102 +1,60 @@
 # AGENTS.md
 
-## Mandatory Update Log
+This file provides guidance to the AI agent when working with code in this repository.
 
-- For **every repository change** (not only SEO changes), the agent must add an entry to:
-  - `docs/seo-updates.md`
-- The entry must include:
-  - Date (`YYYY-MM-DD`)
-  - Changed files
-  - Summary of what changed
-  - Impact on SEO/integration (or explicit note: `No direct SEO impact`)
-  - Verification status (build/test/manual check)
+## Project
 
-## SEO Integration Rules
+pnpm monorepo (pnpm 10.19.0): `frontend/` (Next.js 16 App Router, webpack mode) + `studio/` (Sanity Studio v5).
 
-- Keep Sanity Studio SEO schema and Frontend metadata logic in sync.
-- If a field is added/changed in Studio SEO documents, update related query/fetch/metadata usage in Frontend in the same task.
-- Preserve global fallback behavior from `seoSettings` when per-document meta is empty.
+## Build & Dev
 
-## Local Claude SEO Bundle Rule
+```bash
+pnpm install          # install all workspaces
+pnpm dev              # both apps in parallel
+pnpm dev:frontend     # Next.js only (:3000)
+pnpm dev:studio       # Sanity Studio only (:3333)
+pnpm typegen          # regenerate Sanity TypeScript types
+pnpm typecheck        # TypeScript check (frontend)
+```
 
-- This repository vendors a local Claude SEO toolkit under `skills/claude-seo/`.
-- For SEO audit, technical SEO, on-page, schema, sitemap, image SEO, GEO, local SEO, maps, hreflang, backlinks, or SEO planning tasks, agents must review the relevant local skill first:
-  - `skills/claude-seo/skills/seo/SKILL.md`
-  - matching sub-skill under `skills/claude-seo/skills/seo-*/SKILL.md`
-  - matching agent prompt under `skills/claude-seo/agents/seo-*.md` when delegation or role guidance is useful
-- Prefer this repo-local bundle over machine-global SEO skills so the workflow stays versioned with the codebase.
-- If a local Claude SEO skill references helper scripts, references, or docs, use the vendored paths under `skills/claude-seo/` instead of external or home-directory copies.
+Frontend uses `--webpack` flag for dev and build (not Turbopack).
 
-## Frontend-Backend Sync Rule
+## Studio ↔ Frontend Sync
 
-- Any frontend change that depends on CMS/config data must be cross-checked against Studio schemas, GROQ queries, and fetch helpers in the same task.
-- Do not ship frontend-only shape changes for CMS-driven features; ensure Studio fields, query contracts, and frontend rendering stay integrated.
+Every change to a Studio schema, GROQ query, or block type must be reflected in the matching frontend query fragment, component, and metadata logic in the same task. Layers:
+- Studio schemas: `studio/schemas/` (blocks, documents, objects, singletons)
+- GROQ queries: `frontend/sanity/queries/`
+- Block components: `frontend/components/blocks/`
+- Metadata/SEO: `frontend/sanity/lib/`
 
-## Delivery Rule
+## Sanity Content Guardrails
 
-- A task touching code is not complete until `docs/seo-updates.md` is updated.
+When writing, seeding, importing, or patching Sanity documents:
+- Document `_id` values must NOT contain dots (`.`).
+- Every array item must include `_key`.
+- Every `link` object must set `isExternal`: `false` + `internalLink` for internal, `true` + `href` for external.
+- Use dev credentials first for writes: `SANITY_DEV` (token string, not boolean) > `SANITY_AUTH_TOKEN`. Never target production tokens by default.
+- Never print raw token values in logs.
+- After public writes, audit with public-read access (not only token-authenticated).
 
-## Agent Execution Checklist
+## UI Components
 
-- For migration / SEO / redesign tasks, the agent must also maintain checklist status in:
-  - `docs/astro-migration-megaplan.md`
-- At minimum, each execution cycle must update:
-  - `Current Status Snapshot (Already Done)` when an item is completed
-  - Related workstream TODO checkboxes (`[ ]` -> `[x]`) for completed tasks
-  - Any blocked item with a short blocker note in the relevant section
-- If a task result changes route behavior, schema shape, or metadata logic, the agent must verify cross-layer sync:
-  - Studio schema
-  - Frontend query/fetch contract
-  - Frontend rendering/metadata output
+Use Shadcn UI components from `frontend/components/ui/`. If a needed component is missing: `cd frontend && npx shadcn@latest add [component]`. Never use raw `<select>`, `<button>`, or `<input>` when a Shadcn equivalent exists.
 
-## Redirect Management Rule
+## Redirects
 
-- **Sanity as Source of Truth:** All specific path-to-path redirects must be managed in Sanity CMS using the `redirect` document type.
-- **Structural Wildcards:** Structural redirects (e.g., `/product/:slug` -> `/products/:slug`) are managed in `frontend/next.config.mjs` via the `STATIC_REDIRECTS` array.
-- **Validation Before Import:** Before importing or creating new redirects, agents MUST verify that the destination URL is valid (exists in Sanity or Local Repo).
-- **Documentation:** For detailed workflow, refer to `docs/sanity-redirect-management.md`.
-- **Scripts:**
-  - Use `frontend/scripts/import-approved-redirects.mjs` to sync approved CSVs to Sanity.
-  - Use `frontend/scripts/update-curation-with-sanity.mjs` to audit coverage.
+- Path-to-path: managed in Sanity via `redirect` document type.
+- Structural wildcards: `STATIC_REDIRECTS` array in `frontend/next.config.mjs`.
+- Validate destination URLs exist before creating redirects.
+- Scripts: `frontend/scripts/import-approved-redirects.mjs` (CSV→Sanity), `frontend/scripts/update-curation-with-sanity.mjs` (audit).
 
-## Sanity Dev Communication Rule
+## Hybrid Pages
 
-- For all **agent-driven Sanity communication** (read/write/query/import/mutation via scripts/CLI), default to **development credentials first**.
-- Priority for Sanity write auth in agent workflows:
-  1. `SANITY_DEV` (expected to contain **dev write token**, not boolean)
-  2. `SANITY_AUTH_TOKEN`
-- Do **not** target production credentials by default for routine migration/content automation tasks unless explicitly requested by the user.
-- Agent outputs/logs must never print raw token values.
+Landing pages use a hybrid pattern: code-owned route shell + optional Sanity `page` document. `topBlockCount` splits `blocks[]` into top/bottom zones around the code-owned middle. Review `skills/hybrid-content-page-workflow/SKILL.md` and `docs/sanity-seed-guardrails.md` before adding one.
 
-## Sanity Public Content Guardrails
+## SEO Tasks
 
-- For any agent task that seeds, inserts, imports, patches, or rewires **publicly rendered Sanity content**, the agent must follow:
-  - `docs/sanity-seed-guardrails.md`
-  - `skills/sanity-public-content-guardrails/SKILL.md`
-  - `skills/hybrid-content-page-workflow/SKILL.md` when the task is creating or extending a hybrid main page
-- Minimum required rules:
-  - Public document `_id` values must not contain dots (`.`).
-  - This applies both to primary documents such as `page` and referenced documents such as `faq`.
-  - Every array item must include `_key`.
-  - Every `link` object must explicitly set `isExternal`.
-  - Internal links must use `isExternal: false` with `internalLink`.
-  - External links must use `isExternal: true` with `href`.
-- After agent-driven Sanity writes that affect public `page` content, the agent must audit the result and confirm public-read behavior, not only token-authenticated reads.
-
-## Hybrid Main Page Rule
-
-- For main landing pages that should remain code-owned but allow CMS-managed support content, prefer the repo hybrid pattern over full page replacement.
-- Current preferred pattern:
-  - route shell remains code-owned
-  - Sanity `page` document is optional and public-readable
-  - `topBlockCount` splits `blocks[]` into top and bottom zones around the code-owned middle shell
-- Before adding a new hybrid main page, review:
-  - `skills/hybrid-content-page-workflow/SKILL.md`
-  - `docs/sanity-seed-guardrails.md`
-
-## UI Component Architecture Rule
-
-- **Strict Component Reusability**: When building or modifying React UI for the frontend, **agents must prioritize existing Shadcn UI components** or other predefined styles in `frontend/components/ui/` (e.g., `Button`, `Select`, `Tabs`, `Card`, etc.).
-- **Do not use raw HTML elements** like `<select>`, standard `<button>`, or unstyled `<input>` when an equivalent scalable React UI component is available.
-- **Missing Components**: If a standard UI component is missing, the agent MUST use the Shadcn CLI to install it (e.g., `cd frontend && npx shadcn@latest add [component]`) rather than building an isolated, ad-hoc version using generic HTML.
-- Ensure any UI component built strictly matches the Vercel architecture and design systems currently enforced in the repository to ensure scalability.
+- Log every repo change in `docs/seo-updates.md` (date, files, summary, SEO impact, verification status).
+- For SEO audit/technical tasks, review vendored skills under `skills/claude-seo/` first.
+- Preserve `seoSettings` global fallback when per-document SEO meta is empty.
+- For migration/redesign tasks, also update checklist status in `docs/astro-migration-megaplan.md`.
