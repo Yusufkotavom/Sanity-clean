@@ -42,6 +42,7 @@ export default defineType({
         decorators: [
           { title: "Strong", value: "strong" },
           { title: "Emphasis", value: "em" },
+          { title: "Code", value: "code" },
         ],
         annotations: [
           {
@@ -148,6 +149,63 @@ export default defineType({
           { title: "GraphQL", value: "graphql" },
           { title: "SQL", value: "sql" },
         ],
+      },
+    }),
+    defineArrayMember({
+      name: "markdownTable",
+      type: "object",
+      title: "Markdown Table",
+      fields: [
+        {
+          name: "rows",
+          title: "Rows",
+          type: "array",
+          of: [
+            defineArrayMember({
+              name: "markdownTableRow",
+              type: "object",
+              fields: [
+                {
+                  name: "isHeader",
+                  type: "boolean",
+                  title: "Header Row",
+                  initialValue: false,
+                },
+                {
+                  name: "cells",
+                  title: "Cells",
+                  type: "array",
+                  of: [defineArrayMember({ type: "string" })],
+                },
+              ],
+              preview: {
+                select: {
+                  isHeader: "isHeader",
+                  cells: "cells",
+                },
+                prepare({ isHeader, cells }) {
+                  const values = Array.isArray(cells) ? cells.filter(Boolean) : [];
+                  return {
+                    title: values.join(" | ") || "Empty row",
+                    subtitle: isHeader ? "Header" : "Body",
+                  };
+                },
+              },
+            }),
+          ],
+        },
+      ],
+      preview: {
+        select: {
+          rows: "rows",
+        },
+        prepare({ rows }) {
+          const count = Array.isArray(rows) ? rows.length : 0;
+          return {
+            title: "Markdown Table",
+            subtitle: `${count} row${count === 1 ? "" : "s"}`,
+          };
+        },
       },
     }),
     defineArrayMember({

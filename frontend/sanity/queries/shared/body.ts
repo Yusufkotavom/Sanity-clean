@@ -11,5 +11,12 @@ export const bodyQuery = `
   },
   _type == "image" => {
     ${imageQuery}
+  },
+  _type == "markdownTable" => {
+    ...,
+    rows[]{
+      ...,
+      cells[]
+    }
   }
 `;

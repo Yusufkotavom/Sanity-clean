@@ -5,6 +5,12 @@ import { YouTubeEmbed } from "@next/third-parties/google";
 import dynamic from "next/dynamic";
 import { CopyButton } from "@/components/ui/copy-button";
 
+type MarkdownTableRowValue = {
+  _key?: string;
+  isHeader?: boolean;
+  cells?: string[];
+};
+
 const CodeBlock = dynamic(() => import("@/components/ui/code-block"), { ssr: true });
 import Markdown from "react-markdown";
 
@@ -49,6 +55,40 @@ const createPortableTextComponents = (
           language={value.language || "typescript"}
           filename={value.filename}
         />
+      );
+    },
+    markdownTable: ({ value }) => {
+      const rows: MarkdownTableRowValue[] = Array.isArray(value?.rows) ? value.rows : [];
+      if (rows.length === 0) return null;
+
+      const headerRow = rows.find((row) => row?.isHeader) || rows[0];
+      const bodyRows = rows.filter((row, index) => row !== headerRow || index !== 0 || !row?.isHeader);
+
+      return (
+        <div className="my-6 overflow-x-auto rounded-xl border border-border/70">
+          <table className="min-w-full border-collapse text-sm">
+            <thead className="bg-muted/60">
+              <tr>
+                {(headerRow?.cells || []).map((cell: string, index: number) => (
+                  <th key={`${index}-${cell}`} className="border-b border-border px-4 py-3 text-left font-semibold">
+                    {cell}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {bodyRows.map((row, rowIndex) => (
+                <tr key={row._key || rowIndex} className="odd:bg-background even:bg-muted/20">
+                  {(row?.cells || []).map((cell: string, cellIndex: number) => (
+                    <td key={`${row._key || rowIndex}-${cellIndex}`} className="border-t border-border/70 px-4 py-3 align-top">
+                      {cell}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       );
     },
     "legacy-rich-content": ({ value }) => {
@@ -118,6 +158,11 @@ const createPortableTextComponents = (
     ),
   },
   marks: {
+    code: ({ children }) => (
+      <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[0.9em] text-foreground">
+        {children}
+      </code>
+    ),
     link: ({ value, children }) => {
       const isExternal =
         (value?.href || "").startsWith("http") ||
