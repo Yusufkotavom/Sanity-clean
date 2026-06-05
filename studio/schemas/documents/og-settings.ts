@@ -69,21 +69,44 @@ export default defineType({
       name: "fallbackImage",
       title: "Fallback Image URL",
       type: "url",
-      description: "Default right-side image when page has no specific image.",
+      description:
+        "Default right-side image when no exact category match exists. Use HTTPS CDN/image URL. If Image Library has items, generator now prefers library fallback before this URL.",
       fieldset: "images",
     }),
     defineField({
       name: "images",
       title: "Image Library",
       type: "array",
-      description: "Upload multiple images. OG generator can pick from these based on page category or randomly.",
+      description:
+        "Upload multiple right-side OG images. Fill every item with asset + alt + category. Recommended categories: website, software, percetakan, blog. Generator uses exact category match first, then library fallback, then fallbackImage.",
       of: [
         {
           type: "image",
           options: { hotspot: true },
           fields: [
-            { name: "alt", type: "string", title: "Alt / Label" },
-            { name: "category", type: "string", title: "Category", description: "E.g. 'website', 'percetakan', 'software'" },
+            {
+              name: "alt",
+              type: "string",
+              title: "Alt / Label",
+              description: "Required. Short label for this OG image, e.g. Website development illustration.",
+              validation: (Rule) => Rule.required(),
+            },
+            {
+              name: "category",
+              type: "string",
+              title: "Category",
+              description:
+                "Required. Use one of: website, software, percetakan, blog. Matches badge/title detection in /api/og.",
+              options: {
+                list: [
+                  { title: "Website", value: "website" },
+                  { title: "Software", value: "software" },
+                  { title: "Percetakan", value: "percetakan" },
+                  { title: "Blog", value: "blog" },
+                ],
+              },
+              validation: (Rule) => Rule.required(),
+            },
           ],
         },
       ],

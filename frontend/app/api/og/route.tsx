@@ -76,19 +76,13 @@ export async function GET(request: NextRequest) {
   
   if (isSafeUrl(explicitImage)) {
     bgImage = explicitImage;
-  } else if (category && imagesLib.length > 0) {
-    // Find all images matching category
-    const matches = imagesLib.filter((img: any) => img.category?.toLowerCase() === category.toLowerCase());
-    if (matches.length > 0) {
-      // Pick from matches based on title hash (deterministic but varied)
-      const hash = title.split("").reduce((a: number, c: string) => a + c.charCodeAt(0), 0);
-      bgImage = matches[hash % matches.length]?.asset?.url || og?.fallbackImage || FALLBACK_OG_IMAGE_URL;
-    } else {
-      bgImage = og?.fallbackImage || FALLBACK_OG_IMAGE_URL;
-    }
   } else if (imagesLib.length > 0) {
     const hash = title.split("").reduce((a: number, c: string) => a + c.charCodeAt(0), 0);
-    bgImage = imagesLib[hash % imagesLib.length]?.asset?.url || og?.fallbackImage || FALLBACK_OG_IMAGE_URL;
+    const matches = category
+      ? imagesLib.filter((img: any) => img.category?.toLowerCase() === category.toLowerCase())
+      : [];
+    const candidates = matches.length > 0 ? matches : imagesLib;
+    bgImage = candidates[hash % candidates.length]?.asset?.url || og?.fallbackImage || FALLBACK_OG_IMAGE_URL;
   } else if (og?.fallbackImage) {
     bgImage = og.fallbackImage;
   }
