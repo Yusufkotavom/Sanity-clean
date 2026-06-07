@@ -21,8 +21,7 @@ import {
   LayoutTemplate,
 } from "lucide-react";
 
-const isGeneratorDeskEnabled = (context: any) =>
-  (context?.dataset ?? process.env.SANITY_STUDIO_DATASET ?? "production") === "development";
+const isGeneratorDeskEnabled = (_context?: any) => true;
 
 const createBulkTableItem = (
   S: any,

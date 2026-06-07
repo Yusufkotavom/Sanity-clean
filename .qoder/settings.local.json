@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls /home/kotacom/Sanity-clean/frontend/ 2>/dev/null | head -40)",
+      "Bash(ls /home/kotacom/Sanity-clean/studio/ 2>/dev/null | head -40)",
+      "Bash(ls /home/kotacom/Sanity-clean/docs/ 2>/dev/null | head -20)"
+    ]
+  }
+}
