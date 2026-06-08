@@ -1,4 +1,5 @@
 import RewritePageShell from "@/components/ui/rewrite/page-shell";
+import Blocks from "@/components/blocks";
 import {
   getLegacySectionChildren,
   getLegacySectionSlug,
@@ -7,6 +8,7 @@ import { generateLegacyPageMetadata } from "@/lib/legacy-pages/metadata";
 import {
   fetchTemplatePageByRoute,
   fetchTemplatePageRoutes,
+  fetchSanityPageBySlug,
 } from "@/sanity/lib/fetch";
 import { generatePageMetadata } from "@/sanity/lib/metadata";
 import { resolveTemplateMeta } from "@/lib/templates/resolve-template";
@@ -49,6 +51,12 @@ export async function generateMetadata(props: {
       slug: route.replace(/^\/+/, ""),
     });
   }
+
+  const sanityPage = await fetchSanityPageBySlug({ slug: `software/${params.slug}` });
+  if (sanityPage) {
+    return await generatePageMetadata({ page: sanityPage, slug: `software/${params.slug}` });
+  }
+
   return generateLegacyPageMetadata(getLegacySectionSlug("software", params.slug));
 }
 
@@ -74,6 +82,12 @@ export default async function SoftwareDetailPage(props: {
       />
     );
   }
+
+  const sanityPage = await fetchSanityPageBySlug({ slug: `software/${params.slug}` });
+  if (sanityPage) {
+    return <Blocks blocks={sanityPage?.blocks ?? []} pageTitle={sanityPage.title} />;
+  }
+
   const page = getLegacySectionSlug("software", params.slug);
   if (!page) notFound();
 
