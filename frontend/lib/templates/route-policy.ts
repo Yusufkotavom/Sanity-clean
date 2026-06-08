@@ -1,19 +1,8 @@
-const TEMPLATE_ROUTE_PREFIXES = [
-  "/pembuatan-website",
-  "/software",
-  "/percetakan",
-];
-
-const TEMPLATE_ROOT_PATTERNS = [/^\/jasa-[a-z0-9-]+$/];
-
 export function isAllowedTemplateRoute(route?: string | null) {
+  // Secara otomatis mengizinkan seluruh rute yang valid (dimulai dengan "/")
+  // Pengecekan akhir apakah rute tersebut benar-benar ada akan 
+  // divalidasi langsung dari hasil query Sanity CMS.
   if (!route || !route.startsWith("/")) return false;
-  if (
-    TEMPLATE_ROUTE_PREFIXES.some(
-      (prefix) => route === prefix || route.startsWith(`${prefix}/`),
-    )
-  ) {
-    return true;
-  }
-  return TEMPLATE_ROOT_PATTERNS.some((pattern) => pattern.test(route));
+  
+  return true;
 }

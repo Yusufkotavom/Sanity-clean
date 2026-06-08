@@ -57,7 +57,11 @@ export default function SanityIcon({
     );
   }
 
-  if ((icon.provider === "lu" || icon.provider === "si") && icon.name) return null;
+  if ((icon.provider === "lu" || icon.provider === "si") && icon.name) {
+    const LegacyIcon = NAVIGATION_ICON_MAP[icon.name] || NAVIGATION_ICON_MAP[icon.name.toLowerCase()];
+    if (LegacyIcon) return <LegacyIcon className={className} />;
+    return fallbackSeed ? <FallbackIcon className={className} seed={fallbackSeed} /> : null;
+  }
 
   return fallbackSeed ? <FallbackIcon className={className} seed={fallbackSeed} /> : null;
 }

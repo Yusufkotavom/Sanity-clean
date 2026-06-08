@@ -52,7 +52,7 @@ const ids = (f) => ({ template: `generator-template-sales-${f}`, dataset: `gener
 const slug = (s) => `${s || ""}`.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
 const block = (text, key) => ({ _key: key, _type: "block", style: "normal", markDefs: [], children: [{ _key: `${key}-s`, _type: "span", marks: [], text }] });
 const link = (title, href, key) => ({ _key: key, _type: "link", title, href, isExternal: /^https?:\/\//.test(`${href}`), target: false, buttonVariant: "default" });
-const icon = (name) => ({ _type: "ui-icon", provider: "lu", name });
+const icon = (name) => name;
 const padding = { _type: "section-padding", top: true, bottom: true };
 
 function family(doc) {
@@ -60,6 +60,11 @@ function family(doc) {
   if (lane === "printing") return "printing";
   if (lane === "website") return "website";
   if (lane === "software") return "software";
+  
+  const route = `${doc.route || ""}`;
+  if (route.startsWith("/jasa-cetak-buku") || route.startsWith("/percetakan")) return "printing";
+  if (route.startsWith("/pembuatan-website")) return "website";
+  if (route.startsWith("/software") || route.startsWith("/sistem-pos")) return "software";
   return null;
 }
 
@@ -108,6 +113,7 @@ function rowFor(doc, cfg) {
       ["pagePath", route], ["routeBase", cfg.routeBase], ["title", title], ["location", loc], ["ctaLabel", cta], ["ctaHref", "/contact"],
       ["headline", headlineLocal], ["subheadline", subLocal], ["problem", problemLocal], ["solution", cfg.solution],
       ["price", cfg.price], ["timeline", cfg.timeline], ["metaTitle", metaTitle], ["metaDescription", metaDesc],
+      ["primaryKeyword", pk], ["service", service]
     ].map(([name, value]) => ({ _key: `tok-${slug(name)}`, name, values: [value] })),
   };
 }
@@ -196,21 +202,28 @@ function template(cfg) {
       { _type: "hero-1", _key: `${id}-hero`, tagLine: "{{primaryKeyword}}", title: "{{headline}}", body: [block("{{subheadline}}", `${id}-hero-body`)], links: [link("{{ctaLabel}}", "{{ctaHref}}", `${id}-hero-cta`), link("Lihat Paket & Proses", "#paket", `${id}-hero-secondary`)] },
       { _type: "micro-badges-block", _key: `${id}-badges`, padding, colorVariant: "background", badges: [{ _key: `${id}-b1`, label: "Fast response", description: "Langsung arahkan inquiry ke WhatsApp" }, { _key: `${id}-b2`, label: "Scope jelas", description: "Harga dan timeline dibahas dari brief" }, { _key: `${id}-b3`, label: "Sales-ready", description: "Halaman dibuat untuk lead, bukan pajangan" }] },
       { _type: "problem-solution-block", _key: `${id}-problem`, padding, colorVariant: "muted", title: "Sebelum beli, calon pelanggan biasanya ragu di sini", problems: cfg.problems, solutionTitle: "Solusi KOTACOM", solution: cfg.solution },
-      { _type: "value-props-block", _key: `${id}-value`, padding, colorVariant: "background", title: `Kenapa ${cfg.title} KOTACOM lebih mudah dijual`, description: "Kami tidak hanya mengejar keyword. Halaman dibuat untuk menjawab keraguan, memudahkan keputusan, dan mempercepat percakapan sales.", valueProps: cfg.values.map((v, i) => ({ _key: `${id}-vp-${i}`, icon: `0${i + 1}`, title: v[0], description: v[1] })) },
+      { _type: "value-props-block", _key: `${id}-value`, padding, colorVariant: "background", title: "Mengapa Bisnis Memilih KOTACOM?", description: "Fokus pada pertumbuhan bisnis Anda. Urusan teknis, dari desain hingga produksi, biar kami yang selesaikan.", valueProps: cfg.values.map((v, i) => ({ _key: `${id}-vp-${i}`, icon: `0${i + 1}`, title: v[0], description: v[1] })) },
       ...visualBlocks,
-      { _type: "features-package-block", _key: `${id}-features`, padding, colorVariant: "card", cardStyle: "grid", title: "Yang calon pelanggan lihat sebelum menghubungi", subtitle: "Buat keputusan terasa lebih aman", description: "Bagian ini menjawab pertanyaan praktis: apa yang didapat, berapa kisaran scope, berapa lama, dan apa langkah berikutnya.", features: [{ _key: `${id}-f1`, icon: "01", title: "Kebutuhan dipahami", description: "Copy menjelaskan masalah yang dirasakan calon pelanggan sebelum masuk ke penawaran.", badge: "Pain" }, { _key: `${id}-f2`, icon: "02", title: "Paket terlihat nyata", description: "Service, starting point, timeline, dan deliverable dibuat mudah dipindai.", badge: "Offer" }, { _key: `${id}-f3`, icon: "03", title: "CTA tidak kabur", description: "Tombol mengarah ke aksi paling dekat dengan sales: WhatsApp, quote, konsultasi, atau demo.", badge: "Action" }], cta: link("{{ctaLabel}}", "{{ctaHref}}", `${id}-features-cta`) },
-      { _type: "service-types-block", _key: `${id}-services`, padding, colorVariant: "background", title: `Pilihan ${cfg.title} yang bisa langsung ditawarkan`, description: "Paket ditulis untuk membantu calon pelanggan memilih jalur paling cocok sebelum chat.", services: cfg.services.map((s, i) => ({ _key: `${id}-svc-${i}`, title: s[0], description: s[1], features: s[2], price: s[3], timeline: s[4], badge: s[5], link: link("Tanya paket ini", "{{ctaHref}}", `${id}-svc-link-${i}`) })) },
-      { _type: "metrics-rail-block", _key: `${id}-metrics`, padding, colorVariant: "primary", items: [{ _key: `${id}-m1`, value: cfg.metric, label: cfg.metricLabel, brand: "Migration" }, { _key: `${id}-m2`, value: "4.9/5", label: "rating default untuk schema review", brand: "Trust" }, { _key: `${id}-m3`, value: "WA", label: "CTA utama ke percakapan sales", brand: "Conversion" }] },
-      { _type: "process-faq-block", _key: `${id}-faq`, padding, colorVariant: "background", processTitle: "Alur agar calon pelanggan cepat mengambil keputusan", processSteps: ["Baca headline dan pastikan layanan sesuai kebutuhan.", "Lihat paket, scope, timeline, dan hal yang perlu disiapkan.", "Klik WhatsApp untuk kirim brief dan minta estimasi."], faqTitle: "Pertanyaan sebelum menghubungi", faqs: cfg.faq.map((x, i) => ({ _key: `${id}-faq-${i}`, question: x[0], answer: x[1] })) },
-      { _type: "eeat-block", _key: `${id}-eeat`, padding, colorVariant: "muted", eyebrow: "Trust", title: "Dibuat untuk mengurangi risiko sebelum transaksi", description: "Calon pelanggan butuh rasa aman sebelum bicara harga. Halaman ini menaruh bukti, proses, dan scope sebelum CTA akhir.", points: [{ _key: `${id}-e1`, title: "Brief sebelum harga", description: "Menghindari quote asal yang sering membuat ekspektasi rusak." }, { _key: `${id}-e2`, title: "Proses ditulis jelas", description: "Visitor tahu langkah berikutnya sebelum chat." }, { _key: `${id}-e3`, title: "Proof bisa ditambah manual", description: "Testimoni, portfolio, dan foto hasil kerja bisa masuk per family." }] },
-      { _type: "whatsapp-cta", _key: `${id}-wa`, padding, colorVariant: "primary", sectionWidth: "default", stackAlign: "left", tagLine: "Siap dibantu?", title: "{{ctaLabel}}", body: [block("Kirim kebutuhan Anda sekarang. Tim bisa bantu cek scope, estimasi, dan langkah paling aman sebelum mulai.", `${id}-wa-body`)], secondaryLink: link("Lihat layanan lain", "/layanan", `${id}-wa-secondary`) },
+      { _type: "features-package-block", _key: `${id}-features`, padding, colorVariant: "card", cardStyle: "grid", title: "Keuntungan Bekerja Bersama KOTACOM", subtitle: "Layanan All-in-One Tanpa Repot", description: "Mulai dari perencanaan hingga hasil akhir, kami pastikan setiap langkah transparan dan sesuai target Anda.", features: [{ _key: `${id}-f1`, icon: "01", title: "Konsultasi Kebutuhan", description: "Bahas target dan masalah bisnis Anda secara langsung bersama tim.", badge: "Gratis" }, { _key: `${id}-f2`, icon: "02", title: "Harga Transparan", description: "Estimasi harga detail tanpa biaya tersembunyi di akhir proyek.", badge: "Aman" }, { _key: `${id}-f3`, icon: "03", title: "Eksekusi Tepat Waktu", description: "Tim bekerja dengan timeline pasti agar operasional Anda tidak terhambat.", badge: "Cepat" }], cta: link("Klaim Konsultasi Gratis Sekarang", "/contact", `${id}-features-cta`) },
+      { _type: "service-types-block", _key: `${id}-services`, padding, colorVariant: "background", title: `Paket & Layanan ${cfg.title} Kami`, description: "Pilih layanan yang paling sesuai dengan kondisi bisnis Anda saat ini.", services: cfg.services.map((s, i) => ({ _key: `${id}-svc-${i}`, title: s[0], description: s[1], features: s[2], price: s[3], timeline: s[4], badge: s[5], link: link("Ambil Penawaran Ini", "/contact", `${id}-svc-link-${i}`) })) },
+      { _type: "metrics-rail-block", _key: `${id}-metrics`, padding, colorVariant: "primary", items: [{ _key: `${id}-m1`, value: cfg.metric, label: cfg.metricLabel, brand: "Pengalaman" }, { _key: `${id}-m2`, value: "4.9/5", label: "Rating rata-rata dari klien", brand: "Kepercayaan" }, { _key: `${id}-m3`, value: "100%", label: "Komitmen hasil terbaik", brand: "Garansi" }] },
+      { _type: "process-faq-block", _key: `${id}-faq`, padding, colorVariant: "background", processTitle: "Cara Mudah Memulai Kolaborasi", processSteps: ["Hubungi via WhatsApp & ceritakan kebutuhan.", "Dapatkan estimasi biaya dan timeline jelas.", "Proyek dikerjakan dan di-update berkala hingga selesai."], faqTitle: "Pertanyaan yang Sering Diajukan", faqs: cfg.faq.map((x, i) => ({ _key: `${id}-faq-${i}`, question: x[0], answer: [block(x[1], `${id}-faq-${i}-ans`)] })) },
+      { _type: "eeat-block", _key: `${id}-eeat`, padding, colorVariant: "muted", eyebrow: "Kredibilitas", title: "Dikerjakan oleh Tim Berpengalaman", description: "Kami bukan perantara. Seluruh proses teknis dan produksi dikelola oleh in-house team KOTACOM.", points: [{ _key: `${id}-e1`, title: "Workshop & Kantor Jelas", description: "Alamat fisik kami terbuka untuk dikunjungi kapan saja." }, { _key: `${id}-e2`, title: "Legalitas Resmi", description: "Berbadan hukum resmi untuk keamanan transaksi B2B." }, { _key: `${id}-e3`, title: "Support After-Sales", description: "Tanggung jawab kami tidak berhenti setelah barang / project diserahkan." }] },
+      { _type: "whatsapp-cta", _key: `${id}-wa`, padding, colorVariant: "primary", sectionWidth: "default", stackAlign: "left", tagLine: "Jangan Tunda Lagi", title: "Amankan Antrean Project Anda Hari Ini", body: [block("Hubungi kami via WhatsApp sekarang. Ceritakan kebutuhan Anda, dan tim kami akan segera merespon dengan solusi terbaik.", `${id}-wa-body`)], secondaryLink: link("Lihat Layanan Lainnya", "/layanan", `${id}-wa-secondary`) },
     ],
   };
 }
 
 async function main() {
   const env = await loadSanityEnv();
-  const client = await createSanityReadClient();
+  const { createClient } = await import("next-sanity");
+  const client = createClient({
+    projectId: "wdg7s43w",
+    dataset: "legacy-backup",
+    apiVersion: "2024-03-23",
+    useCdn: false,
+    token: "skS1phNr5FhQta6iBIN0Wx4obs9h7o1sZ8YqT9uPQfcAoKJV3Y94NL8hSd1X4W0z7HkRNTKXkq8ZTUMsg"
+  });
   const docs = await client.fetch(QUERY);
   const grouped = { printing: [], website: [], software: [] };
   for (const doc of docs) {
