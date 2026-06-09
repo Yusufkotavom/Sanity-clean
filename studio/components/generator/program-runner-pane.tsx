@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
-import { Box, Button, Card, Code, Grid, Heading, Spinner, Stack, Text } from "@sanity/ui";
+import { Box, Button, Card, Code, Grid, Heading, Spinner, Stack, Text, Select } from "@sanity/ui";
 import { useClient } from "sanity";
 import { findDuplicatePage } from "../../lib/generator/dedupe";
 import { assessGeneratedDraftQuality } from "../../lib/generator/qa";
 import { buildGeneratedPageDraft } from "../../lib/generator/render";
-import { assertGeneratorWriteTarget, buildGeneratedDraftId, buildGeneratedPageId } from "../../lib/generator/write";
+import { buildGeneratedDraftId, buildGeneratedPageId } from "../../lib/generator/write";
 import type {
   ExistingPageLike,
   GeneratedPageDraft,
@@ -110,6 +110,10 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
   const [linkedData, setLinkedData] = useState<LinkedGeneratorData>({ template: null, dataset: null, existingPages: [] });
   const [isLoadingLinkedData, setIsLoadingLinkedData] = useState(false);
   const [linkedDataError, setLinkedDataError] = useState<string | null>(null);
+  
+  const [writeMode, setWriteMode] = useState<"skip" | "overwrite">("skip");
+  const [batchLimit, setBatchLimit] = useState<number>(10);
+
   const [runSummary, setRunSummary] = useState<RunSummaryState>({
     generated: 0, skipped: 0, conflicts: 0, failed: 0,
     notes: ["Ready. Click 'Dry Run' to inspect all rows or 'Generate Drafts' to write."],
@@ -117,7 +121,6 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
   });
   const [activeAction, setActiveAction] = useState<"dry-run" | "write" | null>(null);
   const [selectedRowIndex, setSelectedRowIndex] = useState(0);
-  const currentDataset = `${client.config().dataset || ""}`.trim();
 
   useEffect(() => {
     const templateId = program.template?._ref;
@@ -183,11 +186,10 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
     if (!program.dataset?._ref) blockingIssues.push("Select a generator dataset.");
     if (linkedDataError) blockingIssues.push(`Load error: ${linkedDataError}`);
     if (linkedData.dataset && !rows.length) blockingIssues.push("Dataset has no rows.");
-    try { assertGeneratorWriteTarget(currentDataset); } catch (e) { blockingIssues.push(e instanceof Error ? e.message : "Write not allowed."); }
-    notes.push(`${rows.length} rows → ${rows.length} pages will be generated.`);
+    notes.push(`${rows.length} rows → ${batchLimit === 0 ? "All" : batchLimit} pages will be processed.`);
     if (linkedData.template?.routeBase) notes.push(`Route base: ${linkedData.template.routeBase}`);
     return { blockingIssues, notes, mode: blockingIssues.length > 0 ? "blocked" : isLoadingLinkedData ? "loading" : "ready" };
-  }, [currentDataset, isLoadingLinkedData, linkedData, linkedDataError, program, rows.length]);
+  }, [isLoadingLinkedData, linkedData, linkedDataError, program, rows.length, batchLimit]);
 
   const buildDryRunResult = (): DryRunResult => {
     if (!linkedData.template || !linkedData.dataset) throw new Error("Template and dataset must resolve.");
@@ -196,7 +198,9 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
     let skipped = 0, conflicts = 0, failed = 0;
     const notes: string[] = [];
 
-    for (const row of rows) {
+    const targetRows = batchLimit === 0 ? rows : rows.slice(0, batchLimit);
+
+    for (const row of targetRows) {
       try {
         const draft = buildGeneratedPageDraft({ program: programLite, template: linkedData.template, row });
         const duplicate = findDuplicatePage(existingPages, {
@@ -204,7 +208,7 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
           rowKey: draft.generator.rowKey, keywordKey: draft.generator.keywordKey,
         });
         const pageId = buildGeneratedPageId(draft.slug.current);
-        if (duplicate) {
+        if (duplicate && writeMode !== "overwrite") {
           if (linkedData.dataset.dedupePolicy === "skip-existing-slug" && duplicate.reason === "slug") skipped++;
           else conflicts++;
           continue;
@@ -217,10 +221,10 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
       } catch { failed++; }
     }
 
-    notes.push(`Inspected ${rows.length} rows (1 row = 1 page). Dedupe: ${formatLabel(linkedData.dataset.dedupePolicy)}.`);
+    notes.push(`Inspected ${targetRows.length} rows (1 row = 1 page). Dedupe: ${writeMode === "overwrite" ? "Overwrite mode" : formatLabel(linkedData.dataset.dedupePolicy)}.`);
     return {
       generatedDrafts,
-      summary: { generated: generatedDrafts.length, skipped, conflicts, failed, notes, mode: failed > 0 ? "error" : "complete", combinationCount: rows.length, sampleSlug: previewDraft?.slug.current },
+      summary: { generated: generatedDrafts.length, skipped, conflicts, failed, notes, mode: failed > 0 ? "error" : "complete", combinationCount: targetRows.length, sampleSlug: previewDraft?.slug.current },
     };
   };
 
@@ -234,13 +238,19 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
   const handleGenerateDrafts = async () => {
     setActiveAction("write");
     try {
-      assertGeneratorWriteTarget(currentDataset);
       const dryRun = buildDryRunResult();
       const written: string[] = [];
       for (const c of dryRun.generatedDrafts) {
-        try { await client.createIfNotExists({ _id: c.documentId, ...c.draft }); written.push(c.pageId); } catch {}
+        try { 
+          if (writeMode === "overwrite") {
+            await client.createOrReplace({ _id: c.documentId, ...c.draft });
+          } else {
+            await client.createIfNotExists({ _id: c.documentId, ...c.draft }); 
+          }
+          written.push(c.pageId); 
+        } catch {}
       }
-      setRunSummary({ ...dryRun.summary, generated: written.length, notes: [...dryRun.summary.notes, `Created ${written.length} draft pages.`], mode: "complete" });
+      setRunSummary({ ...dryRun.summary, generated: written.length, notes: [...dryRun.summary.notes, `Created/Updated ${written.length} draft pages.`], mode: "complete" });
       if (written.length > 0) {
         setLinkedData((cur) => ({ ...cur, existingPages: [...cur.existingPages, ...dryRun.generatedDrafts.filter((c) => written.includes(c.pageId)).map((c) => ({ _id: c.documentId, title: c.draft.title, slug: c.draft.slug, generator: c.draft.generator }))] }));
       }
@@ -266,30 +276,60 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
               <Text size={1}>Route base: {valueOrFallback(linkedData.template?.routeBase || program.routeBase)}</Text>
               <Text size={1}>Slug pattern: {valueOrFallback(linkedData.template?.slugPattern || program.slugPattern)}</Text>
               <Text size={1}>Dataset: {valueOrFallback(linkedData.dataset?.title)}</Text>
-              <Text size={1}>Rows: {rows.length}</Text>
-              <Text size={1}>Pages to generate: <strong>{rows.length}</strong></Text>
+              <Text size={1}>Total Rows in Dataset: {rows.length}</Text>
               {isLoadingLinkedData && <Text size={1}><Spinner muted /> Loading...</Text>}
             </Stack>
           </Card>
 
           <Card {...sectionCardProps}>
             <Stack space={3}>
-              <Heading as="h3" size={1}>Preview Row ({selectedRowIndex + 1}/{rows.length})</Heading>
-              {selectedRow && (
-                <>
-                  <Text size={1}>City: {selectedRow.city || "—"}</Text>
-                  <Text size={1}>Service: {selectedRow.service || "—"}</Text>
-                  <Text size={1}>Primary KW: {selectedRow.primaryKeyword}</Text>
-                  <Text size={1}>Local: {selectedRow.localCondition?.slice(0, 80) || "—"}</Text>
-                </>
-              )}
-              <Grid columns={2} gap={2}>
-                <Button mode="ghost" disabled={selectedRowIndex === 0} onClick={() => setSelectedRowIndex((i) => Math.max(0, i - 1))} text="← Prev" />
-                <Button mode="ghost" disabled={selectedRowIndex >= rows.length - 1} onClick={() => setSelectedRowIndex((i) => Math.min(rows.length - 1, i + 1))} text="Next →" />
-              </Grid>
+              <Heading as="h3" size={1}>Options</Heading>
+              
+              <Stack space={2}>
+                <Text size={1} weight="semibold">Write Mode</Text>
+                <Select value={writeMode} onChange={(e) => setWriteMode(e.currentTarget.value as "skip" | "overwrite")}>
+                  <option value="skip">Safe (Skip Existing)</option>
+                  <option value="overwrite">Overwrite Existing</option>
+                </Select>
+                <Text muted size={1}>
+                  {writeMode === "skip" ? "Safe: Will not overwrite manually edited pages." : "Overwrite: Warning! This will replace existing drafts."}
+                </Text>
+              </Stack>
+
+              <Stack space={2}>
+                <Text size={1} weight="semibold">Batch Limit</Text>
+                <Select value={batchLimit} onChange={(e) => setBatchLimit(Number(e.currentTarget.value))}>
+                  <option value="10">First 10 rows</option>
+                  <option value="20">First 20 rows</option>
+                  <option value="50">First 50 rows</option>
+                  <option value="100">First 100 rows</option>
+                  <option value="200">First 200 rows</option>
+                  <option value="500">First 500 rows</option>
+                  <option value="0">All rows</option>
+                </Select>
+                <Text muted size={1}>Process up to {batchLimit === 0 ? "all" : batchLimit} rows at once.</Text>
+              </Stack>
             </Stack>
           </Card>
         </Grid>
+
+        <Card {...sectionCardProps}>
+          <Stack space={3}>
+            <Heading as="h3" size={1}>Preview Row ({selectedRowIndex + 1}/{rows.length})</Heading>
+            {selectedRow && (
+              <>
+                <Text size={1}>City: {selectedRow.city || "—"}</Text>
+                <Text size={1}>Service: {selectedRow.service || "—"}</Text>
+                <Text size={1}>Primary KW: {selectedRow.primaryKeyword}</Text>
+                <Text size={1}>Local: {selectedRow.localCondition?.slice(0, 80) || "—"}</Text>
+              </>
+            )}
+            <Grid columns={2} gap={2}>
+              <Button mode="ghost" disabled={selectedRowIndex === 0} onClick={() => setSelectedRowIndex((i) => Math.max(0, i - 1))} text="← Prev" />
+              <Button mode="ghost" disabled={selectedRowIndex >= rows.length - 1} onClick={() => setSelectedRowIndex((i) => Math.min(rows.length - 1, i + 1))} text="Next →" />
+            </Grid>
+          </Stack>
+        </Card>
 
         <Card {...sectionCardProps}>
           <Stack space={3}>
@@ -313,10 +353,10 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
         <Card {...sectionCardProps}>
           <Stack space={3}>
             <Heading as="h3" size={1}>Run</Heading>
-            <Text size={1}>{rows.length} rows → {rows.length} pages. Dry run first, then generate drafts.</Text>
+            <Text size={1}>Target: {batchLimit === 0 ? "All" : batchLimit} rows. Dry run first, then generate drafts.</Text>
             <Grid columns={[1, 1, 2]} gap={3}>
-              <Button disabled={hasBlockingIssues || activeAction === "write"} mode="ghost" onClick={handleDryRun} text={activeAction === "dry-run" ? "Running..." : `Dry Run (${rows.length} pages)`} />
-              <Button disabled={hasBlockingIssues || activeAction === "dry-run"} tone="primary" onClick={() => { void handleGenerateDrafts(); }} text={activeAction === "write" ? "Generating..." : `Generate ${rows.length} Drafts`} />
+              <Button disabled={hasBlockingIssues || activeAction === "write"} mode="ghost" onClick={handleDryRun} text={activeAction === "dry-run" ? "Running..." : `Dry Run (${batchLimit === 0 ? "All" : batchLimit} pages)`} />
+              <Button disabled={hasBlockingIssues || activeAction === "dry-run"} tone="primary" onClick={() => { void handleGenerateDrafts(); }} text={activeAction === "write" ? "Generating..." : `Generate Drafts`} />
             </Grid>
             <RunSummary summary={runSummary} />
           </Stack>
