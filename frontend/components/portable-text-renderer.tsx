@@ -5,6 +5,8 @@ import { YouTubeEmbed } from "@next/third-parties/google";
 import dynamic from "next/dynamic";
 import { CopyButton } from "@/components/ui/copy-button";
 
+import { componentMap } from "@/components/blocks";
+
 type MarkdownTableRowValue = {
   _key?: string;
   isHeader?: boolean;
@@ -14,8 +16,22 @@ type MarkdownTableRowValue = {
 const CodeBlock = dynamic(() => import("@/components/ui/code-block"), { ssr: true });
 import Markdown from "react-markdown";
 
+function sectionBlockTypes(pageTitle?: string | null) {
+  return Object.fromEntries(
+    Object.entries(componentMap)
+      .filter(([type]) => type !== "legacy-rich-content" && type !== "block-preset-ref")
+      .map(([type, Component]) => [
+        type,
+        ({ value }: { value: any }) => (
+          <Component {...value} key={value._key} pageTitle={pageTitle} />
+        ),
+      ]),
+  );
+}
+
 const createPortableTextComponents = (
   headingIdMap?: Record<string, string>,
+  pageTitle?: string | null,
 ): PortableTextProps["components"] => ({
   types: {
     image: ({ value }) => {
@@ -106,6 +122,7 @@ const createPortableTextComponents = (
         </section>
       );
     },
+    ...sectionBlockTypes(pageTitle),
   },
   block: {
     normal: ({ children }) => (
@@ -220,14 +237,16 @@ const createPortableTextComponents = (
 const PortableTextRenderer = ({
   value,
   headingIdMap,
+  pageTitle,
 }: {
   value: PortableTextProps["value"];
   headingIdMap?: Record<string, string>;
+  pageTitle?: string | null;
 }) => {
   return (
     <PortableText
       value={value}
-      components={createPortableTextComponents(headingIdMap)}
+      components={createPortableTextComponents(headingIdMap, pageTitle)}
     />
   );
 };

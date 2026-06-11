@@ -130,7 +130,7 @@ export default async function PostPage(props: {
             />
             <BlogTableOfContents items={tocItems} variant="mobile" />
             {post.body && (
-              <PortableTextRenderer value={post.body} headingIdMap={headingIdMap} />
+              <PortableTextRenderer value={post.body} headingIdMap={headingIdMap} pageTitle={post.title} />
             )}
 
             {/* Sanity Page Blocks */}

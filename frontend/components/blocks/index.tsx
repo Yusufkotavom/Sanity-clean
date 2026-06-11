@@ -37,7 +37,7 @@ const ProcessFaqBlock = dynamic(() => import("@/components/blocks/seo/process-fa
 
 type Block = NonNullable<NonNullable<PAGE_QUERY_RESULT>["blocks"]>[number];
 
-const componentMap: Record<string, React.ComponentType<any>> = {
+export const componentMap: Record<string, React.ComponentType<any>> = {
   "hero-1": Hero1,
   "hero-2": Hero2,
   "hero-vercel": HeroVercel,
