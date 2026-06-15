@@ -1,4 +1,10 @@
-import { createSanityWriteClient, loadSanityEnv } from "../lib/sanity-page-guards.mjs";
+import {
+  assertGeneratorDatasetTarget,
+  createSanityWriteClient,
+  loadSanityEnv,
+  resolveSanityDataset,
+  resolveSanityTokenSource,
+} from "../lib/sanity-page-guards.mjs";
 
 const WRITE_MODE = process.argv.includes("--write");
 
@@ -839,23 +845,22 @@ async function deleteIfExists(client, id) {
 
 async function main() {
   const env = await loadSanityEnv();
-  const dataset = `${env.NEXT_PUBLIC_SANITY_DATASET || ""}`.trim().toLowerCase();
-  const tokenSource = env.SANITY_DEV ? "SANITY_DEV" : env.SANITY_AUTH_TOKEN ? "SANITY_AUTH_TOKEN" : null;
-
-  if (dataset !== "development") {
-    throw new Error(`Generator starter seeding is development-only. Received dataset: ${dataset || "<empty>"}.`);
-  }
+  const dataset = resolveSanityDataset(env);
+  const { source: tokenSource } = resolveSanityTokenSource(env);
+  const allowProductionWrite = process.argv.includes("--allow-production-write");
+  assertGeneratorDatasetTarget(dataset, { writeMode: WRITE_MODE, allowProductionWrite });
 
   if (!tokenSource) {
     throw new Error("Missing Sanity write token. Expected SANITY_DEV or SANITY_AUTH_TOKEN.");
   }
 
-  const docs = buildDocs();
+  const devOnly = dataset === "development";
+  const docs = buildDocs().map((doc) => ({ ...doc, devOnly }));
   const desiredIds = new Set(docs.map((doc) => doc._id));
   const cleanupIds = LEGACY_STARTER_IDS.filter((id) => !desiredIds.has(id));
 
   if (WRITE_MODE) {
-    const client = await createSanityWriteClient();
+    const client = await createSanityWriteClient({ dataset });
     for (const id of cleanupIds) {
       await deleteIfExists(client, id);
     }

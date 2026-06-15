@@ -59,12 +59,38 @@ export async function loadSanityEnv() {
   };
 }
 
-export async function createSanityWriteClient() {
+export function getCliOption(args, name) {
+  const prefix = `${name}=`;
+  const match = args.find((arg) => arg.startsWith(prefix));
+  return match ? match.slice(prefix.length) : null;
+}
+
+export function resolveSanityDataset(env, args = process.argv.slice(2)) {
+  return `${getCliOption(args, "--dataset") || env.NEXT_PUBLIC_SANITY_DATASET || env.SANITY_STUDIO_DATASET || ""}`.trim();
+}
+
+export function resolveSanityTokenSource(env) {
+  if (env.SANITY_DEV) return { token: env.SANITY_DEV, source: "SANITY_DEV" };
+  if (env.SANITY_AUTH_TOKEN) return { token: env.SANITY_AUTH_TOKEN, source: "SANITY_AUTH_TOKEN" };
+  return { token: undefined, source: null };
+}
+
+export function assertGeneratorDatasetTarget(dataset, { writeMode = false, allowProductionWrite = false } = {}) {
+  if (!dataset) {
+    throw new Error("Missing Sanity dataset. Set NEXT_PUBLIC_SANITY_DATASET, SANITY_STUDIO_DATASET, or pass --dataset=<name>.");
+  }
+
+  if (writeMode && dataset === "production" && !allowProductionWrite) {
+    throw new Error("Refusing to write generator data to production without --allow-production-write.");
+  }
+}
+
+export async function createSanityWriteClient(options = {}) {
   const env = await loadSanityEnv();
   const projectId = env.NEXT_PUBLIC_SANITY_PROJECT_ID;
-  const dataset = env.NEXT_PUBLIC_SANITY_DATASET;
+  const dataset = options.dataset || env.NEXT_PUBLIC_SANITY_DATASET;
   const apiVersion = env.NEXT_PUBLIC_SANITY_API_VERSION || "2026-03-23";
-  const token = env.SANITY_DEV || env.SANITY_AUTH_TOKEN;
+  const token = options.token || resolveSanityTokenSource(env).token;
 
   if (!projectId || !dataset || !token) {
     throw new Error(
@@ -81,10 +107,10 @@ export async function createSanityWriteClient() {
   });
 }
 
-export async function createSanityReadClient() {
+export async function createSanityReadClient(options = {}) {
   const env = await loadSanityEnv();
   const projectId = env.NEXT_PUBLIC_SANITY_PROJECT_ID;
-  const dataset = env.NEXT_PUBLIC_SANITY_DATASET;
+  const dataset = options.dataset || env.NEXT_PUBLIC_SANITY_DATASET;
   const apiVersion = env.NEXT_PUBLIC_SANITY_API_VERSION || "2026-03-23";
 
   if (!projectId || !dataset) {
@@ -105,12 +131,12 @@ export function resolveSanityReadToken(env) {
   return env.SANITY_DEV || env.SANITY_AUTH_TOKEN || undefined;
 }
 
-export async function createSanityReadClientWithDraftAccess() {
+export async function createSanityReadClientWithDraftAccess(options = {}) {
   const env = await loadSanityEnv();
   const projectId = env.NEXT_PUBLIC_SANITY_PROJECT_ID;
-  const dataset = env.NEXT_PUBLIC_SANITY_DATASET;
+  const dataset = options.dataset || env.NEXT_PUBLIC_SANITY_DATASET;
   const apiVersion = env.NEXT_PUBLIC_SANITY_API_VERSION || "2026-03-23";
-  const token = resolveSanityReadToken(env);
+  const token = options.token || resolveSanityReadToken(env);
 
   if (!projectId || !dataset) {
     throw new Error(

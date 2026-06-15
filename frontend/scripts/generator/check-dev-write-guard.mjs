@@ -1,22 +1,25 @@
-import { loadSanityEnv } from "../lib/sanity-page-guards.mjs";
+import {
+  assertGeneratorDatasetTarget,
+  loadSanityEnv,
+  resolveSanityDataset,
+  resolveSanityTokenSource,
+} from "../lib/sanity-page-guards.mjs";
 
 const env = await loadSanityEnv();
-const token = env.SANITY_DEV || env.SANITY_AUTH_TOKEN;
-const dataset = `${env.NEXT_PUBLIC_SANITY_DATASET || env.SANITY_STUDIO_DATASET || ""}`.trim().toLowerCase();
+const { token, source: tokenSource } = resolveSanityTokenSource(env);
+const dataset = resolveSanityDataset(env).toLowerCase();
+const allowProductionWrite = process.argv.includes("--allow-production-write");
 
 if (!token) {
-  console.error("Missing development write credential");
+  console.error("Missing Sanity write credential. Expected SANITY_DEV or SANITY_AUTH_TOKEN.");
   process.exit(1);
 }
 
-if (dataset === "production") {
-  console.error("Refusing to target production dataset");
+try {
+  assertGeneratorDatasetTarget(dataset, { writeMode: true, allowProductionWrite });
+} catch (error) {
+  console.error(error instanceof Error ? error.message : String(error));
   process.exit(1);
 }
 
-if (dataset !== "development") {
-  console.error(`Generator write guard expects development dataset, received ${dataset || "<empty>"}`);
-  process.exit(1);
-}
-
-console.log("Generator write guard passed");
+console.log(`Generator write guard passed for dataset=${dataset} tokenSource=${tokenSource}`);

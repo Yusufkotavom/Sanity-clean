@@ -1,7 +1,11 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { createSanityReadClient, loadSanityEnv } from "../lib/sanity-page-guards.mjs";
+import {
+  getCliOption,
+  loadSanityEnv,
+  resolveSanityTokenSource,
+} from "../lib/sanity-page-guards.mjs";
 
 const DIR = path.dirname(fileURLToPath(import.meta.url));
 const OUT = path.resolve(DIR, "../../tmp/generator-kotacom-sales.ndjson");
@@ -216,13 +220,20 @@ function template(cfg) {
 
 async function main() {
   const env = await loadSanityEnv();
+  const { token, source: tokenSource } = resolveSanityTokenSource(env);
+  const sourceDataset = getCliOption(process.argv.slice(2), "--source-dataset") || env.SANITY_SOURCE_DATASET || "legacy-backup";
+
+  if (!token) {
+    throw new Error("Missing Sanity read token. Expected SANITY_DEV or SANITY_AUTH_TOKEN.");
+  }
+
   const { createClient } = await import("next-sanity");
   const client = createClient({
-    projectId: "wdg7s43w",
-    dataset: "legacy-backup",
+    projectId: env.NEXT_PUBLIC_SANITY_PROJECT_ID || "wdg7s43w",
+    dataset: sourceDataset,
     apiVersion: "2024-03-23",
     useCdn: false,
-    token: "skS1phNr5FhQta6iBIN0Wx4obs9h7o1sZ8YqT9uPQfcAoKJV3Y94NL8hSd1X4W0z7HkRNTKXkq8ZTUMsg"
+    token,
   });
   const docs = await client.fetch(QUERY);
   const grouped = { printing: [], website: [], software: [] };
@@ -238,7 +249,7 @@ async function main() {
     out.push({ _id: ids(key).program, _type: "generatorProgram", title: `Sales Program - ${cfg.title}`, slug: { _type: "slug", current: `sales-${key}` }, template: { _type: "reference", _ref: ids(key).template }, dataset: { _type: "reference", _ref: ids(key).dataset }, generationMode: grouped[key].length > 20 ? "batch" : "preview", status: "ready", aiMode: "prepared" });
   }
   await fs.writeFile(OUT, out.map(JSON.stringify).join("\n") + "\n");
-  await fs.writeFile(SUMMARY, JSON.stringify({ projectId: env.NEXT_PUBLIC_SANITY_PROJECT_ID, dataset: env.NEXT_PUBLIC_SANITY_DATASET, counts: Object.fromEntries(Object.entries(grouped).map(([k, v]) => [k, v.length])), docs: out.length }, null, 2));
+  await fs.writeFile(SUMMARY, JSON.stringify({ projectId: env.NEXT_PUBLIC_SANITY_PROJECT_ID, dataset: env.NEXT_PUBLIC_SANITY_DATASET, sourceDataset, tokenSource, counts: Object.fromEntries(Object.entries(grouped).map(([k, v]) => [k, v.length])), docs: out.length }, null, 2));
   console.log(JSON.stringify({ ok: true, out: OUT, summary: SUMMARY, counts: Object.fromEntries(Object.entries(grouped).map(([k, v]) => [k, v.length])), docs: out.length }, null, 2));
 }
 

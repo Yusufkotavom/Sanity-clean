@@ -1,4 +1,11 @@
-import { createSanityReadClientWithDraftAccess, createSanityWriteClient, loadSanityEnv } from "../lib/sanity-page-guards.mjs";
+import {
+  assertGeneratorDatasetTarget,
+  createSanityReadClientWithDraftAccess,
+  createSanityWriteClient,
+  loadSanityEnv,
+  resolveSanityDataset,
+  resolveSanityTokenSource,
+} from "../lib/sanity-page-guards.mjs";
 
 const args = process.argv.slice(2);
 const WRITE_MODE = args.includes("--write");
@@ -113,18 +120,16 @@ function normalizeRows(records) {
 
 async function main() {
   const env = await loadSanityEnv();
-  const dataset = `${env.NEXT_PUBLIC_SANITY_DATASET || ""}`.trim().toLowerCase();
-  const tokenSource = env.SANITY_DEV ? "SANITY_DEV" : env.SANITY_AUTH_TOKEN ? "SANITY_AUTH_TOKEN" : null;
-
-  if (dataset !== "development") {
-    throw new Error(`Generator dataset sync is development-only. Received dataset: ${dataset || "<empty>"}.`);
-  }
+  const dataset = resolveSanityDataset(env);
+  const { source: tokenSource } = resolveSanityTokenSource(env);
+  const allowProductionWrite = args.includes("--allow-production-write");
+  assertGeneratorDatasetTarget(dataset, { writeMode: WRITE_MODE, allowProductionWrite });
 
   if (WRITE_MODE && !tokenSource) {
     throw new Error("Missing Sanity write token. Expected SANITY_DEV or SANITY_AUTH_TOKEN.");
   }
 
-  const readClient = await createSanityReadClientWithDraftAccess();
+  const readClient = await createSanityReadClientWithDraftAccess({ dataset });
   const docs = await readClient.fetch(DATASET_QUERY, targetDatasetId ? { id: targetDatasetId } : {});
 
   const inspected = [];
@@ -157,7 +162,7 @@ async function main() {
   }
 
   if (WRITE_MODE && updates.length > 0) {
-    const writeClient = await createSanityWriteClient();
+    const writeClient = await createSanityWriteClient({ dataset });
     for (const update of updates) {
       await writeClient.patch(update._id).set({
         keywordSets: update.keywordSets,

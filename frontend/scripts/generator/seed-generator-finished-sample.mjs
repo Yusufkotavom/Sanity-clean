@@ -1,6 +1,12 @@
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
-import { createSanityWriteClient, loadSanityEnv } from "../lib/sanity-page-guards.mjs";
+import {
+  assertGeneratorDatasetTarget,
+  createSanityWriteClient,
+  loadSanityEnv,
+  resolveSanityDataset,
+  resolveSanityTokenSource,
+} from "../lib/sanity-page-guards.mjs";
 
 if (!process.env.GENERATOR_SAMPLE_NODE_BOOTSTRAPPED) {
   const tsxLoaderPath = fileURLToPath(
@@ -30,10 +36,7 @@ if (!process.env.GENERATOR_SAMPLE_NODE_BOOTSTRAPPED) {
 
 const { buildGeneratedPageDraft } = await import("../../../studio/lib/generator/render.ts");
 const { findDuplicatePage } = await import("../../../studio/lib/generator/dedupe.ts");
-const {
-  assertGeneratorWriteTarget,
-  buildGeneratedDraftId,
-} = await import("../../../studio/lib/generator/write.ts");
+const { buildGeneratedDraftId } = await import("../../../studio/lib/generator/write.ts");
 
 const WRITE_MODE = process.argv.includes("--write");
 const GENERATE_PAGES = process.argv.includes("--generate-pages");
@@ -289,26 +292,25 @@ function buildTemplateInput() {
 
 async function main() {
   const env = await loadSanityEnv();
-  const dataset = `${env.NEXT_PUBLIC_SANITY_DATASET || ""}`.trim();
-  const tokenSource = env.SANITY_DEV ? "SANITY_DEV" : env.SANITY_AUTH_TOKEN ? "SANITY_AUTH_TOKEN" : null;
-
-  if (dataset !== "development") {
-    throw new Error(
-      `Generator sample setup is development-only. Expected NEXT_PUBLIC_SANITY_DATASET=development, received ${dataset || "<empty>"}.`,
-    );
-  }
+  const dataset = resolveSanityDataset(env);
+  const { source: tokenSource } = resolveSanityTokenSource(env);
+  const allowProductionWrite = process.argv.includes("--allow-production-write");
+  assertGeneratorDatasetTarget(dataset, { writeMode: WRITE_MODE, allowProductionWrite });
 
   if (!tokenSource) {
     throw new Error("Missing Sanity write token. Expected SANITY_DEV or SANITY_AUTH_TOKEN.");
   }
 
-  const docs = [SAMPLE_TEMPLATE, SAMPLE_DATASET, SAMPLE_PROGRAM];
+  const devOnly = dataset === "development";
+  const docs = [SAMPLE_TEMPLATE, SAMPLE_DATASET, SAMPLE_PROGRAM].map((doc) => ({
+    ...doc,
+    devOnly,
+  }));
   const generatedDrafts = [];
   const skippedDrafts = [];
 
   if (WRITE_MODE) {
-    const client = await createSanityWriteClient();
-    assertGeneratorWriteTarget(dataset);
+    const client = await createSanityWriteClient({ dataset });
 
     for (const doc of docs) {
       await client.createOrReplace(doc);

@@ -1,8 +1,10 @@
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import {
+  assertGeneratorDatasetTarget,
   createSanityReadClientWithDraftAccess,
   loadSanityEnv,
+  resolveSanityDataset,
   resolveSanityReadToken,
 } from "../lib/sanity-page-guards.mjs";
 
@@ -71,14 +73,6 @@ const EXISTING_PAGES_QUERY = `*[_type == "page" && !(_id in path("versions.**"))
   slug,
   generator{programId, datasetId, rowKey, keywordKey}
 }`;
-
-function requireDevelopmentDataset(env) {
-  const dataset = `${env.NEXT_PUBLIC_SANITY_DATASET || ""}`.trim();
-  if (dataset !== "development") {
-    throw new Error(`Generator smoke script is dev-only. Expected NEXT_PUBLIC_SANITY_DATASET=development, received ${dataset || "<empty>"}.`);
-  }
-  return dataset;
-}
 
 function assertPresent(value, message) {
   if (!value) {
@@ -214,9 +208,10 @@ async function buildLiveContext(client) {
 }
 
 const env = await loadSanityEnv();
-const datasetName = requireDevelopmentDataset(env);
+const datasetName = resolveSanityDataset(env);
+assertGeneratorDatasetTarget(datasetName);
 const readToken = resolveSanityReadToken(env);
-const client = await createSanityReadClientWithDraftAccess();
+const client = await createSanityReadClientWithDraftAccess({ dataset: datasetName });
 const context = await buildLiveContext(client);
 
 const keywordSet = assertPresent(context.dataset.keywordSets?.[0], "Generator dataset has no keyword sets for dry-run preview.");
