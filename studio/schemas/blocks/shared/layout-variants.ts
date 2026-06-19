@@ -6,6 +6,7 @@ export const STACK_ALIGN = [
 export const SECTION_WIDTH = [
   { title: "Default", value: "default" },
   { title: "Narrow", value: "narrow" },
+  { title: "Full Container", value: "container" },
 ];
 
 export const COLS_VARIANTS = [

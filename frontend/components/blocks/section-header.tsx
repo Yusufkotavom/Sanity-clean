@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { stegaClean } from "@/lib/clean";
 import { SectionIntro, SectionShell } from "@/components/ui/section-shell";
 
 import { PAGE_QUERY_RESULT } from "@/sanity.types";
@@ -19,7 +20,10 @@ export default function SectionHeader({
   description,
   pageTitle,
 }: SectionHeaderProps) {
-  const isNarrow = sectionWidth === "narrow";
+  const cleanSectionWidth = stegaClean(sectionWidth);
+  const cleanStackAlign = stegaClean(stackAlign);
+  
+  const isNarrow = cleanSectionWidth === "narrow";
   const resolvedTitle = title?.trim() || pageTitle?.trim() || undefined;
   const toneClassName =
     colorVariant === "primary"
@@ -30,7 +34,7 @@ export default function SectionHeader({
     <SectionShell>
       <div
         className={cn(
-          stackAlign === "center" ? "mx-auto text-center" : undefined,
+          cleanStackAlign === "center" ? "mx-auto text-center" : undefined,
           isNarrow ? "mx-auto max-w-[48rem]" : "max-w-3xl",
           toneClassName,
         )}
@@ -39,7 +43,7 @@ export default function SectionHeader({
           eyebrow={tagLine || undefined}
           title={resolvedTitle || ""}
           description={description || undefined}
-          align={stackAlign === "center" ? "center" : "left"}
+          align={cleanStackAlign === "center" ? "center" : "left"}
           className="mb-0"
         />
       </div>

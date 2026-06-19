@@ -1,6 +1,7 @@
 import { groq } from "next-sanity";
 import { linkQuery } from "../shared/link";
 import { bodyQuery } from "../shared/body";
+import { imageQuery } from "../shared/image";
 
 // @sanity-typegen-ignore
 export const cta1Query = groq`
@@ -9,6 +10,8 @@ export const cta1Query = groq`
     _key,
     padding,
     colorVariant,
+    backgroundWidth,
+    useCard,
     sectionWidth,
     stackAlign,
     tagLine,
@@ -25,6 +28,10 @@ export const cta1Query = groq`
     links[]{
       _key,
       ${linkQuery}
+    },
+    imagePosition,
+    image{
+      ${imageQuery}
     },
   }
 `;

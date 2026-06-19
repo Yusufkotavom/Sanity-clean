@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { stegaClean } from "@/lib/clean";
 import SectionContainer from "@/components/ui/section-container";
 import { PAGE_QUERY_RESULT } from "@/sanity.types";
 import GridCard from "./grid-card";
@@ -33,7 +34,11 @@ export default function GridRow({
   cardStyle,
   columns,
 }: GridRow) {
-  const resolvedGridColumnsClass = GRID_COLUMNS_CLASS[gridColumns || ""] || "lg:grid-cols-3";
+  const cleanGridColumns = stegaClean(gridColumns);
+  const cleanTextAlign = stegaClean(textAlign) as GridRow["textAlign"];
+  const cleanCardStyle = stegaClean(cardStyle) as GridRow["cardStyle"];
+
+  const resolvedGridColumnsClass = GRID_COLUMNS_CLASS[cleanGridColumns || ""] || "lg:grid-cols-3";
   return (
     <SectionContainer color={colorVariant} padding={padding}>
       {columns && columns?.length > 0 && (
@@ -50,8 +55,8 @@ export default function GridRow({
               <Component
                 {...(column as any)}
                 color={colorVariant}
-                textAlign={textAlign}
-                cardStyle={cardStyle}
+                textAlign={cleanTextAlign}
+                cardStyle={cleanCardStyle}
                 key={column._key}
               />
             );

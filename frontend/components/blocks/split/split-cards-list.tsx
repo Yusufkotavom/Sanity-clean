@@ -14,7 +14,7 @@ interface SplitCardsListProps extends SplitCardsList {
 
 export default function SplitCardsList({ color, list }: SplitCardsListProps) {
   return (
-    <div className="flex flex-col justify-center gap-12">
+    <div className="flex flex-col justify-center gap-4">
       {list &&
         list.length > 0 &&
         list.map((item) => (

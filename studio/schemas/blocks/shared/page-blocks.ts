@@ -45,6 +45,7 @@ const pageBlocks = defineField({
     { type: "related-links-block" },
     { type: "process-faq-block" },
     { type: "block-preset-ref" },
+    { type: "flexible-builder" },
   ],
   options: {
     insertMenu: {
@@ -68,6 +69,11 @@ const pageBlocks = defineField({
           name: "grid",
           title: "Grid",
           of: ["grid-row"],
+        },
+        {
+          name: "builder",
+          title: "Builder",
+          of: ["flexible-builder"],
         },
         {
           name: "split",

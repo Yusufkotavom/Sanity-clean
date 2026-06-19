@@ -29,6 +29,7 @@ import { metricsRailBlockQuery } from "../seo/metrics-rail-block";
 import { highlightsBlockQuery } from "../seo/highlights-block";
 import { reviewsBlockQuery } from "../seo/reviews-block";
 import { microBadgesBlockQuery } from "../seo/micro-badges-block";
+import { FLEXIBLE_BUILDER_QUERY } from "../flexible-builder";
 
 /**
  * Shared GROQ projection for blocks[].
@@ -69,6 +70,7 @@ export const blocksQuery = `
     ${highlightsBlockQuery},
     ${reviewsBlockQuery},
     ${microBadgesBlockQuery},
+    ${FLEXIBLE_BUILDER_QUERY},
     _type == "block-preset-ref" => {
       _type,
       _key,

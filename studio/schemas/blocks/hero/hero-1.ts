@@ -46,6 +46,20 @@ export default defineType({
   },
   fields: [
     defineField({
+      name: "useCard",
+      type: "boolean",
+      title: "Use Card Style",
+      description: "Display content inside a rounded card style",
+      initialValue: true,
+    }),
+    defineField({
+      name: "colorVariant",
+      type: "color-variant",
+      title: "Color Variant",
+      description: "Select a background color variant",
+      initialValue: "transparent",
+    }),
+    defineField({
       name: "tagLine",
       type: "string",
     }),

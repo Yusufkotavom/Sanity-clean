@@ -112,7 +112,7 @@ export default function FormNewsletter({
               )}
             />
             <Button
-              className="h-9"
+              className="h-9 rounded-full px-6"
               size="sm"
               type="submit"
               disabled={isSubmitting}

@@ -6,6 +6,8 @@ export const heroVercelQuery = groq`
   _type == "hero-vercel" => {
     _type,
     _key,
+    useCard,
+    colorVariant,
     tagLine,
     title,
     description,
@@ -25,6 +27,9 @@ export const heroVercelQuery = groq`
       },
       title,
       description,
+      link{
+        ${linkQuery}
+      },
     },
     image{
       asset->{_id, url, metadata{lqip, dimensions{width, height}}},

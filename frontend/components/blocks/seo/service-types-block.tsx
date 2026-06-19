@@ -77,8 +77,9 @@ export default function ServiceTypesBlock({
                   <div className="mt-4">
                     <Button
                       asChild
-                      variant={stegaClean(service.link.buttonVariant) as any}
-                      className="w-full"
+                      variant="default"
+                      size="lg"
+                      className="w-full rounded-full px-6"
                     >
                       <Link
                         href={service.link.href || "#"}

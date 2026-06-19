@@ -9,6 +9,7 @@ const COLOR_VARIANT_CLASSNAMES: Record<NonNullable<ColorVariant>, string> = {
   muted: "bg-muted",
   primary: "bg-primary text-primary-foreground",
   secondary: "bg-secondary text-secondary-foreground",
+  transparent: "bg-transparent",
 };
 
 interface SectionContainerProps {

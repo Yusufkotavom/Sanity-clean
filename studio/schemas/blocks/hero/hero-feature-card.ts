@@ -26,6 +26,12 @@ export default defineType({
       rows: 3,
       validation: (Rule) => Rule.max(180),
     }),
+    defineField({
+      name: "link",
+      title: "Link",
+      type: "link",
+      description: "Optional link to navigate when the card is clicked.",
+    }),
   ],
   preview: {
     select: {

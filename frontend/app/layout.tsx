@@ -85,9 +85,11 @@ const THEME_PRESETS: Record<
   },
 };
 
+import { stegaClean } from "@/lib/clean";
+
 function toHexColor(value?: string | null): string | undefined {
   if (!value) return undefined;
-  const normalized = value.trim();
+  const normalized = stegaClean(value.trim());
   return /^#([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$/.test(normalized)
     ? normalized
     : undefined;
@@ -241,7 +243,7 @@ export default async function RootLayout({
   ]);
   const colors = themeSettings?.themeColors;
   const themeVars: Record<string, string> = {};
-  const preset = THEME_PRESETS[colors?.themePreset || "neutral"];
+  const preset = THEME_PRESETS[stegaClean(colors?.themePreset) || "neutral"];
 
   if (preset) {
     themeVars["--studio-light-primary"] = preset.lightPrimary;

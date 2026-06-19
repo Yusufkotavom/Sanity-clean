@@ -11,6 +11,7 @@ import {
 import Image from "next/image";
 import { urlFor } from "@/sanity/lib/image";
 import { cn } from "@/lib/utils";
+import { stegaClean } from "@/lib/clean";
 import { PAGE_QUERY_RESULT } from "@/sanity.types";
 
 const CAROUSEL_SIZES = {
@@ -51,7 +52,11 @@ export default function Carousel1({
   aspectRatio = "auto",
   images,
 }: Carousel1Props) {
-  const ratioClass = ASPECT_RATIO_CLASSES[aspectRatio || "auto"] || "";
+  const cleanSize = stegaClean(size) as CarouselSize;
+  const cleanIndicators = stegaClean(indicators);
+  const cleanAspectRatio = stegaClean(aspectRatio);
+
+  const ratioClass = ASPECT_RATIO_CLASSES[cleanAspectRatio || "auto"] || "";
 
   return (
     <SectionContainer color={colorVariant} padding={padding}>
@@ -61,14 +66,14 @@ export default function Carousel1({
             {images.map((image, index) => (
               <CarouselItem
                 key={`${index}-${image.alt}`}
-                className={CAROUSEL_SIZES[size as CarouselSize]}
+                className={CAROUSEL_SIZES[cleanSize]}
               >
                 {image && (
                   <div
                     className={cn(
                       "relative mx-auto overflow-hidden rounded-2xl",
                       ratioClass || "h-[30rem] md:h-[25rem] xl:h-[30rem]",
-                      size === "one" ? "max-w-[35rem]" : undefined,
+                      cleanSize === "one" ? "max-w-[35rem]" : undefined,
                     )}
                   >
                     <Image
@@ -96,10 +101,10 @@ export default function Carousel1({
             variant="secondary"
             className="-right-3 md:-right-8 xl:-right-12"
           />
-          {indicators !== "none" && (
+          {cleanIndicators !== "none" && (
             <div className="w-full flex justify-center">
-              {indicators === "dots" && <CarouselDots />}
-              {indicators === "count" && <CarouselCounter />}
+              {cleanIndicators === "dots" && <CarouselDots />}
+              {cleanIndicators === "count" && <CarouselCounter />}
             </div>
           )}
         </Carousel>

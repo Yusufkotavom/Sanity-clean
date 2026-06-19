@@ -44,12 +44,13 @@ export default function StatsHeroBlock({
 
             {links && links.length > 0 && (
               <div className="flex flex-wrap gap-3">
-                {links.map((link) => (
+                {links.map((link, index) => (
                   <Button
                     key={link._key}
                     asChild
-                    variant={stegaClean(link.buttonVariant) as any}
+                    variant={index === 0 ? "default" : "outline"}
                     size="lg"
+                    className="rounded-full px-6"
                   >
                     <Link
                       href={link.href || "#"}

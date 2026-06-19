@@ -23,18 +23,20 @@ export default async function WhatsAppCta({
   secondaryLink,
 }: WhatsAppCtaProps) {
   const isNarrow = sectionWidth === "narrow";
+  const isDefault = sectionWidth === "default";
 
   return (
     <SectionShell>
       <div
         className={cn(
-          isNarrow ? "mx-auto max-w-[48rem]" : "mx-auto max-w-4xl",
+          isNarrow ? "mx-auto max-w-[48rem]" : 
+          isDefault ? "mx-auto max-w-4xl" : "w-full",
         )}
       >
         <SectionPanel
           tone={colorVariant === "primary" ? "sky" : "neutral"}
           className={cn(
-            "flex flex-col rounded-[1.75rem] px-5 py-6 md:px-7 md:py-8",
+            "flex flex-col rounded-2xl px-5 py-6 md:px-7 md:py-8 border border-white/60 shadow-sm dark:border-white/10",
             stackAlign === "center" ? "items-center text-center" : undefined,
           )}
         >
@@ -63,7 +65,7 @@ export default async function WhatsAppCta({
           >
             <GlobalWhatsAppButton fallbackLabel="Chat via WhatsApp" />
             {secondaryLink?.title && secondaryLink.href ? (
-              <Button variant={secondaryLink.buttonVariant || "outline"} asChild>
+              <Button variant="outline" size="lg" className="rounded-full px-6" asChild>
                 <Link
                   href={secondaryLink.href}
                   target={secondaryLink.target ? "_blank" : undefined}

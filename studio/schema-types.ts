@@ -108,6 +108,7 @@ import problemSolutionBlock from "./schemas/blocks/seo/problem-solution-block";
 import valuePropsBlock from "./schemas/blocks/seo/value-props-block";
 import statsHeroBlock from "./schemas/blocks/seo/stats-hero-block";
 import blockPresetRef from "./schemas/blocks/shared/block-preset-ref";
+import flexibleBuilder from "./schemas/blocks/flexible-builder";
 
 export const schemaTypes = [
   // documents
@@ -219,4 +220,5 @@ export const schemaTypes = [
   processFaqBlock,
   blockPresetRef,
   blockPreset,
+  flexibleBuilder,
 ];

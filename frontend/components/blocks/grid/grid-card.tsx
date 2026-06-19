@@ -103,9 +103,9 @@ export default function GridCard({
         </div>
         {link?.title ? (
           <Button
-            className={cn("mt-6 self-start rounded-full", !isClassic && "px-5", isCenter && "self-center")}
+            className={cn("mt-6 self-start rounded-full px-6", isCenter && "self-center")}
             size="lg"
-            variant={link?.buttonVariant}
+            variant="default"
             asChild
           >
             <Link

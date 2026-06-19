@@ -85,7 +85,6 @@ export default defineType({
       title: "Button Variant",
       description:
         "Recommended: Primary links use Ghost/Link. Utility links can use Link/Outline/Default for CTA.",
-      hidden: ({ document }) => document?._type !== "navigation",
     }),
     defineField({
       name: "navLocation",

@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import TagLine from "@/components/ui/tag-line";
 import { createElement } from "react";
+import Image from "next/image";
+import { urlFor } from "@/sanity/lib/image";
 import { PAGE_QUERY_RESULT } from "@/sanity.types";
 
 type Block = NonNullable<NonNullable<PAGE_QUERY_RESULT>["blocks"]>[number];
@@ -25,7 +27,9 @@ export default function SplitContent({
   title,
   body,
   link,
-}: SplitContentProps) {
+  ...props
+}: SplitContentProps & { image?: any }) {
+  const image = props.image;
   return (
     <div
       className={cn(
@@ -41,6 +45,18 @@ export default function SplitContent({
           noGap ? "px-10" : undefined,
         )}
       >
+        {image && image.asset?._id && (
+          <div className="relative mb-8 w-full overflow-hidden rounded-[1.25rem] border border-white/40 bg-white/60 dark:border-white/10 dark:bg-white/5">
+            <Image
+              src={urlFor(image).url()}
+              alt={image.alt || title || ""}
+              width={image.asset.metadata?.dimensions?.width || 800}
+              height={image.asset.metadata?.dimensions?.height || 600}
+              className="h-auto w-full object-cover"
+              sizes="(min-width: 1024px) 50vw, 100vw"
+            />
+          </div>
+        )}
         {tagLine && <TagLine title={tagLine} element="h2" />}
         {title &&
           createElement(
@@ -54,8 +70,8 @@ export default function SplitContent({
         {link?.href && (
           <div className="flex flex-col">
             <Button
-              className="mt-2"
-              variant={link?.buttonVariant}
+              className="mt-2 rounded-full px-6"
+              variant="default"
               size="lg"
               asChild
             >

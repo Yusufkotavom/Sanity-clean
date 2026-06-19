@@ -73,9 +73,9 @@ export default function PricingCard({
           ) : null}
         </div>
         <Button
-          className={cn("mt-6 rounded-full", isCenter ? "self-center" : "self-start")}
+          className={cn("mt-6 rounded-full px-6", isCenter ? "self-center" : "self-start")}
           size="lg"
-          variant={link?.buttonVariant}
+          variant="default"
           asChild
         >
           <Link

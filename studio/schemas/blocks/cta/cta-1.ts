@@ -60,6 +60,26 @@ export default defineType({
       description: "Select a background color variant",
     }),
     defineField({
+      name: "backgroundWidth",
+      type: "string",
+      title: "Background Width",
+      options: {
+        list: [
+          { title: "Compact", value: "compact" },
+          { title: "Full Width", value: "full" },
+        ],
+        layout: "radio",
+      },
+      initialValue: "compact",
+    }),
+    defineField({
+      name: "useCard",
+      type: "boolean",
+      title: "Use Card Style",
+      description: "Display content inside a rounded card style",
+      initialValue: true,
+    }),
+    defineField({
       name: "sectionWidth",
       type: "string",
       title: "Section Width",
@@ -96,6 +116,26 @@ export default defineType({
     defineField({
       name: "body",
       type: "block-content",
+    }),
+    defineField({
+      name: "image",
+      type: "image",
+      title: "Image",
+      options: { hotspot: true },
+    }),
+    defineField({
+      name: "imagePosition",
+      type: "string",
+      title: "Image Position",
+      options: {
+        list: [
+          { title: "Top", value: "top" },
+          { title: "Left", value: "left" },
+        ],
+        layout: "radio",
+      },
+      initialValue: "top",
+      hidden: ({ parent }) => !parent?.image,
     }),
     defineField({
       name: "links",

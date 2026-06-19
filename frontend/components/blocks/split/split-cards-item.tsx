@@ -1,10 +1,7 @@
 "use client";
 import PortableTextRenderer from "@/components/portable-text-renderer";
 import SanityIcon from "@/components/icons/sanity-icon";
-import GlassCard from "@/components/ui/glass-card";
 import { cn } from "@/lib/utils";
-import { motion, useInView } from "motion/react";
-import { useRef } from "react";
 import { PAGE_QUERY_RESULT, ColorVariant } from "@/sanity.types";
 
 type Block = NonNullable<NonNullable<PAGE_QUERY_RESULT>["blocks"]>[number];
@@ -26,56 +23,34 @@ export default function SplitCardsItem({
   title,
   body,
 }: SplitCardsItemProps) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, {
-    amount: 1,
-  });
-
   return (
-    <motion.div
-      ref={ref}
-      className={cn(color === "primary" ? "text-background" : undefined)}
-    >
-      <GlassCard
-        className={cn(
-          "w-full rounded-3xl px-6 py-6 transition-colors duration-1000 ease-in-out lg:px-8 lg:py-8",
-          isInView ? "border-primary/35 bg-foreground/85" : undefined,
-        )}
-      >
+    <article className={cn(
+      "group h-full rounded-2xl border border-white/60 bg-white/75 p-6 shadow-[0_12px_28px_rgba(15,23,42,0.08)] backdrop-blur transition-all duration-200 hover:scale-[1.02] hover:bg-white/90 hover:shadow-lg dark:border-white/15 dark:bg-white/5 dark:hover:bg-white/10",
+      color === "primary" ? "text-background" : "text-foreground"
+    )}>
       {tagLine && (
-        <div
-          className={cn(
-            "inline-flex items-center gap-2 font-bold text-2xl lg:text-3xl transition-colors duration-1000 ease-in-out",
-            isInView ? "text-background" : "text-foreground",
-            color === "primary" ? "text-background" : undefined,
-          )}
-        >
-          <SanityIcon icon={uiIcon} className="size-5" />
-          {tagLine}
+        <div className="mb-4 inline-flex items-center gap-3">
+          <div className="inline-flex size-10 shrink-0 items-center justify-center rounded-lg border border-foreground/15 bg-background/80 transition-colors group-hover:border-foreground/30">
+            <SanityIcon icon={uiIcon} className="size-5" fallbackSeed={tagLine || title || "card"} />
+          </div>
+          <span className="font-semibold text-lg">{tagLine}</span>
+        </div>
+      )}
+      {!tagLine && uiIcon && (
+        <div className="mb-4 inline-flex size-10 items-center justify-center rounded-lg border border-foreground/15 bg-background/80 transition-colors group-hover:border-foreground/30">
+          <SanityIcon icon={uiIcon} className="size-5" fallbackSeed={title || "card"} />
         </div>
       )}
       {title && (
-        <div
-          className={cn(
-            "my-2 font-semibold text-xl transition-colors duration-1000 ease-in-out",
-            isInView ? "text-background" : "text-foreground",
-            color === "primary" ? "text-background" : undefined,
-          )}
-        >
+        <h3 className="mb-2 text-xl font-bold tracking-tight md:text-2xl">
           {title}
-        </div>
+        </h3>
       )}
       {body && (
-        <div
-          className={cn(
-            "transition-colors duration-1000 ease-in-out",
-            isInView ? "text-background" : "text-foreground",
-          )}
-        >
+        <div className="text-muted-foreground leading-7">
           <PortableTextRenderer value={body} />
         </div>
       )}
-      </GlassCard>
-    </motion.div>
+    </article>
   );
 }

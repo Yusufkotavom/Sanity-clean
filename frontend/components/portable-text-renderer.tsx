@@ -4,6 +4,7 @@ import Link from "next/link";
 import { YouTubeEmbed } from "@next/third-parties/google";
 import dynamic from "next/dynamic";
 import { CopyButton } from "@/components/ui/copy-button";
+import { Button } from "@/components/ui/button";
 
 import { componentMap } from "@/components/blocks";
 
@@ -120,6 +121,24 @@ const createPortableTextComponents = (
             <Markdown>{value?.contentRaw || ""}</Markdown>
           </div>
         </section>
+      );
+    },
+    "inline-button": ({ value }) => {
+      const linkTarget = value?.link?.isExternal ? "_blank" : undefined;
+      const href = value?.link?.isExternal 
+        ? value?.link?.href 
+        : value?.link?.internalLink?.route 
+          ? `/${value.link.internalLink.route.replace(/^\/+/, '')}`
+          : "#";
+      
+      return (
+        <div className="my-6">
+          <Button asChild size="lg" className="rounded-full px-6 transition-all duration-200 active:scale-[0.98]">
+            <Link href={href || "#"} target={linkTarget}>
+              {value?.text || "Button"}
+            </Link>
+          </Button>
+        </div>
       );
     },
     ...sectionBlockTypes(pageTitle),

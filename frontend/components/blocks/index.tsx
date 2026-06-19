@@ -34,6 +34,7 @@ const QuoteSpotlightBlock = dynamic(() => import("@/components/blocks/seo/quote-
 const MicroBadgesBlock = dynamic(() => import("@/components/blocks/seo/micro-badges-block"));
 const RelatedLinksBlock = dynamic(() => import("@/components/blocks/seo/related-links-block"));
 const ProcessFaqBlock = dynamic(() => import("@/components/blocks/seo/process-faq-block"));
+const FlexibleBuilder = dynamic(() => import("@/components/blocks/flexible-builder"));
 
 type Block = NonNullable<NonNullable<PAGE_QUERY_RESULT>["blocks"]>[number];
 
@@ -72,6 +73,7 @@ export const componentMap: Record<string, React.ComponentType<any>> = {
   "micro-badges-block": MicroBadgesBlock,
   "related-links-block": RelatedLinksBlock,
   "process-faq-block": ProcessFaqBlock,
+  "flexible-builder": FlexibleBuilder,
 };
 
 export const BLOCK_COMPONENT_TYPES = Object.keys(componentMap);

@@ -19,5 +19,9 @@ export const splitContentQuery = groq`
     link{
       ${linkQuery}
     },
+    image{
+      asset->{_id, url, metadata{lqip, dimensions{width, height}}},
+      alt
+    },
   }
 `;

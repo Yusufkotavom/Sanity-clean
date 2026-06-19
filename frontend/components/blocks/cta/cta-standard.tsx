@@ -32,7 +32,7 @@ export function CtaStandard({ block }: CtaStandardProps) {
           </p>
         ) : null}
         {block.button ? (
-          <Button asChild className="mt-8" size="lg">
+          <Button asChild className="mt-8 rounded-full px-6" size="lg">
             <Link href={block.button.url}>{block.button.text}</Link>
           </Button>
         ) : null}

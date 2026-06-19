@@ -76,7 +76,7 @@ export default function FeaturesPackageBlock({
 
         {cta?.title && cta?.href && (
           <div className="mt-8">
-            <Button asChild variant={(cta.buttonVariant as any) || "default"}>
+            <Button asChild variant="default" size="lg" className="rounded-full px-6">
               <Link href={cta.href}>{cta.title}</Link>
             </Button>
           </div>

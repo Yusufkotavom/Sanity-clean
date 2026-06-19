@@ -211,6 +211,30 @@ export default defineType({
     defineArrayMember({
       type: "legacy-rich-content",
     }),
+    defineArrayMember({
+      name: "inline-button",
+      type: "object",
+      title: "CTA Button",
+      fields: [
+        { name: "text", type: "string", title: "Button Text" },
+        {
+          name: "link",
+          type: "link",
+          title: "Link",
+        },
+      ],
+      preview: {
+        select: {
+          title: "text",
+        },
+        prepare({ title }) {
+          return {
+            title: title || "Button",
+            subtitle: "CTA Button",
+          };
+        },
+      },
+    }),
     defineArrayMember({ type: "hero-1" }),
     defineArrayMember({ type: "hero-2" }),
     defineArrayMember({ type: "hero-vercel" }),
