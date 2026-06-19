@@ -20,6 +20,7 @@ import type {
 import { PreviewCard, type PreviewDraftDetails, type PreviewStatus } from "./preview-card";
 import { QaSummary } from "./qa-summary";
 import { RunSummary, type RunSummaryState } from "./run-summary";
+import { resolveAiPrompts, resolveAiPromptsSync } from "../../lib/generator/ai";
 
 type GeneratorProgramValue = GeneratorProgramLite & {
   template?: ReferenceValue;
@@ -178,14 +179,15 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
   const previewDraft = useMemo<GeneratedPageDraft | null>(() => {
     if (!linkedData.template || !selectedRow) return null;
     try {
-      return buildGeneratedPageDraft({ program: programLite, template: linkedData.template, row: selectedRow });
+      const rawDraft = buildGeneratedPageDraft({ program: programLite, template: linkedData.template, row: selectedRow });
+      return resolveAiPromptsSync(rawDraft);
     } catch { return null; }
   }, [linkedData.template, programLite, selectedRow]);
 
   const previewQa = useMemo<GeneratorQaResult | null>(() => {
     if (!previewDraft || !selectedRow) return null;
-    return assessGeneratedDraftQuality({ draft: previewDraft, keywordSet: { primaryKeyword: selectedRow.primaryKeyword, secondaryKeywords: selectedRow.secondaryKeywords }, row: selectedRow, existingPages: linkedData.existingPages });
-  }, [linkedData.existingPages, previewDraft, selectedRow]);
+    return assessGeneratedDraftQuality({ draft: previewDraft, keywordSet: { primaryKeyword: selectedRow.primaryKeyword, secondaryKeywords: selectedRow.secondaryKeywords }, row: selectedRow, existingPages: linkedData.existingPages, writeMode });
+  }, [linkedData.existingPages, previewDraft, selectedRow, writeMode]);
 
   const previewStatus = useMemo<PreviewStatus>(() => {
     const blockingIssues: string[] = [];
@@ -225,7 +227,7 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
           skipped++;
           continue;
         }
-        const qa = assessGeneratedDraftQuality({ draft, keywordSet: { primaryKeyword: row.primaryKeyword, secondaryKeywords: row.secondaryKeywords }, row, existingPages });
+        const qa = assessGeneratedDraftQuality({ draft, keywordSet: { primaryKeyword: row.primaryKeyword, secondaryKeywords: row.secondaryKeywords }, row, existingPages, writeMode });
         if (qa.severity === "blocked") { failed++; continue; }
         const draftDocumentId = buildGeneratedDraftId(draft.slug.current);
         generatedDrafts.push({ documentId: draftDocumentId, pageId, draft, qa });
@@ -255,10 +257,11 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
       const errors: string[] = [];
       for (const c of dryRun.generatedDrafts) {
         try { 
+          const finalDraft = await resolveAiPrompts(c.draft, { mode: "generate" });
           if (writeMode === "overwrite") {
-            await client.createOrReplace({ _id: c.documentId, ...c.draft });
+            await client.createOrReplace({ _id: c.documentId, ...finalDraft });
           } else {
-            await client.createIfNotExists({ _id: c.documentId, ...c.draft }); 
+            await client.createIfNotExists({ _id: c.documentId, ...finalDraft }); 
           }
           written.push(c.pageId); 
         } catch (err: any) {

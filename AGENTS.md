@@ -58,3 +58,7 @@ Landing pages use a hybrid pattern: code-owned route shell + optional Sanity `pa
 - For SEO audit/technical tasks, review vendored skills under `skills/claude-seo/` first.
 - Preserve `seoSettings` global fallback when per-document SEO meta is empty.
 - For migration/redesign tasks, also update checklist status in `docs/astro-migration-megaplan.md`.
+
+## AI Generator Integration
+
+The AI shortcode feature (`[aigen:...]`) for the Template Generator is fully documented at `docs/ai-generator-shortcodes.md`. Read it before modifying generator template logic.

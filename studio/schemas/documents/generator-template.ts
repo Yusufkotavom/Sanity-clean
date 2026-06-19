@@ -125,14 +125,14 @@ export default defineType({
 
     defineField({
       name: "blockTokenReference",
-      title: "Block Token Quick Copy",
+      title: "Token & AI Quick Copy",
       type: "text",
       rows: 8,
       readOnly: true,
       initialValue:
-        "{{routeBase}}\n{{city}}\n{{service}}\n{{primaryKeyword}}\n{{title}}\n{{metaTitle}}\n{{metaDescription}}\n{{ctaLabel}}\n{{ctaHref}}",
+        "--- Data Tokens ---\n{{city}}\n{{service}}\n{{primaryKeyword}}\n\n--- AI Gen Prompts ---\n[aigen:Buatkan 1 kalimat hook singkat dan persuasif (max 10 kata) untuk {{service}} di {{city}}]\n[aigen:Tulis 1 paragraf (3 kalimat) tentang pentingnya {{primaryKeyword}}]\n[aigen:Berikan 1 kalimat call-to-action singkat untuk {{service}}]",
       description:
-        "Copy token dari sini lalu tempel ke field teks di Template Blocks. Token dataset lain juga tetap bisa dipakai dengan format {{namaKolom}}.",
+        "Copy token atau AI prompt dari sini. AI otomatis disetel untuk membuang basa-basi (to the point).",
     }),
     defineField({
       name: "blocks",

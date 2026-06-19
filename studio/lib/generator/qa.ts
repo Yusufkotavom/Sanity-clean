@@ -29,11 +29,13 @@ export const assessGeneratedDraftQuality = ({
   keywordSet,
   row,
   existingPages,
+  writeMode = "skip",
 }: {
   draft: GeneratedPageDraft;
   keywordSet: GeneratorKeywordSet;
   row: GeneratorRow;
   existingPages: ExistingPageLike[];
+  writeMode?: "overwrite" | "skip";
 }): GeneratorQaResult => {
   const issues: GeneratorQaIssue[] = [];
   const seoTitle = draft.meta?.title?.trim() || "";
@@ -51,7 +53,7 @@ export const assessGeneratedDraftQuality = ({
     keywordKey: draft.generator.keywordKey,
   });
 
-  if (duplicate) {
+  if (duplicate && writeMode !== "overwrite") {
     issues.push({
       severity: "blocked",
       code: `duplicate-${duplicate.reason}`,
