@@ -1,5 +1,34 @@
 # SEO Updates Log
 
+## 2026-06-19
+- Changed files:
+  - `docs/ai-generator-shortcodes.md`
+  - `frontend/.env.example`
+  - `frontend/app/(main)/[slug]/page.tsx`
+  - `frontend/app/(main)/products/[slug]/page.tsx`
+  - `frontend/app/api/ai-generate/route.ts`
+  - `frontend/app/api/ai-generate/lib/ai-provider.ts`
+  - `frontend/components/blocks/forms/newsletter.tsx`
+  - `frontend/components/blocks/seo/quote-spotlight-block.tsx`
+  - `frontend/components/blocks/seo/testimonials-block.tsx`
+  - `frontend/sanity.types.ts`
+  - `frontend/sanity/queries/page.ts`
+  - `studio/lib/generator/ai.ts`
+  - `studio/sanity.cli.ts`
+  - `studio/schema.json`
+  - `studio/schemas/documents/page.ts`
+  - `web-astro/src/lib/sanity/generated.types.ts`
+- Summary:
+  - Added AI shortcode generation support and documented provider/key configuration for generated page drafts.
+  - Synced generator metadata through Studio schema, GROQ projection, frontend rendering, and generated Sanity types.
+  - Fixed build blockers found during verification: deterministic product fallback ordering, newsletter hook dependencies/error narrowing, JSX quote escaping, Studio regex target compatibility, and AI provider abort-signal wiring.
+- Impact on SEO/integration:
+  - Integration impact: generated pages can carry AI-generation metadata and shortcode output through the Studio-to-frontend pipeline.
+  - SEO impact: generated page metadata remains queryable/renderable, and product related-content fallback is deterministic for stable prerender output.
+- Verification status:
+  - Build/test: `pnpm typecheck`, `pnpm --filter studio typecheck`, `pnpm --filter studio build`, `pnpm --filter frontend lint`, `pnpm --filter frontend test:templates`, and `pnpm --filter frontend build` passed.
+  - Smoke test: built frontend served `GET /products/quran-printing` with HTTP 200 and rejected invalid `POST /api/ai-generate` payload with HTTP 400.
+
 ## 2026-06-02
 - Changed files:
   - `studio/schemas/documents/theme-settings.ts`

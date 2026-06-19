@@ -155,13 +155,13 @@ export default async function ProductSlugPage(props: {
   if (relatedProducts.length < 4) {
     const allProducts = await fetchSanityProducts();
     const existingIds = new Set([product._id, ...relatedProducts.map((p: any) => p._id)]);
-    const fallbackPool = allProducts.filter((p: any) => p._id !== product._id && !existingIds.has(p._id));
-    
-    // Shuffle the fallback pool
-    for (let i = fallbackPool.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [fallbackPool[i], fallbackPool[j]] = [fallbackPool[j], fallbackPool[i]];
-    }
+    const fallbackPool = allProducts
+      .filter((p: any) => p._id !== product._id && !existingIds.has(p._id))
+      .sort((left: any, right: any) => {
+        const leftTitle = String(left?.title ?? "");
+        const rightTitle = String(right?.title ?? "");
+        return leftTitle.localeCompare(rightTitle);
+      });
 
     const needed = 4 - relatedProducts.length;
     relatedProducts = [...relatedProducts, ...fallbackPool.slice(0, needed)];

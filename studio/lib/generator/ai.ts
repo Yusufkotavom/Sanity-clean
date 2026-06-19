@@ -1,6 +1,6 @@
 export const extractAiPrompts = (obj: any): string[] => {
   const prompts = new Set<string>();
-  const regex = /\[aigen:(.*?)\]/gs;
+  const regex = /\[aigen:([\s\S]*?)\]/g;
 
   const traverse = (node: any) => {
     if (typeof node === "string") {
@@ -20,7 +20,7 @@ export const extractAiPrompts = (obj: any): string[] => {
 };
 
 export const replaceAiPrompts = (obj: any, replacements: Record<string, string>): any => {
-  const regex = /\[aigen:(.*?)\]/gs;
+  const regex = /\[aigen:([\s\S]*?)\]/g;
 
   const processNode = (node: any): any => {
     if (typeof node === "string") {

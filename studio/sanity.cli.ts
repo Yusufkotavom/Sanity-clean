@@ -12,9 +12,9 @@ const appId = process.env.SANITY_STUDIO_APP_ID;
 export default defineCliConfig({
   api: { projectId, dataset },
   typegen: {
-    path: "../web-astro/src/lib/sanity/*.{ts,tsx,js,jsx}",
+    path: ["../frontend/sanity/**/*.{ts,tsx,js,jsx}"],
     schema: "schema.json",
-    generates: "../web-astro/src/lib/sanity/generated.types.ts",
+    generates: "../frontend/sanity.types.ts",
     overloadClientMethods: true,
   },
   deployment: {

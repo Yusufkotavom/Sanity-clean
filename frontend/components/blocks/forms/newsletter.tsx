@@ -72,12 +72,13 @@ export default function FormNewsletter({
         } else {
           toast.error(result.error);
         }
-      } catch (error: any) {
-        toast.error(error.message);
-        throw new Error(error.message);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : "Newsletter submission failed";
+        toast.error(message);
+        throw error;
       }
     },
-    [form],
+    [form, successMessage],
   );
 
   async function onSubmit(values: z.infer<typeof formSchema>) {

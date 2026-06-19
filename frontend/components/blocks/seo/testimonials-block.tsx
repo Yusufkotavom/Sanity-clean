@@ -65,7 +65,7 @@ export default async function TestimonialsBlock({
 
               {/* Quote */}
               <blockquote className="text-sm leading-relaxed text-muted-foreground mb-4">
-                "{testimonial.quote}"
+                &ldquo;{testimonial.quote}&rdquo;
               </blockquote>
 
               {/* Results */}

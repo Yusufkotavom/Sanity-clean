@@ -35,24 +35,67 @@ API Route di `frontend/app/api/ai-generate/route.ts` dikonfigurasi dengan *Syste
 
 ## Konfigurasi Provider AI (.env)
 
-Edit `frontend/.env.local` untuk mengatur Provider. Skrip ini kompatibel dengan semua penyedia API berbasis format OpenAI.
+Edit `frontend/.env.local` untuk mengatur Provider. Sistem mendukung **multi-key** (round-robin + cooldown otomatis pas kena rate-limit) dan **multi-provider fallback chain**.
+
+### Primary Provider (Multi-Key)
+
+Pakai `OPENAI_API_KEYS` (jamak, comma-separated) untuk多条 key. Kalau cuma 1 key, `OPENAI_API_KEY` (tunggal) tetap jalan.
 
 ```env
-# Contoh Gemini (Default)
-OPENAI_API_KEY="AIzaSy..."
+# --- Gemini dengan 3 API Key (round-robin + auto cooldown 60s pas 429) ---
+OPENAI_API_KEYS="AIzaSyA...,AIzaSyB...,AIzaSyC..."
+OPENAI_BASE_URL="https://generativelanguage.googleapis.com/v1beta/openai/chat/completions"
+OPENAI_MODEL="gemini-2.5-flash"
+```
+
+### Fallback Provider Chain
+
+Tambahin `AI_FALLBACK_PROVIDERS` dengan daftar prefix provider (dipisah koma). Tiap prefix butuh `{PREFIX}_API_KEY`, `{PREFIX}_BASE_URL`, `{PREFIX}_MODEL`. Dicoba urut ketika semua primary key kehabisan.
+
+```env
+# --- Provider fallback chain (tried in order) ---
+AI_FALLBACK_PROVIDERS="groq,openrouter"
+
+GROQ_API_KEY="gsk_..."
+GROQ_BASE_URL="https://api.groq.com/openai/v1/chat/completions"
+GROQ_MODEL="llama-3.1-8b-instant"
+
+OPENROUTER_API_KEY="sk-or-..."
+OPENROUTER_BASE_URL="https://openrouter.ai/api/v1/chat/completions"
+OPENROUTER_MODEL="google/gemini-2.5-flash:free"
+```
+
+### Contoh Lengkap
+
+```env
+# ===== AI Generator Config =====
+
+# Primary: Gemini multi-key
+OPENAI_API_KEYS="AIzaSyA...,AIzaSyB...,AIzaSyC..."
 OPENAI_BASE_URL="https://generativelanguage.googleapis.com/v1beta/openai/chat/completions"
 OPENAI_MODEL="gemini-2.5-flash"
 
-# Contoh Groq
-# OPENAI_API_KEY="gsk_..."
-# OPENAI_BASE_URL="https://api.groq.com/openai/v1/chat/completions"
-# OPENAI_MODEL="llama-3.1-8b-instant"
+# Fallback: Groq → OpenRouter
+AI_FALLBACK_PROVIDERS="groq,openrouter"
 
-# Contoh OpenAI Asli
-# OPENAI_API_KEY="sk-..."
-# OPENAI_BASE_URL="https://api.openai.com/v1/chat/completions"
-# OPENAI_MODEL="gpt-4o-mini"
+GROQ_API_KEY="gsk_..."
+GROQ_BASE_URL="https://api.groq.com/openai/v1/chat/completions"
+GROQ_MODEL="llama-3.1-8b-instant"
+
+OPENROUTER_API_KEY="sk-or-..."
+OPENROUTER_BASE_URL="https://openrouter.ai/api/v1/chat/completions"
+OPENROUTER_MODEL="google/gemini-2.5-flash:free"
+
+# Opsional: ubah durasi cooldown setelah kena rate-limit (ms, default 60000)
+# AI_KEY_COOLDOWN_MS=30000
 ```
+
+### Catatan
+
+- Semua provider harus pakai format API **OpenAI-compatible** (`/v1/chat/completions`).
+- Fallback hanya punya 1 key per provider. Untuk scale besar, pakai multi-key di primary.
+- Kalau `OPENAI_API_KEYS` tidak diisi, fallback ke `OPENAI_API_KEY` (backward compatible).
+- Setiap key yang kena HTTP 429 otomatis di-cooldown selama `AI_KEY_COOLDOWN_MS` (default 60 detik) sebelum dipakai lagi.
 
 ## QA Check Override
 

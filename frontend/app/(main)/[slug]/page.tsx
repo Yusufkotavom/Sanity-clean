@@ -10,6 +10,9 @@ import { generatePageMetadata } from "@/sanity/lib/metadata";
 import RewritePageShell from "@/components/ui/rewrite/page-shell";
 import type { LegacyAstroPage } from "@/lib/legacy-pages/astro-static";
 import { resolveTemplateMeta } from "@/lib/templates/resolve-template";
+import PortableTextRenderer from "@/components/portable-text-renderer";
+import { extractTableOfContents } from "@/lib/table-of-contents";
+import BlogTableOfContents from "@/components/ui/blog-table-of-contents";
 
 export async function generateStaticParams() {
   const pages = await fetchSanityPagesStaticParams();
@@ -83,6 +86,39 @@ export default async function Page(props: {
   const page = await fetchSanityPageBySlug({ slug: params.slug });
 
   if (page) {
+    const hasBody = (page as any).body && (page as any).body.length > 0;
+
+    if (hasBody) {
+      const tocItems = extractTableOfContents((page as any).body);
+      const headingIdMap = Object.fromEntries(
+        tocItems.map((item) => [item.key, item.id]),
+      );
+
+      return (
+        <section>
+          <div className="container py-16 xl:py-20">
+            <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[minmax(0,1fr)_280px]">
+              <article className="max-w-3xl">
+                <h1 className="mb-8 text-4xl font-bold tracking-tight lg:text-5xl">
+                  {page.title}
+                </h1>
+
+                <BlogTableOfContents items={tocItems} variant="mobile" />
+                <PortableTextRenderer value={(page as any).body || []} headingIdMap={headingIdMap} pageTitle={page.title || ""} />
+
+                {page.blocks && page.blocks.length > 0 && (
+                  <div className="mt-10 border-t border-border/40 pt-10">
+                    <Blocks blocks={page.blocks} pageTitle={page.title} />
+                  </div>
+                )}
+              </article>
+              <BlogTableOfContents items={tocItems} variant="desktop" />
+            </div>
+          </div>
+        </section>
+      );
+    }
+
     return <Blocks blocks={page?.blocks ?? []} pageTitle={page.title} />;
   }
 

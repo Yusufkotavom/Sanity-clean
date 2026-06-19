@@ -3,6 +3,8 @@ import { metaQuery } from "./shared/meta";
 import { imageQuery } from "./shared/image";
 import { blocksQuery } from "./shared/blocks";
 
+import { bodyQuery } from "./shared/body";
+
 export const PAGE_QUERY = groq`
   *[_type == "page" && slug.current == $slug][0]{
     title,
@@ -19,6 +21,9 @@ export const PAGE_QUERY = groq`
     },
     thumbnail{
       ${imageQuery}
+    },
+    body[]{
+      ${bodyQuery}
     },
     ${blocksQuery},
     ${metaQuery},

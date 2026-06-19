@@ -18,7 +18,7 @@ export default function QuoteSpotlightBlock({ padding, colorVariant, eyebrow, qu
       <div className="grid gap-6 md:grid-cols-[1.2fr_0.8fr]">
         <div>
           {eyebrow && <p className="mb-3 text-xs font-medium uppercase tracking-wide text-muted-foreground">{eyebrow}</p>}
-          <blockquote className="text-2xl font-medium leading-relaxed md:text-3xl">"{quote}"</blockquote>
+          <blockquote className="text-2xl font-medium leading-relaxed md:text-3xl">&ldquo;{quote}&rdquo;</blockquote>
           <footer className="mt-4 text-sm text-muted-foreground">
             <span className="font-semibold text-foreground">{author}</span>
             {role && <span> · {role}</span>}
