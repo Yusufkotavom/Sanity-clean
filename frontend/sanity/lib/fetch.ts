@@ -13,6 +13,7 @@ import {
   TEMPLATE_PAGE_BY_PATTERN_QUERY,
   TEMPLATE_PAGE_ROUTES_QUERY,
 } from "@/sanity/queries/template-page";
+import { GENERATOR_TEMPLATE_BY_ID_QUERY } from "@/sanity/queries/generator-template";
 import {
   SEO_OPS_SETTINGS_PRIVATE_QUERY,
   SEO_OPS_SETTINGS_PUBLIC_QUERY,
@@ -211,6 +212,25 @@ export const fetchSanityPageBySlugBuildOnly = async ({
   });
 
   return data;
+};
+
+export const fetchGeneratorTemplateById = async ({
+  id,
+}: {
+  id: string;
+}): Promise<any | null> => {
+  const data = await client.fetch<any | null>(
+    GENERATOR_TEMPLATE_BY_ID_QUERY,
+    { id: id.replace('drafts.', '') },
+    {
+      perspective: "drafts",
+      stega: false,
+      useCdn: false,
+      token: process.env.SANITY_API_READ_TOKEN,
+    },
+  );
+
+  return data || null;
 };
 
 export const fetchLegacyPageOverrideByRoute = async ({

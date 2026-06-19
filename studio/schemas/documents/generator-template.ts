@@ -122,19 +122,7 @@ export default defineType({
           return true;
         }),
     }),
-    defineField({
-      name: "programType",
-      title: "Program Type",
-      type: "string",
-      options: {
-        list: [
-          { title: "Landing Pages", value: "landing-pages" },
-          { title: "Location Pages", value: "location-pages" },
-        ],
-        layout: "radio",
-      },
-      initialValue: "location-pages",
-    }),
+
     defineField({
       name: "blockTokenReference",
       title: "Block Token Quick Copy",
@@ -154,12 +142,7 @@ export default defineType({
       of: TEMPLATE_BLOCK_TYPES.map((blockType) => ({ type: blockType })),
       validation: (Rule) => Rule.required().min(1),
     }),
-    defineField({
-      name: "designFamily",
-      title: "Design Family",
-      type: "string",
-      description: "Optional label for grouping templates.",
-    }),
+
     defineField({
       name: "seoMeta",
       title: "SEO Meta Pattern",

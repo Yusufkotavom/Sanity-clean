@@ -19,7 +19,7 @@ const DATASET_QUERY = `*[_type == "generatorDataset"${targetDatasetId ? " && _id
   keywordSetCsv,
   rowCsv,
   keywordSets[]{_key,key,label,primaryKeyword,secondaryKeywords,angle},
-  rows[]{_key,key,label,service,city,industry,offer}
+  rows[]{_key,key,label,service,city,primaryKeyword,secondaryKeywords,industry,offer,localCondition,tokens[]{_key,name,values}}
 }`;
 
 function parseCsv(text) {
@@ -105,17 +105,44 @@ function normalizeKeywordSets(records) {
 }
 
 function normalizeRows(records) {
+  const STANDARD_HEADERS = [
+    "key", "label", "service", "city", "primaryKeyword",
+    "secondaryKeywords", "industry", "offer", "localCondition"
+  ];
+
   return records
     .filter((record) => record.key)
-    .map((record, index) => ({
-      _key: record.key || `row-${index + 1}`,
-      key: record.key || `row-${index + 1}`,
-      label: record.label || record.city || record.service || `Row ${index + 1}`,
-      service: record.service || undefined,
-      city: record.city || undefined,
-      industry: record.industry || undefined,
-      offer: record.offer || undefined,
-    }));
+    .map((record, index) => {
+      const tokens = [];
+
+      // Any key not in STANDARD_HEADERS is a custom token
+      for (const [key, value] of Object.entries(record)) {
+        if (!STANDARD_HEADERS.includes(key) && key.trim() !== "") {
+          const values = toSecondaryKeywords(value);
+          if (values.length > 0) {
+            tokens.push({
+              _key: key,
+              name: key,
+              values,
+            });
+          }
+        }
+      }
+
+      return {
+        _key: record.key || `row-${index + 1}`,
+        key: record.key || `row-${index + 1}`,
+        label: record.label || record.city || record.service || `Row ${index + 1}`,
+        service: record.service || undefined,
+        city: record.city || undefined,
+        primaryKeyword: record.primaryKeyword || undefined,
+        secondaryKeywords: toSecondaryKeywords(record.secondaryKeywords),
+        industry: record.industry || undefined,
+        offer: record.offer || undefined,
+        localCondition: record.localCondition || undefined,
+        tokens: tokens.length > 0 ? tokens : undefined,
+      };
+    });
 }
 
 async function main() {

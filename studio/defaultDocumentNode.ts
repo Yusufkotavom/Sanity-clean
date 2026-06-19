@@ -5,11 +5,10 @@ import { OgPreviewPane } from "./components/seo/og-preview-pane";
 
 const SANITY_STUDIO_PREVIEW_URL =
   process.env.SANITY_STUDIO_PREVIEW_URL || "http://localhost:3000";
-const isGeneratorStudioEnabled =
-  (process.env.SANITY_STUDIO_DATASET || "production") === "development";
+const isGeneratorStudioEnabled = true;
 
 // Specify document types that should have preview panes
-const previewSchemaTypes = ["page", "post", "project", "contact"];
+const previewSchemaTypes = ["page", "post", "project", "contact", "generatorTemplate"];
 
 export const defaultDocumentNode: DefaultDocumentNodeResolver = (
   S,
@@ -57,6 +56,9 @@ export const defaultDocumentNode: DefaultDocumentNodeResolver = (
                 path = slug ? `/projects/${slug}` : "/projects";
               } else if (doc._type === "contact") {
                 path = "/contact";
+              } else if (doc._type === "generatorTemplate") {
+                const id = doc._id.replace("drafts.", "");
+                path = `/preview-template?id=${id}`;
               }
 
               // Add iframe parameter to distinguish from presentation mode

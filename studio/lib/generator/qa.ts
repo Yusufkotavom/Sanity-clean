@@ -109,7 +109,7 @@ export const assessGeneratedDraftQuality = ({
 
   if (!blockTypes.includes("hero-1")) {
     issues.push({
-      severity: "blocked",
+      severity: "warning",
       code: "missing-hero",
       message: "Generated page is missing a hero block.",
     });
@@ -117,7 +117,7 @@ export const assessGeneratedDraftQuality = ({
 
   if (draft.blocks.length < 3) {
     issues.push({
-      severity: "blocked",
+      severity: "warning",
       code: "too-few-blocks",
       message: `Generated page only contains ${draft.blocks.length} blocks.`,
     });

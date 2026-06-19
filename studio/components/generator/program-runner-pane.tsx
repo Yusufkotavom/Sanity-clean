@@ -5,6 +5,7 @@ import { findDuplicatePage } from "../../lib/generator/dedupe";
 import { assessGeneratedDraftQuality } from "../../lib/generator/qa";
 import { buildGeneratedPageDraft } from "../../lib/generator/render";
 import { buildGeneratedDraftId, buildGeneratedPageId } from "../../lib/generator/write";
+import { parseCsvToRows } from "../../lib/generator/csv";
 import type {
   ExistingPageLike,
   GeneratedPageDraft,
@@ -23,7 +24,6 @@ import { RunSummary, type RunSummaryState } from "./run-summary";
 type GeneratorProgramValue = GeneratorProgramLite & {
   template?: ReferenceValue;
   dataset?: ReferenceValue;
-  programType?: string;
   generationMode?: string;
   status?: string;
   aiMode?: string;
@@ -34,8 +34,8 @@ type GeneratorDatasetDocument = GeneratorDatasetLite & {
   title?: string;
   slug?: SlugValue;
   rows?: GeneratorRow[];
-  dedupePolicy?: "skip-existing-slug" | "flag-conflict";
-  status?: string;
+  importMode?: string;
+  rowCsv?: string;
 };
 
 type ProgramRunnerPaneProps = {
@@ -73,7 +73,7 @@ const TEMPLATE_QUERY = `*[_type == "generatorTemplate" && _id == $id][0]{
 }`;
 
 const DATASET_QUERY = `*[_type == "generatorDataset" && _id == $id][0]{
-  _id, title, slug, dedupePolicy, status,
+  _id, title, slug, importMode, rowCsv,
   rows[]{_key, key, label, service, city, primaryKeyword, secondaryKeywords, industry, offer, localCondition, tokens}
 }`;
 
@@ -153,7 +153,15 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
     return () => { cancelled = true; };
   }, [client, program.dataset?._ref, program.template?._ref]);
 
-  const rows = linkedData.dataset?.rows ?? [];
+  const rows = useMemo(() => {
+    const d = linkedData.dataset;
+    if (!d) return [];
+    if (d.importMode === "csv-ready" && d.rowCsv) {
+      return parseCsvToRows(d.rowCsv);
+    }
+    return d.rows ?? [];
+  }, [linkedData.dataset]);
+
   const selectedRow = rows[selectedRowIndex] || rows[0] || null;
 
   const programLite = useMemo<GeneratorProgramLite>(() => ({
@@ -184,6 +192,8 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
     const notes: string[] = [];
     if (!program.template?._ref) blockingIssues.push("Select a generator template.");
     if (!program.dataset?._ref) blockingIssues.push("Select a generator dataset.");
+    if (program.status === "paused") blockingIssues.push("Program is paused.");
+    if (program.status === "draft" && program.generationMode === "batch") blockingIssues.push("Program must be 'Ready' to run a Batch generation.");
     if (linkedDataError) blockingIssues.push(`Load error: ${linkedDataError}`);
     if (linkedData.dataset && !rows.length) blockingIssues.push("Dataset has no rows.");
     notes.push(`${rows.length} rows → ${batchLimit === 0 ? "All" : batchLimit} pages will be processed.`);
@@ -198,7 +208,10 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
     let skipped = 0, conflicts = 0, failed = 0;
     const notes: string[] = [];
 
-    const targetRows = batchLimit === 0 ? rows : rows.slice(0, batchLimit);
+    const targetRows = 
+      program.generationMode === "preview" 
+        ? (selectedRow ? [selectedRow] : []) 
+        : batchLimit === 0 ? rows : rows.slice(0, batchLimit);
 
     for (const row of targetRows) {
       try {
@@ -209,8 +222,7 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
         });
         const pageId = buildGeneratedPageId(draft.slug.current);
         if (duplicate && writeMode !== "overwrite") {
-          if (linkedData.dataset.dedupePolicy === "skip-existing-slug" && duplicate.reason === "slug") skipped++;
-          else conflicts++;
+          skipped++;
           continue;
         }
         const qa = assessGeneratedDraftQuality({ draft, keywordSet: { primaryKeyword: row.primaryKeyword, secondaryKeywords: row.secondaryKeywords }, row, existingPages });
@@ -221,7 +233,7 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
       } catch { failed++; }
     }
 
-    notes.push(`Inspected ${targetRows.length} rows (1 row = 1 page). Dedupe: ${writeMode === "overwrite" ? "Overwrite mode" : formatLabel(linkedData.dataset.dedupePolicy)}.`);
+    notes.push(`Inspected ${targetRows.length} rows (1 row = 1 page). Dedupe: ${writeMode === "overwrite" ? "Overwrite mode" : "Skip Existing"}.`);
     return {
       generatedDrafts,
       summary: { generated: generatedDrafts.length, skipped, conflicts, failed, notes, mode: failed > 0 ? "error" : "complete", combinationCount: targetRows.length, sampleSlug: previewDraft?.slug.current },
@@ -240,6 +252,7 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
     try {
       const dryRun = buildDryRunResult();
       const written: string[] = [];
+      const errors: string[] = [];
       for (const c of dryRun.generatedDrafts) {
         try { 
           if (writeMode === "overwrite") {
@@ -248,9 +261,22 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
             await client.createIfNotExists({ _id: c.documentId, ...c.draft }); 
           }
           written.push(c.pageId); 
-        } catch {}
+        } catch (err: any) {
+          console.error("Mutation failed for", c.documentId, err);
+          errors.push(`Failed to write ${c.documentId}: ${err.message}`);
+        }
       }
-      setRunSummary({ ...dryRun.summary, generated: written.length, notes: [...dryRun.summary.notes, `Created/Updated ${written.length} draft pages.`], mode: "complete" });
+      setRunSummary({ 
+        ...dryRun.summary, 
+        generated: written.length, 
+        failed: errors.length,
+        notes: [
+          ...dryRun.summary.notes, 
+          `Created/Updated ${written.length} draft pages.`,
+          ...errors
+        ], 
+        mode: errors.length > 0 ? "error" : "complete" 
+      });
       if (written.length > 0) {
         setLinkedData((cur) => ({ ...cur, existingPages: [...cur.existingPages, ...dryRun.generatedDrafts.filter((c) => written.includes(c.pageId)).map((c) => ({ _id: c.documentId, title: c.draft.title, slug: c.draft.slug, generator: c.draft.generator }))] }));
       }

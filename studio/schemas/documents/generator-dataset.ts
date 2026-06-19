@@ -50,36 +50,7 @@ export default defineType({
       hidden: ({ document }) => document?.importMode !== "csv-ready",
       description:
         "Paste CSV with header: key,label,service,city,primaryKeyword,secondaryKeywords,industry,offer,localCondition. Use | inside secondaryKeywords for multiple terms.",
-    }),
-    defineField({
-      name: "dedupePolicy",
-      title: "Dedupe Policy",
-      type: "string",
-      options: {
-        list: [
-          { title: "Skip Existing Slug", value: "skip-existing-slug" },
-          { title: "Flag Conflict", value: "flag-conflict" },
-        ],
-        layout: "radio",
-      },
-      initialValue: "skip-existing-slug",
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: "status",
-      title: "Status",
-      type: "string",
-      options: {
-        list: [
-          { title: "Draft", value: "draft" },
-          { title: "Ready", value: "ready" },
-          { title: "Archived", value: "archived" },
-        ],
-        layout: "radio",
-      },
-      initialValue: "draft",
-      validation: (Rule) => Rule.required(),
-    }),
+    })
   ],
   preview: {
     select: {

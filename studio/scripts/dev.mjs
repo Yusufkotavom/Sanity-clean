@@ -51,7 +51,7 @@ async function main() {
 
   const child = spawn(sanityCmd, ['dev', '--host', HOST, '--port', String(port)], {
     stdio: 'inherit',
-    shell: false,
+    shell: process.platform === 'win32',
     env: {
       ...process.env,
       __VITE_ADDITIONAL_SERVER_ALLOWED_HOSTS: additionalAllowedHosts,
