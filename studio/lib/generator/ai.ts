@@ -61,28 +61,52 @@ export const resolveAiPrompts = async (
 
   const replacements: Record<string, string> = {};
 
-  try {
-    const url = options.apiUrl || "http://localhost:3000/api/ai-generate";
+  const MAX_RETRIES = 3;
+  let attempt = 0;
+  let success = false;
+
+  while (attempt < MAX_RETRIES && !success) {
+    try {
+      const url = options.apiUrl || "http://localhost:3000/api/ai-generate";
       const res = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompts }),
       });
+      
       if (!res.ok) {
-        throw new Error(`AI API Error: ${res.statusText}`);
+        if (res.status === 429 || res.status >= 500) {
+          throw new Error(`AI API Error: ${res.status} ${res.statusText}`);
+        }
+        throw new Error(`AI Client Error: ${res.status} ${res.statusText}`);
       }
+      
       const data = await res.json();
       if (data.results && Array.isArray(data.results)) {
         prompts.forEach((prompt, idx) => {
           replacements[prompt] = data.results[idx] || `[AI Empty]`;
         });
+        success = true;
+      } else {
+        throw new Error("Invalid AI API response format");
       }
-    } catch (err) {
-      console.error("resolveAiPrompts error:", err);
-      for (const prompt of prompts) {
-        replacements[prompt] = `[AI Failed]`;
+    } catch (err: any) {
+      attempt++;
+      console.warn(`resolveAiPrompts attempt ${attempt} failed:`, err.message);
+      
+      if (err.message.includes("Client Error") || attempt >= MAX_RETRIES) {
+        console.error("resolveAiPrompts fatal error:", err);
+        for (const prompt of prompts) {
+          replacements[prompt] = `[AI Failed]`;
+        }
+        break;
       }
+      
+      const delay = Math.pow(2, attempt) * 1000;
+      console.log(`Retrying in ${delay}ms...`);
+      await new Promise(resolve => setTimeout(resolve, delay));
     }
+  }
 
   return replaceAiPrompts(draft, replacements);
 };

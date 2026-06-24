@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import { Box, Button, Card, Code, Grid, Heading, Spinner, Stack, Text, Select } from "@sanity/ui";
 import { useClient } from "sanity";
 import { findDuplicatePage } from "../../lib/generator/dedupe";
@@ -122,6 +122,8 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
   });
   const [activeAction, setActiveAction] = useState<"dry-run" | "write" | null>(null);
   const [selectedRowIndex, setSelectedRowIndex] = useState(0);
+  const isCancelled = useRef(false);
+  const [progress, setProgress] = useState<{ current: number; total: number } | null>(null);
 
   useEffect(() => {
     const templateId = program.template?._ref;
@@ -251,11 +253,25 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
 
   const handleGenerateDrafts = async () => {
     setActiveAction("write");
+    isCancelled.current = false;
+    setProgress(null);
     try {
       const dryRun = buildDryRunResult();
+      const total = dryRun.generatedDrafts.length;
+      setProgress({ current: 0, total });
+      
       const written: string[] = [];
       const errors: string[] = [];
-      for (const c of dryRun.generatedDrafts) {
+      
+      for (let i = 0; i < total; i++) {
+        if (isCancelled.current) {
+          errors.push(`Process stopped by user at ${i}/${total}.`);
+          break;
+        }
+        
+        const c = dryRun.generatedDrafts[i];
+        setProgress({ current: i + 1, total });
+        
         try { 
           const finalDraft = await resolveAiPrompts(c.draft, { mode: "generate" });
           if (writeMode === "overwrite") {
@@ -284,7 +300,10 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
         setLinkedData((cur) => ({ ...cur, existingPages: [...cur.existingPages, ...dryRun.generatedDrafts.filter((c) => written.includes(c.pageId)).map((c) => ({ _id: c.documentId, title: c.draft.title, slug: c.draft.slug, generator: c.draft.generator }))] }));
       }
     } catch (e) { setRunSummary({ generated: 0, skipped: 0, conflicts: 0, failed: 1, notes: [e instanceof Error ? e.message : "Write failed."], mode: "error" }); }
-    finally { setActiveAction(null); }
+    finally { 
+      setActiveAction(null); 
+      setProgress(null);
+    }
   };
 
   const hasBlockingIssues = previewStatus.blockingIssues.length > 0;
@@ -383,9 +402,12 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
           <Stack space={3}>
             <Heading as="h3" size={1}>Run</Heading>
             <Text size={1}>Target: {batchLimit === 0 ? "All" : batchLimit} rows. Dry run first, then generate drafts.</Text>
-            <Grid columns={[1, 1, 2]} gap={3}>
+            <Grid columns={[1, 1, activeAction === "write" ? 3 : 2]} gap={3}>
               <Button disabled={hasBlockingIssues || activeAction === "write"} mode="ghost" onClick={handleDryRun} text={activeAction === "dry-run" ? "Running..." : `Dry Run (${batchLimit === 0 ? "All" : batchLimit} pages)`} />
-              <Button disabled={hasBlockingIssues || activeAction === "dry-run"} tone="primary" onClick={() => { void handleGenerateDrafts(); }} text={activeAction === "write" ? "Generating..." : `Generate Drafts`} />
+              <Button disabled={hasBlockingIssues || activeAction === "dry-run"} tone="primary" onClick={() => { void handleGenerateDrafts(); }} text={activeAction === "write" ? (progress ? `Generating ${progress.current}/${progress.total}...` : "Generating...") : `Generate Drafts`} />
+              {activeAction === "write" && (
+                <Button tone="critical" mode="ghost" onClick={() => { isCancelled.current = true; }} text="Stop / Pause" />
+              )}
             </Grid>
             <RunSummary summary={runSummary} />
           </Stack>
