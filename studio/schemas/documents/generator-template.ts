@@ -57,6 +57,8 @@ const TEMPLATE_BLOCK_TYPES = [
   "related-links-block",
   "process-faq-block",
   "block-preset-ref",
+  "hero-vercel",
+  "flexible-builder",
 ] as const;
 
 export default defineType({
