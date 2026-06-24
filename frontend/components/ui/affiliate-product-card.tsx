@@ -16,7 +16,7 @@ export default function AffiliateProductCard({
 }: {
   item: AffiliateItemData;
 }) {
-  const imageUrl = item.image?.asset?._id
+  const imageUrl = (item.image?.asset?._id || item.image?._url)
     ? urlFor(item.image).width(400).height(300).url()
     : null;
 

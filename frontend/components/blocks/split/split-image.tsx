@@ -10,7 +10,7 @@ type SplitImage = Extract<
 >;
 
 export default function SplitImage({ image }: SplitImage) {
-  return image && image.asset?._id ? (
+  return image && (image.asset?._id || !!(image as any)._url) ? (
     <div className="relative h-[25rem] sm:h-[30rem] md:h-[25rem] lg:h-full rounded-lg overflow-hidden">
       <Image
         src={urlFor(image).url()}

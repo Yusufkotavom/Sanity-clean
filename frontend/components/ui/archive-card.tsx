@@ -64,7 +64,7 @@ export function ArchiveCardMedia({
   quality?: number;
   priority?: boolean;
 }) {
-  if (!image?.asset?._id) {
+  if (!image?.asset?._id && !image?._url) {
     return null;
   }
 

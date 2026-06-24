@@ -45,7 +45,7 @@ export default function SplitContent({
           noGap ? "px-10" : undefined,
         )}
       >
-        {image && image.asset?._id && (
+        {image && (image.asset?._id || !!(image as any)._url) && (
           <div className="relative mb-8 w-full overflow-hidden rounded-[1.25rem] border border-white/40 bg-white/60 dark:border-white/10 dark:bg-white/5">
             <Image
               src={urlFor(image).url()}

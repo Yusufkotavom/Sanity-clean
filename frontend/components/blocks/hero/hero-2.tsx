@@ -32,7 +32,7 @@ export default function Hero2({
   colorVariant = "transparent",
 }: Hero2Props) {
   const resolvedTitle = title?.trim() || pageTitle?.trim() || undefined;
-  const imageUrl = image?.asset ? urlFor(image).width(1200).quality(80).auto("format").url() : null;
+  const imageUrl = image && (image.asset || !!(image as any)._url) ? urlFor(image).width(1200).quality(80).auto("format").url() : null;
 
   const innerContent = (
     <div className="flex flex-col items-center w-full">

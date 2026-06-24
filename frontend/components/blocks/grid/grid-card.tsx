@@ -49,7 +49,7 @@ export default function GridCard({
         )}
       >
         <div className={cn(isHorizontal && "flex items-start gap-4")}>
-          {image && image.asset?._id && !isHorizontal && (
+          {image && (image.asset?._id || !!(image as any)._url) && !isHorizontal && (
             <div className="relative mb-4 h-[15rem] overflow-hidden rounded-[1.15rem] border border-white/40 bg-white/60 sm:h-[20rem] md:h-[25rem] lg:h-[9.5rem] xl:h-[12rem] dark:border-white/10 dark:bg-white/5">
               <Image
                 src={urlFor(image).width(900).quality(75).url()}

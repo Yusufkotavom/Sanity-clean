@@ -38,7 +38,7 @@ export default function GridPost({ color, textAlign, post }: GridPostProps) {
         )}
       >
         <div className={cn("flex flex-col", isCenter && "items-center text-center")}>
-          {image && image.asset?._id && (
+          {image && (image.asset?._id || !!(image as any)._url) && (
             <div className="mb-4 relative h-[15rem] sm:h-[20rem] md:h-[25rem] lg:h-[9.5rem] xl:h-[12rem] rounded-2xl overflow-hidden">
               <Image
                 src={urlFor(image).width(900).quality(75).url()}

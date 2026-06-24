@@ -20,7 +20,7 @@ export default function PostHero({
   return (
     <>
       {title && <h1 className="mb-4 md:mb-6 text-3xl lg:text-5xl">{title}</h1>}
-      {image && image.asset?._id && (
+      {image && (image.asset?._id || !!(image as any)._url) && (
         <div className="my-4 md:my-6 rounded-2xl overflow-hidden">
           <Image
             src={urlFor(image).width(1200).url()}
@@ -38,7 +38,7 @@ export default function PostHero({
       <div className="flex items-center justify-between gap-2 text-sm md:text-base">
         <div className="flex flex-col md:flex-row md:items-center gap-2">
           <div className="flex items-center gap-2">
-            {author?.image && author.image.asset?._id && (
+            {author?.image && (author.image.asset?._id || !!(author.image as any)._url) && (
               <div className="relative w-6 h-6 md:w-10 md:h-10">
                 <Image
                   src={urlFor(author.image).url()}

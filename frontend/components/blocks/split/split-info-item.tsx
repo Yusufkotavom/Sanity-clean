@@ -48,7 +48,7 @@ export default function SplitCardsItem({
           )}
         >
           <div className="flex items-center gap-2">
-            {image && image.asset?._id && (
+            {image && (image.asset?._id || !!(image as any)._url) && (
               <div className="flex h-10 w-10 shrink-0 items-center justify-center">
                 <Image
                   src={urlFor(image).url()}
@@ -65,7 +65,7 @@ export default function SplitCardsItem({
                 />
               </div>
             )}
-            {!image?.asset?._id ? (
+            {!image?.asset?._id && !(image as any)?._url ? (
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-primary/25 bg-primary/10">
                 <SanityIcon icon={uiIcon} className="size-5" />
               </div>

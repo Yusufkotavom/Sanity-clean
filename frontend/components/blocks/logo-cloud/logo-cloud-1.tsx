@@ -44,7 +44,7 @@ export default function LogoCloud1({
             <Fragment key={arrayIndex}>
               {images?.map((image, index) => (
                 <div
-                  key={`${image.asset?._id}-${arrayIndex}-${index}`}
+                  key={`${(image as any).asset?._id || (image as any)._url}-${arrayIndex}-${index}`}
                   className="shrink-0 w-24 h-24 flex items-center justify-center"
                 >
                   <Image

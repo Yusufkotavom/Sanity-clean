@@ -83,16 +83,16 @@ export default function Cta1({
     </div>
   );
 
-  const imageNode = image?.asset ? (
+  const imageNode = (image?.asset || (image as any)?._url) ? (
     <div className="relative overflow-hidden rounded-2xl w-full h-auto aspect-video md:aspect-[4/3] lg:aspect-video flex-1 shadow-lg">
       <Image
-        src={image.asset.url || ""}
-        alt={(image as any).alt || "CTA Image"}
+        src={image?.asset?.url || (image as any)?._url || ""}
+        alt={(image as any)?.alt || "CTA Image"}
         fill
         className="object-cover"
         sizes="(max-width: 768px) 100vw, 50vw"
-        placeholder={image.asset.metadata?.lqip ? "blur" : "empty"}
-        blurDataURL={image.asset.metadata?.lqip || undefined}
+        placeholder={image?.asset?.metadata?.lqip ? "blur" : "empty"}
+        blurDataURL={image?.asset?.metadata?.lqip || undefined}
       />
     </div>
   ) : null;

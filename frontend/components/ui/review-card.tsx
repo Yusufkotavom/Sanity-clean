@@ -33,7 +33,7 @@ export default function ReviewCard({
   sourceUrl,
   verified,
 }: ReviewCardProps) {
-  const imageUrl = reviewerImage?.asset?._id
+  const imageUrl = (reviewerImage?.asset?._id || reviewerImage?._url)
     ? urlFor(reviewerImage).width(80).height(80).url()
     : null;
 

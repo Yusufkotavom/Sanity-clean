@@ -44,7 +44,7 @@ export default function HeroVercel({
   useCard = true,
   colorVariant = "transparent",
 }: HeroVercelProps) {
-  const imageUrl = image?.asset ? urlFor(image).width(1200).quality(80).auto("format").url() : null;
+  const imageUrl = image && (image.asset || !!(image as any)._url) ? urlFor(image).width(1200).quality(80).auto("format").url() : null;
   const isTransparent = colorVariant === "transparent";
   const tone = colorVariant === "primary" ? "sky" : (isTransparent ? undefined : "neutral");
 

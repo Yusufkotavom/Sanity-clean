@@ -19,7 +19,7 @@ export default function StatsHeroBlock({
   links,
 }: StatsHeroBlock) {
   const color = stegaClean(colorVariant);
-  const hasImageAsset = Boolean(image?.asset?._id);
+  const hasImageAsset = Boolean(image && (image.asset?._id || !!(image as any)._url));
 
   return (
     <SectionContainer color={color} padding={padding}>

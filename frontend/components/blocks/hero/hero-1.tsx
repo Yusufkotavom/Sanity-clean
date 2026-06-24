@@ -69,7 +69,7 @@ export default function Hero1({
         ) : null}
       </div>
       <div className="flex flex-col justify-center">
-        {image && image.asset?._id && (
+        {image && (image.asset?._id || !!(image as any)._url) && (
           <div className="overflow-hidden rounded-[1.5rem] border border-white/45 bg-white/70 shadow-[0_18px_48px_rgba(15,23,42,0.1)] dark:border-white/12 dark:bg-white/5">
             <Image
               className="h-full w-full object-cover aspect-video md:aspect-auto"
