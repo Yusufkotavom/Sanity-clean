@@ -1,5 +1,6 @@
 import dynamic from "next/dynamic";
 import { PAGE_QUERY_RESULT } from "@/sanity.types";
+import FadeIn from "@/components/ui/fade-in";
 
 import Hero1 from "@/components/blocks/hero/hero-1";
 import Hero2 from "@/components/blocks/hero/hero-2";
@@ -87,15 +88,24 @@ export default function Blocks({
 }) {
   return (
     <>
-      {blocks?.map((block) => {
+      {blocks?.map((block, index) => {
+        const isFirst = index === 0;
+
         // Handle block preset references — flatten nested blocks
         if ((block as any)._type === "block-preset-ref") {
           const presetBlocks = (block as any).presetBlocks as Block[] | null;
           if (!presetBlocks?.length) return null;
-          return presetBlocks.map((nested) => {
+          return presetBlocks.map((nested, nestedIndex) => {
+            const isNestedFirst = isFirst && nestedIndex === 0;
             const Component = componentMap[nested._type];
             if (!Component) return <div data-type={nested._type} key={nested._key} />;
-            return <Component {...(nested as any)} key={nested._key} pageTitle={pageTitle} />;
+            
+            const content = <Component {...(nested as any)} pageTitle={pageTitle} />;
+            return isNestedFirst ? (
+              <div key={nested._key}>{content}</div>
+            ) : (
+              <FadeIn key={nested._key}>{content}</FadeIn>
+            );
           });
         }
 
@@ -106,7 +116,13 @@ export default function Blocks({
           );
           return <div data-type={block._type} key={block._key} />;
         }
-        return <Component {...(block as any)} key={block._key} pageTitle={pageTitle} />;
+        
+        const content = <Component {...(block as any)} pageTitle={pageTitle} />;
+        return isFirst ? (
+          <div key={block._key}>{content}</div>
+        ) : (
+          <FadeIn key={block._key}>{content}</FadeIn>
+        );
       })}
     </>
   );
