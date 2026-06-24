@@ -51,23 +51,27 @@ export default function FeaturesPackageBlock({
               <div
                 key={f._key || i}
                 className={cn(
-                  style === "grid" && "rounded-xl border border-border/40 p-4",
-                  style === "list" && "flex items-start gap-3",
-                  style === "numbered" && "flex items-start gap-4",
+                  "transition-all duration-300",
+                  style === "grid" && "flex flex-col rounded-xl border border-border/40 bg-card p-6 shadow-sm hover:border-primary/20 hover:shadow-md",
+                  style === "list" && "flex items-start gap-4 rounded-xl border border-border/40 bg-card p-5 shadow-sm hover:border-primary/20 hover:shadow-md",
+                  style === "numbered" && "flex items-start gap-4 rounded-xl border border-border/40 bg-card p-5 shadow-sm hover:border-primary/20 hover:shadow-md",
                 )}
               >
                 {style === "numbered" && (
-                  <span className="flex size-7 shrink-0 items-center justify-center rounded-full border text-xs font-bold">{i + 1}</span>
+                  <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">{i + 1}</span>
                 )}
                 {style !== "numbered" && f.icon && (
-                  <span className="mb-2 inline-block text-xl">{f.icon}</span>
+                  <span className={cn(
+                    "flex shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary",
+                    style === "grid" ? "mb-4 size-10 text-lg" : "size-10 text-lg"
+                  )}>{f.icon}</span>
                 )}
-                <div>
-                  <h3 className={cn("font-semibold", style === "grid" ? "text-base" : "text-sm")}>
+                <div className="flex-1">
+                  <h3 className={cn("font-semibold text-foreground", style === "grid" ? "text-base" : "text-sm")}>
                     {f.title}
-                    {f.badge && <span className="ml-2 rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium">{f.badge}</span>}
+                    {f.badge && <span className="ml-2 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">{f.badge}</span>}
                   </h3>
-                  {f.description && <p className="mt-1 text-sm text-muted-foreground">{f.description}</p>}
+                  {f.description && <p className="mt-1 text-sm text-muted-foreground leading-relaxed">{f.description}</p>}
                 </div>
               </div>
             ))}

@@ -1,5 +1,22 @@
 # SEO Updates Log
 
+## 2026-06-24
+- Changed files:
+  - `apps/worker/src/markdown-to-portable-text.ts`
+  - `apps/worker/src/markdown-to-portable-text.test.ts`
+  - `frontend/components/blocks/carousel/carousel-2.tsx`
+- Summary:
+  - Fix React warning "Each child in a list should have a unique 'key' prop" in `carousel-2.tsx` by using `${item._id}-${index}` as key to ensure uniqueness under draft preview mode / duplicate references.
+  - Fix Next.js link prefetch runtime error "Cannot prefetch 'https://google.com|Siti' because it cannot be converted to a URL" by modifying the worker's markdown-to-portable-text parser to extract paragraph children as plain text before running regex shortcode checks. This prevents GFM autolinking from breaking block shortcode parsing.
+  - Prevent child blocks (like `split-content`, `split-card`, etc.) from being parsed standalone by adding an `ALLOWED_SHORTCODES` validation filter in the worker parser matching the frontend's component map.
+  - Added unit test coverage for shortcodes with embedded autolinks and child block validation.
+- Impact on SEO/integration:
+  - No direct SEO impact.
+  - Integration/Stability fix: Prevents runtime rendering crashes and Next.js prefetch failures on blog post routes.
+- Verification status:
+  - Build/test: `pnpm typecheck` passed successfully on the frontend.
+  - Unit tests: `pnpm --filter worker run test` passed successfully with 31 tests.
+
 ## 2026-06-19
 - Changed files:
   - `docs/ai-generator-shortcodes.md`

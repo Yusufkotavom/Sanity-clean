@@ -29,9 +29,9 @@ export default function Carousel2({
       {testimonial && testimonial.length > 0 && (
         <Carousel>
           <CarouselContent>
-            {testimonial.map((item) => (
+            {testimonial.map((item, index) => (
               <CarouselItem
-                key={item._id}
+                key={`${item._id}-${index}`}
                 className="pl-2 md:pl-4 md:basis-1/3"
               >
                 <Card className="h-full">

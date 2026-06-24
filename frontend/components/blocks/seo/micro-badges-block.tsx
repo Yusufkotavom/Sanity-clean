@@ -18,11 +18,13 @@ export default function MicroBadgesBlock({ padding, colorVariant, badges }: Prop
         {badges.map((badge, i) => {
           const Icon = ICONS[i % ICONS.length];
           return (
-            <div key={badge._key || i} className="flex items-start gap-3 rounded-xl border border-border/40 p-4">
-              <Icon className="mt-0.5 size-5 shrink-0 text-primary" />
+            <div key={badge._key || i} className="flex items-start gap-3 rounded-xl border border-border/40 bg-card p-4 shadow-sm transition-all duration-300 hover:border-primary/20 hover:shadow-md">
+              <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <Icon className="size-4" />
+              </span>
               <div>
-                <h3 className="text-sm font-semibold">{badge.label}</h3>
-                {badge.description && <p className="mt-0.5 text-xs text-muted-foreground">{badge.description}</p>}
+                <h3 className="text-sm font-semibold text-foreground">{badge.label}</h3>
+                {badge.description && <p className="mt-1 text-xs text-muted-foreground leading-relaxed">{badge.description}</p>}
               </div>
             </div>
           );
