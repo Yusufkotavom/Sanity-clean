@@ -405,3 +405,17 @@ Replaced the legacy content system (raw textarea + 7-dependency unified pipeline
 - Verification status:
   - Manual check: `studio/sanity.config.ts` `defineConfig.title` updated and reviewed.
   - Build/test: `pnpm --filter studio run build` passed.
+
+## 2026-06-24
+- Changed files:
+  - "studio/schemas/blocks/shared/meta.ts"
+  - "frontend/sanity/queries/shared/meta.ts"
+  - "frontend/sanity/lib/metadata.ts"
+- Summary:
+  - Added "keywords" and "openGraph" fields to the shared "meta" schema to resolve "Unknown fields" warnings in Sanity Studio.
+  - Updated frontend GROQ queries and metadata builder logic to consume "keywords" and "openGraph" fields from Sanity.
+- Impact on SEO/integration:
+  - Direct SEO impact: custom SEO keywords and OpenGraph metadata sent from worker/automation scripts are now properly preserved, synced, and rendered on the frontend.
+- Verification status:
+  - Build/test: "pnpm typecheck" passed.
+

@@ -21,8 +21,13 @@ type MetaCompatiblePage = {
     canonicalUrl?: string | null;
     focusKeyword?: string | null;
     secondaryKeywords?: string[] | null;
+    keywords?: string | null;
     noindex?: boolean | null;
     image?: any;
+    openGraph?: {
+      title?: string | null;
+      description?: string | null;
+    } | null;
   } | null;
 };
 
@@ -206,12 +211,20 @@ const buildMetadata = ({
   const robotsValue =
     !isProduction || noindex || seo?.defaultNoIndex ? "noindex, nofollow" : "index, follow";
 
+  const keywordsArray = page?.meta?.keywords
+    ? page.meta.keywords.split(',').map((k: string) => k.trim())
+    : [];
+  
+  const ogTitle = page?.meta?.openGraph?.title || resolvedTitle;
+  const ogDesc = page?.meta?.openGraph?.description || resolvedDescription;
+
   return {
     title: resolvedTitle,
     description: resolvedDescription,
+    keywords: keywordsArray.length > 0 ? keywordsArray : undefined,
     openGraph: {
-      title: resolvedTitle || undefined,
-      description: resolvedDescription || undefined,
+      title: ogTitle || undefined,
+      description: ogDesc || undefined,
       siteName: siteName || undefined,
       images: [image],
       locale: "id_ID",
@@ -220,8 +233,8 @@ const buildMetadata = ({
     },
     twitter: {
       card: "summary_large_image",
-      title: resolvedTitle || undefined,
-      description: resolvedDescription || undefined,
+      title: ogTitle || undefined,
+      description: ogDesc || undefined,
       images: [image.url],
       creator: seo?.twitterHandle || undefined,
     },

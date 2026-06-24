@@ -7,6 +7,11 @@ export const metaQuery = `
     canonicalUrl,
     focusKeyword,
     secondaryKeywords,
+    keywords,
+    openGraph{
+      title,
+      description
+    },
     noindex,
     image{
       ${imageQuery}

@@ -70,6 +70,30 @@ export default defineField({
       ],
     }),
     defineField({
+      name: "keywords",
+      type: "string",
+      title: "Keywords",
+      description: "Comma-separated SEO keywords.",
+    }),
+    defineField({
+      name: "openGraph",
+      type: "object",
+      title: "Open Graph Settings",
+      fields: [
+        defineField({
+          name: "title",
+          type: "string",
+          title: "OG Title",
+        }),
+        defineField({
+          name: "description",
+          type: "text",
+          title: "OG Description",
+          rows: 3,
+        }),
+      ],
+    }),
+    defineField({
       name: "ogGeneratedAt",
       type: "datetime",
       title: "OG Generated At",
