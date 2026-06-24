@@ -10,26 +10,7 @@ export default defineType({
     href: "https://example.com",
     target: false,
   },
-  validation: (Rule) =>
-    Rule.custom((value) => {
-      if (!value) return true;
 
-      const link = value as {
-        isExternal?: boolean;
-        href?: string;
-        internalLink?: { _ref?: string } | null;
-      };
-
-      if (link.isExternal) {
-        return link.href
-          ? true
-          : "External link requires URL (href).";
-      }
-
-      return link.internalLink?._ref
-        ? true
-        : "Internal link requires Internal Link reference.";
-    }),
   fields: [
     defineField({
       name: "isExternal",
@@ -65,11 +46,6 @@ export default defineType({
         Rule.uri({
           allowRelative: true,
           scheme: ["http", "https", "mailto", "tel"],
-        }).custom((value, context) => {
-          const isExternal = (context.parent as { isExternal?: boolean } | undefined)
-            ?.isExternal;
-          if (!isExternal) return true;
-          return value ? true : "URL is required when Is External is enabled.";
         }),
     }),
     defineField({
