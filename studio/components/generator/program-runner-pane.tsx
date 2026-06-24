@@ -6,6 +6,7 @@ import { assessGeneratedDraftQuality } from "../../lib/generator/qa";
 import { buildGeneratedPageDraft } from "../../lib/generator/render";
 import { buildGeneratedDraftId, buildGeneratedPageId } from "../../lib/generator/write";
 import { parseCsvToRows } from "../../lib/generator/csv";
+import { selectTemplateForRow } from "../../lib/generator/template-selection";
 import type {
   ExistingPageLike,
   GeneratedPageDraft,
@@ -24,6 +25,7 @@ import { resolveAiPrompts, resolveAiPromptsSync } from "../../lib/generator/ai";
 
 type GeneratorProgramValue = GeneratorProgramLite & {
   template?: ReferenceValue;
+  templatePool?: ReferenceValue[];
   dataset?: ReferenceValue;
   generationMode?: string;
   status?: string;
@@ -46,6 +48,7 @@ type ProgramRunnerPaneProps = {
 
 type LinkedGeneratorData = {
   template: GeneratorTemplateLite | null;
+  templates: GeneratorTemplateLite[];
   dataset: GeneratorDatasetDocument | null;
   existingPages: ExistingPageLike[];
 };
@@ -66,7 +69,7 @@ const API_VERSION = "2026-03-23";
 
 const sectionCardProps = { border: true, padding: 4, radius: 3, tone: "transparent" as const };
 
-const TEMPLATE_QUERY = `*[_type == "generatorTemplate" && _id == $id][0]{
+const TEMPLATES_QUERY = `*[_type == "generatorTemplate" && _id in $ids]{
   _id, title,
   routeBase, slugPattern, seoMeta, aggregateRatingDefaults,
   tokenDefinitions[]{_key, name, label, sourceField, fallbackValue, required},
@@ -108,7 +111,7 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
   const program = props.document?.displayed ?? {};
   const documentId = props.documentId || program._id || "unknown";
   const client = useClient({ apiVersion: API_VERSION });
-  const [linkedData, setLinkedData] = useState<LinkedGeneratorData>({ template: null, dataset: null, existingPages: [] });
+  const [linkedData, setLinkedData] = useState<LinkedGeneratorData>({ template: null, templates: [], dataset: null, existingPages: [] });
   const [isLoadingLinkedData, setIsLoadingLinkedData] = useState(false);
   const [linkedDataError, setLinkedDataError] = useState<string | null>(null);
   
@@ -126,10 +129,15 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
   const [progress, setProgress] = useState<{ current: number; total: number } | null>(null);
 
   useEffect(() => {
-    const templateId = program.template?._ref;
+    const legacyTemplateId = program.template?._ref;
+    const poolTemplateIds = (program.templatePool ?? [])
+      .map((reference) => reference?._ref)
+      .filter((id): id is string => typeof id === "string" && id.length > 0)
+      .slice(0, 3);
+    const templateIds = poolTemplateIds.length > 0 ? poolTemplateIds : legacyTemplateId ? [legacyTemplateId] : [];
     const datasetId = program.dataset?._ref;
-    if (!templateId || !datasetId) {
-      setLinkedData({ template: null, dataset: null, existingPages: [] });
+    if (templateIds.length === 0 || !datasetId) {
+      setLinkedData({ template: null, templates: [], dataset: null, existingPages: [] });
       return;
     }
     let cancelled = false;
@@ -137,16 +145,23 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
       setIsLoadingLinkedData(true);
       setLinkedDataError(null);
       try {
-        const [template, dataset, existingPages] = await Promise.all([
-          client.fetch<GeneratorTemplateLite | null>(TEMPLATE_QUERY, { id: templateId }),
+        const [templates, dataset, existingPages] = await Promise.all([
+          client.fetch<GeneratorTemplateLite[]>(TEMPLATES_QUERY, { ids: templateIds }),
           client.fetch<GeneratorDatasetDocument | null>(DATASET_QUERY, { id: datasetId }),
           client.fetch<ExistingPageLike[]>(EXISTING_PAGES_QUERY),
         ]);
-        if (!cancelled) setLinkedData({ template, dataset, existingPages: existingPages ?? [] });
+        if (!cancelled) {
+          const templatesById = new Map((templates ?? []).map((template) => [template._id, template]));
+          const orderedTemplates = templateIds.flatMap((id) => {
+            const template = templatesById.get(id);
+            return template ? [template] : [];
+          });
+          setLinkedData({ template: orderedTemplates[0] ?? null, templates: orderedTemplates, dataset, existingPages: existingPages ?? [] });
+        }
       } catch (error) {
         if (!cancelled) {
           setLinkedDataError(error instanceof Error ? error.message : "Fetch failed.");
-          setLinkedData({ template: null, dataset: null, existingPages: [] });
+          setLinkedData({ template: null, templates: [], dataset: null, existingPages: [] });
         }
       } finally {
         if (!cancelled) setIsLoadingLinkedData(false);
@@ -154,7 +169,7 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
     };
     void load();
     return () => { cancelled = true; };
-  }, [client, program.dataset?._ref, program.template?._ref]);
+  }, [client, program.dataset?._ref, program.template?._ref, program.templatePool]);
 
   const rows = useMemo(() => {
     const d = linkedData.dataset;
@@ -174,17 +189,28 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
     slug: program.slug,
     title: program.title,
     ref: program._id ? { _type: "reference", _ref: program._id } : undefined,
+    templatePool: program.templatePool,
     dataset: linkedData.dataset?._id ? { _id: linkedData.dataset._id, title: linkedData.dataset.title, slug: linkedData.dataset.slug } : undefined,
     defaultSeoPattern: program.defaultSeoPattern,
   }), [documentId, linkedData.dataset, program]);
 
+  const activeTemplates = linkedData.templates.length > 0
+    ? linkedData.templates
+    : linkedData.template
+      ? [linkedData.template]
+      : [];
+
+  const selectedTemplate = selectedRow
+    ? selectTemplateForRow({ programId: programLite._id, row: selectedRow, templates: activeTemplates })
+    : null;
+
   const previewDraft = useMemo<GeneratedPageDraft | null>(() => {
-    if (!linkedData.template || !selectedRow) return null;
+    if (!selectedTemplate || !selectedRow) return null;
     try {
-      const rawDraft = buildGeneratedPageDraft({ program: programLite, template: linkedData.template, row: selectedRow });
+      const rawDraft = buildGeneratedPageDraft({ program: programLite, template: selectedTemplate, row: selectedRow });
       return resolveAiPromptsSync(rawDraft);
     } catch { return null; }
-  }, [linkedData.template, programLite, selectedRow]);
+  }, [programLite, selectedRow, selectedTemplate]);
 
   const previewQa = useMemo<GeneratorQaResult | null>(() => {
     if (!previewDraft || !selectedRow) return null;
@@ -194,19 +220,21 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
   const previewStatus = useMemo<PreviewStatus>(() => {
     const blockingIssues: string[] = [];
     const notes: string[] = [];
-    if (!program.template?._ref) blockingIssues.push("Select a generator template.");
+    if (activeTemplates.length === 0) blockingIssues.push("Select at least one generator template.");
     if (!program.dataset?._ref) blockingIssues.push("Select a generator dataset.");
     if (program.status === "paused") blockingIssues.push("Program is paused.");
     if (program.status === "draft" && program.generationMode === "batch") blockingIssues.push("Program must be 'Ready' to run a Batch generation.");
     if (linkedDataError) blockingIssues.push(`Load error: ${linkedDataError}`);
     if (linkedData.dataset && !rows.length) blockingIssues.push("Dataset has no rows.");
     notes.push(`${rows.length} rows → ${batchLimit === 0 ? "All" : batchLimit} pages will be processed.`);
-    if (linkedData.template?.routeBase) notes.push(`Route base: ${linkedData.template.routeBase}`);
+    notes.push(`Templates: ${activeTemplates.length}`);
+    if (selectedTemplate?.title) notes.push(`Preview template: ${selectedTemplate.title}`);
+    if (selectedTemplate?.routeBase) notes.push(`Route base: ${selectedTemplate.routeBase}`);
     return { blockingIssues, notes, mode: blockingIssues.length > 0 ? "blocked" : isLoadingLinkedData ? "loading" : "ready" };
-  }, [isLoadingLinkedData, linkedData, linkedDataError, program, rows.length, batchLimit]);
+  }, [activeTemplates.length, isLoadingLinkedData, linkedData.dataset, linkedDataError, program, rows.length, batchLimit, selectedTemplate]);
 
   const buildDryRunResult = (): DryRunResult => {
-    if (!linkedData.template || !linkedData.dataset) throw new Error("Template and dataset must resolve.");
+    if (!linkedData.dataset || activeTemplates.length === 0) throw new Error("Template and dataset must resolve.");
     const existingPages = [...linkedData.existingPages];
     const generatedDrafts: GeneratedDraftCandidate[] = [];
     let skipped = 0, conflicts = 0, failed = 0;
@@ -219,7 +247,9 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
 
     for (const row of targetRows) {
       try {
-        const draft = buildGeneratedPageDraft({ program: programLite, template: linkedData.template, row });
+        const template = selectTemplateForRow({ programId: programLite._id, row, templates: activeTemplates });
+        if (!template) { failed++; continue; }
+        const draft = buildGeneratedPageDraft({ program: programLite, template, row });
         const duplicate = findDuplicatePage(existingPages, {
           slug: draft.slug.current, programId: draft.generator.programId,
           rowKey: draft.generator.rowKey, keywordKey: draft.generator.keywordKey,
@@ -320,9 +350,10 @@ export function ProgramRunnerPane(props: ProgramRunnerPaneProps) {
           <Card {...sectionCardProps}>
             <Stack space={3}>
               <Heading as="h3" size={1}>Setup</Heading>
-              <Text size={1}>Template: {valueOrFallback(linkedData.template?.title)}</Text>
-              <Text size={1}>Route base: {valueOrFallback(linkedData.template?.routeBase || program.routeBase)}</Text>
-              <Text size={1}>Slug pattern: {valueOrFallback(linkedData.template?.slugPattern || program.slugPattern)}</Text>
+              <Text size={1}>Template: {activeTemplates.length > 1 ? `${activeTemplates.length} templates in pool` : valueOrFallback(activeTemplates[0]?.title)}</Text>
+              {selectedTemplate?.title && <Text size={1}>Preview Template: {selectedTemplate.title}</Text>}
+              <Text size={1}>Route base: {valueOrFallback(selectedTemplate?.routeBase || program.routeBase)}</Text>
+              <Text size={1}>Slug pattern: {valueOrFallback(selectedTemplate?.slugPattern || program.slugPattern)}</Text>
               <Text size={1}>Dataset: {valueOrFallback(linkedData.dataset?.title)}</Text>
               <Text size={1}>Total Rows in Dataset: {rows.length}</Text>
               {isLoadingLinkedData && <Text size={1}><Spinner muted /> Loading...</Text>}

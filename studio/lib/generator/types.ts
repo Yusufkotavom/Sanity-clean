@@ -55,6 +55,7 @@ export type GeneratorProgramLite = {
   slug?: SlugValue;
   title?: string;
   ref?: ReferenceValue;
+  templatePool?: ReferenceValue[];
   dataset?: GeneratorDatasetLite;
   defaultSeoPattern?: {
     title?: string;

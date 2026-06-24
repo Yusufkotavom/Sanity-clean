@@ -1665,6 +1665,11 @@ export type GeneratorProgram = {
   slug?: Slug;
   orderRank?: string;
   template?: GeneratorTemplateReference;
+  templatePool?: Array<
+    {
+      _key: string;
+    } & GeneratorTemplateReference
+  >;
   dataset?: GeneratorDatasetReference;
   generationMode?: "preview" | "batch";
   status?: "draft" | "ready" | "paused";

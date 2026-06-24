@@ -28,6 +28,21 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: "templatePool",
+      title: "Template Pool",
+      type: "array",
+      description:
+        "Optional: choose 1–3 templates for deterministic per-row variation. If empty, the single Template field is used.",
+      of: [
+        defineField({
+          name: "template",
+          type: "reference",
+          to: [{ type: "generatorTemplate" }],
+        }),
+      ],
+      validation: (Rule) => Rule.max(3),
+    }),
+    defineField({
       name: "dataset",
       title: "Dataset",
       type: "reference",
