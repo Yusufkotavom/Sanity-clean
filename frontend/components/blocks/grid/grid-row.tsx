@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import { stegaClean } from "@/lib/clean";
 import SectionContainer from "@/components/ui/section-container";
+import type { CardTheme } from "@/components/ui/card-shell";
 import { PAGE_QUERY_RESULT } from "@/sanity.types";
 import GridCard from "./grid-card";
 import PricingCard from "./pricing-card";
@@ -18,17 +19,21 @@ const GRID_COLUMNS_CLASS: Record<string, string> = {
 
 const componentMap: {
   [K in GridColumn["_type"]]: React.ComponentType<
-    Extract<GridColumn, { _type: K }>
+    Extract<GridColumn, { _type: K }> & {
+      cardTheme?: CardTheme | null;
+      textAlign?: "left" | "center" | null;
+      cardStyle?: "vertical" | "horizontal" | "classic" | null;
+    }
   >;
 } = {
-  "grid-card": GridCard,
-  "pricing-card": PricingCard,
-  "grid-post": GridPost,
+  "grid-card": GridCard as any,
+  "pricing-card": PricingCard as any,
+  "grid-post": GridPost as any,
 };
 
 export default function GridRow({
-  padding,
-  colorVariant,
+  sectionStyle,
+  cardTheme,
   gridColumns,
   textAlign,
   cardStyle,
@@ -40,7 +45,7 @@ export default function GridRow({
 
   const resolvedGridColumnsClass = GRID_COLUMNS_CLASS[cleanGridColumns || ""] || "lg:grid-cols-3";
   return (
-    <SectionContainer color={colorVariant} padding={padding}>
+    <SectionContainer sectionStyle={sectionStyle}>
       {columns && columns?.length > 0 && (
         <div className={cn("grid grid-cols-1 gap-6", resolvedGridColumnsClass)}>
           {columns.map((column) => {
@@ -54,7 +59,7 @@ export default function GridRow({
             return (
               <Component
                 {...(column as any)}
-                color={colorVariant}
+                cardTheme={cardTheme}
                 textAlign={cleanTextAlign}
                 cardStyle={cleanCardStyle}
                 key={column._key}

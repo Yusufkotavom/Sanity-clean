@@ -8,7 +8,22 @@ export default defineType({
   type: "object",
   icon: LayoutGrid,
   initialValue: {
-    colorVariant: "background",
+    sectionStyle: {
+      _type: "section-style",
+      bg: "inherit",
+      density: "inherit",
+      maxWidth: "inherit",
+      radius: "inherit",
+      align: "inherit",
+    },
+    cardTheme: {
+      _type: "card-theme",
+      surface: "inherit",
+      variant: "inherit",
+      radius: "inherit",
+      shadow: "inherit",
+      padding: "inherit",
+    },
     gridColumns: "grid-cols-3",
     columns: [
       {
@@ -57,14 +72,15 @@ export default defineType({
   },
   fields: [
     defineField({
-      name: "padding",
-      type: "section-padding",
+      name: "sectionStyle",
+      type: "section-style",
+      title: "Section Style",
     }),
     defineField({
-      name: "colorVariant",
-      type: "color-variant",
-      title: "Color Variant",
-      description: "Select a background color variant",
+      name: "cardTheme",
+      type: "card-theme",
+      title: "Card Theme",
+      description: "Visual theming applied to every card in this row.",
     }),
     defineField({
       name: "textAlign",

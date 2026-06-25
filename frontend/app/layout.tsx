@@ -9,6 +9,7 @@ import Ga4Tracker from "@/components/analytics/ga4-tracker";
 import { generateRootMetadata } from "@/sanity/lib/metadata";
 import { urlFor } from "@/sanity/lib/image";
 import { fetchSanitySettings, fetchSanityThemeSettings, fetchSanitySeoSettings } from "@/sanity/lib/fetch";
+import { ButtonThemeProvider } from "@/components/ui/button-theme-context";
 
 const THEME_PRESETS: Record<
   string,
@@ -284,13 +285,41 @@ export default async function RootLayout({
   const darkRing = toHexColor(colors?.darkRing);
   if (darkRing) themeVars["--studio-dark-ring"] = darkRing;
 
+  const tokens = themeSettings?.themeTokens;
+  const clean = (v?: string | null) => stegaClean(v) || undefined;
+  const themeTokenClasses: string[] = [];
+  const radiusScale = clean(tokens?.radiusScale) || "lg";
+  const cardVariant = clean(tokens?.defaultCardVariant) || "glass";
+  const accentTone = clean(tokens?.accentTone) || "neutral";
+  const shadowDepth = clean(tokens?.shadowDepth) || "md";
+  const cardPadding = clean(tokens?.cardPadding) || "normal";
+  const defaultDensity = clean(tokens?.defaultDensity) || "normal";
+  themeTokenClasses.push(
+    `card-radius-${radiusScale}`,
+    `card-variant-${cardVariant}`,
+    `card-surface-${accentTone}`,
+    `card-shadow-${shadowDepth}`,
+    `card-pad-${cardPadding}`,
+    `section-density-${defaultDensity}`,
+  );
+
+  const buttons = themeSettings?.themeButtons;
+  const btnRadius = clean(buttons?.radius) || "md";
+  const btnShadow = clean(buttons?.shadow) || "md";
+  const btnBorder = clean(buttons?.border) || "subtle";
+  themeTokenClasses.push(
+    `btn-radius-${btnRadius}`,
+    `btn-shadow-${btnShadow}`,
+    `btn-border-${btnBorder}`,
+  );
+
   const jsonLdScripts = buildJsonLdScripts(settings as SettingsData | null, seoSettings as SeoData | null);
 
   return (
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${GeistSans.variable} ${GeistMono.variable}`}
+      className={`${GeistSans.variable} ${GeistMono.variable} ${themeTokenClasses.join(" ")}`}
       style={themeVars}
     >
       <link rel="icon" href="/fav.png" />
@@ -303,7 +332,9 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <ButtonThemeProvider value={buttons ?? null} scope="global">
+            {children}
+          </ButtonThemeProvider>
         </ThemeProvider>
         <Toaster position="top-center" richColors />
         <Ga4Tracker />

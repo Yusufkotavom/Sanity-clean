@@ -41,6 +41,9 @@ import { buttonVariant } from "./schemas/blocks/shared/button-variant";
 import { navigationIcon } from "./schemas/blocks/shared/navigation-icon";
 import { uiIcon } from "./schemas/blocks/shared/ui-icon";
 import sectionPadding from "./schemas/blocks/shared/section-padding";
+import sectionStyle from "./schemas/blocks/shared/section-style";
+import cardTheme from "./schemas/blocks/shared/card-theme";
+import buttonTheme from "./schemas/blocks/shared/button-theme";
 import reviewItem from "./schemas/blocks/shared/review-item";
 import aggregateRatingObj from "./schemas/blocks/shared/aggregate-rating";
 import affiliateItem from "./schemas/blocks/shared/affiliate-item";
@@ -152,6 +155,9 @@ export const schemaTypes = [
   navigationIcon,
   uiIcon as any,
   sectionPadding,
+  sectionStyle,
+  cardTheme,
+  buttonTheme,
   reviewItem,
   aggregateRatingObj,
   affiliateItem,

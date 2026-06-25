@@ -11,5 +11,22 @@ export const THEME_SETTINGS_QUERY = groq`*[_type == "themeSettings"][0]{
     darkPrimaryForeground,
     darkAccent,
     darkRing
+  },
+  themeTokens{
+    radiusScale,
+    defaultCardVariant,
+    accentTone,
+    shadowDepth,
+    cardPadding,
+    defaultDensity
+  },
+  themeButtons{
+    defaultVariant,
+    size,
+    radius,
+    shadow,
+    border,
+    icon,
+    iconPosition
   }
 }`;

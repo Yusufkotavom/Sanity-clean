@@ -3,8 +3,8 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Check } from "lucide-react";
-import { PAGE_QUERY_RESULT, ColorVariant } from "@/sanity.types";
-import { SectionPanel } from "@/components/ui/section-shell";
+import { PAGE_QUERY_RESULT } from "@/sanity.types";
+import { CardShell, type CardTheme } from "@/components/ui/card-shell";
 import SanityIcon from "@/components/icons/sanity-icon";
 
 type Block = NonNullable<NonNullable<PAGE_QUERY_RESULT>["blocks"]>[number];
@@ -13,13 +13,13 @@ type GridColumn = NonNullable<NonNullable<GridRow["columns"]>>[number];
 type PricingCard = Extract<GridColumn, { _type: "pricing-card" }>;
 
 interface PricingCardProps extends Omit<PricingCard, "_type" | "_key"> {
-  color?: ColorVariant;
+  cardTheme?: CardTheme | null;
   textAlign?: "left" | "center" | null;
   cardStyle?: "vertical" | "horizontal" | "classic" | null;
 }
 
 export default function PricingCard({
-  color,
+  cardTheme,
   textAlign,
   cardStyle,
   uiIcon,
@@ -34,11 +34,11 @@ export default function PricingCard({
   const isHorizontal = cardStyle === "horizontal";
 
   return (
-    <SectionPanel
-      tone={color === "primary" ? "sky" : "neutral"}
-      className="flex w-full flex-col justify-between rounded-[1.5rem] p-6 md:p-8"
+    <CardShell
+      theme={cardTheme}
+      className="flex w-full flex-col justify-between md:p-8"
     >
-        <div className={cn(color === "primary" ? "text-background" : undefined, isCenter && "text-center")}>
+        <div className={cn(isCenter && "text-center")}>
           {title && (
             <div className={cn("flex items-center", isCenter ? "justify-center gap-3 flex-wrap" : "justify-between")}>
               <div className={cn("inline-flex items-center gap-2", isHorizontal && "items-start")}>
@@ -86,6 +86,6 @@ export default function PricingCard({
             {link?.title}
           </Link>
         </Button>
-    </SectionPanel>
+    </CardShell>
   );
 }

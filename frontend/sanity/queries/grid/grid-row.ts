@@ -8,8 +8,20 @@ export const gridRowQuery = groq`
   _type == "grid-row" => {
     _type,
     _key,
-    padding,
-    colorVariant,
+    sectionStyle{
+      bg,
+      density,
+      maxWidth,
+      radius,
+      align
+    },
+    cardTheme{
+      surface,
+      variant,
+      radius,
+      shadow,
+      padding
+    },
     textAlign,
     "cardStyle": coalesce(cardStyle, cardLayout, "vertical"),
     gridColumns,

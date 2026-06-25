@@ -389,6 +389,149 @@
   }
 }
 
+/* ------------------------------------------------------------------ */
+/* Theme system: global tokens + per-block overrides                  */
+/* All visuals are driven by CSS custom properties so a value set on  */
+/* <html> (global themeSettings) cascades down, and a per-element     */
+/* class overrides it locally. "inherit" = emit no class = use root.  */
+/* ------------------------------------------------------------------ */
+
+:root {
+  --radius-card: 1.25rem;
+  --card-pad: 1.5rem;
+  --card-shadow: 0 1px 0 rgba(0, 0, 0, 0.02), 0 8px 28px -16px rgba(0, 0, 0, 0.22);
+  --card-bg: rgba(255, 255, 255, 0.4);
+  --card-border: var(--line-soft);
+  --card-border-width: 1px;
+  --card-backdrop: blur(12px);
+  --card-glow-a: rgba(255, 255, 255, 0.16);
+  --card-glow-b: rgba(148, 163, 184, 0.1);
+  --section-py: 4rem;
+  --section-py-xl: 5rem;
+}
+
+/* Radius presets — same classes used on <html> (global) and element (per-card) */
+@utility card-radius-none { --radius-card: 0; }
+@utility card-radius-sm { --radius-card: 0.5rem; }
+@utility card-radius-md { --radius-card: 0.75rem; }
+@utility card-radius-lg { --radius-card: 1.25rem; }
+@utility card-radius-xl { --radius-card: 1.5rem; }
+
+/* Card padding presets */
+@utility card-pad-compact { --card-pad: 1rem; }
+@utility card-pad-normal { --card-pad: 1.5rem; }
+@utility card-pad-spacious { --card-pad: 2rem; }
+
+/* Card shadow presets */
+@utility card-shadow-none { --card-shadow: none; }
+@utility card-shadow-sm { --card-shadow: 0 2px 8px -4px rgba(0, 0, 0, 0.12); }
+@utility card-shadow-md { --card-shadow: 0 1px 0 rgba(0, 0, 0, 0.02), 0 8px 28px -16px rgba(0, 0, 0, 0.22); }
+@utility card-shadow-lg { --card-shadow: 0 1px 0 rgba(255, 255, 255, 0.4) inset, 0 24px 64px -28px rgba(15, 23, 42, 0.28); }
+
+/* Card surface tones (glow colors) */
+@utility card-surface-neutral { --card-glow-a: rgba(255, 255, 255, 0.34); --card-glow-b: rgba(148, 163, 184, 0.14); }
+@utility card-surface-amber { --card-glow-a: rgba(251, 191, 36, 0.2); --card-glow-b: rgba(249, 115, 22, 0.16); }
+@utility card-surface-sky { --card-glow-a: rgba(59, 130, 246, 0.18); --card-glow-b: rgba(34, 211, 238, 0.16); }
+@utility card-surface-emerald { --card-glow-a: rgba(16, 185, 129, 0.18); --card-glow-b: rgba(45, 212, 191, 0.16); }
+@utility card-surface-rose { --card-glow-a: rgba(244, 63, 94, 0.18); --card-glow-b: rgba(251, 146, 60, 0.16); }
+
+@layer utilities {
+  /* Card variants — set the variable combos. Used on <html> (global) and element (per-card). */
+  .card-variant-glass {
+    --card-bg: rgba(255, 255, 255, 0.4);
+    --card-backdrop: blur(12px);
+    --card-shadow: 0 1px 0 rgba(255, 255, 255, 0.4) inset, 0 20px 64px -36px rgba(15, 23, 42, 0.22);
+  }
+  .card-variant-solid {
+    --card-bg: var(--card);
+    --card-backdrop: none;
+    --card-shadow: 0 8px 28px -16px rgba(0, 0, 0, 0.18);
+  }
+  .card-variant-outline {
+    --card-bg: transparent;
+    --card-backdrop: none;
+    --card-shadow: none;
+  }
+  .card-variant-muted {
+    --card-bg: var(--muted);
+    --card-backdrop: none;
+    --card-shadow: none;
+  }
+  .card-variant-gradient {
+    --card-bg: linear-gradient(135deg, color-mix(in oklab, var(--primary) 14%, var(--card)), var(--card));
+    --card-backdrop: none;
+    --card-shadow: 0 12px 36px -20px rgba(15, 23, 42, 0.24);
+  }
+
+  .dark .card-variant-glass {
+    --card-bg: rgba(255, 255, 255, 0.05);
+    --card-shadow: 0 1px 0 rgba(255, 255, 255, 0.08) inset, 0 20px 64px -36px rgba(0, 0, 0, 0.45);
+  }
+
+  /* The shell consumes the tokens. Per-card classes above set the vars locally. */
+  .card-shell {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-card);
+    border: var(--card-border-width) solid var(--card-border);
+    background: var(--card-bg);
+    box-shadow: var(--card-shadow);
+    backdrop-filter: var(--card-backdrop);
+    -webkit-backdrop-filter: var(--card-backdrop);
+    padding: var(--card-pad);
+  }
+  .card-shell::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at top left, var(--card-glow-a), transparent 34%),
+      radial-gradient(circle at bottom right, var(--card-glow-b), transparent 38%);
+    opacity: 0.95;
+  }
+  .card-shell > * {
+    position: relative;
+  }
+  .card-shell:not(.card-variant-outline, .card-variant-muted):not(:has(> *))::before {
+    display: none;
+  }
+
+  /* Section density presets — used on <html> (global) and the section (per-block) */
+  .section-density-none { --section-py: 0; --section-py-xl: 0; }
+  .section-density-compact { --section-py: 2.5rem; --section-py-xl: 3rem; }
+  .section-density-normal { --section-py: 4rem; --section-py-xl: 5rem; }
+  .section-density-spacious { --section-py: 6rem; --section-py-xl: 7.5rem; }
+}
+
+/* ------------------------------------------------------------------ */
+/* Button theme tokens — global defaults set on <html>, overridable   */
+/* per-section via button-theme. The Button component reads these     */
+/* custom properties for radius, shadow and border.                  */
+/* ------------------------------------------------------------------ */
+
+:root {
+  --btn-radius: 0.5rem;
+  --btn-shadow: 0 1px 0 rgba(255, 255, 255, 0.08) inset, 0 1px 1px rgba(0, 0, 0, 0.08);
+  --btn-border-width: 1px;
+  --btn-border-color: var(--input);
+}
+
+@utility btn-radius-none { --btn-radius: 0; }
+@utility btn-radius-sm { --btn-radius: 0.375rem; }
+@utility btn-radius-md { --btn-radius: 0.5rem; }
+@utility btn-radius-lg { --btn-radius: 0.75rem; }
+@utility btn-radius-pill { --btn-radius: 9999px; }
+
+@utility btn-shadow-none { --btn-shadow: none; }
+@utility btn-shadow-sm { --btn-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); }
+@utility btn-shadow-md { --btn-shadow: 0 1px 0 rgba(255, 255, 255, 0.08) inset, 0 1px 1px rgba(0, 0, 0, 0.08); }
+@utility btn-shadow-lg { --btn-shadow: 0 1px 0 rgba(255, 255, 255, 0.12) inset, 0 8px 24px -8px rgba(0, 0, 0, 0.22); }
+
+@utility btn-border-none { --btn-border-width: 0; }
+@utility btn-border-subtle { --btn-border-width: 1px; --btn-border-color: var(--line-soft); }
+@utility btn-border-strong { --btn-border-width: 1px; --btn-border-color: var(--line-strong); }
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

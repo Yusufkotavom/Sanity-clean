@@ -4,7 +4,8 @@ import Image from "next/image";
 import { urlFor } from "@/sanity/lib/image";
 import { ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { PAGE_QUERY_RESULT, ColorVariant } from "@/sanity.types";
+import { PAGE_QUERY_RESULT } from "@/sanity.types";
+import { CardShell, type CardTheme } from "@/components/ui/card-shell";
 
 type Block = NonNullable<NonNullable<PAGE_QUERY_RESULT>["blocks"]>[number];
 type GridRow = Extract<Block, { _type: "grid-row" }>;
@@ -12,12 +13,12 @@ type GridColumn = NonNullable<NonNullable<GridRow["columns"]>>[number];
 type GridPost = Extract<GridColumn, { _type: "grid-post" }>;
 
 interface GridPostProps extends Omit<NonNullable<GridPost>, "_type" | "_key"> {
-  color?: ColorVariant;
+  cardTheme?: CardTheme | null;
   textAlign?: "left" | "center" | null;
   cardStyle?: "vertical" | "horizontal" | "classic" | null;
 }
 
-export default function GridPost({ color, textAlign, post }: GridPostProps) {
+export default function GridPost({ cardTheme, textAlign, post }: GridPostProps) {
   if (!post) return null;
   const isCenter = textAlign === "center";
 
@@ -26,16 +27,12 @@ export default function GridPost({ color, textAlign, post }: GridPostProps) {
   return (
     <Link
       key={title}
-      className="flex w-full rounded-3xl ring-offset-background focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 group"
+      className="flex w-full ring-offset-background focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 group"
       href={`/blog/${slug?.current}`}
     >
-      <div
-        className={cn(
-          "flex w-full flex-col justify-between overflow-hidden transition ease-in-out group border rounded-3xl p-4 hover:border-primary",
-          color === "primary"
-            ? "group-hover:border-primary-foreground/50"
-            : "group-hover:border-primary",
-        )}
+      <CardShell
+        theme={cardTheme}
+        className="flex w-full flex-col justify-between transition ease-in-out group-hover:border-primary"
       >
         <div className={cn("flex flex-col", isCenter && "items-center text-center")}>
           {image && (image.asset?._id || !!(image as any)._url) && (
@@ -79,7 +76,7 @@ export default function GridPost({ color, textAlign, post }: GridPostProps) {
             size={24}
           />
         </div>
-      </div>
+      </CardShell>
     </Link>
   );
 }

@@ -496,6 +496,23 @@ export const fetchSanityThemeSettings = async (): Promise<{
     darkAccent?: string;
     darkRing?: string;
   } | null;
+  themeTokens?: {
+    radiusScale?: string;
+    defaultCardVariant?: string;
+    accentTone?: string;
+    shadowDepth?: string;
+    cardPadding?: string;
+    defaultDensity?: string;
+  } | null;
+  themeButtons?: {
+    defaultVariant?: string;
+    size?: string;
+    radius?: string;
+    shadow?: string;
+    border?: string;
+    icon?: string;
+    iconPosition?: string;
+  } | null;
 } | null> => {
   const data = await fetchPublishedCached<{
     themeColors?: {
@@ -508,6 +525,23 @@ export const fetchSanityThemeSettings = async (): Promise<{
       darkPrimaryForeground?: string;
       darkAccent?: string;
       darkRing?: string;
+    } | null;
+    themeTokens?: {
+      radiusScale?: string;
+      defaultCardVariant?: string;
+      accentTone?: string;
+      shadowDepth?: string;
+      cardPadding?: string;
+      defaultDensity?: string;
+    } | null;
+    themeButtons?: {
+      defaultVariant?: string;
+      size?: string;
+      radius?: string;
+      shadow?: string;
+      border?: string;
+      icon?: string;
+      iconPosition?: string;
     } | null;
   } | null>({
     query: THEME_SETTINGS_QUERY,
