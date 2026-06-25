@@ -150,7 +150,7 @@ async function main() {
 
   const { createClient } = await import("next-sanity");
   const client = createClient({
-    projectId: env.NEXT_PUBLIC_SANITY_PROJECT_ID || "wdg7s43w",
+    projectId: env.NEXT_PUBLIC_SANITY_PROJECT_ID || "rtpa6pgc",
     dataset: sourceDataset,
     apiVersion: "2024-03-23",
     useCdn: false,

@@ -1,19 +1,34 @@
-import Blocks from "@/components/blocks";
+import type { Metadata } from "next";
+import PageHybridShell from "@/components/hybrid/page-hybrid-shell";
 import { fetchSanityPageBySlug } from "@/sanity/lib/fetch";
-import { generatePageMetadata } from "@/sanity/lib/metadata";
-import { notFound } from "next/navigation";
+import {
+  generateBasicMetadata,
+  generatePageMetadata,
+} from "@/sanity/lib/metadata";
+import AboutMiddleSection from "@/components/hybrid/generated/about-middle-section";
 
-const SLUG = "about";
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await fetchSanityPageBySlug({ slug: "about" });
 
-export async function generateMetadata() {
-  const page = await fetchSanityPageBySlug({ slug: SLUG });
-  if (page) return generatePageMetadata({ page, slug: SLUG });
-  return generatePageMetadata({ page: { title: "Tentang Kami" }, slug: SLUG });
+  if (page) {
+    return generatePageMetadata({
+      page,
+      slug: "about",
+    });
+  }
+
+  return generateBasicMetadata({
+    title: "About Us | Hybrid Landing Page",
+    description:
+      "About Us memakai pola hybrid: block Sanity di atas dan bawah, dengan middle section code-owned yang tetap menjaga struktur halaman utama.",
+    slug: "about",
+  });
 }
 
 export default async function AboutPage() {
-  const page = await fetchSanityPageBySlug({ slug: SLUG });
-  if (page) return <Blocks blocks={page?.blocks ?? []} pageTitle={page.title} />;
-
-  notFound();
+  return (
+    <PageHybridShell slug="about">
+      <AboutMiddleSection />
+    </PageHybridShell>
+  );
 }

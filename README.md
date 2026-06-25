@@ -42,6 +42,12 @@ cd studio && pnpm dev        # Sanity Studio on :3333
 └── scripts/           Seed & import scripts
 ```
 
+## Documentation
+
+- [Sanity Blocks Reference](docs/sanity-blocks-reference.md) — Payload JSON schemas and setup rules for Sanity blocks and page generation.
+- [AI Generator Shortcodes](docs/ai-generator-shortcodes.md) — Documentation on prompt injection directly from CMS.
+- [Hybrid Page Workflow](docs/hybrid-page-cli-workflow.md) — Hybrid page architecture setup.
+
 ## Features
 
 - **Block-based pages** — Compose pages from 30+ block types in Studio

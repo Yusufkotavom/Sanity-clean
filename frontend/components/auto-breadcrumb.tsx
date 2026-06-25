@@ -31,7 +31,7 @@ export default function AutoBreadcrumb() {
   if (!pathname || pathname === "/") return null;
 
   const segments = pathname.split("/").filter(Boolean);
-  if (segments.length === 0) return null;
+  if (segments.length === 0 || segments[0] === "index") return null;
 
   const crumbs = [
     { label: "Home", href: "/" },
@@ -41,23 +41,8 @@ export default function AutoBreadcrumb() {
     })),
   ];
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: crumbs.map((crumb, i) => ({
-      "@type": "ListItem",
-      position: i + 1,
-      name: crumb.label,
-      item: crumb.href === "/" ? undefined : crumb.href,
-    })),
-  };
-
   return (
     <div className="container py-2">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
       <Breadcrumb>
         <BreadcrumbList>
           {crumbs.map((crumb, i) => {

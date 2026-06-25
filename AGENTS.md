@@ -50,7 +50,7 @@ Use Shadcn UI components from `frontend/components/ui/`. If a needed component i
 
 ## Hybrid Pages
 
-Landing pages use a hybrid pattern: code-owned route shell + optional Sanity `page` document. `topBlockCount` splits `blocks[]` into top/bottom zones around the code-owned middle. Review `skills/hybrid-content-page-workflow/SKILL.md` and `docs/sanity-seed-guardrails.md` before adding one.
+Landing pages use a hybrid pattern: code-owned route shell + optional Sanity `page` document. `topBlockCount` splits `blocks[]` into top/bottom zones around the code-owned middle. Review `skills/hybrid-content-page-workflow/SKILL.md` and `docs/sanity-seed-guardrails.md` before adding one. Also read `docs/sanity-blocks-reference.md` for a complete list of all available block schemas, page setup rules, and JSON payloads.
 
 ## SEO Tasks
 

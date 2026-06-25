@@ -1,23 +1,34 @@
-import RewritePageShell from "@/components/ui/rewrite/page-shell";
+import type { Metadata } from "next";
+import PageHybridShell from "@/components/hybrid/page-hybrid-shell";
+import { fetchSanityPageBySlug } from "@/sanity/lib/fetch";
 import {
-  getLegacySectionChildren,
-  getLegacySectionIndex,
-} from "@/lib/legacy-pages/astro-static";
-import { generateLegacyPageMetadata } from "@/lib/legacy-pages/metadata";
-import { notFound } from "next/navigation";
+  generateBasicMetadata,
+  generatePageMetadata,
+} from "@/sanity/lib/metadata";
+import SoftwareMiddleSection from "@/components/hybrid/generated/software-middle-section";
 
-export async function generateMetadata() {
-  return generateLegacyPageMetadata(getLegacySectionIndex("software"));
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await fetchSanityPageBySlug({ slug: "software" });
+
+  if (page) {
+    return generatePageMetadata({
+      page,
+      slug: "software",
+    });
+  }
+
+  return generateBasicMetadata({
+    title: "Software | Hybrid Landing Page",
+    description:
+      "Software memakai pola hybrid: block Sanity di atas dan bawah, dengan middle section code-owned yang tetap menjaga struktur halaman utama.",
+    slug: "software",
+  });
 }
 
-export default function SoftwarePage() {
-  const page = getLegacySectionIndex("software");
-  if (!page) notFound();
-
+export default async function SoftwarePage() {
   return (
-    <RewritePageShell
-      page={page}
-      siblings={getLegacySectionChildren("software")}
-    />
+    <PageHybridShell slug="software">
+      <SoftwareMiddleSection />
+    </PageHybridShell>
   );
 }

@@ -1,12 +1,20 @@
 const DEFAULT_WHATSAPP_URL = "https://wa.me/6281335275219";
 
 export const HYBRID_ELIGIBLE_SLUGS = new Set([
+  "about",
+  "bug-fixes",
+  "contact",
   "home-pepar",
   "index",
   "layanan",
+  "os-installation",
   "pembuatan-website",
   "percetakan",
+  "services",
+  "sistem-pos",
   "software",
+  "software-development",
+  "vitpos",
 ]);
 
 function createPortableTextBlock(text, keyPrefix) {

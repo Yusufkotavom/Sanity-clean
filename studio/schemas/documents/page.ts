@@ -5,12 +5,20 @@ import meta from "../blocks/shared/meta";
 import pageBlocks from "../blocks/shared/page-blocks";
 
 const HYBRID_PAGE_SLUGS = new Set([
+  "about",
+  "bug-fixes",
+  "contact",
   "home-pepar",
   "index",
   "layanan",
+  "os-installation",
   "pembuatan-website",
   "percetakan",
+  "services",
+  "sistem-pos",
   "software",
+  "software-development",
+  "vitpos",
 ]);
 
 export default defineType({
