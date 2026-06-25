@@ -6,10 +6,10 @@ type Props = {
   colorVariant?: ColorVariant | null;
   title?: string | null;
   description?: string | null;
-  items?: Array<{ _key?: string; title?: string; description?: string }> | null;
+  valueProps?: Array<{ _key?: string; icon?: string; title?: string; description?: string }> | null;
 };
 
-export default function ValuePropsBlock({ padding, colorVariant, title, description, items }: Props) {
+export default function ValuePropsBlock({ padding, colorVariant, title, description, valueProps }: Props) {
   return (
     <FeaturesPackageBlock
       padding={padding}
@@ -17,7 +17,7 @@ export default function ValuePropsBlock({ padding, colorVariant, title, descript
       cardStyle="list"
       title={title}
       description={description}
-      features={items?.map((item) => ({ _key: item._key, title: item.title, description: item.description }))}
+      features={valueProps?.map((item) => ({ _key: item._key, title: item.title, description: item.description }))}
     />
   );
 }
