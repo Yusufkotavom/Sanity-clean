@@ -63,7 +63,7 @@ export default async function PricingBlock({
                   </span>
                 </div>
                 {pkg.bestFor && (
-                  <div className="mt-2 inline-block rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+                  <div className="mt-2 inline-block  border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
                     {pkg.bestFor}
                   </div>
                 )}

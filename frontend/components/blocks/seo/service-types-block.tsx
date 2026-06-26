@@ -37,7 +37,7 @@ export default function ServiceTypesBlock({
             {services.map((service) => (
               <GlassCard key={service._key} hover className="relative">
                 {service.badge && (
-                  <div className="absolute right-4 top-4 rounded-full border border-primary/20 bg-primary/90 px-3 py-1 text-xs font-bold text-primary-foreground">
+                  <div className="absolute right-4 top-4  border border-primary/20 bg-primary/90 px-3 py-1 text-xs font-bold text-primary-foreground">
                     {service.badge}
                   </div>
                 )}
@@ -79,7 +79,7 @@ export default function ServiceTypesBlock({
                       asChild
                       variant="default"
                       size="lg"
-                      className="w-full rounded-full px-6"
+                      className="w-full  px-6"
                     >
                       <Link
                         href={service.link.href || "#"}

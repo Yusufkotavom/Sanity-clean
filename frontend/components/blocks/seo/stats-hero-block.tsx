@@ -27,7 +27,7 @@ export default function StatsHeroBlock({
         <div className="grid gap-8 lg:grid-cols-2 lg:items-center">
           <div>
             {eyebrow && (
-              <div className="mb-4 inline-block rounded-full bg-primary/10 px-4 py-2 text-sm font-semibold text-primary">
+              <div className="mb-4 inline-block  bg-primary/10 px-4 py-2 text-sm font-semibold text-primary">
                 {eyebrow}
               </div>
             )}
@@ -50,7 +50,7 @@ export default function StatsHeroBlock({
                     asChild
                     variant={index === 0 ? "default" : "outline"}
                     size="lg"
-                    className="rounded-full px-6"
+                    className=" px-6"
                   >
                     <Link
                       href={link.href || "#"}

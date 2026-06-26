@@ -53,7 +53,7 @@ export default function HeroVercel({
       <div className="grid gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-start w-full">
         <div>
           {tagLine ? (
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-foreground/15 bg-white/70 px-3 py-1 text-xs font-medium text-foreground/75 dark:bg-white/10">
+            <div className="mb-4 inline-flex items-center gap-2  border border-foreground/15 bg-white/70 px-3 py-1 text-xs font-medium text-foreground/75 dark:bg-white/10">
               <Sparkles className="size-3.5" />
               <span>{tagLine}</span>
             </div>
@@ -71,7 +71,7 @@ export default function HeroVercel({
 
           <div className="mt-8 flex flex-wrap items-center gap-3">
             {ctaPrimary?.title ? (
-              <Button asChild size="lg" className="rounded-full px-6 transition-all duration-200 active:scale-[0.98]">
+              <Button asChild size="lg" variant={ctaPrimary?.buttonVariant || "default"} className=" px-6 transition-all duration-200 active:scale-[0.98]">
                 <Link
                   href={ctaPrimary.href || "#"}
                   target={ctaPrimary.target ? "_blank" : undefined}
@@ -83,7 +83,7 @@ export default function HeroVercel({
             ) : null}
 
             {ctaSecondary?.title ? (
-              <Button asChild size="lg" variant="outline" className="rounded-full px-6 transition-all duration-200 active:scale-[0.98]">
+              <Button asChild size="lg" variant={ctaSecondary?.buttonVariant || "outline"} className=" px-6 transition-all duration-200 active:scale-[0.98]">
                 <Link
                   href={ctaSecondary.href || "#"}
                   target={ctaSecondary.target ? "_blank" : undefined}

@@ -45,7 +45,7 @@ export default function PricingCard({
                 <SanityIcon icon={uiIcon} className="size-5" />
                 <h3 className="text-xl font-semibold leading-[1.2]">{title}</h3>
               </div>
-              {tagLine ? <Badge className="rounded-full">{tagLine}</Badge> : null}
+              {tagLine ? <Badge className="">{tagLine}</Badge> : null}
             </div>
           )}
           {price && price.value !== null && price.value !== undefined && (
@@ -73,9 +73,8 @@ export default function PricingCard({
           ) : null}
         </div>
         <Button
-          className={cn("mt-6 rounded-full px-6", isCenter ? "self-center" : "self-start")}
-          size="lg"
-          variant="default"
+          className={cn("mt-6 px-6", isCenter ? "self-center" : "self-start")}
+          variant={link?.buttonVariant || "default"}
           asChild
         >
           <Link

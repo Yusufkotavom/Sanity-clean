@@ -70,7 +70,7 @@ export default function GridPost({ cardTheme, textAlign, post }: GridPostProps) 
           )}
           {excerpt && <p>{excerpt}</p>}
         </div>
-        <div className="mt-3 xl:mt-6 w-10 h-10 border rounded-full flex items-center justify-center group-hover:border-primary">
+        <div className="mt-3 xl:mt-6 w-10 h-10 border  flex items-center justify-center group-hover:border-primary">
           <ChevronRight
             className="text-border group-hover:text-primary"
             size={24}

@@ -54,12 +54,12 @@ export function HeroStandard({ block }: HeroStandardProps) {
         ) : null}
         <div className={cn("flex flex-wrap gap-3", isCentered ? "justify-center" : undefined)}>
           {block.primaryButton ? (
-            <Button asChild size="lg" className="rounded-full px-6">
+            <Button asChild size="lg" className=" px-6" variant={primary?.buttonVariant || "default"}>
               <Link href={block.primaryButton.url}>{block.primaryButton.text}</Link>
             </Button>
           ) : null}
           {block.secondaryButton ? (
-            <Button asChild size="lg" variant="outline" className="rounded-full px-6">
+            <Button asChild size="lg" variant={secondary?.buttonVariant || "outline"} className=" px-6">
               <Link href={block.secondaryButton.url}>{block.secondaryButton.text}</Link>
             </Button>
           ) : null}

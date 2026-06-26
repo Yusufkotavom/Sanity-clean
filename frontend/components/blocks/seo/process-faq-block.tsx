@@ -21,7 +21,7 @@ export default function ProcessFaqBlock({ padding, colorVariant, processTitle, p
             <ol className="space-y-3">
               {processSteps.map((step, i) => (
                 <li key={i} className="flex items-start gap-3">
-                  <span className="flex size-7 shrink-0 items-center justify-center rounded-full border text-xs font-semibold">{i + 1}</span>
+                  <span className="flex size-7 shrink-0 items-center justify-center  border text-xs font-semibold">{i + 1}</span>
                   <p className="pt-1 text-sm">{step}</p>
                 </li>
               ))}

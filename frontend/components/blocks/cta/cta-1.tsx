@@ -67,7 +67,7 @@ export default function Cta1({
           )}
         >
           {links.map((link, index) => (
-            <Button key={link._key || link.title} variant={index === 0 ? "default" : "outline"} size="lg" className="rounded-full px-6 transition-all duration-200 active:scale-[0.98]" asChild>
+            <Button key={link._key || link.title} variant={link.buttonVariant || (index === 0 ? "default" : "outline")} size="lg" className=" px-6 transition-all duration-200 active:scale-[0.98]" asChild>
               <Link
                 href={link.href || "#"}
                 target={link.target ? "_blank" : undefined}

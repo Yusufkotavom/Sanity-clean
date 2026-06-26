@@ -70,7 +70,7 @@ export default function SplitContent({
         {link?.href && (
           <div className="flex flex-col">
             <Button
-              className="mt-2 rounded-full px-6"
+              className="mt-2  px-6"
               variant="default"
               size="lg"
               asChild

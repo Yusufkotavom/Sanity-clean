@@ -26,7 +26,7 @@ export default function HighlightsBlock({ padding, colorVariant, eyebrow, title,
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {items.map((item, i) => (
             <div key={i} className="flex items-start gap-3 rounded-xl border border-border/40 bg-card p-5 shadow-sm transition-all duration-300 hover:border-primary/20 hover:shadow-md">
-              <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <span className="flex size-6 shrink-0 items-center justify-center  bg-primary/10 text-primary">
                 <Check className="size-3.5" />
               </span>
               <p className="text-sm font-medium text-foreground leading-snug">{item}</p>

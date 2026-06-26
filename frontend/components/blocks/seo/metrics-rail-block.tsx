@@ -16,7 +16,7 @@ export default function MetricsRailBlock({ padding, colorVariant, items }: Props
           <div key={item._key || i} className="rounded-xl border border-border/40 p-5">
             <p className="text-3xl font-bold">{item.value}</p>
             <p className="mt-1 text-sm text-muted-foreground">{item.label}</p>
-            {item.brand && <span className="mt-2 inline-block rounded-full border px-2 py-0.5 text-xs text-muted-foreground">{item.brand}</span>}
+            {item.brand && <span className="mt-2 inline-block  border px-2 py-0.5 text-xs text-muted-foreground">{item.brand}</span>}
           </div>
         ))}
       </div>

@@ -54,7 +54,7 @@ export default function Hero1({
         {links && links.length > 0 ? (
           <div className="mt-8 flex flex-wrap gap-3">
             {links.map((link, index) => (
-              <Button key={link._key || link.title} variant={index === 0 ? "default" : "outline"} asChild size="lg" className="rounded-full px-6 transition-all duration-200 active:scale-[0.98]">
+              <Button key={link._key || link.title} variant={link.buttonVariant || (index === 0 ? "default" : "outline")} asChild size="lg" className=" px-6 transition-all duration-200 active:scale-[0.98]">
                 <Link
                   href={link.href || "#"}
                   target={link.target ? "_blank" : undefined}

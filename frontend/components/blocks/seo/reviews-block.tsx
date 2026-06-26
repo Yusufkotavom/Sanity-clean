@@ -30,7 +30,7 @@ export default function ReviewsBlock({ padding, colorVariant, title, reviews }: 
                 <p className="mt-4 text-sm text-muted-foreground leading-relaxed line-clamp-4">{r.reviewBody}</p>
               </div>
               <div className="mt-6 flex items-center gap-3 border-t pt-4">
-                <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/10 font-bold text-primary">
+                <div className="flex size-10 shrink-0 items-center justify-center  bg-primary/10 font-bold text-primary">
                   {(r.reviewerName || "R").charAt(0).toUpperCase()}
                 </div>
                 <div>

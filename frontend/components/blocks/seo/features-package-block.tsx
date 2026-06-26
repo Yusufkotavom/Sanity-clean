@@ -58,7 +58,7 @@ export default function FeaturesPackageBlock({
                 )}
               >
                 {style === "numbered" && (
-                  <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">{i + 1}</span>
+                  <span className="flex size-8 shrink-0 items-center justify-center  bg-primary/10 text-sm font-bold text-primary">{i + 1}</span>
                 )}
                 {style !== "numbered" && f.icon && (
                   <span className={cn(
@@ -69,7 +69,7 @@ export default function FeaturesPackageBlock({
                 <div className="flex-1">
                   <h3 className={cn("font-semibold text-foreground", style === "grid" ? "text-base" : "text-sm")}>
                     {f.title}
-                    {f.badge && <span className="ml-2 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">{f.badge}</span>}
+                    {f.badge && <span className="ml-2  bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">{f.badge}</span>}
                   </h3>
                   {f.description && <p className="mt-1 text-sm text-muted-foreground leading-relaxed">{f.description}</p>}
                 </div>
@@ -80,7 +80,7 @@ export default function FeaturesPackageBlock({
 
         {cta?.title && cta?.href && (
           <div className="mt-8">
-            <Button asChild variant="default" size="lg" className="rounded-full px-6">
+            <Button asChild variant="default" size="lg" className=" px-6">
               <Link href={cta.href}>{cta.title}</Link>
             </Button>
           </div>

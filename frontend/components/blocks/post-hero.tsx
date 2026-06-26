@@ -52,7 +52,7 @@ export default function PostHero({
                   }
                   blurDataURL={author.image.asset?.metadata?.lqip || undefined}
                   sizes="(max-width: 768px) 24px, 40px"
-                  className="w-10 h-10 rounded-full mr-2"
+                  className="w-10 h-10  mr-2"
                 />
               </div>
             )}

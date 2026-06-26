@@ -40,3 +40,4 @@ next-env.d.ts
 
 # temporary files and data exports
 *.tar.gz
+.env*

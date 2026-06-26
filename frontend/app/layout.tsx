@@ -317,7 +317,7 @@ export default async function RootLayout({
 
   return (
     <html
-      lang="en"
+      lang="id"
       suppressHydrationWarning
       className={`${GeistSans.variable} ${GeistMono.variable} ${themeTokenClasses.join(" ")}`}
       style={themeVars}

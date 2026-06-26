@@ -66,7 +66,7 @@ export default function SplitCardsItem({
               </div>
             )}
             {!image?.asset?._id && !(image as any)?._url ? (
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-primary/25 bg-primary/10">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center  border border-primary/25 bg-primary/10">
                 <SanityIcon icon={uiIcon} className="size-5" />
               </div>
             ) : null}

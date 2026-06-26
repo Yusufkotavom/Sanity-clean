@@ -19,7 +19,7 @@ export default function MicroBadgesBlock({ padding, colorVariant, badges }: Prop
           const Icon = ICONS[i % ICONS.length];
           return (
             <div key={badge._key || i} className="flex items-start gap-3 rounded-xl border border-border/40 bg-card p-4 shadow-sm transition-all duration-300 hover:border-primary/20 hover:shadow-md">
-              <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <span className="flex size-8 shrink-0 items-center justify-center  bg-primary/10 text-primary">
                 <Icon className="size-4" />
               </span>
               <div>
