@@ -69,7 +69,7 @@ export default function FeaturesPackageBlock({
                 <div className="flex-1">
                   <h3 className={cn("font-semibold text-foreground", style === "grid" ? "text-base" : "text-sm")}>
                     {f.title}
-                    {f.badge && <span className="ml-2  bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">{f.badge}</span>}
+                    {f.badge && <span className="ml-2 inline-flex items-center rounded-full border border-primary/20 bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary shadow-sm">{f.badge}</span>}
                   </h3>
                   {f.description && <p className="mt-1 text-sm text-muted-foreground leading-relaxed">{f.description}</p>}
                 </div>

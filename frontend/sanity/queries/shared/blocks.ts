@@ -22,6 +22,8 @@ import { featuresPackageBlockQuery } from "../seo/features-package-block";
 import { serviceTypesBlockQuery } from "../seo/service-types-block";
 import { problemSolutionBlockQuery } from "../seo/problem-solution-block";
 import { FLEXIBLE_BUILDER_QUERY } from "../flexible-builder";
+import { tabsSectionQuery } from "../tabs-section";
+import { bannerSectionQuery } from "../banner-section";
 
 /**
  * Shared GROQ projection for blocks[].
@@ -55,6 +57,8 @@ export const blocksQuery = `
     ${serviceTypesBlockQuery},
     ${problemSolutionBlockQuery},
     ${FLEXIBLE_BUILDER_QUERY},
+    ${tabsSectionQuery},
+    ${bannerSectionQuery},
     _type == "block-preset-ref" => {
       _type,
       _key,

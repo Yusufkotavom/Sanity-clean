@@ -45,7 +45,7 @@ export default defineType({
   type: "document",
   icon: Palette,
   fields: [
-    defineField({
+    (defineField as any)({
       name: "tabs",
       type: "tab",
       groups: [

@@ -112,6 +112,8 @@ export default defineType({
         { type: "features-package-block" },
         { type: "service-types-block" },
         { type: "problem-solution-block" },
+        { type: "tabs-section" },
+        { type: "banner-section" },
       ],
       options: {
         insertMenu: {
@@ -147,6 +149,11 @@ export default defineType({
               of: ["carousel-1", "carousel-2"],
             },
             {
+              name: "tabs",
+              title: "Tabs",
+              of: ["tabs-section"],
+            },
+            {
               name: "timeline",
               title: "Timeline",
               of: ["timeline-row"],
@@ -154,7 +161,7 @@ export default defineType({
             {
               name: "cta",
               title: "CTA",
-              of: ["cta-1", "whatsapp-cta"],
+              of: ["cta-1", "whatsapp-cta", "banner-section"],
             },
             {
               name: "faqs",

@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import PortableTextRenderer from "@/components/portable-text-renderer";
 import SanityIcon from "@/components/icons/sanity-icon";
+import Eyebrow from "@/components/ui/eyebrow";
 import { urlFor } from "@/sanity/lib/image";
 import { PAGE_QUERY_RESULT } from "@/sanity.types";
 import {
@@ -98,12 +99,7 @@ export default function Hero2({
 
   const innerContent = (
     <div className="flex flex-col items-center w-full">
-      {tagLine || uiIcon ? (
-        <div className="mb-3 inline-flex items-center justify-center gap-2 text-ui-label text-current/55">
-          <SanityIcon icon={uiIcon} className="size-4" />
-          {tagLine ? <span>{tagLine}</span> : null}
-        </div>
-      ) : null}
+      <Eyebrow icon={uiIcon} title={tagLine} variant="subtle" className="justify-center" />
       <SectionIntro
         title={resolvedTitle || ""}
         align="center"

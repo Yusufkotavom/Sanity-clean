@@ -26,6 +26,8 @@ const ServiceTypesBlock = dynamic(() => import("@/components/blocks/seo/service-
 const ProblemSolutionBlock = dynamic(() => import("@/components/blocks/seo/problem-solution-block"));
 const QuoteSpotlightBlock = dynamic(() => import("@/components/blocks/seo/quote-spotlight-block"));
 const FlexibleBuilder = dynamic(() => import("@/components/blocks/flexible-builder"));
+const TabsSection = dynamic(() => import("@/components/blocks/tabs-section"));
+const BannerSection = dynamic(() => import("@/components/blocks/banner-section"));
 
 type Block = NonNullable<NonNullable<PAGE_QUERY_RESULT>["blocks"]>[number];
 
@@ -55,6 +57,8 @@ export const componentMap: Record<string, React.ComponentType<any>> = {
   "problem-solution-block": ProblemSolutionBlock,
   "quote-spotlight-block": QuoteSpotlightBlock,
   "flexible-builder": FlexibleBuilder,
+  "tabs-section": TabsSection,
+  "banner-section": BannerSection,
 };
 
 export const BLOCK_COMPONENT_TYPES = Object.keys(componentMap);

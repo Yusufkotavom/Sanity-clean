@@ -10,7 +10,7 @@ const COLOR_VARIANT_CLASSNAMES: Record<NonNullable<ColorVariant>, string> = {
   muted: "bg-muted",
   primary: "bg-primary text-primary-foreground",
   secondary: "bg-secondary text-secondary-foreground",
-  transparent: "bg-transparent",
+  transparent: "section-theme-bg",
 };
 
 export interface SectionStyle {
@@ -58,8 +58,9 @@ export default function SectionContainer({
   const ss = sectionStyle ?? null;
   const useNew = !!ss;
 
-  const resolvedBg = resolve(ss?.bg) || (color ?? "background");
-  const bgClass = COLOR_VARIANT_CLASSNAMES[resolvedBg as NonNullable<ColorVariant>] ?? "bg-background";
+  const resolvedBg = resolve(ss?.bg) || (color ?? "transparent");
+  const bgClass =
+    COLOR_VARIANT_CLASSNAMES[resolvedBg as NonNullable<ColorVariant>] ?? "section-theme-bg";
 
   const density = resolve(ss?.density);
   const maxWidth = resolve(ss?.maxWidth);

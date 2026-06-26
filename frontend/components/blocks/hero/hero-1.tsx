@@ -4,6 +4,7 @@ import Image from "next/image";
 import { urlFor } from "@/sanity/lib/image";
 import PortableTextRenderer from "@/components/portable-text-renderer";
 import SanityIcon from "@/components/icons/sanity-icon";
+import Eyebrow from "@/components/ui/eyebrow";
 import { PAGE_QUERY_RESULT } from "@/sanity.types";
 import {
   SectionIntro,
@@ -39,12 +40,7 @@ export default function Hero1({
 
   const textContent = (
     <div className="flex flex-col justify-center">
-      {tagLine || uiIcon ? (
-        <div className="mb-3 inline-flex items-center gap-2 text-ui-label text-current/55">
-          <SanityIcon icon={uiIcon} className="size-4" />
-          {tagLine ? <span>{tagLine}</span> : null}
-        </div>
-      ) : null}
+      <Eyebrow icon={uiIcon} title={tagLine} variant="subtle" />
       <SectionIntro
         title={resolvedTitle || ""}
         className="mb-0 max-w-3xl"

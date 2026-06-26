@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SanityIcon from "@/components/icons/sanity-icon";
+import Eyebrow from "@/components/ui/eyebrow";
 import { urlFor } from "@/sanity/lib/image";
 import type { SanityIconValue } from "@/components/icons/sanity-icon";
 import { SectionPanel, SectionShell } from "@/components/ui/section-shell";
@@ -52,12 +53,7 @@ export default function HeroVercel({
     <>
       <div className="grid gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-start w-full">
         <div>
-          {tagLine ? (
-            <div className="mb-4 inline-flex items-center gap-2  border border-foreground/15 bg-white/70 px-3 py-1 text-xs font-medium text-foreground/75 dark:bg-white/10">
-              <Sparkles className="size-3.5" />
-              <span>{tagLine}</span>
-            </div>
-          ) : null}
+          <Eyebrow icon={<Sparkles />} title={tagLine} variant="default" />
 
           <h1 className="max-w-3xl text-balance text-4xl font-semibold leading-tight tracking-tight text-foreground md:text-5xl lg:text-6xl">
             {title}

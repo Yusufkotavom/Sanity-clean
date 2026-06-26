@@ -99,8 +99,11 @@ import pricingBlock from "./schemas/blocks/seo/pricing-block";
 import featuresPackageBlock from "./schemas/blocks/seo/features-package-block";
 import serviceTypesBlock from "./schemas/blocks/seo/service-types-block";
 import problemSolutionBlock from "./schemas/blocks/seo/problem-solution-block";
+import quoteSpotlightBlock from "./schemas/blocks/seo/quote-spotlight-block";
 import blockPresetRef from "./schemas/blocks/shared/block-preset-ref";
 import flexibleBuilder from "./schemas/blocks/flexible-builder";
+import tabsSection from "./schemas/blocks/tabs-section";
+import bannerSection from "./schemas/blocks/banner-section";
 
 export const schemaTypes = [
   // documents
@@ -206,4 +209,6 @@ export const schemaTypes = [
   blockPresetRef,
   blockPreset,
   flexibleBuilder,
+  tabsSection,
+  bannerSection,
 ];

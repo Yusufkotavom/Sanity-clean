@@ -36,6 +36,8 @@ const pageBlocks = defineField({
     { type: "quote-spotlight-block" },
     { type: "block-preset-ref" },
     { type: "flexible-builder" },
+    { type: "tabs-section" },
+    { type: "banner-section" },
   ],
   options: {
     insertMenu: {
@@ -76,6 +78,11 @@ const pageBlocks = defineField({
           of: ["carousel-1", "carousel-2"],
         },
         {
+          name: "tabs",
+          title: "Tabs",
+          of: ["tabs-section"],
+        },
+        {
           name: "timeline",
           title: "Timeline",
           of: ["timeline-row"],
@@ -83,7 +90,7 @@ const pageBlocks = defineField({
         {
           name: "cta",
           title: "CTA",
-          of: ["cta-1", "whatsapp-cta"],
+          of: ["cta-1", "whatsapp-cta", "banner-section"],
         },
         {
           name: "faqs",

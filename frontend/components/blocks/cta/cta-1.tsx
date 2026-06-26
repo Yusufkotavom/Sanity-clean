@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import PortableTextRenderer from "@/components/portable-text-renderer";
 import SanityIcon from "@/components/icons/sanity-icon";
+import Eyebrow from "@/components/ui/eyebrow";
 import { PAGE_QUERY_RESULT } from "@/sanity.types";
 import { SectionPanel, SectionShell } from "@/components/ui/section-shell";
 import SectionContainer from "@/components/ui/section-container";
@@ -35,17 +36,12 @@ export default function Cta1({
 
   const contentNode = (
     <div className={cn("flex flex-col flex-1", alignClasses)}>
-      {tagLine || uiIcon ? (
-        <div
-          className={cn(
-            "inline-flex items-center gap-2 text-ui-label text-current/70",
-            stackAlign === "center" ? "justify-center" : undefined,
-          )}
-        >
-          <SanityIcon icon={uiIcon} className="size-4" />
-          {tagLine ? <span>{tagLine}</span> : null}
-        </div>
-      ) : null}
+      <Eyebrow
+        icon={uiIcon}
+        title={tagLine}
+        variant="subtle"
+        className={stackAlign === "center" ? "justify-center" : undefined}
+      />
       
       {title ? (
         <h2 className="mt-2 text-2xl font-semibold tracking-tight md:text-3xl">

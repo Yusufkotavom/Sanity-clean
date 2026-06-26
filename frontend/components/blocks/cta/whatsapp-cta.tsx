@@ -3,6 +3,7 @@ import PortableTextRenderer from "@/components/portable-text-renderer";
 import GlobalWhatsAppButton from "@/components/global-whatsapp-button";
 import { Button } from "@/components/ui/button";
 import SanityIcon from "@/components/icons/sanity-icon";
+import Eyebrow from "@/components/ui/eyebrow";
 import { PAGE_QUERY_RESULT } from "@/sanity.types";
 import { cn } from "@/lib/utils";
 import { SectionPanel, SectionShell } from "@/components/ui/section-shell";
@@ -40,17 +41,12 @@ export default async function WhatsAppCta({
             stackAlign === "center" ? "items-center text-center" : undefined,
           )}
         >
-          {tagLine || uiIcon ? (
-            <div
-              className={cn(
-                "inline-flex items-center gap-2 text-ui-label text-current/70",
-                stackAlign === "center" ? "justify-center" : undefined,
-              )}
-            >
-              <SanityIcon icon={uiIcon} className="size-4" />
-              {tagLine ? <span>{tagLine}</span> : null}
-            </div>
-          ) : null}
+          <Eyebrow
+            icon={uiIcon}
+            title={tagLine}
+            variant="subtle"
+            className={stackAlign === "center" ? "justify-center" : undefined}
+          />
           <h2 className="mt-2 text-2xl font-semibold tracking-tight md:text-3xl">{title}</h2>
           {body ? (
             <div className="mt-4 text-sm leading-7 text-current/80 md:text-base">

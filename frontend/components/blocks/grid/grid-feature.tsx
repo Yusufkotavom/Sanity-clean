@@ -1,4 +1,6 @@
 import { cn } from "@/lib/utils";
+import SectionContainer from "@/components/ui/section-container";
+import type { ColorVariant } from "@/sanity.types";
 
 type GridFeatureItem = {
   readonly _key: string;
@@ -13,6 +15,7 @@ type GridFeatureBlock = {
   readonly subtitle?: string;
   readonly columns?: 2 | 3 | 4;
   readonly items: readonly GridFeatureItem[];
+  readonly colorVariant?: ColorVariant | null;
 };
 
 type GridFeatureProps = {
@@ -27,9 +30,10 @@ const columnClassByCount: Record<NonNullable<GridFeatureBlock["columns"]>, strin
 
 export function GridFeature({ block }: GridFeatureProps) {
   const columnClass = columnClassByCount[block.columns ?? 3];
+  const color = (block.colorVariant as ColorVariant) || undefined;
 
   return (
-    <section className="bg-background px-4 py-16 md:py-24">
+    <SectionContainer color={color}>
       <div className="mx-auto max-w-6xl">
         <div className="mx-auto max-w-3xl text-center">
           <h2 className="text-3xl font-semibold tracking-normal md:text-4xl">
@@ -57,6 +61,6 @@ export function GridFeature({ block }: GridFeatureProps) {
           ))}
         </div>
       </div>
-    </section>
+    </SectionContainer>
   );
 }

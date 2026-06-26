@@ -38,36 +38,47 @@ export default function GridRow({
   textAlign,
   cardStyle,
   columns,
-}: GridRow) {
+  noContainer = false,
+}: GridRow & { noContainer?: boolean }) {
   const cleanGridColumns = stegaClean(gridColumns);
   const cleanTextAlign = stegaClean(textAlign) as GridRow["textAlign"];
   const cleanCardStyle = stegaClean(cardStyle) as GridRow["cardStyle"];
 
   const resolvedGridColumnsClass = GRID_COLUMNS_CLASS[cleanGridColumns || ""] || "lg:grid-cols-3";
+
+  const renderContent = () => (
+    columns && columns?.length > 0 && (
+      <div className={cn("grid grid-cols-1 gap-6", resolvedGridColumnsClass)}>
+        {columns.map((column) => {
+          const Component = componentMap[column._type];
+          if (!Component) {
+            console.warn(
+              `No component implemented for grid column type: ${column._type}`,
+            );
+            return <div data-type={column._type} key={column._key} />;
+          }
+          return (
+            <Component
+              {...(column as any)}
+              cardTheme={cardTheme}
+              textAlign={cleanTextAlign}
+              cardStyle={cleanCardStyle}
+              key={column._key}
+            />
+          );
+        })}
+      </div>
+    )
+  );
+
+  if (noContainer) {
+    return renderContent();
+  }
+
   return (
     <SectionContainer sectionStyle={sectionStyle}>
-      {columns && columns?.length > 0 && (
-        <div className={cn("grid grid-cols-1 gap-6", resolvedGridColumnsClass)}>
-          {columns.map((column) => {
-            const Component = componentMap[column._type];
-            if (!Component) {
-              console.warn(
-                `No component implemented for grid column type: ${column._type}`,
-              );
-              return <div data-type={column._type} key={column._key} />;
-            }
-            return (
-              <Component
-                {...(column as any)}
-                cardTheme={cardTheme}
-                textAlign={cleanTextAlign}
-                cardStyle={cleanCardStyle}
-                key={column._key}
-              />
-            );
-          })}
-        </div>
-      )}
+      {renderContent()}
     </SectionContainer>
   );
 }
+

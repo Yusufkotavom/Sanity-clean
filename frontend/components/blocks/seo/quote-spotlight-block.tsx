@@ -1,5 +1,6 @@
 import { Quote } from "lucide-react";
 import SectionContainer from "@/components/ui/section-container";
+import Eyebrow from "@/components/ui/eyebrow";
 import type { ColorVariant, SectionPadding } from "@/sanity.types";
 
 type Props = {
@@ -21,7 +22,7 @@ export default function QuoteSpotlightBlock({ padding, colorVariant, eyebrow, qu
           <div className="relative">
             <Quote className="absolute -left-4 -top-6 size-16 rotate-180 text-primary/10 md:-left-8 md:-top-8 md:size-24" />
             <div className="relative z-10">
-              {eyebrow && <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-primary">{eyebrow}</p>}
+              <Eyebrow title={eyebrow} variant="default" size="sm" />
               <blockquote className="text-2xl font-medium leading-relaxed md:text-3xl lg:text-4xl lg:leading-tight">
                 &ldquo;{quote}&rdquo;
               </blockquote>

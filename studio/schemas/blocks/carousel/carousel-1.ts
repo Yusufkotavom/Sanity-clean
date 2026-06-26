@@ -74,6 +74,20 @@ export default defineType({
       initialValue: "auto",
     }),
     defineField({
+      name: "contentType",
+      type: "string",
+      title: "Content Type",
+      options: {
+        list: [
+          { title: "Images", value: "images" },
+          { title: "Grid Cards", value: "grid" },
+        ],
+        layout: "radio",
+      },
+      initialValue: "images",
+      description: "Choose whether this carousel displays images or grid cards",
+    }),
+    defineField({
       name: "images",
       type: "array",
       of: [
@@ -87,9 +101,76 @@ export default defineType({
               type: "string",
               title: "Alternative Text",
             },
+            {
+              name: "title",
+              type: "string",
+              title: "Title / Caption",
+            },
+            {
+              name: "description",
+              type: "text",
+              title: "Description Text",
+              rows: 2,
+            },
+            {
+              name: "link",
+              type: "link",
+              title: "Link / Action",
+              description: "Optional action when clicking this slide",
+            },
           ],
         }),
       ],
+      hidden: ({ parent }) => parent?.contentType === "grid",
+    }),
+    defineField({
+      name: "cardTheme",
+      type: "card-theme",
+      title: "Card Theme",
+      description: "Visual theming applied to every card in this carousel.",
+      hidden: ({ parent }) => parent?.contentType !== "grid",
+    }),
+    defineField({
+      name: "cardStyle",
+      type: "string",
+      title: "Card Style",
+      description: "Visual style and layout for all cards in this carousel",
+      options: {
+        list: [
+          { title: "Vertical (Icon Top, Text Below)", value: "vertical" },
+          { title: "Horizontal (Icon Left, Text Right)", value: "horizontal" },
+          { title: "Classic (Image Top, Text Below)", value: "classic" },
+        ],
+        layout: "radio",
+      },
+      initialValue: "vertical",
+      hidden: ({ parent }) => parent?.contentType !== "grid",
+    }),
+    defineField({
+      name: "textAlign",
+      type: "string",
+      title: "Text Align",
+      options: {
+        list: [
+          { title: "Left", value: "left" },
+          { title: "Center", value: "center" },
+        ],
+        layout: "radio",
+      },
+      initialValue: "left",
+      hidden: ({ parent }) => parent?.contentType !== "grid",
+    }),
+    defineField({
+      name: "columns",
+      type: "array",
+      title: "Grid Cards",
+      description: "Add grid cards, blog posts, or pricing cards to display in the carousel",
+      of: [
+        { type: "grid-card" },
+        { type: "grid-post" },
+        { type: "pricing-card" },
+      ],
+      hidden: ({ parent }) => parent?.contentType !== "grid",
     }),
   ],
   preview: {
