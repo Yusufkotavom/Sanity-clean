@@ -9,6 +9,7 @@ export const hero1Query = groq`
     _type,
     _key,
     useCard,
+    imagePosition,
     colorVariant,
     tagLine,
     uiIcon{

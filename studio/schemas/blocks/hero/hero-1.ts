@@ -53,6 +53,19 @@ export default defineType({
       initialValue: true,
     }),
     defineField({
+      name: "imagePosition",
+      type: "string",
+      title: "Image Position",
+      options: {
+        list: [
+          { title: "Right", value: "right" },
+          { title: "Left", value: "left" },
+        ],
+        layout: "radio",
+      },
+      initialValue: "right",
+    }),
+    defineField({
       name: "colorVariant",
       type: "color-variant",
       title: "Color Variant",

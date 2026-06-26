@@ -71,7 +71,7 @@ export default function HeroVercel({
 
           <div className="mt-8 flex flex-wrap items-center gap-3">
             {ctaPrimary?.title ? (
-              <Button asChild size="lg" variant={ctaPrimary?.buttonVariant || "default"} className=" px-6 transition-all duration-200 active:scale-[0.98]">
+              <Button asChild size="lg" variant="default" className="transition-all duration-200 active:scale-[0.98]">
                 <Link
                   href={ctaPrimary.href || "#"}
                   target={ctaPrimary.target ? "_blank" : undefined}
@@ -83,7 +83,7 @@ export default function HeroVercel({
             ) : null}
 
             {ctaSecondary?.title ? (
-              <Button asChild size="lg" variant={ctaSecondary?.buttonVariant || "outline"} className=" px-6 transition-all duration-200 active:scale-[0.98]">
+              <Button asChild size="lg" variant="outline" className="transition-all duration-200 active:scale-[0.98]">
                 <Link
                   href={ctaSecondary.href || "#"}
                   target={ctaSecondary.target ? "_blank" : undefined}

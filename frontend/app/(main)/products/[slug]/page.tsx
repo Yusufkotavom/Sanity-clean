@@ -1,9 +1,7 @@
 import { notFound } from "next/navigation";
 import Blocks from "@/components/blocks";
 import Image from "next/image";
-import Link from "next/link";
 import PortableTextRenderer from "@/components/portable-text-renderer";
-import { Button } from "@/components/ui/button";
 import { urlFor } from "@/sanity/lib/image";
 import ArchiveCategoryFilter from "@/components/ui/archive-category-filter";
 import ProductGrid from "@/components/products/product-grid";
@@ -17,11 +15,11 @@ import {
   fetchSanityProductBySlug,
   fetchSanityProductCategories,
   fetchSanityProductsByCategorySlug,
-  fetchSanityProductsStaticParams,
   fetchSanityRelatedProducts,
   fetchSanitySeoSettings,
-  fetchSanityProducts,
 } from "@/sanity/lib/fetch";
+
+export const revalidate = 2592000;
 import { generatePageMetadata } from "@/sanity/lib/metadata";
 import JsonLd from "@/components/seo/json-ld";
 import { buildBreadcrumbJsonLd, buildProductJsonLd, resolveAggregateRating } from "@/lib/seo-jsonld";
@@ -31,24 +29,6 @@ type BreadcrumbLink = {
   label: string;
   href: string;
 };
-
-export async function generateStaticParams() {
-  const [products, categories] = await Promise.all([
-    fetchSanityProductsStaticParams(),
-    fetchSanityProductCategories(),
-  ]);
-
-  const slugs = new Set<string>();
-
-  for (const product of products as any[]) {
-    if (product?.slug?.current) slugs.add(product.slug.current);
-  }
-  for (const category of categories as any[]) {
-    if (category?.slug?.current) slugs.add(category.slug.current);
-  }
-
-  return Array.from(slugs).map((slug) => ({ slug }));
-}
 
 export async function generateMetadata(props: {
   params: Promise<{ slug: string }>;
@@ -145,27 +125,12 @@ export default async function ProductSlugPage(props: {
     .map((cat: any) => cat?._id)
     .filter(Boolean);
 
-  let relatedProducts = categoryIds.length > 0
+  const relatedProducts = categoryIds.length > 0
     ? await fetchSanityRelatedProducts({
         slug: params.slug,
         categoryIds,
       })
     : [];
-
-  if (relatedProducts.length < 4) {
-    const allProducts = await fetchSanityProducts();
-    const existingIds = new Set([product._id, ...relatedProducts.map((p: any) => p._id)]);
-    const fallbackPool = allProducts
-      .filter((p: any) => p._id !== product._id && !existingIds.has(p._id))
-      .sort((left: any, right: any) => {
-        const leftTitle = String(left?.title ?? "");
-        const rightTitle = String(right?.title ?? "");
-        return leftTitle.localeCompare(rightTitle);
-      });
-
-    const needed = 4 - relatedProducts.length;
-    relatedProducts = [...relatedProducts, ...fallbackPool.slice(0, needed)];
-  }
 
   const links: BreadcrumbLink[] = [
     { label: "Home", href: "/" },

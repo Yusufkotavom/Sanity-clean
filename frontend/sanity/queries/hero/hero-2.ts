@@ -21,8 +21,16 @@ export const hero2Query = groq`
       _key,
       ${bodyQuery}
     },
-    image{
-      ${imageQuery}
+    images[]{
+      _key,
+      title,
+      description,
+      image{
+        ${imageQuery}
+      },
+      link{
+        ${linkQuery}
+      },
     },
     links[]{
       _key,

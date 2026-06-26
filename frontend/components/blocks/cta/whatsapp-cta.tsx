@@ -65,7 +65,7 @@ export default async function WhatsAppCta({
           >
             <GlobalWhatsAppButton fallbackLabel="Chat via WhatsApp" />
             {secondaryLink?.title && secondaryLink.href ? (
-              <Button variant={link?.buttonVariant || "outline"} size="lg" className=" px-6" asChild>
+              <Button variant={secondaryLink?.buttonVariant || "outline"} size="lg" asChild>
                 <Link
                   href={secondaryLink.href}
                   target={secondaryLink.target ? "_blank" : undefined}

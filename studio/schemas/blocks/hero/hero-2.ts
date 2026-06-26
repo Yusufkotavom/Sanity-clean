@@ -1,4 +1,4 @@
-import { defineField, defineType } from "sanity";
+import { defineField, defineType, defineArrayMember } from "sanity";
 import { LayoutTemplate } from "lucide-react";
 
 export default defineType({
@@ -79,15 +79,34 @@ export default defineType({
       type: "block-content",
     }),
     defineField({
-      name: "image",
-      title: "Image",
-      type: "image",
-      fields: [
-        {
-          name: "alt",
-          type: "string",
-          title: "Alternative Text",
-        },
+      name: "images",
+      title: "Images",
+      type: "array",
+      of: [
+        defineArrayMember({
+          type: "object",
+          name: "heroImage",
+          fields: [
+            defineField({
+              name: "image",
+              type: "image",
+              title: "Image",
+              options: { hotspot: true },
+              fields: [
+                { name: "alt", type: "string", title: "Alternative Text" },
+              ],
+            }),
+            defineField({ name: "title", type: "string", title: "Title" }),
+            defineField({ name: "description", type: "text", title: "Description", rows: 2 }),
+            defineField({ name: "link", type: "link", title: "Link (entire image)" }),
+          ],
+          preview: {
+            select: { title: "title", media: "image" },
+            prepare({ title, media }: { title?: string; media?: any }) {
+              return { title: title || "Hero Image", media };
+            },
+          },
+        }),
       ],
     }),
     defineField({
@@ -101,7 +120,7 @@ export default defineType({
     select: {
       title: "title",
     },
-    prepare({ title }) {
+    prepare({ title }: { title?: string }) {
       return {
         title: "Hero 2",
         subtitle: title,
