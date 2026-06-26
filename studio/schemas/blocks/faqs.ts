@@ -12,6 +12,9 @@ export default defineType({
       bottom: true,
     },
     colorVariant: "background",
+    source: "reference",
+    title: "Pertanyaan yang Sering Diajukan",
+    description: "Temukan jawaban untuk pertanyaan umum seputar layanan kami",
   },
   fields: [
     defineField({
@@ -25,9 +28,33 @@ export default defineType({
       description: "Select a background color variant",
     }),
     defineField({
+      name: "title",
+      type: "string",
+      initialValue: "Pertanyaan yang Sering Diajukan",
+    }),
+    defineField({
+      name: "description",
+      type: "text",
+      rows: 2,
+      initialValue: "Temukan jawaban untuk pertanyaan umum seputar layanan kami",
+    }),
+    defineField({
+      name: "source",
+      type: "string",
+      title: "Data Source",
+      options: {
+        list: [
+          { title: "Reference (FAQ Documents)", value: "reference" },
+          { title: "Manual Input", value: "manual" },
+        ],
+        layout: "radio",
+      },
+      initialValue: "reference",
+    }),
+    defineField({
       name: "faqs",
       type: "array",
-      title: "FAQs",
+      title: "FAQ Documents",
       of: [
         {
           name: "faq",
@@ -35,16 +62,32 @@ export default defineType({
           to: [{ type: "faq" }],
         },
       ],
+      hidden: ({ parent }) => parent?.source !== "reference",
+    }),
+    defineField({
+      name: "manualItems",
+      title: "FAQ Items",
+      type: "array",
+      of: [{ type: "faqItem" }],
+      hidden: ({ parent }) => parent?.source !== "manual",
+      validation: (Rule) =>
+        Rule.custom((value, context) => {
+          if ((context.parent as any)?.source === "manual" && (!value || value.length === 0)) {
+            return "Add at least one FAQ item when source is Manual";
+          }
+          return true;
+        }),
     }),
   ],
   preview: {
     select: {
-      title: "faqs.0.title",
+      title: "title",
+      source: "source",
     },
-    prepare({ title }) {
+    prepare({ title, source }) {
       return {
         title: "FAQs",
-        subtitle: title || "No Title",
+        subtitle: `${title || ""} (${source === "manual" ? "Manual" : "Reference"})`,
       };
     },
   },

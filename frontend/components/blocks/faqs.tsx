@@ -1,3 +1,4 @@
+import { stegaClean } from "@/lib/clean";
 import SectionContainer from "@/components/ui/section-container";
 import {
   Accordion,
@@ -5,37 +6,70 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { PAGE_QUERY_RESULT } from "@/sanity.types";
 import GlassCard from "@/components/ui/glass-card";
+import type { ColorVariant, SectionPadding } from "@/sanity.types";
 
-type FAQProps = Extract<
-  NonNullable<NonNullable<PAGE_QUERY_RESULT>["blocks"]>[number],
-  { _type: "faqs" }
->;
+type FAQBlock = {
+  _type: "faqs";
+  _key: string;
+  padding?: SectionPadding | null;
+  colorVariant?: ColorVariant | null;
+  title?: string;
+  description?: string;
+  source?: string;
+  faqs?: { _id?: string; question?: string; answer?: string }[] | null;
+  manualItems?: { _key?: string; question?: string; answer?: string }[] | null;
+};
 
-export default function FAQs({ padding, colorVariant, faqs }: FAQProps) {
-  const validFaqs = (faqs || []).filter(
-    (faq: any): faq is NonNullable<typeof faq> =>
-      Boolean(faq?._id || faq?.question),
-  );
+export default function FAQs(block: FAQBlock) {
+  const { padding, colorVariant, title, description, source, faqs, manualItems } = block;
+  const dataSource = stegaClean(source) || "reference";
+
+  let items: { _id?: string; question?: string; answer?: string }[] = [];
+
+  if (dataSource === "manual") {
+    items = (manualItems || []).map((item, i) => ({
+      _id: `manual-${i}`,
+      question: item.question,
+      answer: item.answer,
+    }));
+  } else {
+    items = (faqs || []).filter((faq) => faq?._id || faq?.question);
+  }
 
   return (
     <SectionContainer color={colorVariant} padding={padding}>
-      {validFaqs.length > 0 && (
-        <Accordion className="space-y-4" type="multiple">
-          {validFaqs.map((faq: any, index: number) => (
-            <GlassCard key={faq._id || faq.question || `faq-${index}`} className="p-0">
-              <AccordionItem value={`item-${faq._id || faq.question || index}`}>
-                <AccordionTrigger className="px-6">{faq.question}</AccordionTrigger>
-                <AccordionContent className="px-6 pb-6 text-muted-foreground">
-                  {faq.answer}
-                </AccordionContent>
-              </AccordionItem>
-            </GlassCard>
-          ))}
-        </Accordion>
-      )}
+      <div className="mx-auto max-w-4xl">
+        {title || description ? (
+          <div className="text-center mb-12">
+            {title && (
+              <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+                {title}
+              </h2>
+            )}
+            {description && (
+              <p className="mt-4 text-lg text-muted-foreground">{description}</p>
+            )}
+          </div>
+        ) : null}
+
+        {items.length > 0 && (
+          <GlassCard className="p-2 md:p-3">
+            <Accordion type="single" collapsible className="w-full">
+              {items.map((item, index) => (
+                <AccordionItem key={item._id || item.question || `faq-${index}`} value={`item-${index}`}>
+                  <AccordionTrigger className="text-left">
+                    {item.question}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground">
+                    {item.answer}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </GlassCard>
+        )}
+      </div>
     </SectionContainer>
   );
 }
-

@@ -7,12 +7,19 @@ export const faqsQuery = groq`
     _key,
     padding,
     colorVariant,
+    title,
+    description,
+    source,
     faqs[0..5]->{
       _id,
       question,
       answer,
       category,
     },
+    manualItems[]{
+      _key,
+      question,
+      answer,
+    },
   }
 `;
-

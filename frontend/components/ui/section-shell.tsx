@@ -105,7 +105,7 @@ export function SplitVisualPanel({
     <SectionPanel
       tone={tone}
       className={cn(
-        "grid gap-6 overflow-hidden rounded-[1.75rem] p-5 md:grid-cols-[minmax(0,1fr)_minmax(320px,0.92fr)] md:p-7 lg:p-8",
+        "grid gap-6 overflow-hidden p-5 md:grid-cols-[minmax(0,1fr)_minmax(320px,0.92fr)] md:p-7 lg:p-8 rounded-[var(--radius-card,1.75rem)]",
         reverse && "md:grid-cols-[minmax(320px,0.92fr)_minmax(0,1fr)]",
         className,
       )}
@@ -121,7 +121,7 @@ export function SplitVisualPanel({
       </div>
       <div
         className={cn(
-          "relative min-h-[240px] overflow-hidden rounded-[1.5rem] border border-white/40 bg-white/60 shadow-[0_14px_50px_rgba(15,23,42,0.08)] dark:border-white/10 dark:bg-white/5",
+          "relative min-h-[240px] overflow-hidden border border-white/40 bg-white/60 shadow-[0_14px_50px_rgba(15,23,42,0.08)] dark:border-white/10 dark:bg-white/5 rounded-[var(--radius-card,1.5rem)]",
           reverse && "md:order-1",
           visualClassName,
         )}

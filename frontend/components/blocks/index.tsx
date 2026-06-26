@@ -21,20 +21,10 @@ const RichContent = dynamic(() => import("@/components/blocks/rich-content"));
 const CompanyInfo = dynamic(() => import("@/components/blocks/seo/company-info"));
 const TestimonialsBlock = dynamic(() => import("@/components/blocks/seo/testimonials-block"));
 const PricingBlock = dynamic(() => import("@/components/blocks/seo/pricing-block"));
-const FaqBlock = dynamic(() => import("@/components/blocks/seo/faq-block"));
 const FeaturesPackageBlock = dynamic(() => import("@/components/blocks/seo/features-package-block"));
 const ServiceTypesBlock = dynamic(() => import("@/components/blocks/seo/service-types-block"));
 const ProblemSolutionBlock = dynamic(() => import("@/components/blocks/seo/problem-solution-block"));
-const ValuePropsBlock = dynamic(() => import("@/components/blocks/seo/value-props-block"));
-const StatsHeroBlock = dynamic(() => import("@/components/blocks/seo/stats-hero-block"));
-const EeatBlock = dynamic(() => import("@/components/blocks/seo/eeat-block"));
-const MetricsRailBlock = dynamic(() => import("@/components/blocks/seo/metrics-rail-block"));
-const HighlightsBlock = dynamic(() => import("@/components/blocks/seo/highlights-block"));
-const ReviewsBlock = dynamic(() => import("@/components/blocks/seo/reviews-block"));
 const QuoteSpotlightBlock = dynamic(() => import("@/components/blocks/seo/quote-spotlight-block"));
-const MicroBadgesBlock = dynamic(() => import("@/components/blocks/seo/micro-badges-block"));
-const RelatedLinksBlock = dynamic(() => import("@/components/blocks/seo/related-links-block"));
-const ProcessFaqBlock = dynamic(() => import("@/components/blocks/seo/process-faq-block"));
 const FlexibleBuilder = dynamic(() => import("@/components/blocks/flexible-builder"));
 
 type Block = NonNullable<NonNullable<PAGE_QUERY_RESULT>["blocks"]>[number];
@@ -60,20 +50,10 @@ export const componentMap: Record<string, React.ComponentType<any>> = {
   "company-info": CompanyInfo,
   "testimonials-block": TestimonialsBlock,
   "pricing-block": PricingBlock,
-  "faq-block": FaqBlock,
   "features-package-block": FeaturesPackageBlock,
   "service-types-block": ServiceTypesBlock,
   "problem-solution-block": ProblemSolutionBlock,
-  "value-props-block": ValuePropsBlock,
-  "stats-hero-block": StatsHeroBlock,
-  "eeat-block": EeatBlock,
-  "metrics-rail-block": MetricsRailBlock,
-  "highlights-block": HighlightsBlock,
-  "reviews-block": ReviewsBlock,
   "quote-spotlight-block": QuoteSpotlightBlock,
-  "micro-badges-block": MicroBadgesBlock,
-  "related-links-block": RelatedLinksBlock,
-  "process-faq-block": ProcessFaqBlock,
   "flexible-builder": FlexibleBuilder,
 };
 

@@ -42,15 +42,19 @@ export default defineType({
           type: "object",
           name: "feature",
           fields: [
-            defineField({ name: "icon", type: "string", title: "Icon (Emoji)", description: "Emoji or short text" }),
+            defineField({ name: "icon", type: "ui-icon", title: "Icon" }),
             defineField({ name: "title", type: "string", validation: (Rule) => Rule.required() }),
             defineField({ name: "description", type: "text", rows: 2 }),
             defineField({ name: "badge", type: "string", title: "Badge" }),
+            defineField({ name: "link", type: "link", title: "Link (entire card)" }),
           ],
           preview: {
             select: { title: "title", icon: "icon" },
-            prepare({ title, icon }) {
-              return { title: title || "Item", subtitle: icon || "" };
+            prepare({ title, icon }: { title?: string; icon?: any }) {
+              return {
+                title: title || "Item",
+                subtitle: icon?.name || "",
+              };
             },
           },
         }),
@@ -65,7 +69,7 @@ export default defineType({
   ],
   preview: {
     select: { title: "title", cardStyle: "cardStyle" },
-    prepare({ title, cardStyle }) {
+    prepare({ title, cardStyle }: { title?: string; cardStyle?: string }) {
       return { title: "Features / Value Props", subtitle: `${cardStyle || "grid"} · ${title || ""}` };
     },
   },

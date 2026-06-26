@@ -36,7 +36,7 @@ export default function GridPost({ cardTheme, textAlign, post }: GridPostProps) 
       >
         <div className={cn("flex flex-col", isCenter && "items-center text-center")}>
           {image && (image.asset?._id || !!(image as any)._url) && (
-            <div className="mb-4 relative h-[15rem] sm:h-[20rem] md:h-[25rem] lg:h-[9.5rem] xl:h-[12rem] rounded-2xl overflow-hidden">
+            <div className="mb-4 relative h-[15rem] sm:h-[20rem] md:h-[25rem] lg:h-[9.5rem] xl:h-[12rem] overflow-hidden rounded-[var(--radius-card,1rem)] border border-white/40 bg-white/60 dark:border-white/15 dark:bg-white/[0.08]">
               <Image
                 src={urlFor(image).width(900).quality(75).url()}
                 alt={image.alt || ""}

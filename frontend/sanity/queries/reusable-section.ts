@@ -17,19 +17,10 @@ import { legacyRichContentQuery } from "./legacy/legacy-rich-content";
 import { companyInfoQuery } from "./seo/company-info";
 import { testimonialsBlockQuery } from "./seo/testimonials-block";
 import { pricingBlockQuery } from "./seo/pricing-block";
-import { faqBlockQuery } from "./seo/faq-block";
 import { benefitsBlockQuery } from "./seo/benefits-block";
 import { featuresPackageBlockQuery } from "./seo/features-package-block";
 import { serviceTypesBlockQuery } from "./seo/service-types-block";
 import { problemSolutionBlockQuery } from "./seo/problem-solution-block";
-import { valuePropsBlockQuery } from "./seo/value-props-block";
-import { statsHeroBlockQuery } from "./seo/stats-hero-block";
-import { eeatBlockQuery } from "./seo/eeat-block";
-import { metricsRailBlockQuery } from "./seo/metrics-rail-block";
-import { highlightsBlockQuery } from "./seo/highlights-block";
-import { reviewsBlockQuery } from "./seo/reviews-block";
-import { microBadgesBlockQuery } from "./seo/micro-badges-block";
-
 export const REUSABLE_SECTIONS_QUERY = groq`
   *[_type == "reusableSection" && isActive == true] | order(priority asc, _createdAt asc){
     _id,
@@ -41,7 +32,6 @@ export const REUSABLE_SECTIONS_QUERY = groq`
     blocks[]{
       ${hero1Query},
       ${hero2Query},
-      ${statsHeroBlockQuery},
       ${sectionHeaderQuery},
       ${splitRowQuery},
       ${gridRowQuery},
@@ -58,17 +48,10 @@ export const REUSABLE_SECTIONS_QUERY = groq`
       ${companyInfoQuery},
       ${testimonialsBlockQuery},
       ${pricingBlockQuery},
-      ${faqBlockQuery},
       ${benefitsBlockQuery},
       ${featuresPackageBlockQuery},
       ${serviceTypesBlockQuery},
       ${problemSolutionBlockQuery},
-      ${valuePropsBlockQuery},
-      ${eeatBlockQuery},
-      ${metricsRailBlockQuery},
-      ${highlightsBlockQuery},
-      ${reviewsBlockQuery},
-      ${microBadgesBlockQuery},
     }
   }
 `;

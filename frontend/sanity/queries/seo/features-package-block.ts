@@ -14,10 +14,17 @@ export const featuresPackageBlockQuery = groq`
     description,
     features[]{
       _key,
-      icon,
+      icon{
+        provider,
+        name,
+        svg
+      },
       title,
       description,
       badge,
+      link{
+        ${linkQuery}
+      },
     },
     cta{
       ${linkQuery},

@@ -112,7 +112,6 @@ export default defineType({
         { type: "features-package-block" },
         { type: "service-types-block" },
         { type: "problem-solution-block" },
-        { type: "value-props-block" },
       ],
       options: {
         insertMenu: {
@@ -188,7 +187,6 @@ export default defineType({
                 "features-package-block",
                 "service-types-block",
                 "problem-solution-block",
-                "value-props-block",
               ],
             },
           ],

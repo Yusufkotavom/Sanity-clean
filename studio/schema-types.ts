@@ -94,22 +94,11 @@ import newsletter from "./schemas/blocks/forms/newsletter";
 import allPosts from "./schemas/blocks/all-posts";
 import legacyRichContent from "./schemas/blocks/legacy/legacy-rich-content";
 import companyInfo from "./schemas/blocks/seo/company-info";
-import faqBlock from "./schemas/blocks/seo/faq-block";
 import testimonialsBlock from "./schemas/blocks/seo/testimonials-block";
 import pricingBlock from "./schemas/blocks/seo/pricing-block";
-import eeatBlock from "./schemas/blocks/seo/eeat-block";
-import metricsRailBlock from "./schemas/blocks/seo/metrics-rail-block";
-import highlightsBlock from "./schemas/blocks/seo/highlights-block";
-import reviewsBlock from "./schemas/blocks/seo/reviews-block";
-import quoteSpotlightBlock from "./schemas/blocks/seo/quote-spotlight-block";
-import microBadgesBlock from "./schemas/blocks/seo/micro-badges-block";
-import relatedLinksBlock from "./schemas/blocks/seo/related-links-block";
-import processFaqBlock from "./schemas/blocks/seo/process-faq-block";
 import featuresPackageBlock from "./schemas/blocks/seo/features-package-block";
 import serviceTypesBlock from "./schemas/blocks/seo/service-types-block";
 import problemSolutionBlock from "./schemas/blocks/seo/problem-solution-block";
-import valuePropsBlock from "./schemas/blocks/seo/value-props-block";
-import statsHeroBlock from "./schemas/blocks/seo/stats-hero-block";
 import blockPresetRef from "./schemas/blocks/shared/block-preset-ref";
 import flexibleBuilder from "./schemas/blocks/flexible-builder";
 
@@ -208,22 +197,12 @@ export const schemaTypes = [
   allPosts,
   legacyRichContent,
   companyInfo,
-  faqBlock,
   testimonialsBlock,
   pricingBlock,
   featuresPackageBlock,
   serviceTypesBlock,
   problemSolutionBlock,
-  valuePropsBlock,
-  statsHeroBlock,
-  eeatBlock,
-  metricsRailBlock,
-  highlightsBlock,
-  reviewsBlock,
   quoteSpotlightBlock,
-  microBadgesBlock,
-  relatedLinksBlock,
-  processFaqBlock,
   blockPresetRef,
   blockPreset,
   flexibleBuilder,

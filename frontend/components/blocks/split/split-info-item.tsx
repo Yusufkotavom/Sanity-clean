@@ -37,14 +37,16 @@ export default function SplitCardsItem({
     >
       <GlassCard
         className={cn(
-          "rounded-3xl px-6 py-6 transition-colors duration-1000 ease-in-out lg:px-8 lg:py-8",
-          isInView ? "border-primary/35 bg-foreground/85" : undefined,
+          "px-6 py-6 transition-colors duration-1000 ease-in-out lg:px-8 lg:py-8 rounded-[var(--radius-card,1.5rem)]",
+          isInView
+            ? "border-primary/35 bg-foreground/85 dark:bg-primary/20 dark:border-primary/50"
+            : undefined,
         )}
       >
         <div
           className={cn(
             "flex flex-col gap-4 transition-colors duration-1000 ease-in-out",
-            isInView ? "text-background" : "text-foreground",
+            isInView ? "text-background dark:text-foreground" : "text-foreground",
           )}
         >
           <div className="flex items-center gap-2">
@@ -83,7 +85,7 @@ export default function SplitCardsItem({
           <div
             className={cn(
               "mt-4 flex flex-wrap gap-3 transition-colors duration-1000 ease-in-out",
-              isInView ? "text-background" : "text-foreground",
+              isInView ? "text-background dark:text-foreground" : "text-foreground",
             )}
           >
             {tags.map((tag) => (
@@ -92,8 +94,8 @@ export default function SplitCardsItem({
                 className={cn(
                   "transition-colors duration-1000 ease-in-out",
                   isInView
-                    ? "bg-background text-foreground"
-                    : "bg-foreground text-background",
+                    ? "bg-background text-foreground dark:bg-foreground dark:text-background"
+                    : "bg-foreground text-background dark:bg-background dark:text-foreground",
                 )}
               >
                 {tag}

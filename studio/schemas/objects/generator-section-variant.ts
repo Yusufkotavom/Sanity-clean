@@ -3,7 +3,6 @@ import { defineField, defineType } from "sanity";
 const SECTION_TYPE_OPTIONS = [
   { title: "Hero", value: "hero-1" },
   { title: "Stats Hero", value: "stats-hero-block" },
-  { title: "Value Props", value: "value-props-block" },
   { title: "Features Package", value: "features-package-block" },
   { title: "Company Info", value: "company-info" },
   { title: "Problem / Solution", value: "problem-solution-block" },

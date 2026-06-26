@@ -9,6 +9,14 @@ export const testimonialsBlockQuery = groq`
     colorVariant,
     title,
     description,
+    source,
     category,
+    manualItems[]{
+      _key,
+      reviewerName,
+      reviewerRole,
+      rating,
+      reviewBody,
+    },
   }
 `;

@@ -3,7 +3,7 @@ import { MessageSquareQuote } from "lucide-react";
 
 export default defineType({
   name: "testimonials-block",
-  title: "Testimonials Block",
+  title: "Testimonials",
   type: "object",
   icon: MessageSquareQuote,
   initialValue: {
@@ -13,9 +13,9 @@ export default defineType({
       bottom: true,
     },
     colorVariant: "background",
+    source: "global",
     title: "Apa Kata Klien Kami",
     description: "Testimoni nyata dari klien yang telah merasakan hasil kerja sama dengan Kotacom",
-    category: "",
   },
   fields: [
     defineField({
@@ -40,10 +40,23 @@ export default defineType({
       initialValue: "Testimoni nyata dari klien yang telah merasakan hasil kerja sama dengan Kotacom",
     }),
     defineField({
+      name: "source",
+      type: "string",
+      title: "Data Source",
+      options: {
+        list: [
+          { title: "Global (SEO Settings)", value: "global" },
+          { title: "Manual Input", value: "manual" },
+        ],
+        layout: "radio",
+      },
+      initialValue: "global",
+    }),
+    defineField({
       name: "category",
       type: "string",
       title: "Filter by Category",
-      description: "Leave empty to show all testimonials",
+      description: "Only applies when source is Global. Leave empty to show all",
       options: {
         list: [
           { title: "All", value: "" },
@@ -53,19 +66,32 @@ export default defineType({
         ],
         layout: "radio",
       },
-      initialValue: "",
+      hidden: ({ parent }) => parent?.source !== "global",
+    }),
+    defineField({
+      name: "manualItems",
+      title: "Testimonials",
+      type: "array",
+      of: [{ type: "reviewItem" }],
+      hidden: ({ parent }) => parent?.source !== "manual",
+      validation: (Rule) =>
+        Rule.custom((value, context) => {
+          if ((context.parent as any)?.source === "manual" && (!value || value.length === 0)) {
+            return "Add at least one testimonial when source is Manual";
+          }
+          return true;
+        }),
     }),
   ],
   preview: {
     select: {
       title: "title",
+      source: "source",
       category: "category",
     },
-    prepare({ title, category }) {
-      return {
-        title: "Testimonials",
-        subtitle: category ? `${title} - ${category}` : title,
-      };
+    prepare({ title, source, category }) {
+      const subtitle = source === "manual" ? "Manual Input" : category ? `Global - ${category}` : "Global - All";
+      return { title: "Testimonials", subtitle: `${title} (${subtitle})` };
     },
   },
 });
