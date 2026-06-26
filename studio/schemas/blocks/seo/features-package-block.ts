@@ -14,57 +14,70 @@ export default defineType({
     subtitle: "Apa Yang Akan Anda Dapatkan?",
   },
   fields: [
-    defineField({ name: "padding", type: "section-padding" }),
-    defineField({ name: "colorVariant", type: "color-variant", title: "Color Variant" }),
     defineField({
-      name: "cardStyle",
-      type: "string",
-      title: "Card Style",
-      options: {
-        list: [
-          { title: "Grid (icon + title + desc)", value: "grid" },
-          { title: "List (compact, no card border)", value: "list" },
-          { title: "Numbered (step-style)", value: "numbered" },
-        ],
-        layout: "radio",
-      },
-      initialValue: "grid",
-    }),
-    defineField({ name: "title", type: "string" }),
-    defineField({ name: "subtitle", type: "string" }),
-    defineField({ name: "description", type: "text", rows: 2 }),
-    defineField({
-      name: "features",
-      title: "Items",
-      type: "array",
-      of: [
-        defineArrayMember({
-          type: "object",
-          name: "feature",
-          fields: [
-            defineField({ name: "icon", type: "ui-icon", title: "Icon" }),
-            defineField({ name: "title", type: "string", validation: (Rule) => Rule.required() }),
-            defineField({ name: "description", type: "text", rows: 2 }),
-            defineField({ name: "badge", type: "string", title: "Badge" }),
-            defineField({ name: "link", type: "link", title: "Link (entire card)" }),
-          ],
-          preview: {
-            select: { title: "title", icon: "icon" },
-            prepare({ title, icon }: { title?: string; icon?: any }) {
-              return {
-                title: title || "Item",
-                subtitle: icon?.name || "",
-              };
-            },
-          },
-        }),
+      name: "tabs",
+      type: "tab",
+      groups: [
+        { name: "content", title: "Content" },
+        { name: "layout", title: "Layout" },
+        { name: "style", title: "Style" },
       ],
-    }),
-    defineField({
-      name: "cta",
-      title: "CTA Button",
-      type: "link",
-      description: "Optional call-to-action button below the features.",
+      fields: [
+        defineField({ name: "title", type: "string", title: "Title", group: "content" }),
+        defineField({ name: "subtitle", type: "string", title: "Subtitle", group: "content" }),
+        defineField({ name: "description", type: "text", rows: 2, group: "content" }),
+        defineField({
+          name: "features",
+          title: "Items",
+          type: "array",
+          group: "content",
+          of: [
+            defineArrayMember({
+              type: "object",
+              name: "feature",
+              fields: [
+                defineField({ name: "icon", type: "ui-icon", title: "Icon" }),
+                defineField({ name: "title", type: "string", validation: (Rule) => Rule.required() }),
+                defineField({ name: "description", type: "text", rows: 2 }),
+                defineField({ name: "badge", type: "string", title: "Badge" }),
+                defineField({ name: "link", type: "link", title: "Link" }),
+              ],
+              preview: {
+                select: { title: "title", icon: "icon" },
+                prepare({ title, icon }: { title?: string; icon?: any }) {
+                  return {
+                    title: title || "Item",
+                    subtitle: icon?.name || "",
+                  };
+                },
+              },
+            }),
+          ],
+        }),
+        defineField({
+          name: "cta",
+          title: "CTA Button",
+          type: "link",
+          group: "content",
+        }),
+        defineField({
+          name: "cardStyle",
+          type: "string",
+          title: "Card Style",
+          group: "layout",
+          options: {
+            list: [
+              { title: "Grid", value: "grid" },
+              { title: "List", value: "list" },
+              { title: "Numbered", value: "numbered" },
+            ],
+            layout: "radio",
+          },
+          initialValue: "grid",
+        }),
+        defineField({ name: "padding", type: "section-padding", group: "style" }),
+        defineField({ name: "colorVariant", type: "color-variant", title: "Background", group: "style" }),
+      ],
     }),
   ],
   preview: {

@@ -46,68 +46,87 @@ export default defineType({
   },
   fields: [
     defineField({
-      name: "useCard",
-      type: "boolean",
-      title: "Use Card Style",
-      description: "Display content inside a rounded card style",
-      initialValue: true,
-    }),
-    defineField({
-      name: "imagePosition",
-      type: "string",
-      title: "Image Position",
-      options: {
-        list: [
-          { title: "Right", value: "right" },
-          { title: "Left", value: "left" },
-        ],
-        layout: "radio",
-      },
-      initialValue: "right",
-    }),
-    defineField({
-      name: "colorVariant",
-      type: "color-variant",
-      title: "Color Variant",
-      description: "Select a background color variant",
-      initialValue: "transparent",
-    }),
-    defineField({
-      name: "tagLine",
-      type: "string",
-    }),
-    defineField({
-      name: "uiIcon",
-      title: "UI Icon",
-      type: "ui-icon",
-      description: "Optional icon shown beside the hero tagline.",
-    }),
-    defineField({
-      name: "title",
-      type: "string",
-      description: "Optional custom title override. Leave empty to use the page title in frontend.",
-    }),
-    defineField({
-      name: "body",
-      type: "block-content",
-    }),
-    defineField({
-      name: "image",
-      title: "Image",
-      type: "image",
-      fields: [
-        {
-          name: "alt",
-          type: "string",
-          title: "Alternative Text",
-        },
+      name: "tabs",
+      type: "tab",
+      groups: [
+        { name: "content", title: "Content" },
+        { name: "layout", title: "Layout" },
+        { name: "style", title: "Style" },
       ],
-    }),
-    defineField({
-      name: "links",
-      type: "array",
-      of: [{ type: "link" }],
-      validation: (rule) => rule.max(2),
+      fields: [
+        defineField({
+          name: "tagLine",
+          type: "string",
+          title: "Tagline",
+          group: "content",
+        }),
+        defineField({
+          name: "uiIcon",
+          title: "Icon",
+          type: "ui-icon",
+          group: "content",
+        }),
+        defineField({
+          name: "title",
+          type: "string",
+          title: "Title",
+          group: "content",
+        }),
+        defineField({
+          name: "body",
+          type: "block-content",
+          group: "content",
+        }),
+        defineField({
+          name: "image",
+          title: "Image",
+          type: "image",
+          group: "content",
+          fields: [
+            {
+              name: "alt",
+              type: "string",
+              title: "Alternative Text",
+            },
+          ],
+        }),
+        defineField({
+          name: "links",
+          type: "array",
+          of: [{ type: "link" }],
+          group: "content",
+          validation: (rule) => rule.max(2),
+        }),
+        defineField({
+          name: "useCard",
+          type: "boolean",
+          title: "Card Style",
+          description: "Display content inside a rounded card",
+          group: "layout",
+          initialValue: true,
+        }),
+        defineField({
+          name: "imagePosition",
+          type: "string",
+          title: "Image Position",
+          group: "layout",
+          options: {
+            list: [
+              { title: "Right", value: "right" },
+              { title: "Left", value: "left" },
+            ],
+            layout: "radio",
+          },
+          initialValue: "right",
+        }),
+        defineField({
+          name: "colorVariant",
+          type: "color-variant",
+          title: "Background",
+          group: "style",
+          initialValue: "transparent",
+        }),
+      ],
     }),
   ],
   preview: {

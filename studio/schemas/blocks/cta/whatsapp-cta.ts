@@ -39,58 +39,77 @@ export default defineType({
   },
   fields: [
     defineField({
-      name: "padding",
-      type: "section-padding",
-    }),
-    defineField({
-      name: "colorVariant",
-      type: "color-variant",
-      title: "Color Variant",
-      description: "Select a background color variant",
-    }),
-    defineField({
-      name: "sectionWidth",
-      type: "string",
-      title: "Section Width",
-      options: {
-        list: SECTION_WIDTH.map(({ title, value }) => ({ title, value })),
-        layout: "radio",
-      },
-      initialValue: "default",
-    }),
-    defineField({
-      name: "stackAlign",
-      type: "string",
-      title: "Stack Layout Alignment",
-      options: {
-        list: STACK_ALIGN.map(({ title, value }) => ({ title, value })),
-        layout: "radio",
-      },
-      initialValue: "left",
-    }),
-    defineField({
-      name: "tagLine",
-      type: "string",
-    }),
-    defineField({
-      name: "uiIcon",
-      title: "UI Icon",
-      type: "ui-icon",
-      description: "Optional icon shown beside the WhatsApp CTA tagline.",
-    }),
-    defineField({
-      name: "title",
-      type: "string",
-    }),
-    defineField({
-      name: "body",
-      type: "block-content",
-    }),
-    defineField({
-      name: "secondaryLink",
-      title: "Secondary Link",
-      type: "link",
-      description: "Optional secondary action shown next to the WhatsApp button.",
+      name: "tabs",
+      type: "tab",
+      groups: [
+        { name: "content", title: "Content" },
+        { name: "layout", title: "Layout" },
+        { name: "style", title: "Style" },
+      ],
+      fields: [
+        defineField({
+          name: "tagLine",
+          type: "string",
+          title: "Tagline",
+          group: "content",
+        }),
+        defineField({
+          name: "uiIcon",
+          title: "Icon",
+          type: "ui-icon",
+          group: "content",
+        }),
+        defineField({
+          name: "title",
+          type: "string",
+          title: "Title",
+          group: "content",
+        }),
+        defineField({
+          name: "body",
+          type: "block-content",
+          group: "content",
+        }),
+        defineField({
+          name: "secondaryLink",
+          title: "Secondary Link",
+          type: "link",
+          group: "content",
+        }),
+        defineField({
+          name: "sectionWidth",
+          type: "string",
+          title: "Section Width",
+          group: "layout",
+          options: {
+            list: SECTION_WIDTH.map(({ title, value }) => ({ title, value })),
+            layout: "radio",
+          },
+          initialValue: "default",
+        }),
+        defineField({
+          name: "stackAlign",
+          type: "string",
+          title: "Alignment",
+          group: "layout",
+          options: {
+            list: STACK_ALIGN.map(({ title, value }) => ({ title, value })),
+            layout: "radio",
+          },
+          initialValue: "left",
+        }),
+        defineField({
+          name: "padding",
+          type: "section-padding",
+          group: "style",
+        }),
+        defineField({
+          name: "colorVariant",
+          type: "color-variant",
+          title: "Background",
+          group: "style",
+        }),
+      ],
     }),
   ],
   preview: {

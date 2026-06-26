@@ -19,40 +19,54 @@ export default defineType({
   },
   fields: [
     defineField({
-      name: "padding",
-      type: "section-padding",
-    }),
-    defineField({
-      name: "colorVariant",
-      type: "color-variant",
-      title: "Color Variant",
-      description: "Select a background color variant",
-    }),
-    defineField({
-      name: "title",
-      type: "string",
-      initialValue: "Paket Harga",
-    }),
-    defineField({
-      name: "description",
-      type: "text",
-      rows: 2,
-      initialValue: "Pilih paket yang sesuai dengan kebutuhan bisnis Anda",
-    }),
-    defineField({
-      name: "category",
-      type: "string",
-      title: "Pricing Category",
-      description: "Select which pricing packages to display",
-      options: {
-        list: [
-          { title: "Website", value: "website" },
-          { title: "Software", value: "software" },
-          { title: "Printing", value: "printing" },
-        ],
-        layout: "radio",
-      },
-      validation: (Rule) => Rule.required(),
+      name: "tabs",
+      type: "tab",
+      groups: [
+        { name: "content", title: "Content" },
+        { name: "style", title: "Style" },
+      ],
+      fields: [
+        defineField({
+          name: "title",
+          type: "string",
+          title: "Title",
+          group: "content",
+          initialValue: "Paket Harga",
+        }),
+        defineField({
+          name: "description",
+          type: "text",
+          rows: 2,
+          group: "content",
+          initialValue: "Pilih paket yang sesuai dengan kebutuhan bisnis Anda",
+        }),
+        defineField({
+          name: "category",
+          type: "string",
+          title: "Pricing Category",
+          group: "content",
+          options: {
+            list: [
+              { title: "Website", value: "website" },
+              { title: "Software", value: "software" },
+              { title: "Printing", value: "printing" },
+            ],
+            layout: "radio",
+          },
+          validation: (Rule) => Rule.required(),
+        }),
+        defineField({
+          name: "padding",
+          type: "section-padding",
+          group: "style",
+        }),
+        defineField({
+          name: "colorVariant",
+          type: "color-variant",
+          title: "Background",
+          group: "style",
+        }),
+      ],
     }),
   ],
   preview: {
