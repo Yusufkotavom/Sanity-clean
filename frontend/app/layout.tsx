@@ -88,12 +88,65 @@ const THEME_PRESETS: Record<
 
 import { stegaClean } from "@/lib/clean";
 
-function toHexColor(value?: string | null): string | undefined {
+type SanityColor = {
+  hex?: string | null;
+  rgb?: { r?: number; g?: number; b?: number; a?: number } | null;
+  hsl?: { h?: number; s?: number; l?: number; a?: number } | null;
+} | string | null | undefined;
+
+function toHexColor(value?: SanityColor): string | undefined {
   if (!value) return undefined;
-  const normalized = stegaClean(value.trim());
-  return /^#([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$/.test(normalized)
-    ? normalized
-    : undefined;
+
+  // Legacy string format
+  if (typeof value === "string") {
+    const normalized = stegaClean(value.trim());
+    return /^#([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$/.test(normalized)
+      ? normalized
+      : undefined;
+  }
+
+  // @sanity/color-input object format
+  if (typeof value === "object") {
+    const alpha = value.rgb?.a ?? value.hsl?.a ?? 1;
+
+    // Has transparency → use rgba()
+    if (alpha < 1 && value.rgb) {
+      const { r, g, b } = value.rgb;
+      if (r != null && g != null && b != null) {
+        return `rgba(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)}, ${alpha})`;
+      }
+    }
+
+    // Opaque → use hex
+    if (value.hex) {
+      const hex = stegaClean(value.hex.trim());
+      return /^#([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$/.test(hex) ? hex : undefined;
+    }
+  }
+
+  return undefined;
+}
+
+type GradientConfig = {
+  enabled?: boolean | null;
+  direction?: string | null;
+  from?: SanityColor;
+  via?: SanityColor;
+  to?: SanityColor;
+};
+
+function buildGradientCSS(gradient?: GradientConfig | null): string | undefined {
+  if (!gradient?.enabled) return undefined;
+  const from = toHexColor(gradient.from);
+  const to = toHexColor(gradient.to);
+  if (!from || !to) return undefined;
+  const via = toHexColor(gradient.via);
+  const dir = gradient.direction || "to right";
+  const stops = via ? `${from}, ${via}, ${to}` : `${from}, ${to}`;
+  if (dir.startsWith("radial")) {
+    return `radial-gradient(circle, ${stops})`;
+  }
+  return `linear-gradient(${dir}, ${stops})`;
 }
 
 type SettingsData = {
@@ -242,7 +295,7 @@ export default async function RootLayout({
     fetchSanityThemeSettings(),
     fetchSanitySeoSettings(),
   ]);
-  const colors = themeSettings?.themeColors;
+  const colors = themeSettings?.themeColors as any;
   const themeVars: Record<string, string> = {};
   const preset = THEME_PRESETS[stegaClean(colors?.themePreset) || "neutral"];
 
@@ -257,35 +310,45 @@ export default async function RootLayout({
     themeVars["--studio-dark-ring"] = preset.darkRing;
   }
 
-  const lightPrimary = toHexColor(colors?.lightPrimary);
+  const lightColors = colors?.lightColors as Record<string, any> | undefined;
+  const darkColors = colors?.darkColors as Record<string, any> | undefined;
+
+  const lightPrimary = toHexColor(lightColors?.lightPrimary);
   if (lightPrimary) themeVars["--studio-light-primary"] = lightPrimary;
 
-  const lightPrimaryForeground = toHexColor(colors?.lightPrimaryForeground);
+  const lightPrimaryForeground = toHexColor(lightColors?.lightPrimaryForeground);
   if (lightPrimaryForeground) {
     themeVars["--studio-light-primary-foreground"] = lightPrimaryForeground;
   }
 
-  const lightAccent = toHexColor(colors?.lightAccent);
+  const lightAccent = toHexColor(lightColors?.lightAccent);
   if (lightAccent) themeVars["--studio-light-accent"] = lightAccent;
 
-  const lightRing = toHexColor(colors?.lightRing);
+  const lightRing = toHexColor(lightColors?.lightRing);
   if (lightRing) themeVars["--studio-light-ring"] = lightRing;
 
-  const darkPrimary = toHexColor(colors?.darkPrimary);
+  const darkPrimary = toHexColor(darkColors?.darkPrimary);
   if (darkPrimary) themeVars["--studio-dark-primary"] = darkPrimary;
 
-  const darkPrimaryForeground = toHexColor(colors?.darkPrimaryForeground);
+  const darkPrimaryForeground = toHexColor(darkColors?.darkPrimaryForeground);
   if (darkPrimaryForeground) {
     themeVars["--studio-dark-primary-foreground"] = darkPrimaryForeground;
   }
 
-  const darkAccent = toHexColor(colors?.darkAccent);
+  const darkAccent = toHexColor(darkColors?.darkAccent);
   if (darkAccent) themeVars["--studio-dark-accent"] = darkAccent;
 
-  const darkRing = toHexColor(colors?.darkRing);
+  const darkRing = toHexColor(darkColors?.darkRing);
   if (darkRing) themeVars["--studio-dark-ring"] = darkRing;
 
-  const tokens = themeSettings?.themeTokens;
+  const lightGradient = buildGradientCSS(colors?.lightGradient as GradientConfig | undefined);
+  if (lightGradient) themeVars["--studio-light-gradient"] = lightGradient;
+
+  const darkGradient = buildGradientCSS(colors?.darkGradient as GradientConfig | undefined);
+  if (darkGradient) themeVars["--studio-dark-gradient"] = darkGradient;
+
+  const tokens = themeSettings?.themeTokens as any;
+  const blocks = (themeSettings as any)?.themeBlocks;
   const clean = (v?: string | null) => stegaClean(v) || undefined;
   const themeTokenClasses: string[] = [];
   const radiusScale = clean(tokens?.radiusScale) || "lg";
@@ -293,7 +356,7 @@ export default async function RootLayout({
   const accentTone = clean(tokens?.accentTone) || "neutral";
   const shadowDepth = clean(tokens?.shadowDepth) || "md";
   const cardPadding = clean(tokens?.cardPadding) || "normal";
-  const defaultDensity = clean(tokens?.defaultDensity) || "normal";
+  const defaultDensity = clean(blocks?.defaultDensity) || "normal";
   themeTokenClasses.push(
     `card-radius-${radiusScale}`,
     `card-variant-${cardVariant}`,
@@ -302,6 +365,28 @@ export default async function RootLayout({
     `card-pad-${cardPadding}`,
     `section-density-${defaultDensity}`,
   );
+
+  const cardColors = tokens?.cardColors;
+  const cardBg = toHexColor(cardColors?.cardBg);
+  if (cardBg) themeVars["--studio-card-bg"] = cardBg;
+  const cardFg = toHexColor(cardColors?.cardFg);
+  if (cardFg) themeVars["--studio-card-fg"] = cardFg;
+  const cardBorder = toHexColor(cardColors?.cardBorder);
+  if (cardBorder) themeVars["--studio-card-border"] = cardBorder;
+
+  const sectionColors = blocks?.sectionColors;
+  const sectionBg = toHexColor(sectionColors?.sectionBg);
+  if (sectionBg) themeVars["--studio-section-bg"] = sectionBg;
+  const sectionFg = toHexColor(sectionColors?.sectionFg);
+  if (sectionFg) themeVars["--studio-section-fg"] = sectionFg;
+  const sectionBorder = toHexColor(sectionColors?.sectionBorder);
+  if (sectionBorder) themeVars["--studio-section-border"] = sectionBorder;
+
+  const panelColors = blocks?.panelColors;
+  const panelBg = toHexColor(panelColors?.panelBg);
+  if (panelBg) themeVars["--studio-panel-bg"] = panelBg;
+  const panelBorder = toHexColor(panelColors?.panelBorder);
+  if (panelBorder) themeVars["--studio-panel-border"] = panelBorder;
 
   const buttons = themeSettings?.themeButtons;
   const btnRadius = clean(buttons?.radius) || "md";
