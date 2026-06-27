@@ -203,6 +203,9 @@ const nextConfig = {
     return [...STATIC_REDIRECTS, ...sanityRedirects];
   },
   images: {
+    dangerouslyAllowSVG: true,
+    contentDispositionType: "attachment",
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     qualities: [60, 75, 85, 100],
     formats: ["image/webp"],
     remotePatterns: [

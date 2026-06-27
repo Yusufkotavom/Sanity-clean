@@ -417,6 +417,8 @@ export default async function RootLayout({
       <body
         className={cn("min-h-screen bg-background font-sans antialiased overscroll-none")}
       >
+        <div className="fixed inset-0 z-[-1] pointer-events-none bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/10 via-background to-background"></div>
+        <div className="fixed inset-0 z-[-1] pointer-events-none [mask-image:radial-gradient(ellipse_at_center,black,transparent)]" style={{backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h40v40H0V0zm20 20h20v20H20V20zM0 20h20v20H0V20z' fill='%239C92AC' fill-opacity='0.02' fill-rule='evenodd'/%3E%3C/svg%3E\")"}}></div>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
