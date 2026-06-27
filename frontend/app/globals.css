@@ -298,6 +298,12 @@
 @utility section-divider {
   position: relative;
 }
+@utility section-divider-show {
+  position: relative;
+}
+@utility section-divider-hide {
+  position: relative;
+}
 
 @layer utilities {
   .bg-grid-vercel::before {
@@ -314,7 +320,8 @@
     opacity: 0.45;
   }
 
-  .section-divider::before {
+  .section-divider::before,
+  .section-divider-show::before {
     content: "";
     position: absolute;
     inset-inline: 0;
@@ -327,6 +334,10 @@
       var(--line-soft) 85%,
       transparent 100%
     );
+  }
+
+  .section-divider-hide::before {
+    display: none;
   }
 }
 
@@ -526,6 +537,24 @@
   .section-density-compact { --section-py: 2.5rem; --section-py-xl: 3rem; }
   .section-density-normal { --section-py: 4rem; --section-py-xl: 5rem; }
   .section-density-spacious { --section-py: 6rem; --section-py-xl: 7.5rem; }
+
+  /* Section width presets — controls container vs full-bleed */
+  .section-width-compact {
+    max-width: var(--container-max-width, 1320px);
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .section-width-full {
+    max-width: none;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  /* Section radius presets — border radius on section backgrounds */
+  .section-radius-none { border-radius: 0; }
+  .section-radius-sm { border-radius: 0.5rem; }
+  .section-radius-md { border-radius: 1rem; }
+  .section-radius-lg { border-radius: 1.5rem; }
 
   /* Section background from theme — apply on any section element */
   .section-theme-bg {

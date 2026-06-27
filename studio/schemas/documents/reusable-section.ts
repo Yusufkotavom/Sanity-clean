@@ -91,7 +91,6 @@ export default defineType({
       of: [
         { type: "hero-1" },
         { type: "hero-2" },
-        { type: "stats-hero-block" },
         { type: "section-header" },
         { type: "split-row" },
         { type: "grid-row" },
@@ -108,7 +107,6 @@ export default defineType({
         { type: "company-info" },
         { type: "testimonials-block" },
         { type: "pricing-block" },
-        { type: "faq-block" },
         { type: "features-package-block" },
         { type: "service-types-block" },
         { type: "problem-solution-block" },
@@ -121,7 +119,7 @@ export default defineType({
             {
               name: "hero",
               title: "Hero",
-              of: ["hero-1", "hero-2", "stats-hero-block"],
+              of: ["hero-1", "hero-2"],
             },
             {
               name: "logo-cloud",
@@ -190,7 +188,6 @@ export default defineType({
                 "company-info",
                 "testimonials-block",
                 "pricing-block",
-                "faq-block",
                 "features-package-block",
                 "service-types-block",
                 "problem-solution-block",

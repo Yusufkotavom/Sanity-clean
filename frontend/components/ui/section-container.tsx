@@ -19,6 +19,9 @@ export interface SectionStyle {
   maxWidth?: string | null;
   radius?: string | null;
   align?: string | null;
+  fullWidth?: string | null;
+  sectionRadius?: string | null;
+  divider?: string | null;
 }
 
 const MAXWIDTH_CLASS: Record<string, string | undefined> = {
@@ -33,6 +36,13 @@ const RADIUS_CLASS: Record<string, string> = {
   sm: "rounded-lg",
   md: "rounded-xl",
   lg: "rounded-[1.6rem]",
+};
+
+const SECTION_RADIUS_CLASS: Record<string, string> = {
+  none: "section-radius-none",
+  sm: "section-radius-sm",
+  md: "section-radius-md",
+  lg: "section-radius-lg",
 };
 
 function resolve(value?: string | null): string | undefined {
@@ -66,6 +76,9 @@ export default function SectionContainer({
   const maxWidth = resolve(ss?.maxWidth);
   const radius = resolve(ss?.radius);
   const align = resolve(ss?.align);
+  const fullWidth = resolve(ss?.fullWidth);
+  const sectionRadius = resolve(ss?.sectionRadius);
+  const divider = resolve(ss?.divider);
 
   const hasTopPadding = padding?.top ?? true;
   const hasBottomPadding = padding?.bottom ?? true;
@@ -73,12 +86,15 @@ export default function SectionContainer({
   return (
     <div
       className={cn(
-        "relative section-divider",
+        "relative",
+        divider === "hide" ? "section-divider-hide" : "section-divider-show",
         bgClass,
+        sectionRadius && SECTION_RADIUS_CLASS[sectionRadius],
         useNew
           ? cn(
               "py-[var(--section-py)] xl:py-[var(--section-py-xl)]",
               density && `section-density-${density}`,
+              fullWidth && `section-width-${fullWidth}`,
             )
           : cn(
               hasTopPadding ? "pt-16 xl:pt-20" : undefined,
@@ -87,7 +103,7 @@ export default function SectionContainer({
         className,
       )}
     >
-      <div className="container relative">
+      <div className={cn("container relative", fullWidth === "full" && "max-w-none")}>
         <div
           className={cn(
             "relative",

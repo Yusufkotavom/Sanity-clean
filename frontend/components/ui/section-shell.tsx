@@ -29,7 +29,7 @@ export function SectionShell({
       id={id}
       className={cn(
         "container py-12 md:py-16",
-        divider && "section-divider",
+        divider ? "section-divider-show" : "section-divider-hide",
         useThemeBg && "section-theme-bg",
         className,
       )}

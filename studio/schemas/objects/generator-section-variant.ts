@@ -2,14 +2,13 @@ import { defineField, defineType } from "sanity";
 
 const SECTION_TYPE_OPTIONS = [
   { title: "Hero", value: "hero-1" },
-  { title: "Stats Hero", value: "stats-hero-block" },
   { title: "Features Package", value: "features-package-block" },
   { title: "Company Info", value: "company-info" },
   { title: "Problem / Solution", value: "problem-solution-block" },
   { title: "Service Types", value: "service-types-block" },
   { title: "Pricing", value: "pricing-block" },
   { title: "Testimonials", value: "testimonials-block" },
-  { title: "FAQ", value: "faq-block" },
+  { title: "FAQ", value: "faqs" },
   { title: "Split Row", value: "split-row" },
   { title: "Timeline", value: "timeline-row" },
   { title: "CTA Panel", value: "cta-1" },

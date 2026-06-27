@@ -44,6 +44,9 @@ export const THEME_SETTINGS_QUERY = groq`*[_type == "themeSettings"][0]{
   },
   themeBlocks{
     defaultDensity,
+    defaultSectionWidth,
+    defaultSectionRadius,
+    defaultDivider,
     sectionColors{
       sectionBg{ hex },
       sectionFg{ hex },

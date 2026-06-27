@@ -216,6 +216,50 @@ export default defineType({
               initialValue: "normal",
             }),
             defineField({
+              name: "defaultSectionWidth",
+              title: "Section Width",
+              type: "string",
+              description: "Default width for all sections: compact (contained) or full (edge-to-edge)",
+              options: {
+                list: [
+                  { title: "Compact", value: "compact" },
+                  { title: "Full Wide", value: "full" },
+                ],
+                layout: "radio",
+              },
+              initialValue: "compact",
+            }),
+            defineField({
+              name: "defaultSectionRadius",
+              title: "Section Radius",
+              type: "string",
+              description: "Border radius for section backgrounds",
+              options: {
+                list: [
+                  { title: "None", value: "none" },
+                  { title: "Sm", value: "sm" },
+                  { title: "Md", value: "md" },
+                  { title: "Lg", value: "lg" },
+                ],
+                layout: "radio",
+              },
+              initialValue: "none",
+            }),
+            defineField({
+              name: "defaultDivider",
+              title: "Section Divider",
+              type: "string",
+              description: "Horizontal line between sections",
+              options: {
+                list: [
+                  { title: "Show", value: "show" },
+                  { title: "Hide", value: "hide" },
+                ],
+                layout: "radio",
+              },
+              initialValue: "show",
+            }),
+            defineField({
               name: "sectionColors",
               title: "Section Colors",
               type: "object",

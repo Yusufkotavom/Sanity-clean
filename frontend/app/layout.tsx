@@ -357,6 +357,9 @@ export default async function RootLayout({
   const shadowDepth = clean(tokens?.shadowDepth) || "md";
   const cardPadding = clean(tokens?.cardPadding) || "normal";
   const defaultDensity = clean(blocks?.defaultDensity) || "normal";
+  const defaultSectionWidth = clean(blocks?.defaultSectionWidth) || "compact";
+  const defaultSectionRadius = clean(blocks?.defaultSectionRadius) || "none";
+  const defaultDivider = clean(blocks?.defaultDivider) || "show";
   themeTokenClasses.push(
     `card-radius-${radiusScale}`,
     `card-variant-${cardVariant}`,
@@ -364,6 +367,9 @@ export default async function RootLayout({
     `card-shadow-${shadowDepth}`,
     `card-pad-${cardPadding}`,
     `section-density-${defaultDensity}`,
+    `section-width-${defaultSectionWidth}`,
+    `section-radius-${defaultSectionRadius}`,
+    `section-divider-${defaultDivider}`,
   );
 
   const cardColors = tokens?.cardColors;
