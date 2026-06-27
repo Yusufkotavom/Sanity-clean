@@ -179,7 +179,7 @@ export default function HeroVercel({
   }
 
   return (
-    <SectionShell className="pt-16 lg:pt-24">
+    <SectionShell className="min-h-[100dvh] flex flex-col justify-center py-20 lg:py-24">
       {layoutNode}
     </SectionShell>
   );

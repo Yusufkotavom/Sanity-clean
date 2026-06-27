@@ -179,7 +179,7 @@ export default function Hero2({
   }
 
   return (
-    <SectionShell className="pt-16 lg:pt-24">
+    <SectionShell className="min-h-[100dvh] flex flex-col justify-center py-16 lg:py-24">
       {layoutNode}
     </SectionShell>
   );
