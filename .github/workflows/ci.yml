@@ -230,3 +230,28 @@ jobs:
 
       - name: Typecheck worker
         run: pnpm --filter worker run typecheck
+
+  deploy_vercel:
+    name: Deploy to Vercel (all sites)
+    runs-on: ubuntu-latest
+    needs: [changes, frontend]
+    # Only on push (not PR), and only if frontend changed + CI build passed
+    if: |
+      github.event_name == 'push' &&
+      needs.changes.outputs.frontend == 'true' &&
+      needs.frontend.result == 'success'
+    strategy:
+      max-parallel: 5
+      matrix:
+        project:
+          - { id: "${{ secrets.VERCEL_PROJECT_ID_DEVK }}", name: "devK Studio" }
+          # Add more Vercel project IDs here as needed:
+          # - { id: "${{ secrets.VERCEL_PROJECT_ID_KOTACOM }}", name: "Kotacom" }
+    steps:
+      - name: Deploy ${{ matrix.project.name }} → Vercel
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ matrix.project.id }}
+          vercel-args: "--prod --yes"
