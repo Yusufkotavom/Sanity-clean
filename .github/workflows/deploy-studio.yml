@@ -66,10 +66,6 @@ jobs:
             echo "❌ SANITY_STUDIO_API_VERSION environment variable is not set"
             exit 1
           fi
-          if [ -z "${{ vars.SANITY_STUDIO_APP_ID }}" ]; then
-            echo "❌ SANITY_STUDIO_APP_ID environment variable is not set"
-            exit 1
-          fi
           if [ -z "${{ secrets.SANITY_AUTH_TOKEN }}" ]; then
             echo "❌ SANITY_AUTH_TOKEN secret is not set"
             exit 1
@@ -84,7 +80,6 @@ jobs:
           SANITY_STUDIO_DATASET: ${{ vars.SANITY_STUDIO_DATASET }}
           SANITY_STUDIO_HOSTNAME: ${{ vars.SANITY_STUDIO_HOSTNAME }}
           SANITY_STUDIO_API_VERSION: ${{ vars.SANITY_STUDIO_API_VERSION }}
-          SANITY_STUDIO_APP_ID: ${{ vars.SANITY_STUDIO_APP_ID }}
           SANITY_STUDIO_VERCEL_BYPASS_SECRET: ${{ secrets.SANITY_STUDIO_VERCEL_BYPASS_SECRET }}
           SANITY_AUTH_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
         run: pnpm run build
@@ -97,7 +92,6 @@ jobs:
           SANITY_STUDIO_DATASET: ${{ vars.SANITY_STUDIO_DATASET }}
           SANITY_STUDIO_HOSTNAME: ${{ vars.SANITY_STUDIO_HOSTNAME }}
           SANITY_STUDIO_API_VERSION: ${{ vars.SANITY_STUDIO_API_VERSION }}
-          SANITY_STUDIO_APP_ID: ${{ vars.SANITY_STUDIO_APP_ID }}
           SANITY_STUDIO_VERCEL_BYPASS_SECRET: ${{ secrets.SANITY_STUDIO_VERCEL_BYPASS_SECRET }}
           SANITY_AUTH_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
         run: |
