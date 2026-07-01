@@ -80,17 +80,21 @@ function Button({
 }
 
 function isPlainContent(children: React.ReactNode): boolean {
+  if (!children) return false;
   if (typeof children === "string") return true;
   if (typeof children === "number") return true;
-  if (Array.isArray(children)) {
-    return children.every(
-      (child) =>
-        typeof child === "string" ||
-        typeof child === "number" ||
-        (React.isValidElement(child) && child.type === "span")
-    );
+
+  if (React.isValidElement(children)) {
+    // recursively check inside Link or other wrapper components
+    if (children.props && (children.props as any).children) {
+      return isPlainContent((children.props as any).children);
+    }
+    return children.type === "span";
   }
-  if (React.isValidElement(children) && children.type === "span") return true;
+
+  if (Array.isArray(children)) {
+    return children.every((child) => isPlainContent(child));
+  }
   return false;
 }
 
