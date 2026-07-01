@@ -16,7 +16,7 @@ export default defineType({
   fields: [
     defineField({
       name: "tabs",
-      type: "tab",
+      type: "object",
       groups: [
         { name: "content", title: "Content" },
         { name: "layout", title: "Layout" },

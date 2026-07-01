@@ -47,7 +47,7 @@ export default defineType({
   fields: [
     (defineField as any)({
       name: "tabs",
-      type: "tab",
+      type: "object",
       groups: [
         { name: "colors", title: "Warna" },
         { name: "cards", title: "Kartu Grid" },
