@@ -1,6 +1,7 @@
 "use client";
 import PortableTextRenderer from "@/components/portable-text-renderer";
 import Eyebrow from "@/components/ui/eyebrow";
+import { CardShell } from "@/components/ui/card-shell";
 import { cn } from "@/lib/utils";
 import { PAGE_QUERY_RESULT,  } from "@/sanity.types";
 
@@ -23,8 +24,8 @@ export default function SplitCardsItem({
   body,
 }: SplitCardsItemProps) {
   return (
-    <article className={cn(
-      "group h-full border border-white/60 bg-white/75 p-6 shadow-[0_12px_28px_rgba(15,23,42,0.08)] backdrop-blur transition-all duration-200 hover:scale-[1.02] hover:bg-white/90 hover:shadow-lg dark:border-white/15 dark:bg-white/[0.07] dark:hover:bg-white/12 rounded-[var(--radius-card,1rem)]",
+    <CardShell className={cn(
+      "group h-full p-6 transition-all duration-200 hover:scale-[1.02] hover:border-primary/35",
       "text-foreground"
     )}>
       <Eyebrow icon={uiIcon} title={tagLine} variant="outline" size="md" />
@@ -38,6 +39,6 @@ export default function SplitCardsItem({
           <PortableTextRenderer value={body} />
         </div>
       )}
-    </article>
+    </CardShell>
   );
 }

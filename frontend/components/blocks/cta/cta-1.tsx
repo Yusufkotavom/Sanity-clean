@@ -8,6 +8,7 @@ import Eyebrow from "@/components/ui/eyebrow";
 import { PAGE_QUERY_RESULT } from "@/sanity.types";
 import { SectionPanel, SectionShell } from "@/components/ui/section-shell";
 import SectionContainer from "@/components/ui/section-container";
+import { CardShell } from "@/components/ui/card-shell";
 
 import GlobalWhatsAppButton from "@/components/global-whatsapp-button";
 
@@ -111,7 +112,7 @@ export default function Cta1({ blockStyles,
   );
 
   const imageNode = (image?.asset || (image as any)?._url) ? (
-    <div className="relative overflow-hidden rounded-2xl w-full h-auto aspect-video md:aspect-[4/3] lg:aspect-video flex-1 shadow-lg">
+    <CardShell className="relative overflow-hidden rounded-2xl w-full h-auto aspect-video md:aspect-[4/3] lg:aspect-video flex-1 p-0 shadow-lg">
       <Image
         src={image?.asset?.url || (image as any)?._url || ""}
         alt={(image as any)?.alt || "CTA Image"}
@@ -121,7 +122,7 @@ export default function Cta1({ blockStyles,
         placeholder={image?.asset?.metadata?.lqip ? "blur" : "empty"}
         blurDataURL={image?.asset?.metadata?.lqip || undefined}
       />
-    </div>
+    </CardShell>
   ) : null;
 
   let layoutNode = contentNode;
@@ -153,15 +154,14 @@ export default function Cta1({ blockStyles,
 
   // Determine wrapper based on useCard
   const innerWrapper = useCard ? (
-    <SectionPanel
-      tone={tone}
+    <CardShell
       className={cn(
-        "rounded-2xl border border-white/60 shadow-sm dark:border-white/10 px-5 py-6 md:px-7 md:py-8 w-full",
+        "rounded-[1.75rem] px-5 py-6 md:px-7 md:py-8 w-full",
         !imageNode ? alignClasses : ""
       )}
     >
       {layoutNode}
-    </SectionPanel>
+    </CardShell>
   ) : (
     <div className={cn("w-full py-6 md:py-8", !imageNode ? alignClasses : "")}>
       {layoutNode}

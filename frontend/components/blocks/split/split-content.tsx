@@ -3,6 +3,7 @@ import PortableTextRenderer from "@/components/portable-text-renderer";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import TagLine from "@/components/ui/tag-line";
+import { CardShell } from "@/components/ui/card-shell";
 import { createElement } from "react";
 import Image from "next/image";
 import { urlFor } from "@/sanity/lib/image";
@@ -46,7 +47,7 @@ export default function SplitContent({
         )}
       >
         {image && (image.asset?._id || !!(image as any)._url) && (
-          <div className="relative mb-8 w-full overflow-hidden rounded-[1.25rem] border border-white/40 bg-white/60 dark:border-white/10 dark:bg-white/5">
+          <CardShell className="relative mb-8 w-full overflow-hidden rounded-[1.25rem] p-0">
             <Image
               src={urlFor(image).url()}
               alt={image.alt || title || ""}
@@ -55,7 +56,7 @@ export default function SplitContent({
               className="h-auto w-full object-cover"
               sizes="(min-width: 1024px) 50vw, 100vw"
             />
-          </div>
+          </CardShell>
         )}
         {tagLine && <TagLine title={tagLine} element="h2" />}
         {title &&
