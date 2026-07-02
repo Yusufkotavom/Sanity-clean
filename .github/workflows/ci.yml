@@ -254,4 +254,5 @@ jobs:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ matrix.project.id }}
+          working-directory: ./frontend
           vercel-args: "--prod"
