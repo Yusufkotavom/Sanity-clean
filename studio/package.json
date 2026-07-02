@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "node scripts/dev.mjs",
     "start": "sanity start",
-    "build": "sanity build",
+    "build": "NODE_OPTIONS=\"--max-old-space-size=4096\" sanity build",
     "deploy": "sanity deploy",
     "typegen": "node -e \"try{require('fs').unlinkSync('schema.json')}catch(e){}\" && sanity schema extract && sanity typegen generate",
     "typecheck": "tsc --noEmit"
