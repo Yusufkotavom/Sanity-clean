@@ -12,6 +12,7 @@ import {
   SectionShell,
 } from "@/components/ui/section-shell";
 import SectionContainer from "@/components/ui/section-container";
+import { CardShell } from "@/components/ui/card-shell";
 import {
   Carousel,
   CarouselContent,
@@ -44,7 +45,7 @@ function HeroImageCard({ item }: { item: HeroImage }) {
   if (!imgUrl) return null;
 
   const card = (
-    <div className="group relative overflow-hidden rounded-xl border bg-card shadow-sm transition-all duration-300 hover:shadow-md">
+    <CardShell className="group relative overflow-hidden rounded-xl p-0 transition-all duration-300 hover:scale-[1.02] hover:border-primary/35">
       <div className="relative aspect-video w-full overflow-hidden">
         <Image
           src={imgUrl}
@@ -65,7 +66,7 @@ function HeroImageCard({ item }: { item: HeroImage }) {
           )}
         </div>
       )}
-    </div>
+    </CardShell>
   );
 
   if (item.link?.href) {
@@ -157,11 +158,11 @@ export default function Hero2({ blockStyles,
   let layoutNode = null;
   if (useCard) {
     layoutNode = (
-      <div
-        className="card-shell rounded-[1.75rem] px-5 py-10 text-center md:px-10 md:py-14 w-full"
+      <CardShell
+        className="rounded-[1.75rem] px-5 py-10 text-center md:px-10 md:py-14 w-full"
         >
         {innerContent}
-      </div>
+      </CardShell>
     );
   } else {
     layoutNode = (

@@ -8,6 +8,7 @@ import { urlFor } from "@/sanity/lib/image";
 import type { SanityIconValue } from "@/components/icons/sanity-icon";
 import { SectionPanel, SectionShell } from "@/components/ui/section-shell";
 import SectionContainer from "@/components/ui/section-container";
+import { CardShell } from "@/components/ui/card-shell";
 import { cn } from "@/lib/utils";
 import { colorToStyle, colorToCardStyle, ColorValue } from "@/lib/gradient";
 
@@ -98,7 +99,7 @@ export default function HeroVercel({ blockStyles,
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
           {cards?.map((card) => {
             const inner = (
-              <article className="h-full rounded-2xl border border-white/60 bg-white/75 p-4 shadow-[0_12px_28px_rgba(15,23,42,0.08)] backdrop-blur transition-all duration-200 hover:scale-[1.02] hover:bg-white/90 hover:shadow-lg dark:border-white/15 dark:bg-white/5 dark:hover:bg-white/10">
+              <CardShell className="group h-full p-4 transition-all duration-200 hover:scale-[1.02] hover:border-primary/35">
                 <div className="mb-3 inline-flex size-9 items-center justify-center rounded-lg border border-foreground/15 bg-background/80 transition-colors group-hover:border-foreground/30">
                   <SanityIcon icon={card.uiIcon} className="size-4" fallbackSeed={card.title || card._key || "card"} />
                 </div>
@@ -108,7 +109,7 @@ export default function HeroVercel({ blockStyles,
                 {card.description ? (
                   <p className="mt-1 text-sm leading-6 text-muted-foreground">{card.description}</p>
                 ) : null}
-              </article>
+              </CardShell>
             );
 
             return card.link?.href ? (
@@ -150,11 +151,11 @@ export default function HeroVercel({ blockStyles,
   let layoutNode = null;
   if (useCard) {
     layoutNode = (
-      <div
-        className="w-full rounded-[2rem] p-6 md:p-8 lg:p-10 card-shell shadow-[0_30px_90px_rgba(15,23,42,0.08)] backdrop-blur-xl"
+      <CardShell
+        className="w-full rounded-[2rem] p-6 md:p-8 lg:p-10 shadow-[0_30px_90px_rgba(15,23,42,0.08)] backdrop-blur-xl"
       >
         {innerContent}
-      </div>
+      </CardShell>
     );
   } else {
     layoutNode = (

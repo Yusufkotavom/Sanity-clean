@@ -787,7 +787,7 @@ export type Cta1 = {
     crop?: SanityImageCrop;
     _type: "image";
   };
-  imagePosition?: "top" | "left";
+  imagePosition?: "top" | "left" | "right";
   links?: Array<
     {
       _key: string;
@@ -916,7 +916,7 @@ export type GridCard = {
   _type: "grid-card";
   uiIcon?: UiIcon;
   title?: string;
-  excerpt?: string;
+  excerpt?: BlockContent;
   image?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -4208,7 +4208,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                     crop?: SanityImageCrop;
                     _type: "image";
                   };
-                  imagePosition?: "left" | "top";
+                  imagePosition?: "left" | "right" | "top";
                   links?: Array<
                     {
                       _key: string;
@@ -4561,7 +4561,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                     svg: string | null;
                   } | null;
                   title: string | null;
-                  excerpt: string | null;
+                  excerpt: BlockContent | null;
                   image: {
                     asset: {
                       _id: string;
@@ -4860,7 +4860,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                       crop?: SanityImageCrop;
                       _type: "image";
                     };
-                    imagePosition?: "left" | "top";
+                    imagePosition?: "left" | "right" | "top";
                     links?: Array<
                       {
                         _key: string;
@@ -5354,7 +5354,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                     crop?: SanityImageCrop;
                     _type: "image";
                   };
-                  imagePosition?: "left" | "top";
+                  imagePosition?: "left" | "right" | "top";
                   links?: Array<
                     {
                       _key: string;
@@ -5732,7 +5732,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                 } & NavigationLinkChild
               >;
             }> | null;
-            imagePosition: "left" | "top" | null;
+            imagePosition: "left" | "right" | "top" | null;
             image: {
               asset: {
                 _id: string;
@@ -5992,7 +5992,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                       crop?: SanityImageCrop;
                       _type: "image";
                     };
-                    imagePosition?: "left" | "top";
+                    imagePosition?: "left" | "right" | "top";
                     links?: Array<
                       {
                         _key: string;
@@ -6418,7 +6418,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                     svg: string | null;
                   } | null;
                   title: string | null;
-                  excerpt: string | null;
+                  excerpt: BlockContent | null;
                   image: {
                     asset: {
                       _id: string;
@@ -6681,7 +6681,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                     crop?: SanityImageCrop;
                     _type: "image";
                   };
-                  imagePosition?: "left" | "top";
+                  imagePosition?: "left" | "right" | "top";
                   links?: Array<
                     {
                       _key: string;
@@ -7212,7 +7212,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                     crop?: SanityImageCrop;
                     _type: "image";
                   };
-                  imagePosition?: "left" | "top";
+                  imagePosition?: "left" | "right" | "top";
                   links?: Array<
                     {
                       _key: string;
@@ -8026,7 +8026,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                             crop?: SanityImageCrop;
                             _type: "image";
                           };
-                          imagePosition?: "left" | "top";
+                          imagePosition?: "left" | "right" | "top";
                           links?: Array<
                             {
                               _key: string;
@@ -8513,7 +8513,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                           crop?: SanityImageCrop;
                           _type: "image";
                         };
-                        imagePosition?: "left" | "top";
+                        imagePosition?: "left" | "right" | "top";
                         links?: Array<
                           {
                             _key: string;
@@ -9089,7 +9089,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                             crop?: SanityImageCrop;
                             _type: "image";
                           };
-                          imagePosition?: "left" | "top";
+                          imagePosition?: "left" | "right" | "top";
                           links?: Array<
                             {
                               _key: string;
@@ -9493,7 +9493,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                         svg: string | null;
                       } | null;
                       title: string | null;
-                      excerpt: string | null;
+                      excerpt: BlockContent | null;
                       image: {
                         asset: {
                           _id: string;
@@ -9769,7 +9769,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                       crop?: SanityImageCrop;
                       _type: "image";
                     };
-                    imagePosition?: "left" | "top";
+                    imagePosition?: "left" | "right" | "top";
                     links?: Array<
                       {
                         _key: string;
@@ -10253,7 +10253,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                     crop?: SanityImageCrop;
                     _type: "image";
                   };
-                  imagePosition?: "left" | "top";
+                  imagePosition?: "left" | "right" | "top";
                   links?: Array<
                     {
                       _key: string;
@@ -10807,7 +10807,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                     crop?: SanityImageCrop;
                     _type: "image";
                   };
-                  imagePosition?: "left" | "top";
+                  imagePosition?: "left" | "right" | "top";
                   links?: Array<
                     {
                       _key: string;
@@ -11160,7 +11160,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                     svg: string | null;
                   } | null;
                   title: string | null;
-                  excerpt: string | null;
+                  excerpt: BlockContent | null;
                   image: {
                     asset: {
                       _id: string;
@@ -11459,7 +11459,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                       crop?: SanityImageCrop;
                       _type: "image";
                     };
-                    imagePosition?: "left" | "top";
+                    imagePosition?: "left" | "right" | "top";
                     links?: Array<
                       {
                         _key: string;
@@ -11953,7 +11953,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                     crop?: SanityImageCrop;
                     _type: "image";
                   };
-                  imagePosition?: "left" | "top";
+                  imagePosition?: "left" | "right" | "top";
                   links?: Array<
                     {
                       _key: string;
@@ -12331,7 +12331,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                 } & NavigationLinkChild
               >;
             }> | null;
-            imagePosition: "left" | "top" | null;
+            imagePosition: "left" | "right" | "top" | null;
             image: {
               asset: {
                 _id: string;
@@ -12591,7 +12591,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                       crop?: SanityImageCrop;
                       _type: "image";
                     };
-                    imagePosition?: "left" | "top";
+                    imagePosition?: "left" | "right" | "top";
                     links?: Array<
                       {
                         _key: string;
@@ -13017,7 +13017,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                     svg: string | null;
                   } | null;
                   title: string | null;
-                  excerpt: string | null;
+                  excerpt: BlockContent | null;
                   image: {
                     asset: {
                       _id: string;
@@ -13280,7 +13280,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                     crop?: SanityImageCrop;
                     _type: "image";
                   };
-                  imagePosition?: "left" | "top";
+                  imagePosition?: "left" | "right" | "top";
                   links?: Array<
                     {
                       _key: string;
@@ -13811,7 +13811,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                     crop?: SanityImageCrop;
                     _type: "image";
                   };
-                  imagePosition?: "left" | "top";
+                  imagePosition?: "left" | "right" | "top";
                   links?: Array<
                     {
                       _key: string;
@@ -14625,7 +14625,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                             crop?: SanityImageCrop;
                             _type: "image";
                           };
-                          imagePosition?: "left" | "top";
+                          imagePosition?: "left" | "right" | "top";
                           links?: Array<
                             {
                               _key: string;
@@ -15112,7 +15112,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                           crop?: SanityImageCrop;
                           _type: "image";
                         };
-                        imagePosition?: "left" | "top";
+                        imagePosition?: "left" | "right" | "top";
                         links?: Array<
                           {
                             _key: string;
@@ -15688,7 +15688,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                             crop?: SanityImageCrop;
                             _type: "image";
                           };
-                          imagePosition?: "left" | "top";
+                          imagePosition?: "left" | "right" | "top";
                           links?: Array<
                             {
                               _key: string;
@@ -16092,7 +16092,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                         svg: string | null;
                       } | null;
                       title: string | null;
-                      excerpt: string | null;
+                      excerpt: BlockContent | null;
                       image: {
                         asset: {
                           _id: string;
@@ -16368,7 +16368,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                       crop?: SanityImageCrop;
                       _type: "image";
                     };
-                    imagePosition?: "left" | "top";
+                    imagePosition?: "left" | "right" | "top";
                     links?: Array<
                       {
                         _key: string;
@@ -16852,7 +16852,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                     crop?: SanityImageCrop;
                     _type: "image";
                   };
-                  imagePosition?: "left" | "top";
+                  imagePosition?: "left" | "right" | "top";
                   links?: Array<
                     {
                       _key: string;
@@ -17406,7 +17406,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                     crop?: SanityImageCrop;
                     _type: "image";
                   };
-                  imagePosition?: "left" | "top";
+                  imagePosition?: "left" | "right" | "top";
                   links?: Array<
                     {
                       _key: string;
@@ -17759,7 +17759,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                     svg: string | null;
                   } | null;
                   title: string | null;
-                  excerpt: string | null;
+                  excerpt: BlockContent | null;
                   image: {
                     asset: {
                       _id: string;
@@ -18058,7 +18058,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                       crop?: SanityImageCrop;
                       _type: "image";
                     };
-                    imagePosition?: "left" | "top";
+                    imagePosition?: "left" | "right" | "top";
                     links?: Array<
                       {
                         _key: string;
@@ -18552,7 +18552,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                     crop?: SanityImageCrop;
                     _type: "image";
                   };
-                  imagePosition?: "left" | "top";
+                  imagePosition?: "left" | "right" | "top";
                   links?: Array<
                     {
                       _key: string;
@@ -18930,7 +18930,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                 } & NavigationLinkChild
               >;
             }> | null;
-            imagePosition: "left" | "top" | null;
+            imagePosition: "left" | "right" | "top" | null;
             image: {
               asset: {
                 _id: string;
@@ -19190,7 +19190,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                       crop?: SanityImageCrop;
                       _type: "image";
                     };
-                    imagePosition?: "left" | "top";
+                    imagePosition?: "left" | "right" | "top";
                     links?: Array<
                       {
                         _key: string;
@@ -19616,7 +19616,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                     svg: string | null;
                   } | null;
                   title: string | null;
-                  excerpt: string | null;
+                  excerpt: BlockContent | null;
                   image: {
                     asset: {
                       _id: string;
@@ -19879,7 +19879,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                     crop?: SanityImageCrop;
                     _type: "image";
                   };
-                  imagePosition?: "left" | "top";
+                  imagePosition?: "left" | "right" | "top";
                   links?: Array<
                     {
                       _key: string;
@@ -20410,7 +20410,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                     crop?: SanityImageCrop;
                     _type: "image";
                   };
-                  imagePosition?: "left" | "top";
+                  imagePosition?: "left" | "right" | "top";
                   links?: Array<
                     {
                       _key: string;
@@ -21224,7 +21224,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                             crop?: SanityImageCrop;
                             _type: "image";
                           };
-                          imagePosition?: "left" | "top";
+                          imagePosition?: "left" | "right" | "top";
                           links?: Array<
                             {
                               _key: string;
@@ -21711,7 +21711,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                           crop?: SanityImageCrop;
                           _type: "image";
                         };
-                        imagePosition?: "left" | "top";
+                        imagePosition?: "left" | "right" | "top";
                         links?: Array<
                           {
                             _key: string;
@@ -22287,7 +22287,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                             crop?: SanityImageCrop;
                             _type: "image";
                           };
-                          imagePosition?: "left" | "top";
+                          imagePosition?: "left" | "right" | "top";
                           links?: Array<
                             {
                               _key: string;
@@ -22691,7 +22691,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                         svg: string | null;
                       } | null;
                       title: string | null;
-                      excerpt: string | null;
+                      excerpt: BlockContent | null;
                       image: {
                         asset: {
                           _id: string;
@@ -22967,7 +22967,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                       crop?: SanityImageCrop;
                       _type: "image";
                     };
-                    imagePosition?: "left" | "top";
+                    imagePosition?: "left" | "right" | "top";
                     links?: Array<
                       {
                         _key: string;
@@ -23451,7 +23451,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                     crop?: SanityImageCrop;
                     _type: "image";
                   };
-                  imagePosition?: "left" | "top";
+                  imagePosition?: "left" | "right" | "top";
                   links?: Array<
                     {
                       _key: string;
@@ -24005,7 +24005,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                     crop?: SanityImageCrop;
                     _type: "image";
                   };
-                  imagePosition?: "left" | "top";
+                  imagePosition?: "left" | "right" | "top";
                   links?: Array<
                     {
                       _key: string;
@@ -24358,7 +24358,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                     svg: string | null;
                   } | null;
                   title: string | null;
-                  excerpt: string | null;
+                  excerpt: BlockContent | null;
                   image: {
                     asset: {
                       _id: string;
@@ -24657,7 +24657,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                       crop?: SanityImageCrop;
                       _type: "image";
                     };
-                    imagePosition?: "left" | "top";
+                    imagePosition?: "left" | "right" | "top";
                     links?: Array<
                       {
                         _key: string;
@@ -25151,7 +25151,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                     crop?: SanityImageCrop;
                     _type: "image";
                   };
-                  imagePosition?: "left" | "top";
+                  imagePosition?: "left" | "right" | "top";
                   links?: Array<
                     {
                       _key: string;
@@ -25529,7 +25529,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                 } & NavigationLinkChild
               >;
             }> | null;
-            imagePosition: "left" | "top" | null;
+            imagePosition: "left" | "right" | "top" | null;
             image: {
               asset: {
                 _id: string;
@@ -25789,7 +25789,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                       crop?: SanityImageCrop;
                       _type: "image";
                     };
-                    imagePosition?: "left" | "top";
+                    imagePosition?: "left" | "right" | "top";
                     links?: Array<
                       {
                         _key: string;
@@ -26215,7 +26215,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                     svg: string | null;
                   } | null;
                   title: string | null;
-                  excerpt: string | null;
+                  excerpt: BlockContent | null;
                   image: {
                     asset: {
                       _id: string;
@@ -26478,7 +26478,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                     crop?: SanityImageCrop;
                     _type: "image";
                   };
-                  imagePosition?: "left" | "top";
+                  imagePosition?: "left" | "right" | "top";
                   links?: Array<
                     {
                       _key: string;
@@ -27009,7 +27009,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                     crop?: SanityImageCrop;
                     _type: "image";
                   };
-                  imagePosition?: "left" | "top";
+                  imagePosition?: "left" | "right" | "top";
                   links?: Array<
                     {
                       _key: string;
@@ -27823,7 +27823,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                             crop?: SanityImageCrop;
                             _type: "image";
                           };
-                          imagePosition?: "left" | "top";
+                          imagePosition?: "left" | "right" | "top";
                           links?: Array<
                             {
                               _key: string;
@@ -28310,7 +28310,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                           crop?: SanityImageCrop;
                           _type: "image";
                         };
-                        imagePosition?: "left" | "top";
+                        imagePosition?: "left" | "right" | "top";
                         links?: Array<
                           {
                             _key: string;
@@ -28886,7 +28886,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                             crop?: SanityImageCrop;
                             _type: "image";
                           };
-                          imagePosition?: "left" | "top";
+                          imagePosition?: "left" | "right" | "top";
                           links?: Array<
                             {
                               _key: string;
@@ -29290,7 +29290,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                         svg: string | null;
                       } | null;
                       title: string | null;
-                      excerpt: string | null;
+                      excerpt: BlockContent | null;
                       image: {
                         asset: {
                           _id: string;
@@ -29566,7 +29566,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                       crop?: SanityImageCrop;
                       _type: "image";
                     };
-                    imagePosition?: "left" | "top";
+                    imagePosition?: "left" | "right" | "top";
                     links?: Array<
                       {
                         _key: string;
@@ -30050,7 +30050,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                     crop?: SanityImageCrop;
                     _type: "image";
                   };
-                  imagePosition?: "left" | "top";
+                  imagePosition?: "left" | "right" | "top";
                   links?: Array<
                     {
                       _key: string;
@@ -30604,7 +30604,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                     crop?: SanityImageCrop;
                     _type: "image";
                   };
-                  imagePosition?: "left" | "top";
+                  imagePosition?: "left" | "right" | "top";
                   links?: Array<
                     {
                       _key: string;
@@ -30957,7 +30957,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                     svg: string | null;
                   } | null;
                   title: string | null;
-                  excerpt: string | null;
+                  excerpt: BlockContent | null;
                   image: {
                     asset: {
                       _id: string;
@@ -31256,7 +31256,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                       crop?: SanityImageCrop;
                       _type: "image";
                     };
-                    imagePosition?: "left" | "top";
+                    imagePosition?: "left" | "right" | "top";
                     links?: Array<
                       {
                         _key: string;
@@ -31750,7 +31750,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                     crop?: SanityImageCrop;
                     _type: "image";
                   };
-                  imagePosition?: "left" | "top";
+                  imagePosition?: "left" | "right" | "top";
                   links?: Array<
                     {
                       _key: string;
@@ -32128,7 +32128,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                 } & NavigationLinkChild
               >;
             }> | null;
-            imagePosition: "left" | "top" | null;
+            imagePosition: "left" | "right" | "top" | null;
             image: {
               asset: {
                 _id: string;
@@ -32388,7 +32388,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                       crop?: SanityImageCrop;
                       _type: "image";
                     };
-                    imagePosition?: "left" | "top";
+                    imagePosition?: "left" | "right" | "top";
                     links?: Array<
                       {
                         _key: string;
@@ -32814,7 +32814,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                     svg: string | null;
                   } | null;
                   title: string | null;
-                  excerpt: string | null;
+                  excerpt: BlockContent | null;
                   image: {
                     asset: {
                       _id: string;
@@ -33077,7 +33077,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                     crop?: SanityImageCrop;
                     _type: "image";
                   };
-                  imagePosition?: "left" | "top";
+                  imagePosition?: "left" | "right" | "top";
                   links?: Array<
                     {
                       _key: string;
@@ -33608,7 +33608,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                     crop?: SanityImageCrop;
                     _type: "image";
                   };
-                  imagePosition?: "left" | "top";
+                  imagePosition?: "left" | "right" | "top";
                   links?: Array<
                     {
                       _key: string;
@@ -34422,7 +34422,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                             crop?: SanityImageCrop;
                             _type: "image";
                           };
-                          imagePosition?: "left" | "top";
+                          imagePosition?: "left" | "right" | "top";
                           links?: Array<
                             {
                               _key: string;
@@ -34909,7 +34909,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                           crop?: SanityImageCrop;
                           _type: "image";
                         };
-                        imagePosition?: "left" | "top";
+                        imagePosition?: "left" | "right" | "top";
                         links?: Array<
                           {
                             _key: string;
@@ -35485,7 +35485,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                             crop?: SanityImageCrop;
                             _type: "image";
                           };
-                          imagePosition?: "left" | "top";
+                          imagePosition?: "left" | "right" | "top";
                           links?: Array<
                             {
                               _key: string;
@@ -35889,7 +35889,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                         svg: string | null;
                       } | null;
                       title: string | null;
-                      excerpt: string | null;
+                      excerpt: BlockContent | null;
                       image: {
                         asset: {
                           _id: string;
@@ -36165,7 +36165,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                       crop?: SanityImageCrop;
                       _type: "image";
                     };
-                    imagePosition?: "left" | "top";
+                    imagePosition?: "left" | "right" | "top";
                     links?: Array<
                       {
                         _key: string;
@@ -36649,7 +36649,7 @@ export type BLOCKS_SHOWCASE_QUERY_RESULT = Array<
                     crop?: SanityImageCrop;
                     _type: "image";
                   };
-                  imagePosition?: "left" | "top";
+                  imagePosition?: "left" | "right" | "top";
                   links?: Array<
                     {
                       _key: string;
@@ -37386,7 +37386,7 @@ export type GENERATOR_TEMPLATE_BY_ID_QUERY_RESULT = {
                 crop?: SanityImageCrop;
                 _type: "image";
               };
-              imagePosition?: "left" | "top";
+              imagePosition?: "left" | "right" | "top";
               links?: Array<
                 {
                   _key: string;
@@ -37739,7 +37739,7 @@ export type GENERATOR_TEMPLATE_BY_ID_QUERY_RESULT = {
                 svg: string | null;
               } | null;
               title: string | null;
-              excerpt: string | null;
+              excerpt: BlockContent | null;
               image: {
                 asset: {
                   _id: string;
@@ -38038,7 +38038,7 @@ export type GENERATOR_TEMPLATE_BY_ID_QUERY_RESULT = {
                   crop?: SanityImageCrop;
                   _type: "image";
                 };
-                imagePosition?: "left" | "top";
+                imagePosition?: "left" | "right" | "top";
                 links?: Array<
                   {
                     _key: string;
@@ -38532,7 +38532,7 @@ export type GENERATOR_TEMPLATE_BY_ID_QUERY_RESULT = {
                 crop?: SanityImageCrop;
                 _type: "image";
               };
-              imagePosition?: "left" | "top";
+              imagePosition?: "left" | "right" | "top";
               links?: Array<
                 {
                   _key: string;
@@ -38910,7 +38910,7 @@ export type GENERATOR_TEMPLATE_BY_ID_QUERY_RESULT = {
             } & NavigationLinkChild
           >;
         }> | null;
-        imagePosition: "left" | "top" | null;
+        imagePosition: "left" | "right" | "top" | null;
         image: {
           asset: {
             _id: string;
@@ -39170,7 +39170,7 @@ export type GENERATOR_TEMPLATE_BY_ID_QUERY_RESULT = {
                   crop?: SanityImageCrop;
                   _type: "image";
                 };
-                imagePosition?: "left" | "top";
+                imagePosition?: "left" | "right" | "top";
                 links?: Array<
                   {
                     _key: string;
@@ -39596,7 +39596,7 @@ export type GENERATOR_TEMPLATE_BY_ID_QUERY_RESULT = {
                 svg: string | null;
               } | null;
               title: string | null;
-              excerpt: string | null;
+              excerpt: BlockContent | null;
               image: {
                 asset: {
                   _id: string;
@@ -39859,7 +39859,7 @@ export type GENERATOR_TEMPLATE_BY_ID_QUERY_RESULT = {
                 crop?: SanityImageCrop;
                 _type: "image";
               };
-              imagePosition?: "left" | "top";
+              imagePosition?: "left" | "right" | "top";
               links?: Array<
                 {
                   _key: string;
@@ -40390,7 +40390,7 @@ export type GENERATOR_TEMPLATE_BY_ID_QUERY_RESULT = {
                 crop?: SanityImageCrop;
                 _type: "image";
               };
-              imagePosition?: "left" | "top";
+              imagePosition?: "left" | "right" | "top";
               links?: Array<
                 {
                   _key: string;
@@ -41204,7 +41204,7 @@ export type GENERATOR_TEMPLATE_BY_ID_QUERY_RESULT = {
                         crop?: SanityImageCrop;
                         _type: "image";
                       };
-                      imagePosition?: "left" | "top";
+                      imagePosition?: "left" | "right" | "top";
                       links?: Array<
                         {
                           _key: string;
@@ -41685,7 +41685,7 @@ export type GENERATOR_TEMPLATE_BY_ID_QUERY_RESULT = {
                       crop?: SanityImageCrop;
                       _type: "image";
                     };
-                    imagePosition?: "left" | "top";
+                    imagePosition?: "left" | "right" | "top";
                     links?: Array<
                       {
                         _key: string;
@@ -42258,7 +42258,7 @@ export type GENERATOR_TEMPLATE_BY_ID_QUERY_RESULT = {
                         crop?: SanityImageCrop;
                         _type: "image";
                       };
-                      imagePosition?: "left" | "top";
+                      imagePosition?: "left" | "right" | "top";
                       links?: Array<
                         {
                           _key: string;
@@ -42759,7 +42759,7 @@ export type GENERATOR_TEMPLATE_BY_ID_QUERY_RESULT = {
                   crop?: SanityImageCrop;
                   _type: "image";
                 };
-                imagePosition?: "left" | "top";
+                imagePosition?: "left" | "right" | "top";
                 links?: Array<
                   {
                     _key: string;
@@ -43243,7 +43243,7 @@ export type GENERATOR_TEMPLATE_BY_ID_QUERY_RESULT = {
                 crop?: SanityImageCrop;
                 _type: "image";
               };
-              imagePosition?: "left" | "top";
+              imagePosition?: "left" | "right" | "top";
               links?: Array<
                 {
                   _key: string;
@@ -43714,7 +43714,7 @@ export type LEGACY_PAGE_OVERRIDE_QUERY_RESULT = {
                 svg: string | null;
               } | null;
               title: string | null;
-              excerpt: string | null;
+              excerpt: BlockContent | null;
               image: {
                 asset: {
                   _id: string;
@@ -44013,7 +44013,7 @@ export type LEGACY_PAGE_OVERRIDE_QUERY_RESULT = {
                   crop?: SanityImageCrop;
                   _type: "image";
                 };
-                imagePosition?: "left" | "top";
+                imagePosition?: "left" | "right" | "top";
                 links?: Array<
                   {
                     _key: string;
@@ -44500,7 +44500,7 @@ export type LEGACY_PAGE_OVERRIDE_QUERY_RESULT = {
                 crop?: SanityImageCrop;
                 _type: "image";
               };
-              imagePosition?: "left" | "top";
+              imagePosition?: "left" | "right" | "top";
               links?: Array<
                 {
                   _key: string;
@@ -44878,7 +44878,7 @@ export type LEGACY_PAGE_OVERRIDE_QUERY_RESULT = {
             } & NavigationLinkChild
           >;
         }> | null;
-        imagePosition: "left" | "top" | null;
+        imagePosition: "left" | "right" | "top" | null;
         image: {
           asset: {
             _id: string;
@@ -44971,7 +44971,7 @@ export type LEGACY_PAGE_OVERRIDE_QUERY_RESULT = {
                 svg: string | null;
               } | null;
               title: string | null;
-              excerpt: string | null;
+              excerpt: BlockContent | null;
               image: {
                 asset: {
                   _id: string;
@@ -45234,7 +45234,7 @@ export type LEGACY_PAGE_OVERRIDE_QUERY_RESULT = {
                 crop?: SanityImageCrop;
                 _type: "image";
               };
-              imagePosition?: "left" | "top";
+              imagePosition?: "left" | "right" | "top";
               links?: Array<
                 {
                   _key: string;
@@ -45765,7 +45765,7 @@ export type LEGACY_PAGE_OVERRIDE_QUERY_RESULT = {
                 crop?: SanityImageCrop;
                 _type: "image";
               };
-              imagePosition?: "left" | "top";
+              imagePosition?: "left" | "right" | "top";
               links?: Array<
                 {
                   _key: string;
@@ -46388,7 +46388,7 @@ export type LEGACY_PAGE_OVERRIDE_QUERY_RESULT = {
                         crop?: SanityImageCrop;
                         _type: "image";
                       };
-                      imagePosition?: "left" | "top";
+                      imagePosition?: "left" | "right" | "top";
                       links?: Array<
                         {
                           _key: string;
@@ -46869,7 +46869,7 @@ export type LEGACY_PAGE_OVERRIDE_QUERY_RESULT = {
                       crop?: SanityImageCrop;
                       _type: "image";
                     };
-                    imagePosition?: "left" | "top";
+                    imagePosition?: "left" | "right" | "top";
                     links?: Array<
                       {
                         _key: string;
@@ -47442,7 +47442,7 @@ export type LEGACY_PAGE_OVERRIDE_QUERY_RESULT = {
                         crop?: SanityImageCrop;
                         _type: "image";
                       };
-                      imagePosition?: "left" | "top";
+                      imagePosition?: "left" | "right" | "top";
                       links?: Array<
                         {
                           _key: string;
@@ -47927,7 +47927,7 @@ export type LEGACY_PAGE_OVERRIDE_QUERY_RESULT = {
                   crop?: SanityImageCrop;
                   _type: "image";
                 };
-                imagePosition?: "left" | "top";
+                imagePosition?: "left" | "right" | "top";
                 links?: Array<
                   {
                     _key: string;
@@ -48411,7 +48411,7 @@ export type LEGACY_PAGE_OVERRIDE_QUERY_RESULT = {
                 crop?: SanityImageCrop;
                 _type: "image";
               };
-              imagePosition?: "left" | "top";
+              imagePosition?: "left" | "right" | "top";
               links?: Array<
                 {
                   _key: string;
@@ -49181,7 +49181,7 @@ export type PAGE_QUERY_RESULT = {
                 crop?: SanityImageCrop;
                 _type: "image";
               };
-              imagePosition?: "left" | "top";
+              imagePosition?: "left" | "right" | "top";
               links?: Array<
                 {
                   _key: string;
@@ -49534,7 +49534,7 @@ export type PAGE_QUERY_RESULT = {
                 svg: string | null;
               } | null;
               title: string | null;
-              excerpt: string | null;
+              excerpt: BlockContent | null;
               image: {
                 asset: {
                   _id: string;
@@ -49833,7 +49833,7 @@ export type PAGE_QUERY_RESULT = {
                   crop?: SanityImageCrop;
                   _type: "image";
                 };
-                imagePosition?: "left" | "top";
+                imagePosition?: "left" | "right" | "top";
                 links?: Array<
                   {
                     _key: string;
@@ -50327,7 +50327,7 @@ export type PAGE_QUERY_RESULT = {
                 crop?: SanityImageCrop;
                 _type: "image";
               };
-              imagePosition?: "left" | "top";
+              imagePosition?: "left" | "right" | "top";
               links?: Array<
                 {
                   _key: string;
@@ -50705,7 +50705,7 @@ export type PAGE_QUERY_RESULT = {
             } & NavigationLinkChild
           >;
         }> | null;
-        imagePosition: "left" | "top" | null;
+        imagePosition: "left" | "right" | "top" | null;
         image: {
           asset: {
             _id: string;
@@ -50965,7 +50965,7 @@ export type PAGE_QUERY_RESULT = {
                   crop?: SanityImageCrop;
                   _type: "image";
                 };
-                imagePosition?: "left" | "top";
+                imagePosition?: "left" | "right" | "top";
                 links?: Array<
                   {
                     _key: string;
@@ -51391,7 +51391,7 @@ export type PAGE_QUERY_RESULT = {
                 svg: string | null;
               } | null;
               title: string | null;
-              excerpt: string | null;
+              excerpt: BlockContent | null;
               image: {
                 asset: {
                   _id: string;
@@ -51654,7 +51654,7 @@ export type PAGE_QUERY_RESULT = {
                 crop?: SanityImageCrop;
                 _type: "image";
               };
-              imagePosition?: "left" | "top";
+              imagePosition?: "left" | "right" | "top";
               links?: Array<
                 {
                   _key: string;
@@ -52185,7 +52185,7 @@ export type PAGE_QUERY_RESULT = {
                 crop?: SanityImageCrop;
                 _type: "image";
               };
-              imagePosition?: "left" | "top";
+              imagePosition?: "left" | "right" | "top";
               links?: Array<
                 {
                   _key: string;
@@ -52999,7 +52999,7 @@ export type PAGE_QUERY_RESULT = {
                         crop?: SanityImageCrop;
                         _type: "image";
                       };
-                      imagePosition?: "left" | "top";
+                      imagePosition?: "left" | "right" | "top";
                       links?: Array<
                         {
                           _key: string;
@@ -53480,7 +53480,7 @@ export type PAGE_QUERY_RESULT = {
                       crop?: SanityImageCrop;
                       _type: "image";
                     };
-                    imagePosition?: "left" | "top";
+                    imagePosition?: "left" | "right" | "top";
                     links?: Array<
                       {
                         _key: string;
@@ -54053,7 +54053,7 @@ export type PAGE_QUERY_RESULT = {
                         crop?: SanityImageCrop;
                         _type: "image";
                       };
-                      imagePosition?: "left" | "top";
+                      imagePosition?: "left" | "right" | "top";
                       links?: Array<
                         {
                           _key: string;
@@ -54453,7 +54453,7 @@ export type PAGE_QUERY_RESULT = {
                     svg: string | null;
                   } | null;
                   title: string | null;
-                  excerpt: string | null;
+                  excerpt: BlockContent | null;
                   image: {
                     asset: {
                       _id: string;
@@ -54729,7 +54729,7 @@ export type PAGE_QUERY_RESULT = {
                   crop?: SanityImageCrop;
                   _type: "image";
                 };
-                imagePosition?: "left" | "top";
+                imagePosition?: "left" | "right" | "top";
                 links?: Array<
                   {
                     _key: string;
@@ -55213,7 +55213,7 @@ export type PAGE_QUERY_RESULT = {
                 crop?: SanityImageCrop;
                 _type: "image";
               };
-              imagePosition?: "left" | "top";
+              imagePosition?: "left" | "right" | "top";
               links?: Array<
                 {
                   _key: string;
@@ -55789,7 +55789,7 @@ export type POST_QUERY_RESULT = {
           crop?: SanityImageCrop;
           _type: "image";
         };
-        imagePosition?: "left" | "top";
+        imagePosition?: "left" | "right" | "top";
         links?: Array<
           {
             _key: string;
@@ -56397,7 +56397,7 @@ export type POST_QUERY_RESULT = {
                 crop?: SanityImageCrop;
                 _type: "image";
               };
-              imagePosition?: "left" | "top";
+              imagePosition?: "left" | "right" | "top";
               links?: Array<
                 {
                   _key: string;
@@ -56750,7 +56750,7 @@ export type POST_QUERY_RESULT = {
                 svg: string | null;
               } | null;
               title: string | null;
-              excerpt: string | null;
+              excerpt: BlockContent | null;
               image: {
                 asset: {
                   _id: string;
@@ -57049,7 +57049,7 @@ export type POST_QUERY_RESULT = {
                   crop?: SanityImageCrop;
                   _type: "image";
                 };
-                imagePosition?: "left" | "top";
+                imagePosition?: "left" | "right" | "top";
                 links?: Array<
                   {
                     _key: string;
@@ -57543,7 +57543,7 @@ export type POST_QUERY_RESULT = {
                 crop?: SanityImageCrop;
                 _type: "image";
               };
-              imagePosition?: "left" | "top";
+              imagePosition?: "left" | "right" | "top";
               links?: Array<
                 {
                   _key: string;
@@ -57921,7 +57921,7 @@ export type POST_QUERY_RESULT = {
             } & NavigationLinkChild
           >;
         }> | null;
-        imagePosition: "left" | "top" | null;
+        imagePosition: "left" | "right" | "top" | null;
         image: {
           asset: {
             _id: string;
@@ -58181,7 +58181,7 @@ export type POST_QUERY_RESULT = {
                   crop?: SanityImageCrop;
                   _type: "image";
                 };
-                imagePosition?: "left" | "top";
+                imagePosition?: "left" | "right" | "top";
                 links?: Array<
                   {
                     _key: string;
@@ -58607,7 +58607,7 @@ export type POST_QUERY_RESULT = {
                 svg: string | null;
               } | null;
               title: string | null;
-              excerpt: string | null;
+              excerpt: BlockContent | null;
               image: {
                 asset: {
                   _id: string;
@@ -58870,7 +58870,7 @@ export type POST_QUERY_RESULT = {
                 crop?: SanityImageCrop;
                 _type: "image";
               };
-              imagePosition?: "left" | "top";
+              imagePosition?: "left" | "right" | "top";
               links?: Array<
                 {
                   _key: string;
@@ -59401,7 +59401,7 @@ export type POST_QUERY_RESULT = {
                 crop?: SanityImageCrop;
                 _type: "image";
               };
-              imagePosition?: "left" | "top";
+              imagePosition?: "left" | "right" | "top";
               links?: Array<
                 {
                   _key: string;
@@ -60215,7 +60215,7 @@ export type POST_QUERY_RESULT = {
                         crop?: SanityImageCrop;
                         _type: "image";
                       };
-                      imagePosition?: "left" | "top";
+                      imagePosition?: "left" | "right" | "top";
                       links?: Array<
                         {
                           _key: string;
@@ -60696,7 +60696,7 @@ export type POST_QUERY_RESULT = {
                       crop?: SanityImageCrop;
                       _type: "image";
                     };
-                    imagePosition?: "left" | "top";
+                    imagePosition?: "left" | "right" | "top";
                     links?: Array<
                       {
                         _key: string;
@@ -61269,7 +61269,7 @@ export type POST_QUERY_RESULT = {
                         crop?: SanityImageCrop;
                         _type: "image";
                       };
-                      imagePosition?: "left" | "top";
+                      imagePosition?: "left" | "right" | "top";
                       links?: Array<
                         {
                           _key: string;
@@ -61669,7 +61669,7 @@ export type POST_QUERY_RESULT = {
                     svg: string | null;
                   } | null;
                   title: string | null;
-                  excerpt: string | null;
+                  excerpt: BlockContent | null;
                   image: {
                     asset: {
                       _id: string;
@@ -61945,7 +61945,7 @@ export type POST_QUERY_RESULT = {
                   crop?: SanityImageCrop;
                   _type: "image";
                 };
-                imagePosition?: "left" | "top";
+                imagePosition?: "left" | "right" | "top";
                 links?: Array<
                   {
                     _key: string;
@@ -62429,7 +62429,7 @@ export type POST_QUERY_RESULT = {
                 crop?: SanityImageCrop;
                 _type: "image";
               };
-              imagePosition?: "left" | "top";
+              imagePosition?: "left" | "right" | "top";
               links?: Array<
                 {
                   _key: string;
@@ -63113,7 +63113,7 @@ export type PRODUCT_QUERY_RESULT = {
           crop?: SanityImageCrop;
           _type: "image";
         };
-        imagePosition?: "left" | "top";
+        imagePosition?: "left" | "right" | "top";
         links?: Array<
           {
             _key: string;
@@ -63770,7 +63770,7 @@ export type PRODUCT_QUERY_RESULT = {
                 crop?: SanityImageCrop;
                 _type: "image";
               };
-              imagePosition?: "left" | "top";
+              imagePosition?: "left" | "right" | "top";
               links?: Array<
                 {
                   _key: string;
@@ -64123,7 +64123,7 @@ export type PRODUCT_QUERY_RESULT = {
                 svg: string | null;
               } | null;
               title: string | null;
-              excerpt: string | null;
+              excerpt: BlockContent | null;
               image: {
                 asset: {
                   _id: string;
@@ -64422,7 +64422,7 @@ export type PRODUCT_QUERY_RESULT = {
                   crop?: SanityImageCrop;
                   _type: "image";
                 };
-                imagePosition?: "left" | "top";
+                imagePosition?: "left" | "right" | "top";
                 links?: Array<
                   {
                     _key: string;
@@ -64916,7 +64916,7 @@ export type PRODUCT_QUERY_RESULT = {
                 crop?: SanityImageCrop;
                 _type: "image";
               };
-              imagePosition?: "left" | "top";
+              imagePosition?: "left" | "right" | "top";
               links?: Array<
                 {
                   _key: string;
@@ -65294,7 +65294,7 @@ export type PRODUCT_QUERY_RESULT = {
             } & NavigationLinkChild
           >;
         }> | null;
-        imagePosition: "left" | "top" | null;
+        imagePosition: "left" | "right" | "top" | null;
         image: {
           asset: {
             _id: string;
@@ -65554,7 +65554,7 @@ export type PRODUCT_QUERY_RESULT = {
                   crop?: SanityImageCrop;
                   _type: "image";
                 };
-                imagePosition?: "left" | "top";
+                imagePosition?: "left" | "right" | "top";
                 links?: Array<
                   {
                     _key: string;
@@ -65980,7 +65980,7 @@ export type PRODUCT_QUERY_RESULT = {
                 svg: string | null;
               } | null;
               title: string | null;
-              excerpt: string | null;
+              excerpt: BlockContent | null;
               image: {
                 asset: {
                   _id: string;
@@ -66243,7 +66243,7 @@ export type PRODUCT_QUERY_RESULT = {
                 crop?: SanityImageCrop;
                 _type: "image";
               };
-              imagePosition?: "left" | "top";
+              imagePosition?: "left" | "right" | "top";
               links?: Array<
                 {
                   _key: string;
@@ -66774,7 +66774,7 @@ export type PRODUCT_QUERY_RESULT = {
                 crop?: SanityImageCrop;
                 _type: "image";
               };
-              imagePosition?: "left" | "top";
+              imagePosition?: "left" | "right" | "top";
               links?: Array<
                 {
                   _key: string;
@@ -67588,7 +67588,7 @@ export type PRODUCT_QUERY_RESULT = {
                         crop?: SanityImageCrop;
                         _type: "image";
                       };
-                      imagePosition?: "left" | "top";
+                      imagePosition?: "left" | "right" | "top";
                       links?: Array<
                         {
                           _key: string;
@@ -68069,7 +68069,7 @@ export type PRODUCT_QUERY_RESULT = {
                       crop?: SanityImageCrop;
                       _type: "image";
                     };
-                    imagePosition?: "left" | "top";
+                    imagePosition?: "left" | "right" | "top";
                     links?: Array<
                       {
                         _key: string;
@@ -68642,7 +68642,7 @@ export type PRODUCT_QUERY_RESULT = {
                         crop?: SanityImageCrop;
                         _type: "image";
                       };
-                      imagePosition?: "left" | "top";
+                      imagePosition?: "left" | "right" | "top";
                       links?: Array<
                         {
                           _key: string;
@@ -69042,7 +69042,7 @@ export type PRODUCT_QUERY_RESULT = {
                     svg: string | null;
                   } | null;
                   title: string | null;
-                  excerpt: string | null;
+                  excerpt: BlockContent | null;
                   image: {
                     asset: {
                       _id: string;
@@ -69318,7 +69318,7 @@ export type PRODUCT_QUERY_RESULT = {
                   crop?: SanityImageCrop;
                   _type: "image";
                 };
-                imagePosition?: "left" | "top";
+                imagePosition?: "left" | "right" | "top";
                 links?: Array<
                   {
                     _key: string;
@@ -69802,7 +69802,7 @@ export type PRODUCT_QUERY_RESULT = {
                 crop?: SanityImageCrop;
                 _type: "image";
               };
-              imagePosition?: "left" | "top";
+              imagePosition?: "left" | "right" | "top";
               links?: Array<
                 {
                   _key: string;
@@ -70621,7 +70621,7 @@ export type PROJECT_QUERY_RESULT = {
           crop?: SanityImageCrop;
           _type: "image";
         };
-        imagePosition?: "left" | "top";
+        imagePosition?: "left" | "right" | "top";
         links?: Array<
           {
             _key: string;
@@ -71199,7 +71199,7 @@ export type PROJECT_QUERY_RESULT = {
                 crop?: SanityImageCrop;
                 _type: "image";
               };
-              imagePosition?: "left" | "top";
+              imagePosition?: "left" | "right" | "top";
               links?: Array<
                 {
                   _key: string;
@@ -71552,7 +71552,7 @@ export type PROJECT_QUERY_RESULT = {
                 svg: string | null;
               } | null;
               title: string | null;
-              excerpt: string | null;
+              excerpt: BlockContent | null;
               image: {
                 asset: {
                   _id: string;
@@ -71851,7 +71851,7 @@ export type PROJECT_QUERY_RESULT = {
                   crop?: SanityImageCrop;
                   _type: "image";
                 };
-                imagePosition?: "left" | "top";
+                imagePosition?: "left" | "right" | "top";
                 links?: Array<
                   {
                     _key: string;
@@ -72345,7 +72345,7 @@ export type PROJECT_QUERY_RESULT = {
                 crop?: SanityImageCrop;
                 _type: "image";
               };
-              imagePosition?: "left" | "top";
+              imagePosition?: "left" | "right" | "top";
               links?: Array<
                 {
                   _key: string;
@@ -72723,7 +72723,7 @@ export type PROJECT_QUERY_RESULT = {
             } & NavigationLinkChild
           >;
         }> | null;
-        imagePosition: "left" | "top" | null;
+        imagePosition: "left" | "right" | "top" | null;
         image: {
           asset: {
             _id: string;
@@ -72983,7 +72983,7 @@ export type PROJECT_QUERY_RESULT = {
                   crop?: SanityImageCrop;
                   _type: "image";
                 };
-                imagePosition?: "left" | "top";
+                imagePosition?: "left" | "right" | "top";
                 links?: Array<
                   {
                     _key: string;
@@ -73409,7 +73409,7 @@ export type PROJECT_QUERY_RESULT = {
                 svg: string | null;
               } | null;
               title: string | null;
-              excerpt: string | null;
+              excerpt: BlockContent | null;
               image: {
                 asset: {
                   _id: string;
@@ -73672,7 +73672,7 @@ export type PROJECT_QUERY_RESULT = {
                 crop?: SanityImageCrop;
                 _type: "image";
               };
-              imagePosition?: "left" | "top";
+              imagePosition?: "left" | "right" | "top";
               links?: Array<
                 {
                   _key: string;
@@ -74203,7 +74203,7 @@ export type PROJECT_QUERY_RESULT = {
                 crop?: SanityImageCrop;
                 _type: "image";
               };
-              imagePosition?: "left" | "top";
+              imagePosition?: "left" | "right" | "top";
               links?: Array<
                 {
                   _key: string;
@@ -75017,7 +75017,7 @@ export type PROJECT_QUERY_RESULT = {
                         crop?: SanityImageCrop;
                         _type: "image";
                       };
-                      imagePosition?: "left" | "top";
+                      imagePosition?: "left" | "right" | "top";
                       links?: Array<
                         {
                           _key: string;
@@ -75498,7 +75498,7 @@ export type PROJECT_QUERY_RESULT = {
                       crop?: SanityImageCrop;
                       _type: "image";
                     };
-                    imagePosition?: "left" | "top";
+                    imagePosition?: "left" | "right" | "top";
                     links?: Array<
                       {
                         _key: string;
@@ -76071,7 +76071,7 @@ export type PROJECT_QUERY_RESULT = {
                         crop?: SanityImageCrop;
                         _type: "image";
                       };
-                      imagePosition?: "left" | "top";
+                      imagePosition?: "left" | "right" | "top";
                       links?: Array<
                         {
                           _key: string;
@@ -76471,7 +76471,7 @@ export type PROJECT_QUERY_RESULT = {
                     svg: string | null;
                   } | null;
                   title: string | null;
-                  excerpt: string | null;
+                  excerpt: BlockContent | null;
                   image: {
                     asset: {
                       _id: string;
@@ -76747,7 +76747,7 @@ export type PROJECT_QUERY_RESULT = {
                   crop?: SanityImageCrop;
                   _type: "image";
                 };
-                imagePosition?: "left" | "top";
+                imagePosition?: "left" | "right" | "top";
                 links?: Array<
                   {
                     _key: string;
@@ -77231,7 +77231,7 @@ export type PROJECT_QUERY_RESULT = {
                 crop?: SanityImageCrop;
                 _type: "image";
               };
-              imagePosition?: "left" | "top";
+              imagePosition?: "left" | "right" | "top";
               links?: Array<
                 {
                   _key: string;
@@ -77856,7 +77856,7 @@ export type REUSABLE_SECTIONS_QUERY_RESULT = Array<{
                 svg: string | null;
               } | null;
               title: string | null;
-              excerpt: string | null;
+              excerpt: BlockContent | null;
               image: {
                 asset: {
                   _id: string;
@@ -78155,7 +78155,7 @@ export type REUSABLE_SECTIONS_QUERY_RESULT = Array<{
                   crop?: SanityImageCrop;
                   _type: "image";
                 };
-                imagePosition?: "left" | "top";
+                imagePosition?: "left" | "right" | "top";
                 links?: Array<
                   {
                     _key: string;
@@ -78649,7 +78649,7 @@ export type REUSABLE_SECTIONS_QUERY_RESULT = Array<{
                 crop?: SanityImageCrop;
                 _type: "image";
               };
-              imagePosition?: "left" | "top";
+              imagePosition?: "left" | "right" | "top";
               links?: Array<
                 {
                   _key: string;
@@ -79027,7 +79027,7 @@ export type REUSABLE_SECTIONS_QUERY_RESULT = Array<{
             } & NavigationLinkChild
           >;
         }> | null;
-        imagePosition: "left" | "top" | null;
+        imagePosition: "left" | "right" | "top" | null;
         image: {
           asset: {
             _id: string;
@@ -79200,7 +79200,7 @@ export type REUSABLE_SECTIONS_QUERY_RESULT = Array<{
                 svg: string | null;
               } | null;
               title: string | null;
-              excerpt: string | null;
+              excerpt: BlockContent | null;
               image: {
                 asset: {
                   _id: string;
@@ -79463,7 +79463,7 @@ export type REUSABLE_SECTIONS_QUERY_RESULT = Array<{
                 crop?: SanityImageCrop;
                 _type: "image";
               };
-              imagePosition?: "left" | "top";
+              imagePosition?: "left" | "right" | "top";
               links?: Array<
                 {
                   _key: string;
@@ -79994,7 +79994,7 @@ export type REUSABLE_SECTIONS_QUERY_RESULT = Array<{
                 crop?: SanityImageCrop;
                 _type: "image";
               };
-              imagePosition?: "left" | "top";
+              imagePosition?: "left" | "right" | "top";
               links?: Array<
                 {
                   _key: string;
@@ -80680,7 +80680,7 @@ export type REUSABLE_SECTIONS_QUERY_RESULT = Array<{
                         crop?: SanityImageCrop;
                         _type: "image";
                       };
-                      imagePosition?: "left" | "top";
+                      imagePosition?: "left" | "right" | "top";
                       links?: Array<
                         {
                           _key: string;
@@ -81161,7 +81161,7 @@ export type REUSABLE_SECTIONS_QUERY_RESULT = Array<{
                       crop?: SanityImageCrop;
                       _type: "image";
                     };
-                    imagePosition?: "left" | "top";
+                    imagePosition?: "left" | "right" | "top";
                     links?: Array<
                       {
                         _key: string;
@@ -81734,7 +81734,7 @@ export type REUSABLE_SECTIONS_QUERY_RESULT = Array<{
                         crop?: SanityImageCrop;
                         _type: "image";
                       };
-                      imagePosition?: "left" | "top";
+                      imagePosition?: "left" | "right" | "top";
                       links?: Array<
                         {
                           _key: string;
@@ -82235,7 +82235,7 @@ export type REUSABLE_SECTIONS_QUERY_RESULT = Array<{
                   crop?: SanityImageCrop;
                   _type: "image";
                 };
-                imagePosition?: "left" | "top";
+                imagePosition?: "left" | "right" | "top";
                 links?: Array<
                   {
                     _key: string;
@@ -82719,7 +82719,7 @@ export type REUSABLE_SECTIONS_QUERY_RESULT = Array<{
                 crop?: SanityImageCrop;
                 _type: "image";
               };
-              imagePosition?: "left" | "top";
+              imagePosition?: "left" | "right" | "top";
               links?: Array<
                 {
                   _key: string;
@@ -83507,7 +83507,7 @@ export type SERVICE_QUERY_RESULT = {
           crop?: SanityImageCrop;
           _type: "image";
         };
-        imagePosition?: "left" | "top";
+        imagePosition?: "left" | "right" | "top";
         links?: Array<
           {
             _key: string;
@@ -84131,7 +84131,7 @@ export type SERVICE_QUERY_RESULT = {
                 crop?: SanityImageCrop;
                 _type: "image";
               };
-              imagePosition?: "left" | "top";
+              imagePosition?: "left" | "right" | "top";
               links?: Array<
                 {
                   _key: string;
@@ -84484,7 +84484,7 @@ export type SERVICE_QUERY_RESULT = {
                 svg: string | null;
               } | null;
               title: string | null;
-              excerpt: string | null;
+              excerpt: BlockContent | null;
               image: {
                 asset: {
                   _id: string;
@@ -84783,7 +84783,7 @@ export type SERVICE_QUERY_RESULT = {
                   crop?: SanityImageCrop;
                   _type: "image";
                 };
-                imagePosition?: "left" | "top";
+                imagePosition?: "left" | "right" | "top";
                 links?: Array<
                   {
                     _key: string;
@@ -85277,7 +85277,7 @@ export type SERVICE_QUERY_RESULT = {
                 crop?: SanityImageCrop;
                 _type: "image";
               };
-              imagePosition?: "left" | "top";
+              imagePosition?: "left" | "right" | "top";
               links?: Array<
                 {
                   _key: string;
@@ -85655,7 +85655,7 @@ export type SERVICE_QUERY_RESULT = {
             } & NavigationLinkChild
           >;
         }> | null;
-        imagePosition: "left" | "top" | null;
+        imagePosition: "left" | "right" | "top" | null;
         image: {
           asset: {
             _id: string;
@@ -85915,7 +85915,7 @@ export type SERVICE_QUERY_RESULT = {
                   crop?: SanityImageCrop;
                   _type: "image";
                 };
-                imagePosition?: "left" | "top";
+                imagePosition?: "left" | "right" | "top";
                 links?: Array<
                   {
                     _key: string;
@@ -86341,7 +86341,7 @@ export type SERVICE_QUERY_RESULT = {
                 svg: string | null;
               } | null;
               title: string | null;
-              excerpt: string | null;
+              excerpt: BlockContent | null;
               image: {
                 asset: {
                   _id: string;
@@ -86604,7 +86604,7 @@ export type SERVICE_QUERY_RESULT = {
                 crop?: SanityImageCrop;
                 _type: "image";
               };
-              imagePosition?: "left" | "top";
+              imagePosition?: "left" | "right" | "top";
               links?: Array<
                 {
                   _key: string;
@@ -87135,7 +87135,7 @@ export type SERVICE_QUERY_RESULT = {
                 crop?: SanityImageCrop;
                 _type: "image";
               };
-              imagePosition?: "left" | "top";
+              imagePosition?: "left" | "right" | "top";
               links?: Array<
                 {
                   _key: string;
@@ -87949,7 +87949,7 @@ export type SERVICE_QUERY_RESULT = {
                         crop?: SanityImageCrop;
                         _type: "image";
                       };
-                      imagePosition?: "left" | "top";
+                      imagePosition?: "left" | "right" | "top";
                       links?: Array<
                         {
                           _key: string;
@@ -88430,7 +88430,7 @@ export type SERVICE_QUERY_RESULT = {
                       crop?: SanityImageCrop;
                       _type: "image";
                     };
-                    imagePosition?: "left" | "top";
+                    imagePosition?: "left" | "right" | "top";
                     links?: Array<
                       {
                         _key: string;
@@ -89003,7 +89003,7 @@ export type SERVICE_QUERY_RESULT = {
                         crop?: SanityImageCrop;
                         _type: "image";
                       };
-                      imagePosition?: "left" | "top";
+                      imagePosition?: "left" | "right" | "top";
                       links?: Array<
                         {
                           _key: string;
@@ -89403,7 +89403,7 @@ export type SERVICE_QUERY_RESULT = {
                     svg: string | null;
                   } | null;
                   title: string | null;
-                  excerpt: string | null;
+                  excerpt: BlockContent | null;
                   image: {
                     asset: {
                       _id: string;
@@ -89679,7 +89679,7 @@ export type SERVICE_QUERY_RESULT = {
                   crop?: SanityImageCrop;
                   _type: "image";
                 };
-                imagePosition?: "left" | "top";
+                imagePosition?: "left" | "right" | "top";
                 links?: Array<
                   {
                     _key: string;
@@ -90163,7 +90163,7 @@ export type SERVICE_QUERY_RESULT = {
                 crop?: SanityImageCrop;
                 _type: "image";
               };
-              imagePosition?: "left" | "top";
+              imagePosition?: "left" | "right" | "top";
               links?: Array<
                 {
                   _key: string;

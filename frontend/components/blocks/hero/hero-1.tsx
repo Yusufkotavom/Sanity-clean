@@ -12,6 +12,7 @@ import {
   SectionShell,
 } from "@/components/ui/section-shell";
 import SectionContainer from "@/components/ui/section-container";
+import { CardShell } from "@/components/ui/card-shell";
 import { cn } from "@/lib/utils";
 import { stegaClean } from "@/lib/clean";
 import { colorToStyle, colorToCardStyle, ColorValue } from "@/lib/gradient";
@@ -76,7 +77,7 @@ export default function Hero1({ blockStyles,
 
   const imageContent = image && (image.asset || !!(image as any)._url) ? (
     <div className="flex flex-col justify-center">
-      <div className="overflow-hidden rounded-[1.5rem] border border-white/45 bg-white/70 shadow-[0_18px_48px_rgba(15,23,42,0.1)] dark:border-white/12 dark:bg-white/5">
+      <CardShell className="overflow-hidden rounded-[1.5rem] p-0 shadow-[0_18px_48px_rgba(15,23,42,0.1)]">
         <Image
           className="h-full w-full object-cover aspect-video md:aspect-auto"
           src={urlFor(image).width(900).url()}
@@ -91,7 +92,7 @@ export default function Hero1({ blockStyles,
           fetchPriority="high"
           sizes="(max-width: 768px) 100vw, 50vw"
         />
-      </div>
+      </CardShell>
     </div>
   ) : null;
 
@@ -116,11 +117,11 @@ export default function Hero1({ blockStyles,
   let layoutNode = null;
   if (useCard) {
     layoutNode = (
-      <div
-        className={cn(containerLayout, "card-shell p-5 md:p-7 lg:p-8")}
+      <CardShell
+        className={cn(containerLayout, "p-5 md:p-7 lg:p-8")}
         >
         {innerContent}
-      </div>
+      </CardShell>
     );
   } else {
     layoutNode = (

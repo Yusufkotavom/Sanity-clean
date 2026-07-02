@@ -4073,6 +4073,10 @@
               {
                 "type": "string",
                 "value": "left"
+              },
+              {
+                "type": "string",
+                "value": "right"
               }
             ]
           },
@@ -4942,7 +4946,8 @@
         "excerpt": {
           "type": "objectAttribute",
           "value": {
-            "type": "string"
+            "type": "inline",
+            "name": "block-content"
           },
           "optional": true
         },
