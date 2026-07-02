@@ -248,11 +248,21 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v6
 
-      - name: Deploy ${{ matrix.project.name }} → Vercel
-        uses: amondnet/vercel-action@v25
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
         with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ matrix.project.id }}
-          working-directory: ./frontend
-          vercel-args: "--prod"
+          node-version: 22
+
+      - name: Deploy ${{ matrix.project.name }} → Vercel
+        working-directory: ./frontend
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ matrix.project.id }}
+        run: |
+          npm install -g vercel@latest
+          # Pull environment config first (build needs it for Next.js)
+          vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+          # Build via Vercel CLI
+          vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+          # Deploy the prebuilt output
+          vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
