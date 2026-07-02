@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type {   } from "@/sanity.types";
+import SanityIcon from "@/components/icons/sanity-icon";
 
 type Feature = { _key?: string; icon?: string; title?: string; description?: string; badge?: string };
 type Props = {
@@ -64,7 +65,9 @@ export default function FeaturesPackageBlock({ blockStyles,
                   <span className={cn(
                     "flex shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary",
                     style === "grid" ? "mb-4 size-10 text-lg" : "size-10 text-lg"
-                  )}>{f.icon}</span>
+                  )}>
+                    {typeof f.icon === "object" ? <SanityIcon icon={f.icon as any} className="size-5" /> : f.icon}
+                  </span>
                 )}
                 <div className="flex-1">
                   <h3 className={cn("font-semibold text-foreground", style === "grid" ? "text-base" : "text-sm")}>
