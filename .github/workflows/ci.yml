@@ -245,6 +245,9 @@ jobs:
           # Add more projects here:
           # - { id: "prj_XXXXXXXXXXXXXXXXXXXX", name: "Kotacom" }
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v6
+
       - name: Deploy ${{ matrix.project.name }} → Vercel
         uses: amondnet/vercel-action@v25
         with:
