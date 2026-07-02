@@ -2,7 +2,7 @@ import { stegaClean } from "@/lib/clean";
 import SectionContainer from "@/components/ui/section-container";
 import { fetchSeoSettings } from "@/sanity/lib/fetch";
 import { Star, TrendingUp, CheckCircle } from "lucide-react";
-import type { ColorVariant, SectionPadding } from "@/sanity.types";
+import type {   } from "@/sanity.types";
 import GlassCard from "@/components/ui/glass-card";
 import StarRating from "@/components/ui/star-rating";
 
@@ -17,26 +17,25 @@ type ManualItem = {
 type TestimonialsBlock = {
   _type: "testimonials-block";
   _key: string;
-  padding?: string;
-  colorVariant?: string;
   title?: string;
   description?: string;
   source?: string;
   category?: string;
   manualItems?: ManualItem[] | null;
+  blockStyles?: any;
 };
 
-export default async function TestimonialsBlock({
-  padding,
-  colorVariant,
-  title,
-  description,
-  source,
-  category,
-  manualItems,
-}: TestimonialsBlock) {
-  const color = stegaClean(colorVariant) as ColorVariant | null;
-  const pad = padding as unknown as SectionPadding | null;
+export default async function TestimonialsBlock({ blockStyles, 
+      
+      
+      title,
+      description,
+      source,
+      category,
+      manualItems,
+    }: TestimonialsBlock) {
+  
+  
   const dataSource = stegaClean(source) || "global";
 
   let items: any[] = [];
@@ -59,7 +58,7 @@ export default async function TestimonialsBlock({
   const isGlobal = dataSource === "global";
 
   return (
-    <SectionContainer color={color} padding={pad}>
+    <SectionContainer blockStyles={blockStyles}>
       <div className="mx-auto max-w-7xl">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">

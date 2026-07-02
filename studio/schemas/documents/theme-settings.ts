@@ -44,24 +44,20 @@ export default defineType({
   title: "Theme Settings",
   type: "document",
   icon: Palette,
+  groups: [
+    { name: "colors", title: "Warna" },
+    { name: "cards", title: "Kartu Grid" },
+    { name: "blocks", title: "Block" },
+    { name: "buttons", title: "Tombol" },
+  ],
   fields: [
-    (defineField as any)({
-      name: "tabs",
+    // ── TAB: WARNA ──
+    defineField({
+      name: "themeColors",
+      title: "Warna",
       type: "object",
-      groups: [
-        { name: "colors", title: "Warna" },
-        { name: "cards", title: "Kartu Grid" },
-        { name: "blocks", title: "Block" },
-        { name: "buttons", title: "Tombol" },
-      ],
+      group: "colors",
       fields: [
-        // ── TAB: WARNA ──
-        defineField({
-          name: "themeColors",
-          title: "Warna",
-          type: "object",
-          group: "colors",
-          fields: [
             defineField({
               name: "themePreset",
               title: "Preset",
@@ -398,8 +394,6 @@ export default defineType({
             }),
           ],
         }),
-      ],
-    }),
   ],
   preview: {
     prepare() {

@@ -9,6 +9,7 @@ import type { SanityIconValue } from "@/components/icons/sanity-icon";
 import { SectionPanel, SectionShell } from "@/components/ui/section-shell";
 import SectionContainer from "@/components/ui/section-container";
 import { cn } from "@/lib/utils";
+import { colorToStyle, colorToCardStyle, ColorValue } from "@/lib/gradient";
 
 type HeroLink = {
   title?: string | null;
@@ -31,23 +32,25 @@ type HeroVercelProps = {
   cards?: HeroCard[] | null;
   image?: { asset?: { _ref?: string } | null; alt?: string | null } | null;
   useCard?: boolean;
-  colorVariant?: string | null;
+  blockStyles?: any;
 };
 
-export default function HeroVercel({
-  tagLine,
-  title,
-  description,
-  ctaPrimary,
-  ctaSecondary,
-  cards,
-  image,
-  useCard = true,
-  colorVariant = "transparent",
-}: HeroVercelProps) {
+export default function HeroVercel({ blockStyles, 
+      tagLine,
+      title,
+      description,
+      ctaPrimary,
+      ctaSecondary,
+      cards,
+      image,
+      useCard = true,
+      
+      
+      
+    }: HeroVercelProps) {
   const imageUrl = image && (image.asset || !!(image as any)._url) ? urlFor(image).width(1200).quality(80).auto("format").url() : null;
-  const isTransparent = colorVariant === "transparent";
-  const tone = colorVariant === "primary" ? "sky" : (isTransparent ? undefined : "neutral");
+  
+  
 
   const innerContent = (
     <>
@@ -146,21 +149,12 @@ export default function HeroVercel({
 
   let layoutNode = null;
   if (useCard) {
-    // If it's the default background, we keep the special Vercel gradient
-    // If they picked transparent or something else, we let it be.
-    const isVercelDefaultCard = colorVariant === "background" || !colorVariant;
     layoutNode = (
-      <SectionPanel
-        tone={tone as any}
-        className={cn(
-          "w-full rounded-[2rem] p-6 md:p-8 lg:p-10",
-          isVercelDefaultCard
-            ? "border border-white/45 bg-[linear-gradient(180deg,rgba(255,255,255,0.88)_0%,rgba(246,248,252,0.84)_100%)] shadow-[0_30px_90px_rgba(15,23,42,0.16)] backdrop-blur-xl dark:border-white/15 dark:bg-[linear-gradient(180deg,rgba(15,23,42,0.78)_0%,rgba(15,23,42,0.62)_100%)]"
-            : (isTransparent ? "" : "border border-white/60 bg-white/75 shadow-[0_30px_90px_rgba(15,23,42,0.08)] backdrop-blur-xl dark:border-white/10 dark:bg-white/5")
-        )}
+      <div
+        className="w-full rounded-[2rem] p-6 md:p-8 lg:p-10 card-shell border border-white/60 bg-white/75 shadow-[0_30px_90px_rgba(15,23,42,0.08)] backdrop-blur-xl dark:border-white/10 dark:bg-white/5"
       >
         {innerContent}
-      </SectionPanel>
+      </div>
     );
   } else {
     layoutNode = (
@@ -170,17 +164,11 @@ export default function HeroVercel({
     );
   }
 
-  if (!useCard && colorVariant && colorVariant !== "transparent") {
-    return (
-      <SectionContainer color={colorVariant as any}>
-        {layoutNode}
-      </SectionContainer>
-    );
-  }
-
   return (
-    <SectionShell className="min-h-[100dvh] flex flex-col justify-center py-20 lg:py-24">
-      {layoutNode}
-    </SectionShell>
+    <SectionContainer blockStyles={blockStyles}>
+      
+        {layoutNode}
+      
+    </SectionContainer>
   );
 }

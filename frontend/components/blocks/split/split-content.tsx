@@ -21,7 +21,7 @@ interface SplitContentProps extends SplitContent {
 
 export default function SplitContent({
   sticky,
-  padding,
+  
   noGap,
   tagLine,
   title,
@@ -34,8 +34,8 @@ export default function SplitContent({
     <div
       className={cn(
         !sticky ? "flex flex-col justify-center" : undefined,
-        padding?.top ? "pt-16 xl:pt-20" : undefined,
-        padding?.bottom ? "pb-16 xl:pb-20" : undefined,
+        false ? "pt-16 xl:pt-20" : undefined,
+        false ? "pb-16 xl:pb-20" : undefined,
       )}
     >
       <div

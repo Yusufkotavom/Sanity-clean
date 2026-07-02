@@ -2,32 +2,31 @@ import { stegaClean } from "@/lib/clean";
 import SectionContainer from "@/components/ui/section-container";
 import { fetchSeoSettings } from "@/sanity/lib/fetch";
 import { Building2, MapPin, Phone, Mail } from "lucide-react";
-import { ColorVariant, SectionPadding } from "@/sanity.types";
+import {   } from "@/sanity.types";
 
 type CompanyInfoBlock = {
   _type: "company-info";
   _key: string;
-  padding?: string;
-  colorVariant?: string;
   title?: string;
   description?: string;
+  blockStyles?: any;
 };
 
-export default async function CompanyInfo({
-  padding,
-  colorVariant,
-  title,
-  description,
-}: CompanyInfoBlock) {
-  const color = stegaClean(colorVariant) as ColorVariant | null;
-  const pad = padding as unknown as SectionPadding | null;
+export default async function CompanyInfo({ blockStyles, 
+      
+      
+      title,
+      description,
+    }: CompanyInfoBlock) {
+  
+  
   const seoSettings = await fetchSeoSettings();
   const c = seoSettings?.companyInfo;
 
   if (!c) return null;
 
   return (
-    <SectionContainer color={color} padding={pad}>
+    <SectionContainer blockStyles={blockStyles}>
       <div className="mx-auto max-w-4xl">
         <div className="mb-8 text-center">
           <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">

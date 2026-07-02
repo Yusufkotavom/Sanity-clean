@@ -5,8 +5,7 @@ export const benefitsBlockQuery = groq`
   _type == "benefits-block" => {
     _type,
     _key,
-    padding,
-    colorVariant,
+    blockStyles,
     title,
     subtitle,
     description,

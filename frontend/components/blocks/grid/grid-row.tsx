@@ -31,15 +31,15 @@ const componentMap: {
   "grid-post": GridPost as any,
 };
 
-export default function GridRow({
-  sectionStyle,
-  cardTheme,
-  gridColumns,
-  textAlign,
-  cardStyle,
-  columns,
-  noContainer = false,
-}: GridRow & { noContainer?: boolean }) {
+export default function GridRow({ blockStyles, 
+      
+      cardTheme,
+      gridColumns,
+      textAlign,
+      cardStyle,
+      columns,
+      noContainer = false,
+    }: GridRow & { noContainer?: boolean }) {
   const cleanGridColumns = stegaClean(gridColumns);
   const cleanTextAlign = stegaClean(textAlign) as GridRow["textAlign"];
   const cleanCardStyle = stegaClean(cardStyle) as GridRow["cardStyle"];
@@ -76,7 +76,7 @@ export default function GridRow({
   }
 
   return (
-    <SectionContainer sectionStyle={sectionStyle}>
+    <SectionContainer blockStyles={blockStyles}>
       {renderContent()}
     </SectionContainer>
   );

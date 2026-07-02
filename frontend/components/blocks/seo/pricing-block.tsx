@@ -3,17 +3,16 @@ import SectionContainer from "@/components/ui/section-container";
 import { fetchSeoSettings } from "@/sanity/lib/fetch";
 import { Check, X, Clock, CreditCard } from "lucide-react";
 import WhatsAppLink from "@/components/whatsapp-link";
-import { ColorVariant, SectionPadding } from "@/sanity.types";
+import {   } from "@/sanity.types";
 import GlassCard from "@/components/ui/glass-card";
 
 type PricingBlock = {
   _type: "pricing-block";
   _key: string;
-  padding?: string;
-  colorVariant?: string;
   title?: string;
   description?: string;
   category: "website" | "software" | "printing";
+  blockStyles?: any;
 };
 
 function formatPrice(price: number, currency: string = "IDR", priceUnit?: string) {
@@ -23,22 +22,22 @@ function formatPrice(price: number, currency: string = "IDR", priceUnit?: string
   return `Rp ${price.toLocaleString("id-ID")}`;
 }
 
-export default async function PricingBlock({
-  padding,
-  colorVariant,
-  title,
-  description,
-  category,
-}: PricingBlock) {
-  const color = stegaClean(colorVariant) as ColorVariant | null;
-  const pad = padding as unknown as SectionPadding | null;
+export default async function PricingBlock({ blockStyles, 
+      
+      
+      title,
+      description,
+      category,
+    }: PricingBlock) {
+  
+  
   const seoSettings = await fetchSeoSettings();
   const packages = seoSettings?.pricingPackages?.[category] || [];
 
   if (!packages || packages.length === 0) return null;
 
   return (
-    <SectionContainer color={color} padding={pad}>
+    <SectionContainer blockStyles={blockStyles}>
       <div className="mx-auto max-w-7xl">
         {/* Header */}
         <div className="text-center mb-12">

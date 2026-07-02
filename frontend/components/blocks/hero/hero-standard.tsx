@@ -17,6 +17,7 @@ type HeroStandardBlock = {
   readonly secondaryButton?: HeroStandardButton;
   readonly alignment?: "left" | "center";
   readonly size?: "md" | "lg";
+  blockStyles?: any;
 };
 
 type HeroStandardProps = {

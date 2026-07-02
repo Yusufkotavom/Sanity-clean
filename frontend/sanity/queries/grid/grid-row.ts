@@ -8,13 +8,7 @@ export const gridRowQuery = groq`
   _type == "grid-row" => {
     _type,
     _key,
-    sectionStyle{
-      bg,
-      density,
-      maxWidth,
-      radius,
-      align
-    },
+    blockStyles,
     cardTheme{
       surface,
       variant,

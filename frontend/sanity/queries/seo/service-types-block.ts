@@ -6,8 +6,7 @@ export const serviceTypesBlockQuery = groq`
   _type == "service-types-block" => {
     _type,
     _key,
-    padding,
-    colorVariant,
+    blockStyles,
     title,
     description,
     services[]{

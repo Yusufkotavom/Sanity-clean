@@ -3,35 +3,35 @@ import SectionContainer from "@/components/ui/section-container";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import type { ColorVariant, SectionPadding } from "@/sanity.types";
+import type {   } from "@/sanity.types";
 
 type Feature = { _key?: string; icon?: string; title?: string; description?: string; badge?: string };
 type Props = {
-  padding?: SectionPadding | null;
-  colorVariant?: ColorVariant | null;
   cardStyle?: "grid" | "list" | "numbered" | null;
   title?: string | null;
   subtitle?: string | null;
   description?: string | null;
   features?: Feature[] | null;
-  cta?: { title?: string; href?: string; buttonVariant?: string } | null;
+  cta?: { title?: string; href?: string; buttonVariant?: string; blockStyles?: any;
+} | null;
+  blockStyles?: any;
 };
 
-export default function FeaturesPackageBlock({
-  padding,
-  colorVariant,
-  cardStyle,
-  title,
-  subtitle,
-  description,
-  features,
-  cta,
-}: Props) {
-  const color = stegaClean(colorVariant);
+export default function FeaturesPackageBlock({ blockStyles, 
+      
+      
+      cardStyle,
+      title,
+      subtitle,
+      description,
+      features,
+      cta,
+    }: Props) {
+  
   const style = cardStyle || "grid";
 
   return (
-    <SectionContainer color={color} padding={padding}>
+    <SectionContainer blockStyles={blockStyles}>
       <div className="mx-auto max-w-5xl">
         {(title || subtitle) && (
           <div className="mb-8">

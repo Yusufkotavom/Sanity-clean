@@ -80,15 +80,6 @@ export default defineType({
   },
   fields: [
     defineField({
-      name: "padding",
-      type: "section-padding",
-    }),
-    defineField({
-      name: "colorVariant",
-      type: "color-variant",
-      description: "Select a background color variant",
-    }),
-    defineField({
       name: "timelines",
       type: "array",
       of: [{ type: "timelines-1" }],
@@ -104,7 +95,14 @@ export default defineType({
         },
       },
     }),
-  ],
+      defineField({
+            name: "blockStyles",
+            type: "blockStyles",
+            title: "Block Styles",
+            
+            options: { collapsible: true, collapsed: true }
+          })
+],
   preview: {
     select: {
       subtitle: "timelines.0.title",

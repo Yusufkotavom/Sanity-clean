@@ -5,8 +5,7 @@ export const companyInfoQuery = groq`
   _type == "company-info" => {
     _type,
     _key,
-    padding,
-    colorVariant,
+    blockStyles,
     title,
     description,
   }

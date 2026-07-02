@@ -9,16 +9,6 @@ export default defineType({
   icon: LayoutTemplate,
   fields: [
     defineField({
-      name: "padding",
-      type: "section-padding",
-    }),
-    defineField({
-      name: "colorVariant",
-      type: "color-variant",
-      title: "Color Variant",
-      description: "Select a background color variant for the entire row.",
-    }),
-    defineField({
       name: "layout",
       type: "string",
       title: "Column Layout",
@@ -71,7 +61,14 @@ export default defineType({
       ],
       validation: (Rule) => Rule.max(4),
     }),
-  ],
+      defineField({
+            name: "blockStyles",
+            type: "blockStyles",
+            title: "Block Styles",
+            
+            options: { collapsible: true, collapsed: true }
+          })
+],
   preview: {
     select: {
       layout: "layout",

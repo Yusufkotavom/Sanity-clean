@@ -3,18 +3,17 @@ import { cn } from "@/lib/utils";
 import PortableTextRenderer from "@/components/portable-text-renderer";
 import { motion, useInView } from "motion/react";
 import { useRef } from "react";
-import { PAGE_QUERY_RESULT, ColorVariant } from "@/sanity.types";
+import { PAGE_QUERY_RESULT,  } from "@/sanity.types";
 
 type Block = NonNullable<NonNullable<PAGE_QUERY_RESULT>["blocks"]>[number];
 type TimelineRow = Extract<Block, { _type: "timeline-row" }>;
 type Timeline1 = NonNullable<NonNullable<TimelineRow["timelines"]>>[number];
 
 interface Timeline1Props extends Timeline1 {
-  color?: ColorVariant;
 }
 
 export default function Timeline1({
-  color,
+  
   title,
   tagLine,
   body,
@@ -42,7 +41,7 @@ export default function Timeline1({
           delay: 0.6,
         }}
       />
-      <div className={cn(color === "primary" ? "text-background" : undefined)}>
+      <div className={cn(undefined)}>
         <h3 className="flex justify-between items-center font-semibold mb-4">
           <motion.span
             initial={{ opacity: 0, y: 10 }}

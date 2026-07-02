@@ -12,7 +12,7 @@ type SectionHeaderProps = Extract<
 };
 
 export default function SectionHeader({
-  colorVariant,
+  
   sectionWidth = "default",
   stackAlign = "left",
   tagLine,
@@ -26,7 +26,7 @@ export default function SectionHeader({
   const isNarrow = cleanSectionWidth === "narrow";
   const resolvedTitle = title?.trim() || pageTitle?.trim() || undefined;
   const toneClassName =
-    colorVariant === "primary"
+    false
       ? "surface-panel surface-panel-sky rounded-[1.6rem] px-5 py-6 md:px-7 md:py-8"
       : "";
 

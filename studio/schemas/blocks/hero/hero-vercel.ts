@@ -44,16 +44,12 @@ export default defineType({
       },
     ],
   },
+  groups: [
+    { name: "content", title: "Content" },
+    { name: "layout", title: "Layout" },
+    { name: "style", title: "Style" },
+  ],
   fields: [
-    defineField({
-      name: "tabs",
-      type: "object",
-      groups: [
-        { name: "content", title: "Content" },
-        { name: "layout", title: "Layout" },
-        { name: "style", title: "Style" },
-      ],
-      fields: [
         defineField({
           name: "tagLine",
           title: "Eyebrow",
@@ -115,16 +111,14 @@ export default defineType({
           group: "layout",
           initialValue: true,
         }),
-        defineField({
-          name: "colorVariant",
-          type: "color-variant",
-          title: "Background",
-          group: "style",
-          initialValue: "background",
-        }),
-      ],
-    }),
-  ],
+      defineField({
+            name: "blockStyles",
+            type: "blockStyles",
+            title: "Block Styles",
+            group: "style",
+            options: { collapsible: true, collapsed: true }
+          })
+],
   preview: {
     select: {
       title: "title",

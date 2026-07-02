@@ -1,22 +1,21 @@
 import { Quote } from "lucide-react";
 import SectionContainer from "@/components/ui/section-container";
 import Eyebrow from "@/components/ui/eyebrow";
-import type { ColorVariant, SectionPadding } from "@/sanity.types";
+import type {   } from "@/sanity.types";
 
 type Props = {
-  padding?: SectionPadding | null;
-  colorVariant?: ColorVariant | null;
   eyebrow?: string | null;
   quote?: string | null;
   author?: string | null;
   role?: string | null;
   highlights?: string[] | null;
+  blockStyles?: any;
 };
 
-export default function QuoteSpotlightBlock({ padding, colorVariant, eyebrow, quote, author, role, highlights }: Props) {
+export default function QuoteSpotlightBlock({ blockStyles,    eyebrow, quote, author, role, highlights }: Props) {
   if (!quote) return null;
   return (
-    <SectionContainer color={colorVariant} padding={padding}>
+    <SectionContainer blockStyles={blockStyles}>
       <div className="mx-auto max-w-5xl">
         <div className="grid gap-10 md:grid-cols-[1.2fr_0.8fr] md:items-center md:gap-16">
           <div className="relative">

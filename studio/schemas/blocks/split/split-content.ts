@@ -44,15 +44,6 @@ export default defineType({
       initialValue: false,
     }),
     defineField({
-      name: "padding",
-      type: "section-padding",
-    }),
-    defineField({
-      name: "colorVariant",
-      type: "color-variant",
-      description: "Select a background color variant",
-    }),
-    defineField({
       name: "tagLine",
       type: "string",
     }),
@@ -80,7 +71,14 @@ export default defineType({
       description:
         "Link to a page or external URL. Leave empty to hide the link.",
     }),
-  ],
+      defineField({
+            name: "blockStyles",
+            type: "blockStyles",
+            title: "Block Styles",
+            
+            options: { collapsible: true, collapsed: true }
+          })
+],
   preview: {
     select: {
       title: "title",

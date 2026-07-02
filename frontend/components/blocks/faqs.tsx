@@ -7,22 +7,21 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import GlassCard from "@/components/ui/glass-card";
-import type { ColorVariant, SectionPadding } from "@/sanity.types";
+import type {   } from "@/sanity.types";
 
 type FAQBlock = {
   _type: "faqs";
   _key: string;
-  padding?: SectionPadding | null;
-  colorVariant?: ColorVariant | null;
   title?: string;
   description?: string;
   source?: string;
   faqs?: { _id?: string; question?: string; answer?: string }[] | null;
   manualItems?: { _key?: string; question?: string; answer?: string }[] | null;
+  blockStyles?: any;
 };
 
 export default function FAQs(block: FAQBlock) {
-  const { padding, colorVariant, title, description, source, faqs, manualItems } = block;
+  const {   title, description, source, faqs, manualItems } = block;
   const dataSource = stegaClean(source) || "reference";
 
   let items: { _id?: string; question?: string; answer?: string }[] = [];
@@ -38,7 +37,7 @@ export default function FAQs(block: FAQBlock) {
   }
 
   return (
-    <SectionContainer color={colorVariant} padding={padding}>
+    <SectionContainer blockStyles={block.blockStyles}>
       <div className="mx-auto max-w-4xl">
         {title || description ? (
           <div className="text-center mb-12">

@@ -46,8 +46,7 @@ interface CarouselImage {
 }
 
 interface Carousel1Props {
-  padding?: any;
-  colorVariant?: any;
+  blockStyles?: any;
   size?: CarouselSize | null;
   indicators?: "none" | "dots" | "count" | null;
   aspectRatio?: string | null;
@@ -65,19 +64,19 @@ const gridComponentMap = {
   "grid-post": GridPost,
 } as const;
 
-export default function Carousel1({
-  padding,
-  colorVariant,
-  size = "one",
-  indicators = "none",
-  aspectRatio = "auto",
-  contentType = "images",
-  images,
-  columns,
-  cardTheme,
-  cardStyle = "vertical",
-  textAlign = "left",
-}: Carousel1Props) {
+export default function Carousel1({ blockStyles, 
+      
+      
+      size = "one",
+      indicators = "none",
+      aspectRatio = "auto",
+      contentType = "images",
+      images,
+      columns,
+      cardTheme,
+      cardStyle = "vertical",
+      textAlign = "left",
+    }: Carousel1Props) {
   const cleanSize = stegaClean(size) as CarouselSize;
   const cleanIndicators = stegaClean(indicators);
   const cleanAspectRatio = stegaClean(aspectRatio);
@@ -93,9 +92,9 @@ export default function Carousel1({
       : images && images.length > 0;
 
   return (
-    <SectionContainer color={colorVariant} padding={padding}>
+    <SectionContainer blockStyles={blockStyles}>
       {hasContent && (
-        <Carousel>
+        <Carousel opts={{ loop: true }}>
           <CarouselContent>
             {cleanContentType === "images" && images
               ? images.map((image, index) => {

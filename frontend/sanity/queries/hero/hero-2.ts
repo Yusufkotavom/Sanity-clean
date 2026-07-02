@@ -8,8 +8,8 @@ export const hero2Query = groq`
   _type == "hero-2" => {
     _type,
     _key,
+    blockStyles,
     useCard,
-    colorVariant,
     tagLine,
     uiIcon{
       provider,

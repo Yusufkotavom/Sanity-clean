@@ -6,8 +6,7 @@ export const logoCloud1Query = groq`
   _type == "logo-cloud-1" => {
     _type,
     _key,
-    padding,
-    colorVariant,
+    blockStyles,
     title,
     images[]{
       _key,

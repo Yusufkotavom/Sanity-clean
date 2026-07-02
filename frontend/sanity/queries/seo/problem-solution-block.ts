@@ -5,8 +5,7 @@ export const problemSolutionBlockQuery = groq`
   _type == "problem-solution-block" => {
     _type,
     _key,
-    padding,
-    colorVariant,
+    blockStyles,
     title,
     problems[],
     solutionTitle,

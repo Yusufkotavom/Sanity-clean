@@ -17,16 +17,6 @@ export default defineType({
   },
   fields: [
     defineField({
-      name: "padding",
-      type: "section-padding",
-    }),
-    defineField({
-      name: "colorVariant",
-      type: "color-variant",
-      title: "Color Variant",
-      description: "Select a background color variant",
-    }),
-    defineField({
       name: "testimonial",
       type: "array",
       of: [
@@ -37,7 +27,14 @@ export default defineType({
         },
       ],
     }),
-  ],
+      defineField({
+            name: "blockStyles",
+            type: "blockStyles",
+            title: "Block Styles",
+            
+            options: { collapsible: true, collapsed: true }
+          })
+],
   preview: {
     select: {
       title: "testimonial.0.name",

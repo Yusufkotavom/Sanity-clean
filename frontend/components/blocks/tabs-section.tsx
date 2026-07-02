@@ -13,16 +13,15 @@ interface TabItem {
 }
 
 interface TabsSectionProps {
-  padding?: any;
-  colorVariant?: any;
+  blockStyles?: any;
   tabs?: TabItem[] | null;
 }
 
-export default function TabsSection({
-  padding,
-  colorVariant,
-  tabs,
-}: TabsSectionProps) {
+export default function TabsSection({ blockStyles, 
+      
+      
+      tabs,
+    }: TabsSectionProps) {
   // Safe initialization for activeTab
   const initialTab = tabs?.[0]?._key || "";
   const [activeTab, setActiveTab] = useState<string>(initialTab);
@@ -36,7 +35,7 @@ export default function TabsSection({
   const resolvedActiveTab = activeTabExists ? activeTab : initialTab;
 
   return (
-    <SectionContainer color={colorVariant} padding={padding}>
+    <SectionContainer blockStyles={blockStyles}>
       <Tabs
         value={resolvedActiveTab}
         onValueChange={setActiveTab}

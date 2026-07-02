@@ -5,7 +5,7 @@ import { urlFor } from "@/sanity/lib/image";
 import PortableTextRenderer from "@/components/portable-text-renderer";
 import SanityIcon from "@/components/icons/sanity-icon";
 import Eyebrow from "@/components/ui/eyebrow";
-import { PAGE_QUERY_RESULT } from "@/sanity.types";
+import {  PAGE_QUERY_RESULT } from "@/sanity.types";
 import {
   SectionIntro,
   SectionPanel,
@@ -14,6 +14,7 @@ import {
 import SectionContainer from "@/components/ui/section-container";
 import { cn } from "@/lib/utils";
 import { stegaClean } from "@/lib/clean";
+import { colorToStyle, colorToCardStyle, ColorValue } from "@/lib/gradient";
 
 type Hero1Props = Extract<
   NonNullable<NonNullable<PAGE_QUERY_RESULT>["blocks"]>[number],
@@ -23,18 +24,20 @@ type Hero1Props = Extract<
   imagePosition?: string | null;
 };
 
-export default function Hero1({
-  tagLine,
-  uiIcon,
-  title,
-  body,
-  image,
-  links,
-  pageTitle,
-  useCard = true,
-  colorVariant = "transparent",
-  imagePosition = "right",
-}: Hero1Props) {
+export default function Hero1({ blockStyles, 
+      tagLine,
+      uiIcon,
+      title,
+      body,
+      image,
+      links,
+      pageTitle,
+      useCard = true,
+      
+      imagePosition = "right",
+      
+      
+    }: Hero1Props) {
   const resolvedTitle = title?.trim() || pageTitle?.trim() || undefined;
   const pos = stegaClean(imagePosition) || "right";
 
@@ -59,7 +62,9 @@ export default function Hero1({
                 target={link.target ? "_blank" : undefined}
                 rel={link.target ? "noopener" : undefined}
               >
-                <SanityIcon icon={link.uiIcon || link.icon} className="size-4" />
+                {(link.uiIcon || link.icon) && (
+                  <SanityIcon icon={link.uiIcon || link.icon} className="size-4" />
+                )}
                 {link.title}
               </Link>
             </Button>
@@ -97,6 +102,11 @@ export default function Hero1({
       : "md:grid-cols-[minmax(0,1fr)_minmax(320px,0.92fr)]",
   );
 
+  const isLeft = pos === "left";
+  
+  
+  
+
   const innerContent = pos === "left" ? (
     <>{imageContent}{textContent}</>
   ) : (
@@ -105,14 +115,12 @@ export default function Hero1({
 
   let layoutNode = null;
   if (useCard) {
-    const tone = colorVariant === "primary" ? "sky" : (colorVariant === "transparent" ? undefined : "neutral");
     layoutNode = (
-      <SectionPanel
-        tone={tone as any}
-        className={cn(containerLayout, "overflow-hidden rounded-[1.75rem] p-5 md:p-7 lg:p-8")}
-      >
+      <div
+        className={cn(containerLayout, "card-shell p-5 md:p-7 lg:p-8")}
+        >
         {innerContent}
-      </SectionPanel>
+      </div>
     );
   } else {
     layoutNode = (
@@ -122,17 +130,11 @@ export default function Hero1({
     );
   }
 
-  if (!useCard && colorVariant && colorVariant !== "transparent") {
-    return (
-      <SectionContainer color={colorVariant}>
-        {layoutNode}
-      </SectionContainer>
-    );
-  }
-
   return (
-    <SectionShell className="pt-16 lg:pt-24">
-      {layoutNode}
-    </SectionShell>
+    <SectionContainer blockStyles={blockStyles}>
+      
+        {layoutNode}
+      
+    </SectionContainer>
   );
 }

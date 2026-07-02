@@ -13,6 +13,7 @@ type CtaStandardBlock = {
   readonly title: string;
   readonly subtitle?: string;
   readonly button?: CtaStandardButton;
+  blockStyles?: any;
 };
 
 type CtaStandardProps = {

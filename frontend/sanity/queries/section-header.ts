@@ -6,8 +6,7 @@ export const sectionHeaderQuery = groq`
   _type == "section-header" => {
     _type,
     _key,
-    padding,
-    colorVariant,
+    blockStyles,
     sectionWidth,
     stackAlign,
     tagLine,

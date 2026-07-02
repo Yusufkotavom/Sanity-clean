@@ -8,8 +8,7 @@ export const cta1Query = groq`
   _type == "cta-1" => {
     _type,
     _key,
-    padding,
-    colorVariant,
+    blockStyles,
     backgroundWidth,
     useCard,
     sectionWidth,

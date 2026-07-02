@@ -2,7 +2,7 @@
 import PortableTextRenderer from "@/components/portable-text-renderer";
 import Eyebrow from "@/components/ui/eyebrow";
 import { cn } from "@/lib/utils";
-import { PAGE_QUERY_RESULT, ColorVariant } from "@/sanity.types";
+import { PAGE_QUERY_RESULT,  } from "@/sanity.types";
 
 type Block = NonNullable<NonNullable<PAGE_QUERY_RESULT>["blocks"]>[number];
 type SplitRow = Extract<Block, { _type: "split-row" }>;
@@ -13,11 +13,10 @@ type SplitCardsList = Extract<
 type SplitCardItem = NonNullable<NonNullable<SplitCardsList["list"]>[number]>;
 
 interface SplitCardsItemProps extends SplitCardItem {
-  color?: ColorVariant;
 }
 
 export default function SplitCardsItem({
-  color,
+  
   tagLine,
   uiIcon,
   title,
@@ -26,7 +25,7 @@ export default function SplitCardsItem({
   return (
     <article className={cn(
       "group h-full border border-white/60 bg-white/75 p-6 shadow-[0_12px_28px_rgba(15,23,42,0.08)] backdrop-blur transition-all duration-200 hover:scale-[1.02] hover:bg-white/90 hover:shadow-lg dark:border-white/15 dark:bg-white/[0.07] dark:hover:bg-white/12 rounded-[var(--radius-card,1rem)]",
-      color === "primary" ? "text-background" : "text-foreground"
+      "text-foreground"
     )}>
       <Eyebrow icon={uiIcon} title={tagLine} variant="outline" size="md" />
       {title && (

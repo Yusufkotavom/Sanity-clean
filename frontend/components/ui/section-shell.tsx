@@ -16,6 +16,7 @@ export function SectionShell({
   className,
   divider = true,
   useThemeBg = false,
+  style,
   children,
 }: {
   id?: string;
@@ -23,10 +24,12 @@ export function SectionShell({
   divider?: boolean;
   useThemeBg?: boolean;
   children: ReactNode;
+  style?: React.CSSProperties;
 }) {
   return (
     <section
       id={id}
+      style={style}
       className={cn(
         "container py-12 md:py-16",
         divider ? "section-divider-show" : "section-divider-hide",

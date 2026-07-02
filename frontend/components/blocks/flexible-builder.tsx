@@ -8,12 +8,12 @@ type FlexibleBuilderProps = Extract<
   { _type: "flexible-builder" }
 >;
 
-export default function FlexibleBuilder({
-  padding,
-  colorVariant,
-  layout = "1-col",
-  columns,
-}: FlexibleBuilderProps) {
+export default function FlexibleBuilder({ blockStyles, 
+      
+      
+      layout = "1-col",
+      columns,
+    }: FlexibleBuilderProps) {
   if (!columns || columns.length === 0) return null;
 
   // Determine grid template based on layout
@@ -39,7 +39,7 @@ export default function FlexibleBuilder({
   const gridClass = getGridClass(layout || "1-col");
 
   return (
-    <SectionContainer color={colorVariant} padding={padding}>
+    <SectionContainer blockStyles={blockStyles}>
       <div className={cn("grid gap-8 w-full", gridClass)}>
         {columns.map((col: any, index: number) => (
           <div key={col._key || index} className="w-full">

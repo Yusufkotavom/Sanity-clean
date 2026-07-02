@@ -5,8 +5,7 @@ export const testimonialsBlockQuery = groq`
   _type == "testimonials-block" => {
     _type,
     _key,
-    padding,
-    colorVariant,
+    blockStyles,
     title,
     description,
     source,

@@ -23,16 +23,6 @@ export default defineType({
   },
   fields: [
     defineField({
-      name: "padding",
-      type: "section-padding",
-    }),
-    defineField({
-      name: "colorVariant",
-      type: "color-variant",
-      title: "Color Variant",
-      description: "Select a background color variant",
-    }),
-    defineField({
       name: "title",
       type: "string",
       initialValue: "Apakah Bisnis Anda Mengalami Masalah Ini?",
@@ -55,7 +45,14 @@ export default defineType({
       rows: 3,
       initialValue: "Website profesional yang responsif dan SEO-friendly dapat meningkatkan omset bisnis Anda hingga 200% dalam 6 bulan!",
     }),
-  ],
+      defineField({
+            name: "blockStyles",
+            type: "blockStyles",
+            title: "Block Styles",
+            
+            options: { collapsible: true, collapsed: true }
+          })
+],
   preview: {
     select: {
       title: "title",

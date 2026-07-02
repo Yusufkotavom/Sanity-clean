@@ -5,8 +5,7 @@ export const formNewsletterQuery = groq`
   _type == "form-newsletter" => {
     _type,
     _key,
-    padding,
-    colorVariant,
+    blockStyles,
     stackAlign,
     consentText,
     buttonText,

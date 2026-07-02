@@ -159,6 +159,15 @@ const fetchPublishedCached = async <T>({
     });
   }
 
+  const isDev = process.env.NODE_ENV === "development";
+  if (isDev) {
+    return client.fetch(query, params || {}, {
+      perspective: "published",
+      stega: false,
+      cache: "no-store",
+    });
+  }
+
   return client.fetch(query, params || {}, {
     perspective: "published",
     stega: false,
@@ -436,21 +445,21 @@ export const fetchSanityPostsStaticParams =
 
 export const fetchSanityNavigation =
   async (): Promise<NAVIGATION_QUERY_RESULT> => {
-    const data = await fetchPublishedCached<NAVIGATION_QUERY_RESULT>({
+    const isDev = process.env.NODE_ENV === "development";
+    return fetchPublishedCached<NAVIGATION_QUERY_RESULT>({
       query: NAVIGATION_QUERY,
       tags: ["navigation"],
+      revalidate: isDev ? 0 : 2592000,
     });
-
-    return data;
   };
 
 export const fetchSanitySettings = async (): Promise<SETTINGS_QUERY_RESULT> => {
-  const data = await fetchPublishedCached<SETTINGS_QUERY_RESULT>({
+  const isDev = process.env.NODE_ENV === "development";
+  return fetchPublishedCached<SETTINGS_QUERY_RESULT>({
     query: SETTINGS_QUERY,
     tags: ["settings"],
+    revalidate: isDev ? 0 : 2592000,
   });
-
-  return data;
 };
 
 export const fetchSanitySeoSettings = async (): Promise<any | null> => {
@@ -514,6 +523,7 @@ export const fetchSanityThemeSettings = async (): Promise<{
     iconPosition?: string;
   } | null;
 } | null> => {
+  const isDev = process.env.NODE_ENV === "development";
   const data = await fetchPublishedCached<{
     themeColors?: {
       themePreset?: string;
@@ -546,6 +556,7 @@ export const fetchSanityThemeSettings = async (): Promise<{
   } | null>({
     query: THEME_SETTINGS_QUERY,
     tags: ["theme-settings"],
+    revalidate: isDev ? 0 : 2592000,
   });
 
   return data;

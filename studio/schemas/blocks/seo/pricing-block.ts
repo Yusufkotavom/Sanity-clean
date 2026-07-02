@@ -17,15 +17,11 @@ export default defineType({
     description: "Pilih paket yang sesuai dengan kebutuhan bisnis Anda",
     category: "website",
   },
+  groups: [
+    { name: "content", title: "Content" },
+    { name: "style", title: "Style" },
+  ],
   fields: [
-    defineField({
-      name: "tabs",
-      type: "object",
-      groups: [
-        { name: "content", title: "Content" },
-        { name: "style", title: "Style" },
-      ],
-      fields: [
         defineField({
           name: "title",
           type: "string",
@@ -55,20 +51,14 @@ export default defineType({
           },
           validation: (Rule) => Rule.required(),
         }),
-        defineField({
-          name: "padding",
-          type: "section-padding",
-          group: "style",
-        }),
-        defineField({
-          name: "colorVariant",
-          type: "color-variant",
-          title: "Background",
-          group: "style",
-        }),
-      ],
-    }),
-  ],
+      defineField({
+            name: "blockStyles",
+            type: "blockStyles",
+            title: "Block Styles",
+            group: "style",
+            options: { collapsible: true, collapsed: true }
+          })
+],
   preview: {
     select: {
       title: "title",

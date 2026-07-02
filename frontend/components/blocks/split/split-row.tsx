@@ -21,14 +21,14 @@ const componentMap: {
   "split-info-list": SplitInfoList,
 };
 
-export default function SplitRow({
-  padding,
-  colorVariant,
-  noGap,
-  splitColumns,
-}: SplitRow) {
+export default function SplitRow({ blockStyles, 
+      
+      
+      noGap,
+      splitColumns,
+    }: SplitRow) {
   return (
-    <SectionContainer color={colorVariant} padding={padding}>
+    <SectionContainer blockStyles={blockStyles}>
       {splitColumns && splitColumns?.length > 0 && (
         <div
           className={cn(
@@ -52,7 +52,6 @@ export default function SplitRow({
             return (
               <Component
                 {...(column as any)}
-                color={colorVariant}
                 noGap={noGap}
                 key={column._key}
               />

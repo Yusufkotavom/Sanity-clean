@@ -6,8 +6,8 @@ export const heroVercelQuery = groq`
   _type == "hero-vercel" => {
     _type,
     _key,
+    blockStyles,
     useCard,
-    colorVariant,
     tagLine,
     title,
     description,

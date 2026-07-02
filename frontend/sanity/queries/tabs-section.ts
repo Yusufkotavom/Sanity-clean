@@ -8,21 +8,13 @@ export const tabsSectionQuery = groq`
   _type == "tabs-section" => {
     _type,
     _key,
-    padding,
-    colorVariant,
+    blockStyles,
     tabs[]{
       _key,
       label,
       grid{
         _type,
         _key,
-        sectionStyle{
-          bg,
-          density,
-          maxWidth,
-          radius,
-          align
-        },
         cardTheme{
           surface,
           variant,

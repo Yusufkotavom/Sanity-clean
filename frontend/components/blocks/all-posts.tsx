@@ -51,11 +51,11 @@ const normalizeItems = (items: any[], type: ListingType): ListingItem[] => {
     }));
 };
 
-export default async function AllPosts({
-  padding,
-  colorVariant,
-  ...props
-}: AllPostsProps) {
+export default async function AllPosts({ blockStyles, 
+      
+      
+      ...props
+    }: AllPostsProps) {
   const displayMode = ((props as any).displayMode as "default" | "carousel" | undefined) || "default";
   const selectedTypes = Array.isArray((props as any).contentTypes)
     ? ((props as any).contentTypes as string[]).filter(Boolean)
@@ -83,7 +83,7 @@ export default async function AllPosts({
   const items = contentTypes.flatMap((type) => pools[type]).slice(0, itemLimit);
 
   return (
-    <SectionContainer color={colorVariant} padding={padding}>
+    <SectionContainer blockStyles={blockStyles}>
       {displayMode === "carousel" ? (
         <Carousel opts={{ align: "start", loop: false }}>
           <CarouselContent>

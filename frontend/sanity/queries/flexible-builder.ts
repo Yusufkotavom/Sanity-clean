@@ -6,8 +6,7 @@ export const FLEXIBLE_BUILDER_QUERY = `
   _type == "flexible-builder" => {
     _type,
     _key,
-    padding,
-    colorVariant,
+    blockStyles,
     layout,
     columns[]{
       content[]{

@@ -19,15 +19,15 @@ type Carousel2Props = Extract<
   { _type: "carousel-2" }
 >;
 
-export default function Carousel2({
-  padding,
-  colorVariant,
-  testimonial,
-}: Carousel2Props) {
+export default function Carousel2({ blockStyles, 
+      
+      
+      testimonial,
+    }: Carousel2Props) {
   return (
-    <SectionContainer color={colorVariant} padding={padding}>
+    <SectionContainer blockStyles={blockStyles}>
       {testimonial && testimonial.length > 0 && (
-        <Carousel>
+        <Carousel opts={{ loop: true }}>
           <CarouselContent>
             {testimonial.map((item, index) => (
               <CarouselItem

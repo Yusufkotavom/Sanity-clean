@@ -8,14 +8,6 @@ export default defineType({
   icon: Quote,
   fields: [
     defineField({
-      name: "padding",
-      type: "section-padding",
-    }),
-    defineField({
-      name: "colorVariant",
-      type: "color-variant",
-    }),
-    defineField({
       name: "eyebrow",
       type: "string",
       initialValue: "Customer story",
@@ -41,7 +33,14 @@ export default defineType({
       of: [{ type: "string" }],
       description: "Visual highlight chips shown beside the quote",
     }),
-  ],
+      defineField({
+            name: "blockStyles",
+            type: "blockStyles",
+            title: "Block Styles",
+            
+            options: { collapsible: true, collapsed: true }
+          })
+],
   preview: {
     select: { title: "author", subtitle: "quote" },
     prepare({ title, subtitle }) {

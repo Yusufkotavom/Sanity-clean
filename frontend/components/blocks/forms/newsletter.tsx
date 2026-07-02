@@ -23,13 +23,13 @@ type FormNewsletterProps = Extract<
   { _type: "form-newsletter" }
 >;
 
-export default function FormNewsletter({
-  padding,
-  colorVariant,
-  consentText,
-  buttonText,
-  successMessage,
-}: FormNewsletterProps) {
+export default function FormNewsletter({ blockStyles, 
+      
+      
+      consentText,
+      buttonText,
+      successMessage,
+    }: FormNewsletterProps) {
   // form validation schema
   const formSchema = z.object({
     email: z
@@ -85,10 +85,10 @@ export default function FormNewsletter({
     await handleSend(values);
   }
 
-  const color = stegaClean(colorVariant);
+  
 
   return (
-    <SectionContainer color={color} padding={padding}>
+    <SectionContainer blockStyles={blockStyles}>
       <Form {...form}>
         <form className="pt-8" onSubmit={form.handleSubmit(onSubmit)}>
           <div className="flex gap-4">

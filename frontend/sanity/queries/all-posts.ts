@@ -5,8 +5,7 @@ export const allPostsQuery = groq`
   _type == "all-posts" => {
     _type,
     _key,
-    padding,
-    colorVariant,
+    blockStyles,
     displayMode,
     contentTypes,
     limit,

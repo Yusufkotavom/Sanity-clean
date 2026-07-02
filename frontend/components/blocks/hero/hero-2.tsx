@@ -84,17 +84,19 @@ function HeroImageCard({ item }: { item: HeroImage }) {
   return card;
 }
 
-export default function Hero2({
-  tagLine,
-  uiIcon,
-  title,
-  body,
-  links,
-  images,
-  pageTitle,
-  useCard = true,
-  colorVariant = "transparent",
-}: Hero2Props) {
+export default function Hero2({ blockStyles, 
+      tagLine,
+      uiIcon,
+      title,
+      body,
+      links,
+      images,
+      pageTitle,
+      useCard = true,
+      
+      
+      
+    }: Hero2Props) {
   const resolvedTitle = title?.trim() || pageTitle?.trim() || undefined;
 
   const innerContent = (
@@ -151,36 +153,29 @@ export default function Hero2({
     </div>
   );
 
+    
   let layoutNode = null;
   if (useCard) {
-    const tone = colorVariant === "primary" ? "sky" : (colorVariant === "transparent" ? undefined : "neutral");
     layoutNode = (
-      <SectionPanel
-        tone={tone as any}
-        className="rounded-[1.75rem] px-5 py-10 text-center md:px-10 md:py-14 w-full"
-      >
+      <div
+        className="card-shell rounded-[1.75rem] px-5 py-10 text-center md:px-10 md:py-14 w-full"
+        >
         {innerContent}
-      </SectionPanel>
+      </div>
     );
   } else {
     layoutNode = (
-      <div className="py-8 md:py-12 text-center w-full">
+      <div className="py-8 md:py-12 w-full flex flex-col items-center">
         {innerContent}
       </div>
     );
   }
 
-  if (!useCard && colorVariant && colorVariant !== "transparent") {
-    return (
-      <SectionContainer color={colorVariant}>
-        {layoutNode}
-      </SectionContainer>
-    );
-  }
-
   return (
-    <SectionShell className="min-h-[100dvh] flex flex-col justify-center py-16 lg:py-24">
-      {layoutNode}
-    </SectionShell>
+    <SectionContainer blockStyles={blockStyles}>
+      
+        {layoutNode}
+      
+    </SectionContainer>
   );
 }

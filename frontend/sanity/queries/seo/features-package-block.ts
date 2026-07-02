@@ -6,8 +6,7 @@ export const featuresPackageBlockQuery = groq`
   _type == "features-package-block" => {
     _type,
     _key,
-    padding,
-    colorVariant,
+    blockStyles,
     cardStyle,
     title,
     subtitle,

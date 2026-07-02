@@ -4,7 +4,8 @@ import { structureTool } from "sanity/structure";
 import { presentationTool } from "sanity/presentation";
 import { media } from "sanity-plugin-media";
 import { iconPicker } from "sanity-plugin-icon-picker-v2";
-import { colorInput } from "@sanity/color-input";
+import { customColorPicker } from "sanity-plugin-color-input";
+import { blockStyles } from "sanity-plugin-block-styles";
 import { schemaTypes } from "./schema-types";
 import { resolve } from "./presentation/resolve";
 import { structure } from "./structure";
@@ -101,7 +102,8 @@ export default defineConfig({
     visionTool({ defaultApiVersion: apiVersion }),
     codeInput(),
     media(),
-    colorInput(),
+    customColorPicker(),
+    blockStyles(),
     iconPicker(),
     markdownSchema(),
   ],

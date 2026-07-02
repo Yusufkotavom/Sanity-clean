@@ -9,8 +9,7 @@ import { cn } from "@/lib/utils";
 import { stegaClean } from "@/lib/clean";
 
 interface BannerSectionProps {
-  padding?: any;
-  colorVariant?: any;
+  blockStyles?: any;
   title?: string | null;
   subtitle?: string | null;
   bgType?: "color" | "image" | null;
@@ -26,8 +25,7 @@ interface BannerSectionProps {
 }
 
 export default function BannerSection({
-  padding,
-  colorVariant,
+  blockStyles,
   title,
   subtitle,
   bgType = "color",
@@ -50,14 +48,8 @@ export default function BannerSection({
 
   const resolvedBgUrl = showBgImage ? urlFor(bgImage).url() : "";
 
-  // Override standard padding if size is slim
-  const paddingOverride = isSlim
-    ? { top: false, bottom: false, _type: "section-padding" as const }
-    : padding;
-
   return (
     <div className="relative overflow-hidden w-full">
-      {/* Background Image Container */}
       {showBgImage && (
         <div className="absolute inset-0 z-0">
           {isSvgBg ? (
@@ -79,14 +71,12 @@ export default function BannerSection({
               priority={isSlim}
             />
           )}
-          {/* Subtle overlay for readability */}
           <div className="absolute inset-0 bg-black/45 dark:bg-black/70 backdrop-blur-[0.5px]" />
         </div>
       )}
 
       <SectionContainer
-        color={showBgImage ? "transparent" : colorVariant || "primary"}
-        padding={paddingOverride}
+        blockStyles={blockStyles}
         className={cn(
           "relative z-10 transition-all duration-300",
           isSlim ? "py-2 md:py-2.5" : undefined,
@@ -103,7 +93,6 @@ export default function BannerSection({
               : "flex-col md:flex-row md:items-center md:justify-between"
           )}
         >
-          {/* Text Area */}
           <div className={cn("max-w-4xl", isSlim ? "w-auto flex items-center gap-2 flex-wrap justify-center" : "w-full")}>
             {title && (
               <h2
@@ -136,7 +125,6 @@ export default function BannerSection({
             )}
           </div>
 
-          {/* Action / CTA Button */}
           {link?.href && link?.title && (
             <div className={cn("shrink-0", isSlim ? "inline-block" : "mt-2 md:mt-0")}>
               <Link

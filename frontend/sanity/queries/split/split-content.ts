@@ -7,9 +7,8 @@ export const splitContentQuery = groq`
   _type == "split-content" => {
     _type,
     _key,
+    blockStyles,
     sticky,
-    padding,
-    colorVariant,
     tagLine,
     title,
     body[]{

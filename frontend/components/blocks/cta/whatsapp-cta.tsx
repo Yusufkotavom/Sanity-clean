@@ -14,7 +14,7 @@ type WhatsAppCtaProps = Extract<
 >;
 
 export default async function WhatsAppCta({
-  colorVariant,
+  
   sectionWidth = "default",
   stackAlign = "left",
   tagLine,
@@ -35,7 +35,7 @@ export default async function WhatsAppCta({
         )}
       >
         <SectionPanel
-          tone={colorVariant === "primary" ? "sky" : "neutral"}
+          tone={false ? "sky" : "neutral"}
           className={cn(
             "flex flex-col rounded-2xl px-5 py-6 md:px-7 md:py-8 border border-white/60 shadow-sm dark:border-white/10",
             stackAlign === "center" ? "items-center text-center" : undefined,

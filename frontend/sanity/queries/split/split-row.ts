@@ -9,8 +9,7 @@ export const splitRowQuery = groq`
   _type == "split-row" => {
     _type,
     _key,
-    padding,
-    colorVariant,
+    blockStyles,
     noGap,
     splitColumns[0..1]{
       _key,

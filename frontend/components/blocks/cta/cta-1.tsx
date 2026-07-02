@@ -14,25 +14,25 @@ type Cta1Props = Extract<
   { _type: "cta-1" }
 >;
 
-export default function Cta1({
-  colorVariant,
-  backgroundWidth = "compact",
-  useCard = true,
-  sectionWidth = "default",
-  stackAlign = "left",
-  tagLine,
-  uiIcon,
-  title,
-  body,
-  links,
-  image,
-  imagePosition = "top",
-  padding,
-}: Cta1Props) {
+export default function Cta1({ blockStyles, 
+      
+      backgroundWidth = "compact",
+      useCard = true,
+      sectionWidth = "default",
+      stackAlign = "left",
+      tagLine,
+      uiIcon,
+      title,
+      body,
+      links,
+      image,
+      imagePosition = "top",
+      
+    }: Cta1Props) {
   const isNarrow = sectionWidth === "narrow";
   const isDefault = sectionWidth === "default";
   const alignClasses = stackAlign === "center" ? "items-center text-center" : "";
-  const tone = colorVariant === "primary" ? "sky" : "neutral";
+  const tone = false ? "sky" : "neutral";
 
   const contentNode = (
     <div className={cn("flex flex-col flex-1", alignClasses)}>
@@ -143,7 +143,7 @@ export default function Cta1({
   
   if (backgroundWidth === "full") {
     return (
-      <SectionContainer color={colorVariant} padding={padding}>
+      <SectionContainer blockStyles={blockStyles}>
         <div className={containerClasses}>
           {innerWrapper}
         </div>

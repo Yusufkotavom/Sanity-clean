@@ -403,8 +403,33 @@
     --panel-glow-b: rgba(251, 146, 60, 0.16);
   }
 
+  .dark .surface-panel-neutral {
+    --panel-glow-a: rgba(255, 255, 255, 0.06);
+    --panel-glow-b: rgba(148, 163, 184, 0.03);
+  }
+
+  .dark .surface-panel-amber {
+    --panel-glow-a: rgba(251, 191, 36, 0.06);
+    --panel-glow-b: rgba(249, 115, 22, 0.04);
+  }
+
+  .dark .surface-panel-sky {
+    --panel-glow-a: rgba(59, 130, 246, 0.06);
+    --panel-glow-b: rgba(34, 211, 238, 0.04);
+  }
+
+  .dark .surface-panel-emerald {
+    --panel-glow-a: rgba(16, 185, 129, 0.06);
+    --panel-glow-b: rgba(45, 212, 191, 0.04);
+  }
+
+  .dark .surface-panel-rose {
+    --panel-glow-a: rgba(244, 63, 94, 0.06);
+    --panel-glow-b: rgba(251, 146, 60, 0.04);
+  }
+
   .dark .surface-panel {
-    background: var(--panel-bg, rgba(255, 255, 255, 0.05));
+    background: var(--panel-bg, rgba(0, 0, 0, 0.4));
     border-color: var(--panel-border, rgba(255, 255, 255, 0.08));
     box-shadow:
       0 1px 0 rgba(255, 255, 255, 0.08) inset,
@@ -470,6 +495,27 @@
 @utility card-surface-rose { --card-glow-a: rgba(244, 63, 94, 0.18); --card-glow-b: rgba(251, 146, 60, 0.16); }
 
 @layer utilities {
+  .dark.card-surface-neutral, .dark .card-surface-neutral {
+    --card-glow-a: rgba(255, 255, 255, 0.06);
+    --card-glow-b: rgba(148, 163, 184, 0.03);
+  }
+  .dark.card-surface-amber, .dark .card-surface-amber {
+    --card-glow-a: rgba(251, 191, 36, 0.06);
+    --card-glow-b: rgba(249, 115, 22, 0.04);
+  }
+  .dark.card-surface-sky, .dark .card-surface-sky {
+    --card-glow-a: rgba(59, 130, 246, 0.06);
+    --card-glow-b: rgba(34, 211, 238, 0.04);
+  }
+  .dark.card-surface-emerald, .dark .card-surface-emerald {
+    --card-glow-a: rgba(16, 185, 129, 0.06);
+    --card-glow-b: rgba(45, 212, 191, 0.04);
+  }
+  .dark.card-surface-rose, .dark .card-surface-rose {
+    --card-glow-a: rgba(244, 63, 94, 0.06);
+    --card-glow-b: rgba(251, 146, 60, 0.04);
+  }
+
   /* Card variants — set the variable combos. Used on <html> (global) and element (per-card). */
   .card-variant-glass {
     --card-bg: rgba(255, 255, 255, 0.4);
@@ -497,8 +543,8 @@
     --card-shadow: 0 12px 36px -20px rgba(15, 23, 42, 0.24);
   }
 
-  .dark .card-variant-glass {
-    --card-bg: rgba(255, 255, 255, 0.05);
+  .dark.card-variant-glass, .dark .card-variant-glass {
+    --card-bg: rgba(0, 0, 0, 0.4);
     --card-shadow: 0 1px 0 rgba(255, 255, 255, 0.08) inset, 0 20px 64px -36px rgba(0, 0, 0, 0.45);
   }
 

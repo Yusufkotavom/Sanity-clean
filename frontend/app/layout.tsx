@@ -360,6 +360,9 @@ export default async function RootLayout({
   const defaultSectionWidth = clean(blocks?.defaultSectionWidth) || "compact";
   const defaultSectionRadius = clean(blocks?.defaultSectionRadius) || "none";
   const defaultDivider = clean(blocks?.defaultDivider) || "show";
+  if (defaultDivider === "hide") {
+    themeTokenClasses.push("section-divider-none");
+  }
   themeTokenClasses.push(
     `card-radius-${radiusScale}`,
     `card-variant-${cardVariant}`,

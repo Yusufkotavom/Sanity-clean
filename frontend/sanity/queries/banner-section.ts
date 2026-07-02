@@ -7,8 +7,7 @@ export const bannerSectionQuery = groq`
   _type == "banner-section" => {
     _type,
     _key,
-    padding,
-    colorVariant,
+    blockStyles,
     title,
     subtitle,
     bgType,

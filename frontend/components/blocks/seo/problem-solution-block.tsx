@@ -7,18 +7,18 @@ import { AlertTriangle, CheckCircle2 } from "lucide-react";
 type Block = NonNullable<NonNullable<PAGE_QUERY_RESULT>["blocks"]>[number];
 type ProblemSolutionBlock = Extract<Block, { _type: "problem-solution-block" }>;
 
-export default function ProblemSolutionBlock({
-  padding,
-  colorVariant,
-  title,
-  problems,
-  solutionTitle,
-  solution,
-}: ProblemSolutionBlock) {
-  const color = stegaClean(colorVariant);
+export default function ProblemSolutionBlock({ blockStyles, 
+      
+      
+      title,
+      problems,
+      solutionTitle,
+      solution,
+    }: ProblemSolutionBlock) {
+  
 
   return (
-    <SectionContainer color={color} padding={padding}>
+    <SectionContainer blockStyles={blockStyles}>
       <div className="mx-auto max-w-4xl">
         {title && (
           <h2 className="mb-8 text-center text-2xl font-bold md:text-3xl">

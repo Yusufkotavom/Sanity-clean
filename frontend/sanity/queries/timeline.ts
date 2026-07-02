@@ -6,8 +6,7 @@ export const timelineQuery = groq`
   _type == "timeline-row" => {
     _type,
     _key,
-    padding,
-    colorVariant,
+    blockStyles,
     timelines[]{
       _key,
       title,

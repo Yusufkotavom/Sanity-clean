@@ -48,16 +48,12 @@ export default defineType({
       },
     ],
   },
+  groups: [
+    { name: "content", title: "Content" },
+    { name: "layout", title: "Layout" },
+    { name: "style", title: "Style" },
+  ],
   fields: [
-    defineField({
-      name: "tabs",
-      type: "object",
-      groups: [
-        { name: "content", title: "Content" },
-        { name: "layout", title: "Layout" },
-        { name: "style", title: "Style" },
-      ],
-      fields: [
         defineField({
           name: "tagLine",
           type: "string",
@@ -154,20 +150,14 @@ export default defineType({
           },
           initialValue: "left",
         }),
-        defineField({
-          name: "padding",
-          type: "section-padding",
-          group: "style",
-        }),
-        defineField({
-          name: "colorVariant",
-          type: "color-variant",
-          title: "Background",
-          group: "style",
-        }),
-      ],
-    }),
-  ],
+      defineField({
+            name: "blockStyles",
+            type: "blockStyles",
+            title: "Block Styles",
+            group: "style",
+            options: { collapsible: true, collapsed: true }
+          })
+],
   preview: {
     select: {
       title: "title",

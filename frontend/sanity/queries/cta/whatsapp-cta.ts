@@ -7,8 +7,7 @@ export const whatsappCtaQuery = groq`
   _type == "whatsapp-cta" => {
     _type,
     _key,
-    padding,
-    colorVariant,
+    blockStyles,
     sectionWidth,
     stackAlign,
     tagLine,

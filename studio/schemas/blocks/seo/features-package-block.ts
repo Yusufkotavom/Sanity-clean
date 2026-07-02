@@ -13,16 +13,12 @@ export default defineType({
     title: "Paket Lengkap",
     subtitle: "Apa Yang Akan Anda Dapatkan?",
   },
+  groups: [
+    { name: "content", title: "Content" },
+    { name: "layout", title: "Layout" },
+    { name: "style", title: "Style" },
+  ],
   fields: [
-    defineField({
-      name: "tabs",
-      type: "object",
-      groups: [
-        { name: "content", title: "Content" },
-        { name: "layout", title: "Layout" },
-        { name: "style", title: "Style" },
-      ],
-      fields: [
         defineField({ name: "title", type: "string", title: "Title", group: "content" }),
         defineField({ name: "subtitle", type: "string", title: "Subtitle", group: "content" }),
         defineField({ name: "description", type: "text", rows: 2, group: "content" }),
@@ -75,11 +71,14 @@ export default defineType({
           },
           initialValue: "grid",
         }),
-        defineField({ name: "padding", type: "section-padding", group: "style" }),
-        defineField({ name: "colorVariant", type: "color-variant", title: "Background", group: "style" }),
-      ],
-    }),
-  ],
+      defineField({
+            name: "blockStyles",
+            type: "blockStyles",
+            title: "Block Styles",
+            group: "style",
+            options: { collapsible: true, collapsed: true }
+          })
+],
   preview: {
     select: { title: "title", cardStyle: "cardStyle" },
     prepare({ title, cardStyle }: { title?: string; cardStyle?: string }) {

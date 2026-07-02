@@ -72,11 +72,6 @@ export default defineType({
   },
   fields: [
     defineField({
-      name: "sectionStyle",
-      type: "section-style",
-      title: "Section Style",
-    }),
-    defineField({
       name: "cardTheme",
       type: "card-theme",
       title: "Card Theme",
@@ -141,7 +136,14 @@ export default defineType({
         },
       },
     }),
-  ],
+      defineField({
+            name: "blockStyles",
+            type: "blockStyles",
+            title: "Block Styles",
+            
+            options: { collapsible: true, collapsed: true }
+          })
+],
   preview: {
     select: {
       title: "columns.0.title",

@@ -90,17 +90,14 @@ export default defineType({
       },
       initialValue: "inherit",
     }),
-    defineField({
-      name: "padding",
-      title: "Inner Padding",
-      type: "string",
-      options: {
-        list: CARD_PADDING.map(({ title, value }) => ({ title, value })),
-        layout: "radio",
-      },
-      initialValue: "inherit",
-    }),
-  ],
+      defineField({
+            name: "blockStyles",
+            type: "blockStyles",
+            title: "Block Styles",
+            
+            options: { collapsible: true, collapsed: true }
+          })
+],
   preview: {
     select: {
       surface: "surface",

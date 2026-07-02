@@ -7,6 +7,7 @@ import { type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 import {
   useButtonTheme,
+  buttonThemeTokenClasses,
   type ButtonIconValue,
   type ButtonIconPosition,
 } from "@/components/ui/button-theme-context";
@@ -48,21 +49,46 @@ function Button({
     <ButtonDefaultIcon name={iconName} className="size-4 shrink-0" />
   ) : null;
 
-  const content = iconNode ? (
-    iconPosition === "left" ? (
-      <>
-        {iconNode}
-        {children}
-      </>
-    ) : (
-      <>
-        {children}
-        {iconNode}
-      </>
-    )
-  ) : (
-    children
-  );
+  let content: React.ReactNode = children;
+
+  if (showDefaultIcon && iconNode) {
+    if (asChild && React.isValidElement(children)) {
+      // Inject the icon inside the child to maintain a single root for Slot
+      const childProps = children.props as any;
+      const innerChildren = childProps.children;
+
+      const newInnerContent =
+        iconPosition === "left" ? (
+          <>
+            {iconNode}
+            {innerChildren}
+          </>
+        ) : (
+          <>
+            {innerChildren}
+            {iconNode}
+          </>
+        );
+
+      content = React.cloneElement(children, {
+        ...childProps,
+        children: newInnerContent,
+      });
+    } else {
+      content =
+        iconPosition === "left" ? (
+          <>
+            {iconNode}
+            {children}
+          </>
+        ) : (
+          <>
+            {children}
+            {iconNode}
+          </>
+        );
+    }
+  }
 
   const Comp = asChild ? Slot : "button";
 
@@ -70,6 +96,7 @@ function Button({
     <Comp
       data-slot="button"
       className={cn(
+        buttonThemeTokenClasses(theme),
         buttonVariants({ variant: resolvedVariant, size: resolvedSize, className })
       )}
       {...props}
@@ -80,7 +107,7 @@ function Button({
 }
 
 function isPlainContent(children: React.ReactNode): boolean {
-  if (!children) return false;
+  if (children === null || children === undefined || typeof children === "boolean") return true;
   if (typeof children === "string") return true;
   if (typeof children === "number") return true;
 

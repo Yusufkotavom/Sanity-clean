@@ -9,17 +9,17 @@ import { CheckCircle2 } from "lucide-react";
 type Block = NonNullable<NonNullable<PAGE_QUERY_RESULT>["blocks"]>[number];
 type ServiceTypesBlock = Extract<Block, { _type: "service-types-block" }>;
 
-export default function ServiceTypesBlock({
-  padding,
-  colorVariant,
-  title,
-  description,
-  services,
-}: ServiceTypesBlock) {
-  const color = stegaClean(colorVariant);
+export default function ServiceTypesBlock({ blockStyles, 
+      
+      
+      title,
+      description,
+      services,
+    }: ServiceTypesBlock) {
+  
 
   return (
-    <SectionContainer color={color} padding={padding}>
+    <SectionContainer blockStyles={blockStyles}>
       <div className="mx-auto max-w-7xl">
         {title && (
           <div className="mb-3 text-center text-3xl font-bold md:text-4xl">

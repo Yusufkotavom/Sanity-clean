@@ -11,17 +11,15 @@ type LogoCloud1Props = Extract<
   { _type: "logo-cloud-1" }
 >;
 
-export default function LogoCloud1({
-  padding,
-  colorVariant,
-  title,
-  images,
-}: LogoCloud1Props) {
+export default function LogoCloud1({ blockStyles, 
+      
+      
+      title,
+      images,
+    }: LogoCloud1Props) {
   return (
     <SectionContainer
-      color={colorVariant}
-      padding={padding}
-      className="overflow-hidden"
+      className="overflow-hidden" blockStyles={blockStyles}
     >
       {title && (
         <h2 className="text-lg font-medium tracking-tighter text-center mb-4 animate-fade-up [animation-delay:100ms] opacity-0">
