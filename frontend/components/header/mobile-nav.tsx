@@ -11,14 +11,13 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import Logo from "@/components/logo";
-import SocialLinks from "@/components/header/social-links";
+
 import SanityIcon, { type SanityIconValue } from "@/components/icons/sanity-icon";
 import WhatsAppIcon from "@/components/whatsapp-icon";
 import WhatsAppLink from "@/components/whatsapp-link";
 import { useMemo, useState } from "react";
-import { AlignRight, ChevronDown, Moon, Sun, Monitor } from "lucide-react";
+import { AlignRight, ChevronDown } from "lucide-react";
 import { SETTINGS_QUERY_RESULT, NAVIGATION_QUERY_RESULT } from "@/sanity.types";
-import { useTheme } from "next-themes";
 
 type SanityLink = NonNullable<NAVIGATION_QUERY_RESULT[0]["links"]>[number];
 type NavChild = {
@@ -48,7 +47,6 @@ export default function MobileNav({
 }) {
   const [open, setOpen] = useState(false);
   const [openGroups, setOpenGroups] = useState<string[]>([]);
-  const { setTheme, theme } = useTheme();
   const navItems = useMemo(
     () =>
       (navigation[0]?.links || [])
@@ -369,55 +367,6 @@ export default function MobileNav({
               </div>
             </div>
           )}
-          <div className="section-divider mt-6 pt-4">
-            <p className="mb-2 px-3 text-left text-xs uppercase tracking-wide text-foreground/50">
-              Appearance
-            </p>
-            <div className="grid grid-cols-3 gap-2 px-1">
-              <Button
-                type="button"
-                variant={theme === "light" ? "default" : "outline"}
-                className="h-9"
-                onClick={() => setTheme("light")}
-                aria-label="Use light mode"
-                title="Light"
-              >
-                <Sun className="size-4" />
-              </Button>
-              <Button
-                type="button"
-                variant={theme === "dark" ? "default" : "outline"}
-                className="h-9"
-                onClick={() => setTheme("dark")}
-                aria-label="Use dark mode"
-                title="Dark"
-              >
-                <Moon className="size-4" />
-              </Button>
-              <Button
-                type="button"
-                variant={theme === "system" ? "default" : "outline"}
-                className="h-9"
-                onClick={() => setTheme("system")}
-                aria-label="Use system mode"
-                title="System"
-              >
-                <Monitor className="size-4" />
-              </Button>
-            </div>
-          </div>
-          <div className="section-divider mt-6 pt-4">
-            <p className="mb-2 px-3 text-left text-xs uppercase tracking-wide text-foreground/50">
-              Social
-            </p>
-            <SocialLinks
-              links={(settings as any)?.socialLinks}
-              iconOnly
-              size="sm"
-              align="start"
-              className="flex-wrap"
-            />
-          </div>
         </div>
       </SheetContent>
     </Sheet>
