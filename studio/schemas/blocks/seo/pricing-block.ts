@@ -26,21 +26,21 @@ export default defineType({
           name: "title",
           type: "string",
           title: "Title",
-          group: "content",
+          
           initialValue: "Paket Harga",
         }),
         defineField({
           name: "description",
           type: "text",
           rows: 2,
-          group: "content",
+          
           initialValue: "Pilih paket yang sesuai dengan kebutuhan bisnis Anda",
         }),
         defineField({
           name: "category",
           type: "string",
           title: "Pricing Category",
-          group: "content",
+          
           options: {
             list: [
               { title: "Website", value: "website" },
@@ -55,7 +55,7 @@ export default defineType({
             name: "blockStyles",
             type: "blockStyles",
             title: "Block Styles",
-            group: "style",
+            
             options: { collapsible: true, collapsed: true }
           })
 ],

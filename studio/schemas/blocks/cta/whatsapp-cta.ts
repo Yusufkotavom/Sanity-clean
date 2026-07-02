@@ -46,36 +46,36 @@ export default defineType({
           name: "tagLine",
           type: "string",
           title: "Tagline",
-          group: "content",
+          
         }),
         defineField({
           name: "uiIcon",
           title: "Icon",
           type: "ui-icon",
-          group: "content",
+          
         }),
         defineField({
           name: "title",
           type: "string",
           title: "Title",
-          group: "content",
+          
         }),
         defineField({
           name: "body",
           type: "block-content",
-          group: "content",
+          
         }),
         defineField({
           name: "secondaryLink",
           title: "Secondary Link",
           type: "link",
-          group: "content",
+          
         }),
         defineField({
           name: "sectionWidth",
           type: "string",
           title: "Section Width",
-          group: "style",
+          
           options: {
             list: SECTION_WIDTH.map(({ title, value }) => ({ title, value })),
             layout: "radio",
@@ -86,7 +86,7 @@ export default defineType({
           name: "stackAlign",
           type: "string",
           title: "Alignment",
-          group: "style",
+          
           options: {
             list: STACK_ALIGN.map(({ title, value }) => ({ title, value })),
             layout: "radio",
@@ -97,7 +97,7 @@ export default defineType({
             name: "blockStyles",
             type: "blockStyles",
             title: "Block Styles",
-            group: "style",
+            
             options: { collapsible: true, collapsed: true }
           })
 ],

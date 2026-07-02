@@ -41,7 +41,6 @@ export default defineType({
             }),
             defineField({
               name: "grid",
-      group: "content",
               type: "grid-row",
               title: "Grid Content",
               description: "Configure the grid structure and cards shown in this tab",
@@ -68,7 +67,6 @@ export default defineType({
     }),
       defineField({
             name: "blockStyles",
-      group: "style",
             type: "blockStyles",
             title: "Block Styles",
             

@@ -53,30 +53,30 @@ export default defineType({
           name: "tagLine",
           type: "string",
           title: "Tagline",
-          group: "content",
+          
         }),
         defineField({
           name: "uiIcon",
           title: "Icon",
           type: "ui-icon",
-          group: "content",
+          
         }),
         defineField({
           name: "title",
           type: "string",
           title: "Title",
-          group: "content",
+          
         }),
         defineField({
           name: "body",
           type: "block-content",
-          group: "content",
+          
         }),
         defineField({
           name: "images",
           title: "Images",
           type: "array",
-          group: "content",
+          
           of: [
             defineArrayMember({
               type: "object",
@@ -92,11 +92,11 @@ export default defineType({
                   ],
                 }),
                 defineField({ name: "title",
-      group: "content", type: "string", title: "Title" }),
+      type: "string", title: "Title" }),
                 defineField({ name: "description",
-      group: "content", type: "text", title: "Description", rows: 2 }),
+      type: "text", title: "Description", rows: 2 }),
                 defineField({ name: "link",
-      group: "content", type: "link", title: "Link" }),
+      type: "link", title: "Link" }),
               ],
               preview: {
                 select: { title: "title", media: "image" },
@@ -111,7 +111,7 @@ export default defineType({
           name: "links",
           type: "array",
           of: [{ type: "link" }],
-          group: "content",
+          
           validation: (rule) => rule.max(2),
         }),
         defineField({
@@ -119,14 +119,14 @@ export default defineType({
           type: "boolean",
           title: "Card Style",
           description: "Display content inside a rounded card",
-          group: "style",
+          
           initialValue: true,
         }),
       defineField({
             name: "blockStyles",
             type: "blockStyles",
             title: "Block Styles",
-            group: "style",
+            
             options: { collapsible: true, collapsed: true }
           })
 ],

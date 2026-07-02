@@ -57,37 +57,37 @@ export default defineType({
           name: "tagLine",
           type: "string",
           title: "Tagline",
-          group: "content",
+          
         }),
         defineField({
           name: "uiIcon",
           title: "Icon",
           type: "ui-icon",
-          group: "content",
+          
         }),
         defineField({
           name: "title",
           type: "string",
           title: "Title",
-          group: "content",
+          
         }),
         defineField({
           name: "body",
           type: "block-content",
-          group: "content",
+          
         }),
         defineField({
           name: "image",
           type: "image",
           title: "Image",
-          group: "content",
+          
           options: { hotspot: true },
         }),
         defineField({
           name: "imagePosition",
           type: "string",
           title: "Image Position",
-          group: "style",
+          
           options: {
             list: [
               { title: "Top", value: "top" },
@@ -103,14 +103,14 @@ export default defineType({
           name: "links",
           type: "array",
           of: [{ type: "link" }],
-          group: "content",
+          
           validation: (rule) => rule.max(2),
         }),
         defineField({
           name: "backgroundWidth",
           type: "string",
           title: "Background Width",
-          group: "style",
+          
           options: {
             list: [
               { title: "Compact", value: "compact" },
@@ -125,14 +125,14 @@ export default defineType({
           type: "boolean",
           title: "Card Style",
           description: "Display content inside a rounded card",
-          group: "style",
+          
           initialValue: true,
         }),
         defineField({
           name: "sectionWidth",
           type: "string",
           title: "Section Width",
-          group: "style",
+          
           options: {
             list: SECTION_WIDTH.map(({ title, value }) => ({ title, value })),
             layout: "radio",
@@ -143,7 +143,7 @@ export default defineType({
           name: "stackAlign",
           type: "string",
           title: "Alignment",
-          group: "style",
+          
           options: {
             list: STACK_ALIGN.map(({ title, value }) => ({ title, value })),
             layout: "radio",
@@ -154,7 +154,7 @@ export default defineType({
             name: "blockStyles",
             type: "blockStyles",
             title: "Block Styles",
-            group: "style",
+            
             options: { collapsible: true, collapsed: true }
           })
 ],

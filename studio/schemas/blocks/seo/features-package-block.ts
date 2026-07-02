@@ -25,7 +25,7 @@ export default defineType({
           name: "features",
           title: "Items",
           type: "array",
-          group: "content",
+          
           of: [
             defineArrayMember({
               type: "object",
@@ -33,13 +33,13 @@ export default defineType({
               fields: [
                 defineField({ name: "icon", type: "ui-icon", title: "Icon" }),
                 defineField({ name: "title",
-      group: "content", type: "string", validation: (Rule) => Rule.required() }),
+      type: "string", validation: (Rule) => Rule.required() }),
                 defineField({ name: "description",
-      group: "content", type: "text", rows: 2 }),
+      type: "text", rows: 2 }),
                 defineField({ name: "badge",
-      group: "content", type: "string", title: "Badge" }),
+      type: "string", title: "Badge" }),
                 defineField({ name: "link",
-      group: "content", type: "link", title: "Link" }),
+      type: "link", title: "Link" }),
               ],
               preview: {
                 select: { title: "title", icon: "icon" },
@@ -57,13 +57,13 @@ export default defineType({
           name: "cta",
           title: "CTA Button",
           type: "link",
-          group: "content",
+          
         }),
         defineField({
           name: "cardStyle",
           type: "string",
           title: "Card Style",
-          group: "style",
+          
           options: {
             list: [
               { title: "Grid", value: "grid" },
@@ -78,7 +78,7 @@ export default defineType({
             name: "blockStyles",
             type: "blockStyles",
             title: "Block Styles",
-            group: "style",
+            
             options: { collapsible: true, collapsed: true }
           })
 ],

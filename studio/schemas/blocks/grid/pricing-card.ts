@@ -61,7 +61,6 @@ export default defineType({
         }),
         defineField({
           name: "period",
-      group: "content",
           type: "string",
         }),
       ],

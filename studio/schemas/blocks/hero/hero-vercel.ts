@@ -53,21 +53,21 @@ export default defineType({
           name: "tagLine",
           title: "Eyebrow",
           type: "string",
-          group: "content",
+          
           validation: (Rule) => Rule.max(120),
         }),
         defineField({
           name: "title",
           title: "Title",
           type: "string",
-          group: "content",
+          
           validation: (Rule) => Rule.required().min(8).max(180),
         }),
         defineField({
           name: "description",
           title: "Description",
           type: "text",
-          group: "content",
+          
           rows: 4,
           validation: (Rule) => Rule.max(320),
         }),
@@ -75,20 +75,20 @@ export default defineType({
           name: "ctaPrimary",
           title: "Primary CTA",
           type: "link",
-          group: "content",
+          
           validation: (Rule) => Rule.required(),
         }),
         defineField({
           name: "ctaSecondary",
           title: "Secondary CTA",
           type: "link",
-          group: "content",
+          
         }),
         defineField({
           name: "cards",
           title: "Feature Cards",
           type: "array",
-          group: "content",
+          
           of: [{ type: "hero-feature-card" }],
           validation: (Rule) => Rule.min(1).max(4),
         }),
@@ -96,7 +96,7 @@ export default defineType({
           name: "image",
           title: "Hero Image",
           type: "image",
-          group: "content",
+          
           options: { hotspot: true },
           fields: [
             { name: "alt", type: "string", title: "Alt Text" },
@@ -107,14 +107,14 @@ export default defineType({
           type: "boolean",
           title: "Card Style",
           description: "Display content inside a rounded card",
-          group: "style",
+          
           initialValue: true,
         }),
       defineField({
             name: "blockStyles",
             type: "blockStyles",
             title: "Block Styles",
-            group: "style",
+            
             options: { collapsible: true, collapsed: true }
           })
 ],

@@ -66,7 +66,6 @@ export default defineType({
     }),
       defineField({
             name: "blockStyles",
-      group: "style",
             type: "blockStyles",
             title: "Block Styles",
             
