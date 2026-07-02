@@ -43,7 +43,7 @@ export default function Hero1({ blockStyles,
 
   const textContent = (
     <div className="flex flex-col justify-center">
-      <Eyebrow icon={uiIcon} title={tagLine} variant="subtle" />
+      <Eyebrow icon={uiIcon} title={tagLine} variant="default" className="self-start" />
       <SectionIntro
         title={resolvedTitle || ""}
         className="mb-0 max-w-3xl"

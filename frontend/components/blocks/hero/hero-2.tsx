@@ -101,7 +101,7 @@ export default function Hero2({ blockStyles,
 
   const innerContent = (
     <div className="flex flex-col items-center w-full">
-      <Eyebrow icon={uiIcon} title={tagLine} variant="subtle" className="justify-center" />
+      <Eyebrow icon={uiIcon} title={tagLine} variant="default" className="justify-center" />
       <SectionIntro
         title={resolvedTitle || ""}
         align="center"

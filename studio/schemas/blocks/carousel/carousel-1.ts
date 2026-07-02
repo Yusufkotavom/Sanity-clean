@@ -17,9 +17,14 @@ export default defineType({
     size: "one",
     indicators: "none",
   },
+    groups: [
+    { name: "content", title: "Content" },
+    { name: "style", title: "Style & Layout" },
+  ],
   fields: [
     defineField({
       name: "size",
+      group: "content",
       type: "string",
       title: "Size",
       options: {
@@ -34,6 +39,7 @@ export default defineType({
     }),
     defineField({
       name: "indicators",
+      group: "content",
       type: "string",
       title: "Slide Indicators",
       options: {
@@ -49,6 +55,7 @@ export default defineType({
     }),
     defineField({
       name: "aspectRatio",
+      group: "content",
       type: "string",
       title: "Image Aspect Ratio",
       options: {
@@ -65,6 +72,7 @@ export default defineType({
     }),
     defineField({
       name: "contentType",
+      group: "content",
       type: "string",
       title: "Content Type",
       options: {
@@ -79,6 +87,7 @@ export default defineType({
     }),
     defineField({
       name: "images",
+      group: "content",
       type: "array",
       of: [
         defineField({
@@ -115,6 +124,7 @@ export default defineType({
     }),
     defineField({
       name: "cardTheme",
+      group: "style",
       type: "card-theme",
       title: "Card Theme",
       description: "Visual theming applied to every card in this carousel.",
@@ -122,6 +132,7 @@ export default defineType({
     }),
     defineField({
       name: "cardStyle",
+      group: "style",
       type: "string",
       title: "Card Style",
       description: "Visual style and layout for all cards in this carousel",
@@ -138,6 +149,7 @@ export default defineType({
     }),
     defineField({
       name: "textAlign",
+      group: "style",
       type: "string",
       title: "Text Align",
       options: {
@@ -152,6 +164,7 @@ export default defineType({
     }),
     defineField({
       name: "columns",
+      group: "style",
       type: "array",
       title: "Grid Cards",
       description: "Add grid cards, blog posts, or pricing cards to display in the carousel",
@@ -164,6 +177,7 @@ export default defineType({
     }),
       defineField({
             name: "blockStyles",
+      group: "style",
             type: "blockStyles",
             title: "Block Styles",
             

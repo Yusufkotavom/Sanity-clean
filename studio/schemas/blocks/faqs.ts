@@ -16,20 +16,27 @@ export default defineType({
     title: "Pertanyaan yang Sering Diajukan",
     description: "Temukan jawaban untuk pertanyaan umum seputar layanan kami",
   },
+    groups: [
+    { name: "content", title: "Content" },
+    { name: "style", title: "Style & Layout" },
+  ],
   fields: [
     defineField({
       name: "title",
+      group: "content",
       type: "string",
       initialValue: "Pertanyaan yang Sering Diajukan",
     }),
     defineField({
       name: "description",
+      group: "content",
       type: "text",
       rows: 2,
       initialValue: "Temukan jawaban untuk pertanyaan umum seputar layanan kami",
     }),
     defineField({
       name: "source",
+      group: "content",
       type: "string",
       title: "Data Source",
       options: {
@@ -43,6 +50,7 @@ export default defineType({
     }),
     defineField({
       name: "faqs",
+      group: "content",
       type: "array",
       title: "FAQ Documents",
       of: [
@@ -56,6 +64,7 @@ export default defineType({
     }),
     defineField({
       name: "manualItems",
+      group: "content",
       title: "FAQ Items",
       type: "array",
       of: [{ type: "faqItem" }],
@@ -70,6 +79,7 @@ export default defineType({
     }),
       defineField({
             name: "blockStyles",
+      group: "style",
             type: "blockStyles",
             title: "Block Styles",
             

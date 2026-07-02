@@ -28,23 +28,31 @@ export default defineType({
       buttonVariant: "default",
     },
   },
+    groups: [
+    { name: "content", title: "Content" },
+    { name: "style", title: "Style & Layout" },
+  ],
   fields: [
     defineField({
       name: "uiIcon",
+      group: "content",
       title: "UI Icon",
       type: "ui-icon",
       description: "Optional icon shown in the pricing card heading.",
     }),
     defineField({
       name: "title",
+      group: "content",
       type: "string",
     }),
     defineField({
       name: "tagLine",
+      group: "content",
       type: "string",
     }),
     defineField({
       name: "price",
+      group: "content",
       type: "object",
       fields: [
         defineField({
@@ -53,21 +61,25 @@ export default defineType({
         }),
         defineField({
           name: "period",
+      group: "content",
           type: "string",
         }),
       ],
     }),
     defineField({
       name: "list",
+      group: "content",
       type: "array",
       of: [{ type: "string" }],
     }),
     defineField({
       name: "excerpt",
+      group: "content",
       type: "text",
     }),
     defineField({
       name: "link",
+      group: "content",
       type: "link",
     }),
   ],

@@ -46,8 +46,7 @@ export default defineType({
   },
   groups: [
     { name: "content", title: "Content" },
-    { name: "layout", title: "Layout" },
-    { name: "style", title: "Style" },
+    { name: "style", title: "Style & Layout" },
   ],
   fields: [
         defineField({
@@ -92,9 +91,12 @@ export default defineType({
                     { name: "alt", type: "string", title: "Alternative Text" },
                   ],
                 }),
-                defineField({ name: "title", type: "string", title: "Title" }),
-                defineField({ name: "description", type: "text", title: "Description", rows: 2 }),
-                defineField({ name: "link", type: "link", title: "Link" }),
+                defineField({ name: "title",
+      group: "content", type: "string", title: "Title" }),
+                defineField({ name: "description",
+      group: "content", type: "text", title: "Description", rows: 2 }),
+                defineField({ name: "link",
+      group: "content", type: "link", title: "Link" }),
               ],
               preview: {
                 select: { title: "title", media: "image" },
@@ -117,7 +119,7 @@ export default defineType({
           type: "boolean",
           title: "Card Style",
           description: "Display content inside a rounded card",
-          group: "layout",
+          group: "style",
           initialValue: true,
         }),
       defineField({

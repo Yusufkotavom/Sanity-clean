@@ -15,9 +15,14 @@ export default defineType({
     },
     colorVariant: "background",
   },
+    groups: [
+    { name: "content", title: "Content" },
+    { name: "style", title: "Style & Layout" },
+  ],
   fields: [
     defineField({
       name: "testimonial",
+      group: "content",
       type: "array",
       of: [
         {
@@ -29,6 +34,7 @@ export default defineType({
     }),
       defineField({
             name: "blockStyles",
+      group: "style",
             type: "blockStyles",
             title: "Block Styles",
             

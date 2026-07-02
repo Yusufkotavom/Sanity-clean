@@ -9,10 +9,19 @@ import { PAGE_QUERY_RESULT } from "@/sanity.types";
 import { SectionPanel, SectionShell } from "@/components/ui/section-shell";
 import SectionContainer from "@/components/ui/section-container";
 
+import GlobalWhatsAppButton from "@/components/global-whatsapp-button";
+
 type Cta1Props = Extract<
   NonNullable<NonNullable<PAGE_QUERY_RESULT>["blocks"]>[number],
-  { _type: "cta-1" }
->;
+  { _type: "cta-1" | "whatsapp-cta" }
+> & { 
+  secondaryLink?: any;
+  backgroundWidth?: string | null;
+  useCard?: boolean | null;
+  imagePosition?: string | null;
+  image?: any;
+  links?: any[];
+};
 
 export default function Cta1({ blockStyles, 
       
@@ -27,7 +36,8 @@ export default function Cta1({ blockStyles,
       links,
       image,
       imagePosition = "top",
-      
+      secondaryLink,
+      _type,
     }: Cta1Props) {
   const isNarrow = sectionWidth === "narrow";
   const isDefault = sectionWidth === "default";
@@ -39,8 +49,8 @@ export default function Cta1({ blockStyles,
       <Eyebrow
         icon={uiIcon}
         title={tagLine}
-        variant="subtle"
-        className={stackAlign === "center" ? "justify-center" : undefined}
+        variant="default"
+        className={cn("mb-4", stackAlign === "center" ? "mx-auto" : "self-start")}
       />
       
       {title ? (
@@ -55,25 +65,46 @@ export default function Cta1({ blockStyles,
         </div>
       ) : null}
       
-      {links && links.length > 0 && (
+      {(_type === "whatsapp-cta" || (links && links.length > 0)) && (
         <div
           className={cn(
             "mt-6 flex flex-wrap gap-3",
             stackAlign === "center" ? "justify-center" : undefined,
           )}
         >
-          {links.map((link, index) => (
-            <Button key={link._key || link.title} variant={link.buttonVariant || (index === 0 ? "default" : "outline")} size="lg" className=" px-6 transition-all duration-200 active:scale-[0.98]" asChild>
-              <Link
-                href={link.href || "#"}
-                target={link.target ? "_blank" : undefined}
-                rel={link.target ? "noopener" : undefined}
-              >
-                <SanityIcon icon={link.uiIcon || link.icon} className="size-4" />
-                {link.title}
-              </Link>
-            </Button>
-          ))}
+          {_type === "whatsapp-cta" ? (
+            <>
+              <GlobalWhatsAppButton fallbackLabel="Chat via WhatsApp" />
+              {secondaryLink?.title && secondaryLink.href ? (
+                <Button variant={secondaryLink?.buttonVariant || "outline"} size="lg" asChild>
+                  <Link
+                    href={secondaryLink.href}
+                    target={secondaryLink.target ? "_blank" : undefined}
+                    rel={secondaryLink.target ? "noopener noreferrer" : undefined}
+                  >
+                    <SanityIcon
+                      icon={secondaryLink.uiIcon || secondaryLink.icon}
+                      className="size-4"
+                    />
+                    {secondaryLink.title}
+                  </Link>
+                </Button>
+              ) : null}
+            </>
+          ) : (
+            links?.map((link: any, index: number) => (
+              <Button key={link._key || link.title} variant={link.buttonVariant || (index === 0 ? "default" : "outline")} size="lg" className=" px-6 transition-all duration-200 active:scale-[0.98]" asChild>
+                <Link
+                  href={link.href || "#"}
+                  target={link.target ? "_blank" : undefined}
+                  rel={link.target ? "noopener" : undefined}
+                >
+                  <SanityIcon icon={link.uiIcon || link.icon} className="size-4" />
+                  {link.title}
+                </Link>
+              </Button>
+            ))
+          )}
         </div>
       )}
     </div>
@@ -100,6 +131,13 @@ export default function Cta1({ blockStyles,
         <div className="grid md:grid-cols-2 gap-8 items-center w-full">
           {imageNode}
           {contentNode}
+        </div>
+      );
+    } else if (imagePosition === "right") {
+      layoutNode = (
+        <div className="grid md:grid-cols-2 gap-8 items-center w-full">
+          {contentNode}
+          {imageNode}
         </div>
       );
     } else {

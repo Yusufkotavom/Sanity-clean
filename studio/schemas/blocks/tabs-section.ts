@@ -15,9 +15,14 @@ export default defineType({
     },
     colorVariant: "background",
   },
+    groups: [
+    { name: "content", title: "Content" },
+    { name: "style", title: "Style & Layout" },
+  ],
   fields: [
     defineField({
       name: "tabs",
+      group: "content",
       type: "array",
       title: "Tab Items",
       description: "Add tab items, each containing a label and a grid layout",
@@ -36,6 +41,7 @@ export default defineType({
             }),
             defineField({
               name: "grid",
+      group: "content",
               type: "grid-row",
               title: "Grid Content",
               description: "Configure the grid structure and cards shown in this tab",
@@ -62,6 +68,7 @@ export default defineType({
     }),
       defineField({
             name: "blockStyles",
+      group: "style",
             type: "blockStyles",
             title: "Block Styles",
             

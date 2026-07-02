@@ -6,9 +6,14 @@ export default defineType({
   type: "object",
   icon: LayoutGrid,
   initialValue: {},
+    groups: [
+    { name: "content", title: "Content" },
+    { name: "style", title: "Style & Layout" },
+  ],
   fields: [
     defineField({
       name: "post",
+      group: "content",
       type: "reference",
       title: "Blog Post",
       description: "Select a blog post to link to.",

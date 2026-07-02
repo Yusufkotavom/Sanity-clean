@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import { stegaClean } from "@/lib/clean";
 import { SectionIntro, SectionShell } from "@/components/ui/section-shell";
+import Eyebrow from "@/components/ui/eyebrow";
 
 import { PAGE_QUERY_RESULT } from "@/sanity.types";
 
@@ -39,8 +40,8 @@ export default function SectionHeader({
           toneClassName,
         )}
       >
+        {tagLine && <Eyebrow title={tagLine} variant="default" />}
         <SectionIntro
-          eyebrow={tagLine || undefined}
           title={resolvedTitle || ""}
           description={description || undefined}
           align={cleanStackAlign === "center" ? "center" : "left"}

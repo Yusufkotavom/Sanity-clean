@@ -24,13 +24,19 @@ export default defineType({
       },
     ],
   },
+    groups: [
+    { name: "content", title: "Content" },
+    { name: "style", title: "Style & Layout" },
+  ],
   fields: [
     defineField({
       name: "title",
+      group: "content",
       type: "string",
     }),
     defineField({
       name: "tagLine",
+      group: "content",
       title: "Tag Line",
       description:
         "A short tag line to display under the title, e.g. date, location, job title, etc.",
@@ -38,6 +44,7 @@ export default defineType({
     }),
     defineField({
       name: "body",
+      group: "content",
       title: "Body",
       type: "block-content",
     }),

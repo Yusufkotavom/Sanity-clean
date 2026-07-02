@@ -28,23 +28,31 @@ export default defineType({
       },
     ],
   },
+    groups: [
+    { name: "content", title: "Content" },
+    { name: "style", title: "Style & Layout" },
+  ],
   fields: [
     defineField({
       name: "tagLine",
+      group: "content",
       type: "string",
     }),
     defineField({
       name: "uiIcon",
+      group: "content",
       title: "UI Icon",
       type: "ui-icon",
       description: "Optional icon shown beside the card tagline.",
     }),
     defineField({
       name: "title",
+      group: "content",
       type: "string",
     }),
     defineField({
       name: "body",
+      group: "content",
       type: "block-content",
     }),
   ],

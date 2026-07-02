@@ -18,9 +18,14 @@ export default defineType({
     size: "default",
     align: "left-right",
   },
+    groups: [
+    { name: "content", title: "Content" },
+    { name: "style", title: "Style & Layout" },
+  ],
   fields: [
     defineField({
       name: "bgType",
+      group: "content",
       type: "string",
       title: "Background Type",
       options: {
@@ -34,6 +39,7 @@ export default defineType({
     }),
     defineField({
       name: "bgImage",
+      group: "content",
       type: "image",
       title: "Background Image",
       options: { hotspot: true },
@@ -41,6 +47,7 @@ export default defineType({
     }),
     defineField({
       name: "size",
+      group: "content",
       type: "string",
       title: "Banner Height Size",
       options: {
@@ -54,6 +61,7 @@ export default defineType({
     }),
     defineField({
       name: "align",
+      group: "style",
       type: "string",
       title: "Content Alignment",
       options: {
@@ -67,23 +75,27 @@ export default defineType({
     }),
     defineField({
       name: "title",
+      group: "content",
       type: "string",
       title: "Title Text",
       validation: (Rule) => Rule.required().error("Title Text is required"),
     }),
     defineField({
       name: "subtitle",
+      group: "content",
       type: "text",
       title: "Subtitle / Description Text",
       rows: 2,
     }),
     defineField({
       name: "link",
+      group: "content",
       type: "link",
       title: "CTA Link / Action",
     }),
       defineField({
             name: "blockStyles",
+      group: "style",
             type: "blockStyles",
             title: "Block Styles",
             

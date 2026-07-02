@@ -7,9 +7,14 @@ export default defineType({
   icon: Image,
   description: "Column with full image.",
   initialValue: {},
+    groups: [
+    { name: "content", title: "Content" },
+    { name: "style", title: "Style & Layout" },
+  ],
   fields: [
     defineField({
       name: "image",
+      group: "content",
       type: "image",
       fields: [
         {

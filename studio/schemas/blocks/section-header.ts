@@ -17,9 +17,14 @@ export default defineType({
     description:
       "Tim kami membantu dari strategi sampai eksekusi agar bisnis Anda tetap fokus pada pertumbuhan, bukan masalah teknis.",
   },
+    groups: [
+    { name: "content", title: "Content" },
+    { name: "style", title: "Style & Layout" },
+  ],
   fields: [
     defineField({
       name: "sectionWidth",
+      group: "style",
       type: "string",
       title: "Section Width",
       options: {
@@ -30,6 +35,7 @@ export default defineType({
     }),
     defineField({
       name: "stackAlign",
+      group: "style",
       type: "string",
       title: "Stack Layout Alignment",
       options: {
@@ -40,19 +46,23 @@ export default defineType({
     }),
     defineField({
       name: "tagLine",
+      group: "content",
       type: "string",
     }),
     defineField({
       name: "title",
+      group: "content",
       type: "string",
       description: "Optional custom title override. Leave empty to use the page title in frontend.",
     }),
     defineField({
       name: "description",
+      group: "content",
       type: "text",
     }),
       defineField({
             name: "blockStyles",
+      group: "style",
             type: "blockStyles",
             title: "Block Styles",
             

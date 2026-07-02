@@ -16,9 +16,14 @@ export default defineType({
     buttonText: "Dapatkan Update",
     successMessage: "Terima kasih, email Anda sudah terdaftar.",
   },
+    groups: [
+    { name: "content", title: "Content" },
+    { name: "style", title: "Style & Layout" },
+  ],
   fields: [
     defineField({
       name: "stackAlign",
+      group: "style",
       type: "string",
       title: "Stack Layout Alignment",
       options: {
@@ -29,18 +34,22 @@ export default defineType({
     }),
     defineField({
       name: "consentText",
+      group: "content",
       type: "text",
     }),
     defineField({
       name: "buttonText",
+      group: "content",
       type: "string",
     }),
     defineField({
       name: "successMessage",
+      group: "content",
       type: "text",
     }),
       defineField({
             name: "blockStyles",
+      group: "style",
             type: "blockStyles",
             title: "Block Styles",
             

@@ -6,35 +6,45 @@ export default defineType({
   title: "Quote Spotlight",
   type: "object",
   icon: Quote,
+    groups: [
+    { name: "content", title: "Content" },
+    { name: "style", title: "Style & Layout" },
+  ],
   fields: [
     defineField({
       name: "eyebrow",
+      group: "content",
       type: "string",
       initialValue: "Customer story",
     }),
     defineField({
       name: "quote",
+      group: "content",
       type: "text",
       rows: 3,
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "author",
+      group: "content",
       type: "string",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "role",
+      group: "content",
       type: "string",
     }),
     defineField({
       name: "highlights",
+      group: "content",
       type: "array",
       of: [{ type: "string" }],
       description: "Visual highlight chips shown beside the quote",
     }),
       defineField({
             name: "blockStyles",
+      group: "style",
             type: "blockStyles",
             title: "Block Styles",
             

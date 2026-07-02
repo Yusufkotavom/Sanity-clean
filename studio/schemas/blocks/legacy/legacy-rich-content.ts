@@ -12,20 +12,27 @@ export default defineType({
     contentFormat: "markdown",
     contentRaw: "## Judul\n\nTulis konten Markdown di sini.",
   },
+    groups: [
+    { name: "content", title: "Content" },
+    { name: "style", title: "Style & Layout" },
+  ],
   fields: [
     defineField({
       name: "title",
+      group: "content",
       title: "Title",
       type: "string",
     }),
     defineField({
       name: "excerpt",
+      group: "content",
       title: "Excerpt",
       type: "text",
       rows: 2,
     }),
     defineField({
       name: "contentFormat",
+      group: "content",
       title: "Content Format",
       type: "string",
       options: {
@@ -40,6 +47,7 @@ export default defineType({
     }),
     defineField({
       name: "contentRaw",
+      group: "content",
       title: "Content",
       type: "markdown",
       description: "Tulis konten dalam format Markdown.",

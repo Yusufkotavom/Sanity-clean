@@ -39,8 +39,7 @@ export default defineType({
   },
   groups: [
     { name: "content", title: "Content" },
-    { name: "layout", title: "Layout" },
-    { name: "style", title: "Style" },
+    { name: "style", title: "Style & Layout" },
   ],
   fields: [
         defineField({
@@ -76,7 +75,7 @@ export default defineType({
           name: "sectionWidth",
           type: "string",
           title: "Section Width",
-          group: "layout",
+          group: "style",
           options: {
             list: SECTION_WIDTH.map(({ title, value }) => ({ title, value })),
             layout: "radio",
@@ -87,7 +86,7 @@ export default defineType({
           name: "stackAlign",
           type: "string",
           title: "Alignment",
-          group: "layout",
+          group: "style",
           options: {
             list: STACK_ALIGN.map(({ title, value }) => ({ title, value })),
             layout: "radio",

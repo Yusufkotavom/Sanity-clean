@@ -46,8 +46,7 @@ export default defineType({
   },
   groups: [
     { name: "content", title: "Content" },
-    { name: "layout", title: "Layout" },
-    { name: "style", title: "Style" },
+    { name: "style", title: "Style & Layout" },
   ],
   fields: [
         defineField({
@@ -98,14 +97,14 @@ export default defineType({
           type: "boolean",
           title: "Card Style",
           description: "Display content inside a rounded card",
-          group: "layout",
+          group: "style",
           initialValue: true,
         }),
         defineField({
           name: "imagePosition",
           type: "string",
           title: "Image Position",
-          group: "layout",
+          group: "style",
           options: {
             list: [
               { title: "Right", value: "right" },

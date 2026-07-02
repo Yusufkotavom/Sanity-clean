@@ -23,12 +23,14 @@ export interface BlockStyles {
     bottomLeft?: string;
   };
   background?: {
-    color?: string;
+    color?: any;
+    image?: any;
   };
   typography?: {
     textAlign?: string;
     fontSize?: string;
-    textColor?: string;
+    fontFamily?: string;
+    textColor?: any;
   };
   effects?: {
     shadow?: string;
@@ -39,19 +41,31 @@ export interface BlockStyles {
 export function applyBlockStyles(styles?: BlockStyles | null): React.CSSProperties {
   if (!styles) return {};
 
+  const getColor = (c: any) => {
+    if (!c) return undefined;
+    if (typeof c === "string") return c;
+    if (typeof c === "object" && c.hex) return c.hex;
+    return undefined;
+  };
+
   const cssProps: Record<string, string | number | undefined> = {
     paddingTop: styles.padding?.top,
     paddingBottom: styles.padding?.bottom,
     marginTop: styles.margin?.top,
-    backgroundColor: styles.background?.color,
+    backgroundColor: getColor(styles.background?.color) || getColor((styles.background as any)),
+    backgroundImage: typeof styles.background?.image === 'string' ? `url(${styles.background.image})` : undefined,
     borderWidth: styles.border?.width,
     borderStyle: styles.border?.style,
-    borderColor: styles.border?.color,
+    borderColor: getColor(styles.border?.color),
     borderRadius: styles.borderRadius
       ? `${styles.borderRadius.topLeft || '0'} ${styles.borderRadius.topRight || '0'} ${styles.borderRadius.bottomRight || '0'} ${styles.borderRadius.bottomLeft || '0'}`
       : undefined,
     textAlign: styles.typography?.textAlign,
-    color: styles.typography?.textColor,
+    color: getColor(styles.typography?.textColor),
+    fontSize: styles.typography?.fontSize,
+    fontFamily: styles.typography?.fontFamily,
+    boxShadow: styles.effects?.shadow,
+    opacity: styles.effects?.opacity,
   };
 
   // Add responsive CSS variables for breakpoints

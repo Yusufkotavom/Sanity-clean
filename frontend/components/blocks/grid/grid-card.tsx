@@ -6,6 +6,7 @@ import { urlFor } from "@/sanity/lib/image";
 import { PAGE_QUERY_RESULT } from "@/sanity.types";
 import { CardShell, type CardTheme } from "@/components/ui/card-shell";
 import SanityIcon from "@/components/icons/sanity-icon";
+import PortableTextRenderer from "@/components/portable-text-renderer";
 
 type Block = NonNullable<NonNullable<PAGE_QUERY_RESULT>["blocks"]>[number];
 type GridRow = Extract<Block, { _type: "grid-row" }>;
@@ -84,13 +85,13 @@ export default function GridCard({
             </div>
           )}
           {excerpt ? (
-            <p className="text-sm leading-6 text-muted-foreground md:text-base">
-              {excerpt}
-            </p>
+            <div className="text-sm leading-6 text-muted-foreground md:text-base prose prose-sm prose-neutral dark:prose-invert">
+              <PortableTextRenderer value={excerpt as any} />
+            </div>
           ) : null}
         </div>
       </div>
-      {link?.title ? (
+      {link?.title?.trim() ? (
         <Button
           className={cn("mt-6 self-start px-6", isCenter && "self-center")}
           variant={link?.buttonVariant || "default"}
@@ -102,7 +103,7 @@ export default function GridCard({
             rel={link?.target ? "noopener" : undefined}
           >
             <SanityIcon icon={link?.uiIcon || link?.icon} className="size-4" />
-            <span>{link?.title ?? "Learn More"}</span>
+            <span>{link.title.trim()}</span>
           </Link>
         </Button>
       ) : null}

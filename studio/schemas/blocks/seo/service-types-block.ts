@@ -34,20 +34,27 @@ export default defineType({
       },
     ],
   },
+    groups: [
+    { name: "content", title: "Content" },
+    { name: "style", title: "Style & Layout" },
+  ],
   fields: [
     defineField({
       name: "title",
+      group: "content",
       type: "string",
       initialValue: "Layanan Website Development Terlengkap",
     }),
     defineField({
       name: "description",
+      group: "content",
       type: "text",
       rows: 2,
       initialValue: "Kami menyediakan solusi website lengkap untuk semua kebutuhan bisnis Anda",
     }),
     defineField({
       name: "services",
+      group: "content",
       type: "array",
       of: [
         defineArrayMember({
@@ -61,35 +68,41 @@ export default defineType({
             }),
             defineField({
               name: "description",
+      group: "content",
               type: "text",
               rows: 2,
               validation: (Rule) => Rule.required(),
             }),
             defineField({
               name: "features",
+      group: "content",
               type: "array",
               of: [{ type: "string" }],
               description: "List fitur yang disediakan",
             }),
             defineField({
               name: "price",
+      group: "content",
               type: "string",
               title: "Starting Price",
               description: "Contoh: Mulai Rp 500.000",
             }),
             defineField({
               name: "timeline",
+      group: "content",
               type: "string",
               description: "Contoh: Timeline: 1-2 minggu",
             }),
             defineField({
               name: "badge",
+      group: "content",
               type: "string",
               title: "Badge",
               description: "Optional badge (contoh: POPULER)",
             }),
             defineField({
               name: "link",
+      group: "content",
               type: "link",
             }),
           ],
@@ -110,6 +123,7 @@ export default defineType({
     }),
       defineField({
             name: "blockStyles",
+      group: "style",
             type: "blockStyles",
             title: "Block Styles",
             

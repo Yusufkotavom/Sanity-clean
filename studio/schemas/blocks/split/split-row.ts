@@ -93,15 +93,21 @@ export default defineType({
       },
     ],
   },
+    groups: [
+    { name: "content", title: "Content" },
+    { name: "style", title: "Style & Layout" },
+  ],
   fields: [
     defineField({
       name: "noGap",
+      group: "content",
       type: "boolean",
       description: "Remove gap between columns",
       initialValue: false,
     }),
     defineField({
       name: "splitColumns",
+      group: "content",
       type: "array",
       of: [
         { type: "split-content" },
@@ -124,6 +130,7 @@ export default defineType({
     }),
       defineField({
             name: "blockStyles",
+      group: "style",
             type: "blockStyles",
             title: "Block Styles",
             

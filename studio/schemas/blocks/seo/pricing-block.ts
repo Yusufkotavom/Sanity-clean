@@ -19,7 +19,7 @@ export default defineType({
   },
   groups: [
     { name: "content", title: "Content" },
-    { name: "style", title: "Style" },
+    { name: "style", title: "Style & Layout" },
   ],
   fields: [
         defineField({

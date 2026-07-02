@@ -78,9 +78,14 @@ export default defineType({
       },
     ],
   },
+    groups: [
+    { name: "content", title: "Content" },
+    { name: "style", title: "Style & Layout" },
+  ],
   fields: [
     defineField({
       name: "timelines",
+      group: "content",
       type: "array",
       of: [{ type: "timelines-1" }],
       options: {
@@ -97,6 +102,7 @@ export default defineType({
     }),
       defineField({
             name: "blockStyles",
+      group: "style",
             type: "blockStyles",
             title: "Block Styles",
             

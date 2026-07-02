@@ -16,20 +16,27 @@ export default defineType({
     title: "Tentang Kotacom",
     description: "Partner terpercaya untuk solusi IT dan percetakan di Surabaya sejak 2015",
   },
+    groups: [
+    { name: "content", title: "Content" },
+    { name: "style", title: "Style & Layout" },
+  ],
   fields: [
     defineField({
       name: "title",
+      group: "content",
       type: "string",
       initialValue: "Tentang Kotacom",
     }),
     defineField({
       name: "description",
+      group: "content",
       type: "text",
       rows: 3,
       initialValue: "Partner terpercaya untuk solusi IT dan percetakan di Surabaya sejak 2015",
     }),
       defineField({
             name: "blockStyles",
+      group: "style",
             type: "blockStyles",
             title: "Block Styles",
             

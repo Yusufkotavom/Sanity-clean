@@ -70,15 +70,21 @@ export default defineType({
       },
     ],
   },
+    groups: [
+    { name: "content", title: "Content" },
+    { name: "style", title: "Style & Layout" },
+  ],
   fields: [
     defineField({
       name: "cardTheme",
+      group: "style",
       type: "card-theme",
       title: "Card Theme",
       description: "Visual theming applied to every card in this row.",
     }),
     defineField({
       name: "textAlign",
+      group: "style",
       type: "string",
       title: "Text Align",
       options: {
@@ -92,6 +98,7 @@ export default defineType({
     }),
     defineField({
       name: "cardStyle",
+      group: "style",
       type: "string",
       title: "Card Style",
       description: "Visual style and layout for all cards in this row",
@@ -107,6 +114,7 @@ export default defineType({
     }),
     defineField({
       name: "gridColumns",
+      group: "content",
       type: "string",
       title: "Grid Columns",
       options: {
@@ -118,6 +126,7 @@ export default defineType({
     // add only the blocks you need
     defineField({
       name: "columns",
+      group: "style",
       type: "array",
       of: [
         { type: "grid-card" },
@@ -138,6 +147,7 @@ export default defineType({
     }),
       defineField({
             name: "blockStyles",
+      group: "style",
             type: "blockStyles",
             title: "Block Styles",
             

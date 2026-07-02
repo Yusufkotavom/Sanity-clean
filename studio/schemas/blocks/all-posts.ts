@@ -18,9 +18,14 @@ export default defineType({
     contentTypes: ["post"],
     limit: 6,
   },
+    groups: [
+    { name: "content", title: "Content" },
+    { name: "style", title: "Style & Layout" },
+  ],
   fields: [
     defineField({
       name: "displayMode",
+      group: "content",
       type: "string",
       title: "Display Mode",
       options: {
@@ -35,6 +40,7 @@ export default defineType({
     }),
     defineField({
       name: "contentTypes",
+      group: "content",
       type: "array",
       title: "Content Types",
       description: "Choose which document types to show in this listing.",
@@ -52,6 +58,7 @@ export default defineType({
     }),
     defineField({
       name: "limit",
+      group: "content",
       type: "number",
       title: "Item Limit",
       initialValue: 6,
@@ -59,6 +66,7 @@ export default defineType({
     }),
       defineField({
             name: "blockStyles",
+      group: "style",
             type: "blockStyles",
             title: "Block Styles",
             

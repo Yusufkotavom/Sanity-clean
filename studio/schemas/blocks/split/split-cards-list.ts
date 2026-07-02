@@ -78,9 +78,14 @@ export default defineType({
       },
     ],
   },
+    groups: [
+    { name: "content", title: "Content" },
+    { name: "style", title: "Style & Layout" },
+  ],
   fields: [
     defineField({
       name: "list",
+      group: "content",
       type: "array",
       of: [{ type: "split-card" }],
     }),

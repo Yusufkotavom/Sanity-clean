@@ -15,8 +15,7 @@ export default defineType({
   },
   groups: [
     { name: "content", title: "Content" },
-    { name: "layout", title: "Layout" },
-    { name: "style", title: "Style" },
+    { name: "style", title: "Style & Layout" },
   ],
   fields: [
         defineField({ name: "title", type: "string", title: "Title", group: "content" }),
@@ -33,10 +32,14 @@ export default defineType({
               name: "feature",
               fields: [
                 defineField({ name: "icon", type: "ui-icon", title: "Icon" }),
-                defineField({ name: "title", type: "string", validation: (Rule) => Rule.required() }),
-                defineField({ name: "description", type: "text", rows: 2 }),
-                defineField({ name: "badge", type: "string", title: "Badge" }),
-                defineField({ name: "link", type: "link", title: "Link" }),
+                defineField({ name: "title",
+      group: "content", type: "string", validation: (Rule) => Rule.required() }),
+                defineField({ name: "description",
+      group: "content", type: "text", rows: 2 }),
+                defineField({ name: "badge",
+      group: "content", type: "string", title: "Badge" }),
+                defineField({ name: "link",
+      group: "content", type: "link", title: "Link" }),
               ],
               preview: {
                 select: { title: "title", icon: "icon" },
@@ -60,7 +63,7 @@ export default defineType({
           name: "cardStyle",
           type: "string",
           title: "Card Style",
-          group: "layout",
+          group: "style",
           options: {
             list: [
               { title: "Grid", value: "grid" },

@@ -9,13 +9,19 @@ export default defineType({
     colorVariant: "background",
     title: "Dipercaya oleh tim bisnis dari berbagai industri",
   },
+    groups: [
+    { name: "content", title: "Content" },
+    { name: "style", title: "Style & Layout" },
+  ],
   fields: [
     defineField({
       name: "title",
+      group: "content",
       type: "string",
     }),
     defineField({
       name: "images",
+      group: "content",
       type: "array",
       of: [
         defineField({
@@ -34,6 +40,7 @@ export default defineType({
     }),
       defineField({
             name: "blockStyles",
+      group: "style",
             type: "blockStyles",
             title: "Block Styles",
             

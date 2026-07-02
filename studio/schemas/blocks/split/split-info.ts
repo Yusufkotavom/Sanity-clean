@@ -29,9 +29,14 @@ export default defineType({
     ],
     tags: ["Next.js", "SEO", "Responsive"],
   },
+    groups: [
+    { name: "content", title: "Content" },
+    { name: "style", title: "Style & Layout" },
+  ],
   fields: [
     defineField({
       name: "image",
+      group: "content",
       type: "image",
       fields: [
         {
@@ -43,20 +48,24 @@ export default defineType({
     }),
     defineField({
       name: "uiIcon",
+      group: "content",
       title: "UI Icon",
       type: "ui-icon",
       description: "Optional icon shown beside the info title.",
     }),
     defineField({
       name: "title",
+      group: "content",
       type: "string",
     }),
     defineField({
       name: "body",
+      group: "content",
       type: "block-content",
     }),
     defineField({
       name: "tags",
+      group: "content",
       type: "array",
       of: [{ type: "string" }],
     }),

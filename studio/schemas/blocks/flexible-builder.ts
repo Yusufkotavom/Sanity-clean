@@ -7,9 +7,14 @@ export default defineType({
   title: "Flexible Builder",
   description: "Elementor-like row and column builder using Portable Text.",
   icon: LayoutTemplate,
+    groups: [
+    { name: "content", title: "Content" },
+    { name: "style", title: "Style & Layout" },
+  ],
   fields: [
     defineField({
       name: "layout",
+      group: "style",
       type: "string",
       title: "Column Layout",
       options: {
@@ -27,6 +32,7 @@ export default defineType({
     }),
     defineField({
       name: "columns",
+      group: "style",
       type: "array",
       title: "Columns Content",
       description: "Add content for each column. The number of items here should match your chosen layout.",
@@ -63,6 +69,7 @@ export default defineType({
     }),
       defineField({
             name: "blockStyles",
+      group: "style",
             type: "blockStyles",
             title: "Block Styles",
             

@@ -12,7 +12,6 @@ const Carousel1 = dynamic(() => import("@/components/blocks/carousel/carousel-1"
 const Carousel2 = dynamic(() => import("@/components/blocks/carousel/carousel-2"));
 const TimelineRow = dynamic(() => import("@/components/blocks/timeline/timeline-row"));
 const Cta1 = dynamic(() => import("@/components/blocks/cta/cta-1"));
-const WhatsAppCta = dynamic(() => import("@/components/blocks/cta/whatsapp-cta"));
 const LogoCloud1 = dynamic(() => import("@/components/blocks/logo-cloud/logo-cloud-1"));
 const FAQs = dynamic(() => import("@/components/blocks/faqs"));
 const FormNewsletter = dynamic(() => import("@/components/blocks/forms/newsletter"));
@@ -42,7 +41,7 @@ export const componentMap: Record<string, React.ComponentType<any>> = {
   "carousel-2": Carousel2,
   "timeline-row": TimelineRow,
   "cta-1": Cta1,
-  "whatsapp-cta": WhatsAppCta,
+  "whatsapp-cta": Cta1,
   "logo-cloud-1": LogoCloud1,
   faqs: FAQs,
   "form-newsletter": FormNewsletter,

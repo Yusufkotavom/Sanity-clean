@@ -17,20 +17,27 @@ export default defineType({
     title: "Apa Kata Klien Kami",
     description: "Testimoni nyata dari klien yang telah merasakan hasil kerja sama dengan Kotacom",
   },
+    groups: [
+    { name: "content", title: "Content" },
+    { name: "style", title: "Style & Layout" },
+  ],
   fields: [
     defineField({
       name: "title",
+      group: "content",
       type: "string",
       initialValue: "Apa Kata Klien Kami",
     }),
     defineField({
       name: "description",
+      group: "content",
       type: "text",
       rows: 2,
       initialValue: "Testimoni nyata dari klien yang telah merasakan hasil kerja sama dengan Kotacom",
     }),
     defineField({
       name: "source",
+      group: "content",
       type: "string",
       title: "Data Source",
       options: {
@@ -44,6 +51,7 @@ export default defineType({
     }),
     defineField({
       name: "category",
+      group: "content",
       type: "string",
       title: "Filter by Category",
       description: "Only applies when source is Global. Leave empty to show all",
@@ -60,6 +68,7 @@ export default defineType({
     }),
     defineField({
       name: "manualItems",
+      group: "content",
       title: "Testimonials",
       type: "array",
       of: [{ type: "reviewItem" }],
@@ -74,6 +83,7 @@ export default defineType({
     }),
       defineField({
             name: "blockStyles",
+      group: "style",
             type: "blockStyles",
             title: "Block Styles",
             

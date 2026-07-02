@@ -36,19 +36,26 @@ export default defineType({
       buttonVariant: "default",
     },
   },
+    groups: [
+    { name: "content", title: "Content" },
+    { name: "style", title: "Style & Layout" },
+  ],
   fields: [
     defineField({
       name: "sticky",
+      group: "content",
       type: "boolean",
       description: "Sticky column on desktop",
       initialValue: false,
     }),
     defineField({
       name: "tagLine",
+      group: "content",
       type: "string",
     }),
     defineField({
       name: "image",
+      group: "content",
       title: "Image",
       type: "image",
       description: "Optional image displayed above the content.",
@@ -59,20 +66,24 @@ export default defineType({
     }),
     defineField({
       name: "title",
+      group: "content",
       type: "string",
     }),
     defineField({
       name: "body",
+      group: "content",
       type: "block-content",
     }),
     defineField({
       name: "link",
+      group: "content",
       type: "link",
       description:
         "Link to a page or external URL. Leave empty to hide the link.",
     }),
       defineField({
             name: "blockStyles",
+      group: "style",
             type: "blockStyles",
             title: "Block Styles",
             

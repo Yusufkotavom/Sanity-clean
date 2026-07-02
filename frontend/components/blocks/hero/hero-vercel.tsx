@@ -151,7 +151,7 @@ export default function HeroVercel({ blockStyles,
   if (useCard) {
     layoutNode = (
       <div
-        className="w-full rounded-[2rem] p-6 md:p-8 lg:p-10 card-shell border border-white/60 bg-white/75 shadow-[0_30px_90px_rgba(15,23,42,0.08)] backdrop-blur-xl dark:border-white/10 dark:bg-white/5"
+        className="w-full rounded-[2rem] p-6 md:p-8 lg:p-10 card-shell shadow-[0_30px_90px_rgba(15,23,42,0.08)] backdrop-blur-xl"
       >
         {innerContent}
       </div>
