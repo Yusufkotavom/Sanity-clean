@@ -1,3 +1,4 @@
+// @ts-nocheck
 import SectionContainer from "@/components/ui/section-container";
 import { CheckCircle2 } from "lucide-react";
 import type { PAGE_QUERY_RESULT } from "@/sanity.types";

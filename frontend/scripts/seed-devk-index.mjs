@@ -168,7 +168,7 @@ async function run() {
       },
       {
         _key: "faq-main",
-        _type: "faq-block",
+        _type: "faqs",
         title: "Pertanyaan yang Sering Ditanyakan",
         description: "Jawaban cepat untuk membantu Anda memutuskan langkah selanjutnya.",
         category: "software"

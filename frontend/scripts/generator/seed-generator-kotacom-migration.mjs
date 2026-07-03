@@ -368,7 +368,7 @@ function buildTemplateDoc(family, docs) {
         ],
       },
       {
-        _type: "highlights-block",
+        _type: "section-header",
         _key: makeKey("block", `${family}-highlights`),
         colorVariant: "muted",
         title: "Apa yang dicari calon klien saat membuka halaman ini",
@@ -379,7 +379,7 @@ function buildTemplateDoc(family, docs) {
         ],
       },
       {
-        _type: "process-faq-block",
+        _type: "faqs",
         _key: makeKey("block", `${family}-process-faq`),
         colorVariant: "background",
         processTitle: "Bagaimana halaman generator ini harus bekerja",
@@ -396,7 +396,7 @@ function buildTemplateDoc(family, docs) {
         ],
       },
       {
-        _type: "related-links-block",
+        _type: "section-header",
         _key: makeKey("block", `${family}-related`),
         colorVariant: "card",
         title: "Jelajahi jalur berikutnya",
