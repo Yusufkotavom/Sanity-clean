@@ -57,6 +57,11 @@ const createPortableTextComponents = (
         />
       );
     },
+    undefined: ({ value }) => {
+      const text = typeof value === 'string' ? value : value?.text;
+      if (!text) return null;
+      return <p style={{ marginBottom: '1rem' }}>{text}</p>;
+    },
     youtube: ({ value }) => {
       const { videoId } = value;
       return (
