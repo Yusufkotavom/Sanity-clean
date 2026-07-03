@@ -24,6 +24,7 @@ const FeaturesPackageBlock = dynamic(() => import("@/components/blocks/seo/featu
 const ServiceTypesBlock = dynamic(() => import("@/components/blocks/seo/service-types-block"));
 const ProblemSolutionBlock = dynamic(() => import("@/components/blocks/seo/problem-solution-block"));
 const QuoteSpotlightBlock = dynamic(() => import("@/components/blocks/seo/quote-spotlight-block"));
+const ValuePropsBlock = dynamic(() => import("@/components/blocks/seo/value-props-block"));
 const FlexibleBuilder = dynamic(() => import("@/components/blocks/flexible-builder"));
 const TabsSection = dynamic(() => import("@/components/blocks/tabs-section"));
 const BannerSection = dynamic(() => import("@/components/blocks/banner-section"));
@@ -55,6 +56,7 @@ export const componentMap: Record<string, React.ComponentType<any>> = {
   "service-types-block": ServiceTypesBlock,
   "problem-solution-block": ProblemSolutionBlock,
   "quote-spotlight-block": QuoteSpotlightBlock,
+  "value-props-block": ValuePropsBlock,
   "flexible-builder": FlexibleBuilder,
   "tabs-section": TabsSection,
   "banner-section": BannerSection,

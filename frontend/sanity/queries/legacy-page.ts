@@ -19,7 +19,6 @@ import { legacyRichContentQuery } from "./legacy/legacy-rich-content";
 import { companyInfoQuery } from "./seo/company-info";
 import { testimonialsBlockQuery } from "./seo/testimonials-block";
 import { pricingBlockQuery } from "./seo/pricing-block";
-import { benefitsBlockQuery } from "./seo/benefits-block";
 import { featuresPackageBlockQuery } from "./seo/features-package-block";
 import { serviceTypesBlockQuery } from "./seo/service-types-block";
 import { problemSolutionBlockQuery } from "./seo/problem-solution-block";
@@ -63,7 +62,7 @@ export const LEGACY_PAGE_OVERRIDE_QUERY = groq`
       ${companyInfoQuery},
       ${testimonialsBlockQuery},
       ${pricingBlockQuery},
-      ${benefitsBlockQuery},
+      
       ${featuresPackageBlockQuery},
       ${serviceTypesBlockQuery},
       ${problemSolutionBlockQuery},
