@@ -419,3 +419,14 @@ Replaced the legacy content system (raw textarea + 7-dependency unified pipeline
 - Verification status:
   - Build/test: "pnpm typecheck" passed.
 
+
+## 2026-08-06
+- Changed files:
+  - `README.md`
+  - `Dockerfile` (new, on `dokploy` branch)
+- Summary:
+  - Added README deployment note documenting the intentional removal of the legacy local-routing subsystem (LOCAL_JASA_CETAK_BUKU_CITY_DISABLED, deleted `software/[slug]`, `percetakan/[...segments]`, etc.) and the measured build gap vs `sanity-nextjs-kotacom` (1010 vs 1278 static pages; 403 vs 412 jasa-cetak-buku pages).
+  - Added Dokploy Dockerfile (multi-stage, pnpm workspace, `next start`) and created Dokploy project `sanity-clean` + app `sanity-clean-frontend` (sanity-clean.devk.my.id) deployed from the `dokploy` branch.
+- Impact on SEO/integration:
+  - Deployment/infra change only; no code change to route/metadata behavior. Note: non-listed city pages such as `/jasa-cetak-buku-lamongan` render "Page not found" because the local fallback remains disabled.
+- Verification status: Docker build completed; https://sanity-clean.devk.my.id returns HTTP 200; `/jasa-cetak-buku-surabaya`, `/software/*`, `/percetakan/*` render full content.
