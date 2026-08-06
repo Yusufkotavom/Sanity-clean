@@ -100,6 +100,52 @@ Template (blocks + seoMeta + routeBase)
   = 394 unique pages generated
 ```
 
+## ⚠️ Deployment Note (2026-08-06): Sanity-clean vs sanity-nextjs-kotacom
+
+This repo is a fork of [`sanity-nextjs-kotacom`](https://github.com/Yusufkotavom/sanity-nextjs-kotacom)
+(HEAD `8f7bbad` is an ancestor of this repo's `main`). During cleanup, the legacy
+local-routing subsystem was intentionally removed, which means this build does **not**
+ship the same page set as the parent repo.
+
+### What was removed
+
+- `LOCAL_JASA_CETAK_BUKU_CITY_DISABLED = true` in `frontend/lib/local-content/jasa-cetak-buku-kota.ts`
+  (added in commit `9df9371` "chore: remove local fallback runtime sources"). All
+  `jasa-cetak-buku-*` city fallbacks are disabled.
+- Dynamic routes (deleted from `frontend/app/`):
+  `about/[slug]`, `pembuatan-website/[slug]`, `percetakan/[...segments]`,
+  `services/[slug]`, `services/category/[slug]`, `software/[slug]`,
+  plus `component-ui`, `home`, `style-guide`, `test-page-hybrid`.
+- City shell components: `components/ui/jasa-cetak-buku-city-shell.tsx` and the whole
+  `components/archive/legacy-rewrite-v0/` subsystem.
+- `products/[slug]` renders as a dynamic route (ƒ) instead of SSG, so
+  `/products/cetak-buku*` and `/products/hardisk-*` are not prebuilt.
+
+### Measured impact (build comparison, same env, same Sanity project)
+
+| Metric | sanity-nextjs-kotacom | Sanity-clean |
+|---|---|---|
+| Total static pages | 1278 | 1010 |
+| `jasa-cetak-buku-<kota>` pages | 412 | 403 |
+| Software pages (`*software*`) | 37 | 23 |
+
+Missing vs parent: 5 local-only `jasa-cetak-buku-*` pages (novel-murah, yasin-surabaya,
+dari-pdf-surabaya, edisi-terbatas-untuk-komunitas-merchandise, satuan-terdekat),
+`/percetakan/*`, `/products/cetak-buku*`, `/software/*`, `/services/[slug]`,
+`/pembuatan-website/[slug]`, `/about/[slug]`.
+
+> Note: Sanity-backed per-city pages still render (403 pages). Only the local-code
+> fallback pages and the nested dynamic routes are missing.
+
+### How to restore parity
+
+1. Set `LOCAL_JASA_CETAK_BUKU_CITY_DISABLED` to `false` (or remove the guard) in
+   `frontend/lib/local-content/jasa-cetak-buku-kota.ts`.
+2. Re-add `cityPages` + `JasaCetakBukuCityShell` fallback in `frontend/app/(main)/[slug]/page.tsx`
+   (see the parent repo for reference).
+3. Restore the deleted dynamic routes and the `legacy-rewrite-v0` subsystem from git
+   history (`git log --diff-filter=D`).
+
 ## License
 
 Private. All rights reserved.
